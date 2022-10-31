@@ -19,7 +19,6 @@ library(tibbletime)
 
 ```
 
-
 ```{r Read in files, format}
 #file path for your data directory. might work with the "Box Sync" client as well, haven't tried
 path <- "/Users/grambihler/Documents/data/GitHub/OceanWaterQuality/YSI Data/UTF-8 versions" 
@@ -35,7 +34,6 @@ exoframe <- list.files(path = path,
                              skip = 9,
                              locale=locale(encoding="UTF-16")))
 ```
-
 
 ```{r Set Working Directory}
 setwd("C:/Users/fried/OneDrive/Desktop/YSI Data") #your data directory. might work with the "Box Sync" client as well, haven't tried
@@ -117,4 +115,3 @@ ggplot(exoday,aes(Date,pH))+
 
 
 ```
-

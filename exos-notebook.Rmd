@@ -34,6 +34,21 @@ exoframe <- list.files(path = path,
                                               `Time (HH:mm:ss)` = col_time(format = "%H:%M:%S")),
                              skip = 9,
                              locale=locale(encoding="UTF-16")))
+```
+
+
+```{r Set Working Directory}
+setwd("C:/Users/fried/OneDrive/Desktop/YSI Data") #your data directory. might work with the "Box Sync" client as well, haven't tried
+```
+
+```{r File Formatting}
+files <- list.files(pattern = ".csv") #create list of files in directory
+
+#bind files into a list. skips the first 8 lines (EXO summary data). creates a column noting the source file of each entry
+exolist<-Map(cbind, lapply(files, fread,sep=",",skip=8), filename = files) 
+
+#fread function can't work with the files as they come out of YSI (in UTF-16 format). 
+#I had to re-save them in Excel to change them to UTF-8. The YSI outputs should either be converted in bulk in the future, or maybe there's a setting in the KorEXO template.
 
 ```
 
@@ -91,11 +106,15 @@ exoday<-exotbl %>%
 
 ```{r Plot Example}
 #create plots for data points
+
 ggplot(exoday,aes(Date,DO.mgL))+
+ggplot(exoday,aes(Date,pH))+
   geom_point(cex=1,alpha=0.5)+
   ylab(expression(paste("pH")))+
   xlab(element_blank())+
   theme_classic(base_size=20)+
   theme(legend.position = "bottom")
 
+
 ```
+

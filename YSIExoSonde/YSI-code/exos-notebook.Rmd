@@ -1,19 +1,18 @@
 ---
 title: "Exos Notebook"
-Collaborators: Dan Killam, Aidan Kavanaugh, Renee Grambihler
+Collaborators: Renee Grambihler, Dan Killam
 Project: OceanWaterQuality
 Institution: Biosphere 2 Ocean
 output: html_notebook
 ---
 
 ```{r Import Libraries}
-library(data.table)
+# library(data.table)
 library(tidyverse)
-library(stringi)
+# library(stringi)
 library(lubridate)
-library(dplyr)
-library(tsibble)
-library(tibbletime)
+# library(tsibble)
+# library(tibbletime)
 
 # note: I prefer the package tsibble which includes some new features. tibbletime is actually retired. but tsibble was having trouble parsing the time column for some reason. it is more tempermental. there is also a timetk package I haven't used as much
 
@@ -21,10 +20,10 @@ library(tibbletime)
 
 ```{r Read in files, format}
 #file path for your data directory. might work with the "Box Sync" client as well, haven't tried
-path <- "/Users/grambihler/Documents/data/GitHub/OceanWaterQuality/YSI Data/UTF-8 versions" 
+path16 <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-sonde-raw-data/UTF-16-versions" 
 
-# create exoframe: use path to create list of files to read in, read in files in path, specify column data types, skip the first 9 rows, and specify UTF-16 encoding for files from YSI exo sonde
-exoframe <- list.files(path = path,
+# create ExoFrame16: use path to create list of UTF-16 files to read in, read in files in path, specify column data types, skip the first 9 rows, and specify UTF-16 encoding for files from YSI exo sonde
+ExoFrame16 <- list.files(path = path16,
                        pattern = ".csv") %>%
             map_df(~read_csv(.,
                              col_types = cols(.default = col_double(),

@@ -7,18 +7,490 @@ output: html_notebook
 ---
 
 ```{r Import Libraries}
-# library(data.table)
 library(tidyverse)
-# library(stringi)
 library(lubridate)
-# library(tsibble)
-# library(tibbletime)
+library(here)
+# library(data.table)
+# library(stringi)
+library(tsibble)
+library(tibbletime)
 
 # note: I prefer the package tsibble which includes some new features. tibbletime is actually retired. but tsibble was having trouble parsing the time column for some reason. it is more tempermental. there is also a timetk package I haven't used as much
 
 ```
 
-```{r Read in files, format}
+
+# Files from various SCADA databases and instruments
+## 2011 - 2021
+```{r Read in SCADA files from 2011-2021}
+# file path to folder containing old scada database 2011-2021 ocean water quality files
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-sonde-raw-data/SCADA/SCADA-2011-2021"
+
+# data from 7/22/11 - 8/4/14
+ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"),
+                                 skip = 1,
+                                 col_names = c("datetime",
+                                               "temp_f",
+                                               "temp_c",
+                                               "pH",
+                                               "salinity_psu",
+                                               "conductivity_uScm",
+                                               "orp_mV")) %>%
+  mutate(conductivity_uScm = conductivity_uScm*1000) %>%
+  na.omit()%>%
+  filter(!orp_mV == -999 & !orp_mV == 0) %>%
+  add_column(chlorophyll_ugL = NA,
+             .after = 7)
+
+# data from 10/3/14 - 6/12/18
+ocean_data_2014_2018 <- read_csv(here(path, "Ocean_FTP_Data.csv"), 
+                                 skip = 1,
+                                 col_names = c("datetime",
+                                               "temp_f",
+                                               "temp_c",
+                                               "pH",
+                                               "salinity_psu",
+                                               "conductivity_uScm",
+                                               "orp_mV")) %>%
+  mutate(conductivity_uScm = conductivity_uScm*1000) %>%
+  na.omit() %>%
+  filter(!orp_mV == -999 & !orp_mV == 0) %>%
+  add_column(chlorophyll_ugL = NA,
+             .after = 7)
+
+# data from 11/18/16 - 6/12/18
+ocean_data_2016_2018 <- read_csv(here(path, "Ocean_FTP_Data_Extended.csv"), 
+                                 skip = 1,
+                                 col_names = c("datetime",
+                                               "temp_f",
+                                               "temp_c",
+                                               "pH",
+                                               "salinity_psu",
+                                               "conductivity_uScm",
+                                               "orp_mV",
+                                               "total_algae_rfu",
+                                               "chlorophyll_ugL",
+                                               "ro_flow_gpm")) %>%
+  mutate(conductivity_uScm = conductivity_uScm*1000)%>%
+  na.omit() %>%
+  filter(!orp_mV == -999 & !orp_mV == 0)
+
+# data from 10/12/18 - 5/25/21
+ocean_data_2018_2021 <- read_csv(here(path, "Ocean_Data_new.csv"), 
+                                 skip = 1, 
+                                 col_names = c("datetime",
+                                               "temp_c",
+                                               "pH",
+                                               "salinity_psu",
+                                               "conductivity_uScm",
+                                               "orp_mV",
+                                               "total_algae_cellsL",
+                                               "chlorophyll_ugL",
+                                               "do_saturated_percent"))%>%
+  mutate(conductivity_uScm = conductivity_uScm*1000)%>%
+  na.omit() %>%
+  add_column(temp_f = NA, .after = 1)
+
+```
+
+
+# Files from old YSI sonde and new YSI EXO3 sonde, downloaded from old B2 SCADA database
+## 10/21/19 - 2/23/22
+```{r Read in SCADA files from 10/21/19-2/23/22}
+# file path to folder containing old scada database 10/21/19-2/23/22 ocean water quality files
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-sonde-raw-data/SCADA/SCADA-2019-2022"
+
+# total algae phycoerythrin in cells/L from 10/21/19-5/26/21 from old YSI
+olddb_ysi_total_algae <- read_csv(here(path,
+                                       "UAB2_B240001_YSI_OCEANBGA_PE_593908.csv"),
+                                    col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         total_algae_cellsL = VALUE)
+
+# chlorophyll in ug/L from 10/21/19-5/26/21 from old YSI
+olddb_ysi_chlorophyll <- read_csv(here(path,
+                                       "UAB2_B240001_YSI_OCEANCHLORO_595563.csv"),
+                                  col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         chlorophyll_ugL = VALUE)
+
+# electrical conductivity in mS/cm from 10/21/19-5/26/21 from old YSI
+olddb_ysi_conductivity <- read_csv(here(path, 
+                                        "UAB2_B240001_YSI_OCEANCONDUC_597443.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE"))%>%
+  mutate(VALUE = VALUE*1000)%>%
+  rename(datetime = TIMESTAMP,
+         conductivity_uScm = VALUE)
+
+# reduction potential (ORP) in mV from 10/21/19-5/26/21 from old YSI
+olddb_ysi_orp <- read_csv(here(path, "UAB2_B240001_YSI_OCEANORP_598894.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         orp_mV = VALUE)
+
+# pH in pH units from 10/21/19-5/26/21 from old YSI
+olddb_ysi_pH <- read_csv(here(path, "UAB2_B240001_YSI_OCEANPH_600334.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         pH = VALUE)
+
+# salinity in ppt from 10/21/19-5/26/21 from old YSI
+olddb_ysi_salinity <- read_csv(here(path, "UAB2_B240001_YSI_OCEANSALANI_602884.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         salinity_psu = VALUE)
+
+# temperature in degrees Celcius from 10/21/19-5/26/21 from old YSI
+olddb_ysi_temp_c <- read_csv(here(path, "UAB2_B240001_YSI_OCEANTMP_604270.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         temp_c = VALUE)
+
+# chlorophyll in RFU from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_chlorophyll <- read_csv(here(path, 
+                                       "UAB2_B240001_YSI_EXO3_CHLORO_617107.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         chlorophyll_rfu = VALUE)
+
+# electrical conductivity in uS/cm from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_conductivity <- read_csv(here(path, 
+                                        "UAB2_B240001_YSI_EXO3_COND_U_617936.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         conductivity_uScm = VALUE)
+
+# nLF conductivity in uS/cm from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_nlf_conductivity <- read_csv(here(path, 
+                                      "UAB2_B240001_YSI_EXO3_NLF_CO_661668.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         nlf_conductivity_uScm = VALUE)
+
+# dissolved oxygen in % local from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_do_local <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ODO__L_632594.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         do_local_percent = VALUE)
+
+# dissolved oxygen in % saturated from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_do_saturated <- read_csv(here(path, 
+                                        "UAB2_B240001_YSI_EXO3_ODO__S_635338.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         do_saturated_percent = VALUE)
+
+# dissolved oxygen in mg/L from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_do <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ODO_MG_645798.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         do_mgL = VALUE)
+
+# reduction potential (ORP) in mV from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_orp <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ORP_MV_647084.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         orp_mV = VALUE)
+
+# pH in pH units from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_ph <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_PH_662411.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         pH = VALUE)
+
+# pH in mV from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_ph_mv <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_PH_MV_663459.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         pH_mV = VALUE)
+
+# salinity in psu from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_salinity <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_SAL_PS_647937.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         salinity_psu = VALUE)
+
+# specific conductivity in uS/cm from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_sp_conductivity <- read_csv(here(path, 
+                                           "UAB2_B240001_YSI_EXO3_SPCOND_648943.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         sp_conductivity_uScm = VALUE)
+
+# total algae phycoerythrin in RFU from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_total_algae <- read_csv(here(path, 
+                                       "UAB2_B240001_YSI_EXO3_TAL_PE_650659.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         total_algae_rfu = VALUE)
+
+# total dissolved solids in mg/L from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_total_dissolved_solids <- read_csv(here(path,
+                                          "UAB2_B240001_YSI_EXO3_TDS_MG_653051.csv"),
+                                          col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         total_dissolved_solids_mgL = VALUE)
+
+# temperature in degrees Celcius from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_temp_c <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_TEMP_C_655738.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         temp_c = VALUE)
+
+# temperature in degrees Fahrenheit from 5/26/21-2/23/22 from current YSI EXO3 Sonde
+olddb_exo_temp_f <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_TEMP_F_659351.csv"),
+                                   col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         temp_f = VALUE)
+
+```
+
+
+# Files from YSI EXO3 Sonde, downloaded from new B2 SCADA database
+## 1/22/22 - Present
+```{r Read in SCADA files from 1/22/22-present}
+# file path to folder containing new scada database 1/22/22-present ocean water quality files
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-sonde-raw-data/SCADA/SCADA-2022-PRESENT"
+
+# chlorophyll in RFU from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_chlorophyll <- read_csv(here(path,
+                              "UAB2_BIO1_B4000_YSI_EXO3_CHLOROPHYLL_RFU_687484.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         chlorophyll_rfu = VALUE)
+
+# electrical conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_conductivity <- read_csv(here(path, 
+                                    "UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM_686791.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         conductivity_uScm = VALUE)
+
+# nLF conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_nlf_conductivity <- read_csv(here(path, 
+                                "UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM_675074.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         nlf_conductivity_uScm = VALUE)
+
+# dissolved oxygen in % local from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_do_local <- read_csv(here(path, 
+                                    "UAB2_BIO1_B4000_YSI_EXO3_ODO__LOCAL_685469.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         do_local_percent = VALUE)
+
+# dissolved oxygen in % saturated from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_do_saturated <- read_csv(here(path, 
+                                    "UAB2_BIO1_B4000_YSI_EXO3_ODO__SAT_683139.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         do_saturated_percent = VALUE)
+
+# dissolved oxygen in mg/L from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_do <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_ODO_MGPL_684055.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         do_mgL = VALUE)
+
+# reduction potential (ORP) in mV from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_orp <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_ORP_MV_682052.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         orp_mV = VALUE)
+
+# pH in pH units from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_ph <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_PH_673160.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         pH = VALUE)
+
+# pH in mV from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_ph_mv <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_PH_MV_672635.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         pH_mV = VALUE)
+
+# salinity in psu from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_salinity <- read_csv(here(path,
+                                    "UAB2_BIO1_B4000_YSI_EXO3_SAL_PSU_682617.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         salinity_psu = VALUE)
+
+# specific conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_sp_conductivity <- read_csv(here(path, 
+                                  "UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM_681325.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         sp_conductivity_uScm = VALUE)
+
+# total algae phycoerythrin in RFU from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_total_algae <- read_csv(here(path, 
+                                  "UAB2_BIO1_B4000_YSI_EXO3_TAL_PE_RFU_680581.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         total_algae_rfu = VALUE)
+
+# total dissolved solids in mg/L from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_total_dissolved_solids <- read_csv(here(path,
+                                    "UAB2_BIO1_B4000_YSI_EXO3_TDS_MGPL_679560.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         total_dissolved_solids_mgL = VALUE)
+
+# temperature in degrees Celcius from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_temp_c <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_TEMP_C_680104.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         temp_c = VALUE)
+
+# temperature in degrees Fahrenheit from 1/22/22-present from current YSI EXO3 Sonde
+newdb_exo_temp_f <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_TEMP_F_675540.csv"),
+                              skip = 2,
+                              col_select = c("TIMESTAMP", "VALUE")) %>%
+  rename(datetime = TIMESTAMP,
+         temp_f = VALUE)
+
+```
+
+
+# Data Wrangling
+```{r Wrangle and combine data frames}
+# create pre-2019 ocean data dataframe
+OceanDataFame_2011_2021 <- rbind(ocean_data_2011_2014, 
+                              ocean_data_2014_2018,
+                              ocean_data_2016_2018[,c(1:7,9)],
+                              ocean_data_2018_2021[,c(1:7,9)])%>%
+  left_join(ocean_data_2016_2018)%>%
+  left_join(ocean_data_2018_2021)
+
+# create old database YSI dataframe by joining the files for each variable from this instrument based on the datetime column
+OlddbYsiFrame <- olddb_ysi_temp_c %>%
+  left_join(olddb_ysi_pH) %>%
+  left_join(olddb_ysi_salinity) %>%
+  left_join(olddb_ysi_conductivity) %>%
+  left_join(olddb_ysi_orp) %>%
+  left_join(olddb_ysi_total_algae) %>%
+  left_join(olddb_ysi_chlorophyll)
+
+# create old database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the datetime column
+OlddbYsiExoFrame <- olddb_exo_temp_c %>%
+  left_join(olddb_exo_ph) %>%
+  left_join(olddb_exo_salinity) %>%
+  left_join(olddb_exo_conductivity) %>%
+  left_join(olddb_exo_orp) %>%
+  left_join(olddb_exo_total_algae) %>%
+  left_join(olddb_exo_chlorophyll) %>%
+  left_join(olddb_exo_do) %>%
+  left_join(olddb_exo_do_local) %>%
+  left_join(olddb_exo_do_saturated) %>%
+  left_join(olddb_exo_nlf_conductivity) %>%
+  left_join(olddb_exo_ph_mv) %>%
+  left_join(olddb_exo_sp_conductivity) %>%
+  left_join(olddb_exo_temp_f) %>%
+  left_join(olddb_exo_total_dissolved_solids)
+
+# create new database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the datetime column
+NewdbYsiExoFrame <- newdb_exo_temp_c %>%
+  left_join(newdb_exo_ph) %>%
+  left_join(newdb_exo_salinity) %>%
+  left_join(newdb_exo_conductivity) %>%
+  left_join(newdb_exo_orp) %>%
+  left_join(newdb_exo_total_algae) %>%
+  left_join(newdb_exo_chlorophyll) %>%
+  left_join(newdb_exo_do) %>%
+  left_join(newdb_exo_do_local) %>%
+  left_join(newdb_exo_do_saturated) %>%
+  left_join(newdb_exo_nlf_conductivity) %>%
+  left_join(newdb_exo_ph_mv) %>%
+  left_join(newdb_exo_sp_conductivity) %>%
+  left_join(newdb_exo_temp_f) %>%
+  left_join(newdb_exo_total_dissolved_solids)
+
+# create dataframe of all YSI Exo3 Sonde data
+YsiExoFrame <- rbind(OlddbYsiExoFrame, NewdbYsiExoFrame)
+
+# create dataframe of all YSI Sonde data -- 10/21/19-present
+YsiFrame <- rbind(OlddbYsiFrame[,1:6], YsiExoFrame[,1:6]) %>%
+  left_join(OlddbYsiFrame) %>%
+  left_join(YsiExoFrame)
+
+# create dataframe of all data -- 2011-present
+# edit column placement of YsiFrame to match up common columns with OceanDataFrame_2011_2021 
+YsiFrameEdit <- YsiFrame %>%
+  relocate(temp_f, .before = temp_c) %>%
+  relocate(chlorophyll_ugL, total_algae_rfu, .after = orp_mV) %>%
+  add_column(ro_flow_gpm = NA, .after = 9) %>%
+  relocate(do_saturated_percent, .after = total_algae_cellsL)
+# combine dataframes, keep unique rows, move columns around so that similar variables are grouped together
+OceanWaterQualityFrame <- rbind(OceanDataFame_2011_2021, YsiFrameEdit[, 1:12]) %>%
+  left_join(YsiFrameEdit) %>%
+  unique() %>%
+  relocate(pH_mV, .after = pH) %>%
+  relocate(nlf_conductivity_uScm, 
+           sp_conductivity_uScm, .after = conductivity_uScm) %>%
+  relocate(do_mgL, 
+           do_saturated_percent, 
+           do_local_percent, .after = sp_conductivity_uScm) %>%
+  relocate(chlorophyll_rfu, .after = orp_mV) %>%
+  relocate(ro_flow_gpm, .after = total_dissolved_solids_mgL)%>%
+  mutate(datetime = ymd_hms(datetime))
+
+#create a time tibble
+OceanWaterQualityTibble <- OceanWaterQualityFrame %>%
+  as_tbl_time(index = datetime)
+#order by day
+OceanWaterQualityTibble <- OceanWaterQualityTibble %>% 
+  arrange(ymd_hms(datetime))
+
+```
+
+
+# Preliminary Plotting
+```{r Basic plots - pre QC}
+# create long format dataframe
+OceanWaterQualityFramePivot <- OceanWaterQualityFrame %>%
+  pivot_longer(cols = temp_f:ro_flow_gpm,
+               names_to = "variables",
+               values_to = "variable_values")
+
+# line graph of every variable - facet wrapped 
+AllVariablesPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  group_by(date, variables) %>%
+  summarise(mean_daily_value = mean(variable_values, na.rm = TRUE)) %>%
+  na.omit(mean_daily_value) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  facet_wrap(~variables, ncol = 3, scales = "free")+
+  scale_y_continuous(expand = expansion(mult = c(.5, .5))) +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Water Quality by Variable from 2011-2023")
+
+AllVariablesPlot
+  
+```
+
+
+# Original code from Dan (and Renee) for EXO3 files -- can be ignored
+```{r Read in and format UTF-16 files}
 #file path for your data directory. might work with the "Box Sync" client as well, haven't tried
 path16 <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-sonde-raw-data/UTF-16-versions" 
 

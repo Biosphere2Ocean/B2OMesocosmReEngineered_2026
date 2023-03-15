@@ -490,7 +490,7 @@ AllVariablePlot <- OceanWaterQualityFramePivot %>%
 AllVariablePlot
 # Save plot
 ggsave(filename = "AllVariablePlot.png", plot = AllVariablePlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 12, width = 16, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 12, width = 8, units = "in")
 
 # line graph of temp in fahrenheit
 TempFPlot <- OceanWaterQualityFramePivot %>%
@@ -503,12 +503,13 @@ TempFPlot <- OceanWaterQualityFramePivot %>%
   geom_line() +
   scale_y_continuous(expand = expansion(mult = c(.1, .1))) +
   scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
   ggtitle("B2O Temperature(F) from 2011-2023")
 
 TempFPlot
 # Save plot
 ggsave(filename = "TempFPlot.png", plot = TempFPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of temp in celcius
 TempCPlot <- OceanWaterQualityFramePivot %>%
@@ -528,7 +529,7 @@ TempCPlot <- OceanWaterQualityFramePivot %>%
 TempCPlot
 # Save plot
 ggsave(filename = "TempCPlot.png", plot = TempCPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of pH in pH units
 pHPlot <- OceanWaterQualityFramePivot %>%
@@ -549,7 +550,7 @@ pHPlot <- OceanWaterQualityFramePivot %>%
 pHPlot
 # Save plot
 ggsave(filename = "pHPlot.png", plot = pHPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of pH in mV
 pHmVPlot <- OceanWaterQualityFramePivot %>%
@@ -568,7 +569,7 @@ pHmVPlot <- OceanWaterQualityFramePivot %>%
 pHmVPlot
 # Save plot
 ggsave(filename = "pHmVPlot.png", plot = pHmVPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of salinity in psu
 SalinityPlot <- OceanWaterQualityFramePivot %>%
@@ -587,7 +588,7 @@ SalinityPlot <- OceanWaterQualityFramePivot %>%
 SalinityPlot
 # Save plot
 ggsave(filename = "SalinityPlot.png", plot = SalinityPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of conductivity in uS/cm
 ConductivityPlot <- OceanWaterQualityFramePivot %>%
@@ -608,7 +609,7 @@ ConductivityPlot <- OceanWaterQualityFramePivot %>%
 ConductivityPlot
 # Save plot
 ggsave(filename = "ConductivityPlot.png", plot = ConductivityPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of nlf conductivity in uS/cm
 NLFConductivityPlot <- OceanWaterQualityFramePivot %>%
@@ -629,7 +630,7 @@ NLFConductivityPlot <- OceanWaterQualityFramePivot %>%
 NLFConductivityPlot
 # Save plot
 ggsave(filename = "NLFConductivityPlot.png", plot = NLFConductivityPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of specific conductivity in uS/cm
 SpConductivityPlot <- OceanWaterQualityFramePivot %>%
@@ -650,7 +651,7 @@ SpConductivityPlot <- OceanWaterQualityFramePivot %>%
 SpConductivityPlot
 # Save plot
 ggsave(filename = "SpConductivityPlot.png", plot = SpConductivityPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of DO in mg/L
 DOmgLPlot <- OceanWaterQualityFramePivot %>%
@@ -669,7 +670,7 @@ DOmgLPlot <- OceanWaterQualityFramePivot %>%
 DOmgLPlot
 # Save plot
 ggsave(filename = "DOmgLPlot.png", plot = DOmgLPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of DO in percent saturated
 DOPercentSaturatedPlot <- OceanWaterQualityFramePivot %>%
@@ -691,7 +692,7 @@ DOPercentSaturatedPlot <- OceanWaterQualityFramePivot %>%
 DOPercentSaturatedPlot
 # Save plot
 ggsave(filename = "DOPercentSaturatedPlot.png", plot = DOPercentSaturatedPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of DO in percent local
 DOPercentLocalPlot <- OceanWaterQualityFramePivot %>%
@@ -712,7 +713,7 @@ DOPercentLocalPlot <- OceanWaterQualityFramePivot %>%
 DOPercentLocalPlot
 # Save plot
 ggsave(filename = "DOPercentLocalPlot.png", plot = DOPercentLocalPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of ORP in mV
 ORPPlot <- OceanWaterQualityFramePivot %>%
@@ -733,7 +734,7 @@ ORPPlot <- OceanWaterQualityFramePivot %>%
 ORPPlot
 # Save plot
 ggsave(filename = "ORPPlot.png", plot = ORPPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of chlorophyll in RFU
 ChlorophyllRFUPlot <- OceanWaterQualityFramePivot %>%
@@ -753,7 +754,7 @@ ChlorophyllRFUPlot <- OceanWaterQualityFramePivot %>%
 ChlorophyllRFUPlot
 # Save plot
 ggsave(filename = "ChlorophyllRFUPlot.png", plot = ChlorophyllRFUPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of chlorophyll in ug/L
 ChlorophyllugLPlot <- OceanWaterQualityFramePivot %>%
@@ -772,7 +773,7 @@ ChlorophyllugLPlot <- OceanWaterQualityFramePivot %>%
 ChlorophyllugLPlot
 # Save plot
 ggsave(filename = "ChlorophyllugLPlot.png", plot = ChlorophyllugLPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of total algae in cells/L
 TotalAlgaePlot <- OceanWaterQualityFramePivot %>%
@@ -791,7 +792,7 @@ TotalAlgaePlot <- OceanWaterQualityFramePivot %>%
 TotalAlgaePlot
 # Save plot
 ggsave(filename = "TotalAlgaePlot.png", plot = TotalAlgaePlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of total dissolved solids in mg/L
 TotalDissolvedSolidsPlot <- OceanWaterQualityFramePivot %>%
@@ -813,7 +814,7 @@ TotalDissolvedSolidsPlot <- OceanWaterQualityFramePivot %>%
 TotalDissolvedSolidsPlot
 # Save plot
 ggsave(filename = "TotalDissolvedSolidsPlot.png", plot = TotalDissolvedSolidsPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
 # line graph of RO flow in gallons/min
 ROFlowPlot <- OceanWaterQualityFramePivot %>%
@@ -832,7 +833,7 @@ ROFlowPlot <- OceanWaterQualityFramePivot %>%
 ROFlowPlot
 # Save plot
 ggsave(filename = "ROFlowPlot.png", plot = ROFlowPlot, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 4, width = 6, units = "in")
 
   
 ```

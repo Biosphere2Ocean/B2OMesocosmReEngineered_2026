@@ -556,13 +556,13 @@ ggsave(filename = "pHPlot.png", plot = pHPlot,
 pHmVPlot <- OceanWaterQualityFramePivot %>%
   mutate(date = date(datetime))%>%
   filter(variable == "pH_mV") %>%
+  filter(date >= "2021-01-01")%>%
   group_by(date, variable) %>%
   summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
   ggplot(aes(x = date, 
              y = mean_daily_value)) +
   geom_line() +
-  scale_y_continuous(expand = expansion(mult = c(.5, .5))) +
-  scale_x_date(breaks = waiver(), date_breaks = "1 month") +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
   theme(axis.text.x = element_text(angle = 45))+
   ggtitle("B2O pH(mV) from 2021-2023")
 

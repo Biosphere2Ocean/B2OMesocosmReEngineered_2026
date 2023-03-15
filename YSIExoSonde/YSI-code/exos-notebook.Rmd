@@ -12,8 +12,11 @@ library(lubridate)
 library(here)
 # library(data.table)
 # library(stringi)
-library(tsibble)
-library(tibbletime)
+#library(tsibble)
+#library(tibbletime)
+
+# turns scientific notation off
+options(scipen = 999)
 
 # note: I prefer the package tsibble which includes some new features. tibbletime is actually retired. but tsibble was having trouble parsing the time column for some reason. it is more tempermental. there is also a timetk package I haven't used as much
 
@@ -437,7 +440,7 @@ YsiFrameEdit <- YsiFrame %>%
   relocate(chlorophyll_ugL, total_algae_rfu, .after = orp_mV) %>%
   add_column(ro_flow_gpm = NA, .after = 9) %>%
   relocate(do_saturated_percent, .after = total_algae_cellsL)
-# combine dataframes, keep unique rows, move columns around so that similar variables are grouped together
+# combine dataframes, keep unique rows, move columns around so that similar variable are grouped together
 OceanWaterQualityFrame <- rbind(OceanDataFame_2011_2021, YsiFrameEdit[, 1:12]) %>%
   left_join(YsiFrameEdit) %>%
   unique() %>%
@@ -464,27 +467,373 @@ OceanWaterQualityTibble <- OceanWaterQualityTibble %>%
 # Preliminary Plotting
 ```{r Basic plots - pre QC}
 # create long format dataframe
+# keep NAs in to keep ggplot from connecting across missing data points
 OceanWaterQualityFramePivot <- OceanWaterQualityFrame %>%
   pivot_longer(cols = temp_f:ro_flow_gpm,
-               names_to = "variables",
-               values_to = "variable_values")
-
+               names_to = "variable",
+               values_to = "variable_value")
+  
 # line graph of every variable - facet wrapped 
-AllVariablesPlot <- OceanWaterQualityFramePivot %>%
+AllVariablePlot <- OceanWaterQualityFramePivot %>%
   mutate(date = date(datetime))%>%
-  group_by(date, variables) %>%
-  summarise(mean_daily_value = mean(variable_values, na.rm = TRUE)) %>%
-  na.omit(mean_daily_value) %>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value)) %>%
   ggplot(aes(x = date, 
              y = mean_daily_value)) +
   geom_line() +
-  facet_wrap(~variables, ncol = 3, scales = "free")+
+  facet_wrap(~variable, ncol = 3, scales = "free")+
   scale_y_continuous(expand = expansion(mult = c(.5, .5))) +
   scale_x_date(breaks = waiver(), date_breaks = "1 year") +
   theme(axis.text.x = element_text(angle = 45))+
-  ggtitle("B2O Water Quality by Variable from 2011-2023")
+  ggtitle("B2O Water Quality by Variable from 2011-2023") 
 
-AllVariablesPlot
+AllVariablePlot
+# Save plot
+ggsave(filename = "AllVariablePlot.png", plot = AllVariablePlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 12, width = 16, units = "in")
+
+# line graph of temp in fahrenheit
+TempFPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "temp_f") %>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_y_continuous(expand = expansion(mult = c(.1, .1))) +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  ggtitle("B2O Temperature(F) from 2011-2023")
+
+TempFPlot
+# Save plot
+ggsave(filename = "TempFPlot.png", plot = TempFPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of temp in celcius
+TempCPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "temp_c")%>%
+  filter(variable_value != 0) %>% #removed 0 values because they were messing up averages
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_y_continuous(expand = expansion(mult = c(.1, .1))) +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Temperature(C) from 2011-2023")
+
+TempCPlot
+# Save plot
+ggsave(filename = "TempCPlot.png", plot = TempCPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of pH in pH units
+pHPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "pH") %>%
+  filter(variable_value != 0) %>% #removed 0 values because they were messing up averages
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_y_continuous(breaks = c(5, 6, 7, 8, 9, 10),
+                     expand = expansion(mult = c(.1, .1))) +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O pH from 2011-2023")
+
+pHPlot
+# Save plot
+ggsave(filename = "pHPlot.png", plot = pHPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of pH in mV
+pHmVPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "pH_mV") %>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_y_continuous(expand = expansion(mult = c(.5, .5))) +
+  scale_x_date(breaks = waiver(), date_breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O pH(mV) from 2021-2023")
+
+pHmVPlot
+# Save plot
+ggsave(filename = "pHmVPlot.png", plot = pHmVPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of salinity in psu
+SalinityPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "salinity_psu")%>%
+  mutate(variable_value = ifelse(variable_value < 20, NA, variable_value))%>%         #turn values <20 into NAs because they were messing up averages
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Salinity(psu) from 2011-2023")
+
+SalinityPlot
+# Save plot
+ggsave(filename = "SalinityPlot.png", plot = SalinityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of conductivity in uS/cm
+ConductivityPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "conductivity_uScm") %>%
+   # turn values 20000 < x < 60000 into NA so that it doesn't mess up calculations
+  mutate(variable_value = ifelse(variable_value > 60000, NA, variable_value),
+         variable_value = ifelse(variable_value < 20000, NA, variable_value))%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE))%>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Conductivity(uS/cm) from 2011-2023")
+
+ConductivityPlot
+# Save plot
+ggsave(filename = "ConductivityPlot.png", plot = ConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of nlf conductivity in uS/cm
+NLFConductivityPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "nlf_conductivity_uScm") %>%
+  filter(date >= "2021-01-01")%>%
+  # turn values < 48000 into NA so that it doesn't mess up calculations
+  mutate(variable_value = ifelse(variable_value < 48000, NA, variable_value))%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(date_breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O NLF Conductivity(uS/cm) from 2021-2023")
+
+NLFConductivityPlot
+# Save plot
+ggsave(filename = "NLFConductivityPlot.png", plot = NLFConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of specific conductivity in uS/cm
+SpConductivityPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "sp_conductivity_uScm") %>%
+  filter(date >= "2021-01-01")%>%
+  # turn values < 48000 into NA so that it doesn't mess up calculations
+  mutate(variable_value = ifelse(variable_value < 48000, NA, variable_value))%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Specific Conductivity(uS/cm) from 2021-2023")
+
+SpConductivityPlot
+# Save plot
+ggsave(filename = "SpConductivityPlot.png", plot = SpConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of DO in mg/L
+DOmgLPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "do_mgL") %>%
+  filter(date >= "2021-01-01")%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Dissolved Oxygen(mg/L) from 2021-2023")
+
+DOmgLPlot
+# Save plot
+ggsave(filename = "DOmgLPlot.png", plot = DOmgLPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of DO in percent saturated
+DOPercentSaturatedPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "do_saturated_percent") %>%
+  filter(date >= "2018-06-01")%>%
+  # turn values < 50 into NA so that it doesn't mess up calculations
+  mutate(variable_value = ifelse(variable_value < 50, NA, variable_value))%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_y_continuous(expand = expansion(mult = c(.1, .1))) +
+  scale_x_date(breaks = waiver(), date_breaks = "6 months") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Dissolved Oxygen(% saturated) from 2018-2023")
+
+DOPercentSaturatedPlot
+# Save plot
+ggsave(filename = "DOPercentSaturatedPlot.png", plot = DOPercentSaturatedPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of DO in percent local
+DOPercentLocalPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "do_local_percent") %>%
+  filter(date >= "2021-01-01")%>%
+  # turn values < 102 into NA so that it doesn't mess up calculations
+  mutate(variable_value = ifelse(variable_value < 102, NA, variable_value))%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Dissolved Oxygen(% local) from 2021-2023")
+
+DOPercentLocalPlot
+# Save plot
+ggsave(filename = "DOPercentLocalPlot.png", plot = DOPercentLocalPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of ORP in mV
+ORPPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "orp_mV") %>%
+  # turn values < 102 into NA so that it doesn't mess up calculations
+  mutate(variable_value = ifelse(variable_value < 1, NA, variable_value))%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_y_continuous(expand = expansion(mult = c(.1, .1))) +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Oxygen Reduction Potential(mV) from 2011-2023")
+
+ORPPlot
+# Save plot
+ggsave(filename = "ORPPlot.png", plot = ORPPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of chlorophyll in RFU
+ChlorophyllRFUPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "chlorophyll_rfu") %>%
+  filter(date >= "2021-01-01")%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_y_continuous(expand = expansion(mult = c(.5, .5))) +
+  scale_x_date(breaks = waiver(), date_breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Chlorophyll(RFU) from 2021-2023")
+
+ChlorophyllRFUPlot
+# Save plot
+ggsave(filename = "ChlorophyllRFUPlot.png", plot = ChlorophyllRFUPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of chlorophyll in ug/L
+ChlorophyllugLPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "chlorophyll_ugL") %>%
+  filter(date >= "2016-06-01")%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Chlorophyll(ug/L) from 2016-2023")
+
+ChlorophyllugLPlot
+# Save plot
+ggsave(filename = "ChlorophyllugLPlot.png", plot = ChlorophyllugLPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of total algae in cells/L
+TotalAlgaePlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "total_algae_cellsL") %>%
+  filter(date >= "2018-06-01")%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Total Algae(cells/L) from 2018-2023")
+
+TotalAlgaePlot
+# Save plot
+ggsave(filename = "TotalAlgaePlot.png", plot = TotalAlgaePlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of total dissolved solids in mg/L
+TotalDissolvedSolidsPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "total_dissolved_solids_mgL") %>%
+  filter(date >= "2021-01-01")%>%
+  # turn values < 31000 into NA so that it doesn't mess up calculations
+  mutate(variable_value = ifelse(variable_value < 31000, NA, variable_value))%>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_y_continuous(expand = expansion(mult = c(.1, .1))) +
+  scale_x_date(breaks = waiver(), date_breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O Total Dissolved Solids(mg/L) from 2021-2023")
+
+TotalDissolvedSolidsPlot
+# Save plot
+ggsave(filename = "TotalDissolvedSolidsPlot.png", plot = TotalDissolvedSolidsPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
+# line graph of RO flow in gallons/min
+ROFlowPlot <- OceanWaterQualityFramePivot %>%
+  mutate(date = date(datetime))%>%
+  filter(variable == "ro_flow_gpm") %>%
+  filter(between(date, as.Date("2016-06-01"), as.Date("2019-01-01"))) %>%
+  group_by(date, variable) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 month") +
+  theme(axis.text.x = element_text(angle = 45))+
+  ggtitle("B2O RO Flow(gallons/minute) from 2016-2018")
+
+ROFlowPlot
+# Save plot
+ggsave(filename = "ROFlowPlot.png", plot = ROFlowPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures", height = 8, width = 12, units = "in")
+
   
 ```
 

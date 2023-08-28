@@ -20,7 +20,7 @@ options(scipen = 999)
 ## Files from Wei-Ren: 2011 - 2021
 ```{r Read in SCADA files from 2011-2021}
 # file path to folder containing old scada database 2011-2021 ocean water quality files
-path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-sonde-raw-data/SCADA/SCADA-2011-2021"
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/RawData/RawDataYSI/SCADA/SCADA_2011_2021"
 
 # data from 7/22/11 - 8/4/14
 ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"),
@@ -119,7 +119,7 @@ ocean_data_2018_2021 <- read_csv(here(path, "Ocean_Data_new.csv"),
 ## Files from old YSI sonde and new YSI EXO3 sonde, downloaded from old B2 SCADA database: 10/21/19 - 2/23/22
 ```{r Read in SCADA files from 10/21/19-2/23/22}
 # file path to folder containing old scada database 10/21/19-2/23/22 ocean water quality files
-path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-sonde-raw-data/SCADA/SCADA-2019-2022"
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/RawData/RawDataYSI/SCADA/SCADA_2019_2022"
 
 # total algae phycoerythrin in cells/L from 10/21/19-5/26/21 from old YSI
 olddb_ysi_total_algae <- read_csv(here(path,
@@ -270,7 +270,7 @@ olddb_exo_temp_f <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_TEMP_F_659351.csv
 ## Files from YSI EXO3 Sonde, downloaded from new B2 SCADA database: 1/22/22 - Present
 ```{r Read in SCADA files from 1/22/22-present}
 # file path to folder containing new scada database 1/22/22-present ocean water quality files
-path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-sonde-raw-data/SCADA/SCADA-2022-PRESENT"
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/RawData/RawDataYSI/SCADA/SCADA_2022_Present"
 
 # chlorophyll in RFU from 1/22/22-present from current YSI EXO3 Sonde
 newdb_exo_chlorophyll <- read_csv(here(path,
@@ -473,7 +473,7 @@ OceanWaterQualityFrame <- rbind(OceanDataFrame_2011_2021, YsiFrameEdit[, 1:11]) 
   separate(col = datetime, into = c("date", "time"), sep = " ")
 
 write_csv(OceanWaterQualityFrame, 
-          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataWranglingCode/OceanWaterQualityFrame.csv", 
+          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/01_DataWrangling/OceanWaterQualityFrame.csv", 
           col_names = TRUE)
 
 ```

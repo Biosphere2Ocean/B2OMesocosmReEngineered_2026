@@ -21,7 +21,7 @@ options(scipen = 999)
 ## Import Raw Data
 ```{r Import Data}
 # uses csv file created in OceanDataWrangling.Rmd. do not need to re-run that file to use this csv
-path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataWranglingCode/"
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/01_DataWrangling/"
 OceanWaterQualityFrame <- read_csv(here(path, "OceanWaterQualityFrame.csv"))
 
 ```
@@ -151,7 +151,7 @@ for (v in var_names) {
 ### Save QC Data
 ```{r Save QC Data}
 write_csv(dfQC, 
-          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataQualityControlCode/QCOceanWaterQualityFrame.csv", 
+          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv", 
           col_names = TRUE)
 ```
 
@@ -192,7 +192,7 @@ AllVariablePlotPostQC
 ### Implement Cutoffs -- might not be necessary -- check with diane
 ```{r Implement Cutoffs}
 # read in QCOceanWaterQualityFrame.csv that was created in a previous chunk
-path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataQualityControlCode/"
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/02_QualityControl/"
 QCOceanWaterQualityFrame <- read_csv(here(path, "QCOceanWaterQualityFrame.csv"))
 
 # implement calibration cutoff values
@@ -259,7 +259,7 @@ AllVariablePlotPostQCCutoff
 # Write Post-QC CSV
 ```{r Write Post-QC csv}
 write_csv(CutQCOceanWaterQualityFrame, 
-          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataQualityControlCode/QCOceanWaterQualityFrame.csv", 
+          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv", 
           col_names = TRUE)  
 
 ```

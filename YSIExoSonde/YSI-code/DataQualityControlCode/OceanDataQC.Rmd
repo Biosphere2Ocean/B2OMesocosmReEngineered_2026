@@ -10,7 +10,7 @@ output: html_notebook
 library(tidyverse)
 library(lubridate)
 library(here)
-source("./QCFunction.R")
+# source("./QCFunction.R")
 
 # turns scientific notation off
 options(scipen = 999)
@@ -53,12 +53,8 @@ AllVariablePlotPreQC <- OceanWaterQualityFramePivot %>%
   xlab("Date")+
   ylab("Nutrient Value")
 
-AllVariablePlotPreQCTest
+AllVariablePlotPreQC
 
-# Save plot
-ggsave(filename = "AllVariablePlot-PreQC.pdf", plot = AllVariablePlotPreQC, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots", height = 12, width = 10)
-  
 ```
 
 ## Quality Control Data
@@ -188,16 +184,19 @@ AllVariablePlotPostQC <- OceanWaterQualityFramePivot %>%
   xlab("Date")+
   ylab("Nutrient Value")
 
-# Save plot
-ggsave(filename = "AllVariablePlot-PostQC.pdf", plot = AllVariablePlotPostQC, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots", height = 12, width = 10)
+AllVariablePlotPostQC
+
 ```
 
 
-### Implement Cutoffs
+### Implement Cutoffs -- might not be necessary -- check with diane
 ```{r Implement Cutoffs}
+# read in QCOceanWaterQualityFrame.csv that was created in a previous chunk
+path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataQualityControlCode/"
+QCOceanWaterQualityFrame <- read_csv(here(path, "QCOceanWaterQualityFrame.csv"))
+
 # implement calibration cutoff values
-CutOceanWaterQualityFrame <- OceanWaterQualityFrame %>%
+CutQCOceanWaterQualityFrame <- QCOceanWaterQualityFrame %>%
   mutate(date = as.Date(date, format = "%m/%d/%Y")) %>%
   mutate(chlorophyll_ugL = ifelse(date > "2018/06/01" & chlorophyll_ugL < 500, 
                                   NA, chlorophyll_ugL))%>%
@@ -227,13 +226,40 @@ CutOceanWaterQualityFrame <- OceanWaterQualityFrame %>%
 
 ## Visualize Post-QC Data
 ```{r Visualize Post-QC, Post-Cutoff Data}
+CutQCOceanWaterQualityFramePivot <- CutQCOceanWaterQualityFrame %>%
+  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+               names_to = "variable",
+               values_to = "variable_value")%>%
+  mutate(date = as.Date(date, format = "%Y/%m/%d"))
+
+AllVariablePlotPostQCCutoff <- CutQCOceanWaterQualityFramePivot %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  facet_wrap(~variable, ncol = 3, scales = "free")+
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Water Quality by Variable from 2011-2023",
+       subtitle = "Post-QC: Removed Values 2 Standard Deviations Outside Mean and Cutoff Values")+
+  xlab("Date")+
+  ylab("Nutrient Value")
+
+AllVariablePlotPostQCCutoff
 
 ```
 
 # Write Post-QC CSV
 ```{r Write Post-QC csv}
-write_csv(QCOceanWaterQualityFrame, 
-          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataWranglingCode/QCOceanWaterQualityFrame.csv", 
+write_csv(CutQCOceanWaterQualityFrame, 
+          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataQualityControlCode/QCOceanWaterQualityFrame.csv", 
           col_names = TRUE)  
 
 ```

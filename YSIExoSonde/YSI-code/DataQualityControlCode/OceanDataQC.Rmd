@@ -152,6 +152,14 @@ for (v in var_names) {
 
 ```
 
+### Save QC Data
+```{r Save QC Data}
+write_csv(dfQC, 
+          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataQualityControlCode/QCOceanWaterQualityFrame.csv", 
+          col_names = TRUE)
+```
+
+
 ### Visualize QC Data Before Cutoffs Implemented
 ```{r Post-QC, Pre-Cutoffs Visualization}
 OceanWaterQualityFramePivot <- dfQC %>%
@@ -179,8 +187,6 @@ AllVariablePlotPostQC <- OceanWaterQualityFramePivot %>%
        subtitle = "Post-QC: Removed Values 2 Standard Deviations Outside Mean")+
   xlab("Date")+
   ylab("Nutrient Value")
-
-AllVariablePlotPostQC
 
 # Save plot
 ggsave(filename = "AllVariablePlot-PostQC.pdf", plot = AllVariablePlotPostQC, 

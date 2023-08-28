@@ -1,0 +1,916 @@
+---
+title: "Ocean Data Plots"
+Collaborators: Renee Grambihler
+Project: OceanWaterQuality
+Institution: Biosphere 2 Ocean
+output: html_notebook
+---
+
+```{r Libraries}
+library(tidyverse)
+library(lubridate)
+library(here)
+library(ggpubr)
+```
+
+```{r import data}
+OceanWaterQualityFrame <- read_csv("/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataWranglingCode/OceanWaterQualityFrame.csv")
+
+QCOceanWaterQualityFrame <- read_csv("/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-code/DataWranglingCode/QCOceanWaterQualityFrame.csv") 
+```
+
+```{r Pre-plotting Formatting}
+QCMeanDailyValueFrame <- QCOceanWaterQualityFrame %>%
+  group_by(variable, date) %>%
+  summarise(mean_daily_value = mean(variable_value, na.rm = TRUE))
+
+```
+
+
+# Preliminary Plotting Before QC
+```{r Basic plots - Pre QC}
+# line graph of every variable - facet wrapped 
+AllVariablePlot <- OceanWaterQualityFrame %>%
+  filter(date >= "2021-05-01")%>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  facet_wrap(~variable, ncol = 3, scales = "free")+
+  scale_x_date(breaks = waiver(), date_breaks = "1 month",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Water Quality by Variable from 2011-2023",
+       subtitle = "Pre-QC: All Outliers Still Present")+
+  xlab("Date")+
+  ylab("Nutrient Value")
+AllVariablePlot
+
+# Save plot
+ggsave(filename = "AllVariablePlot-PreQC-2021present.pdf", plot = AllVariablePlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots", height = 12, width = 10)
+
+# line graph of temperature in fahrenheit
+TempFPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "temp_f") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Temperature (F)",
+         title = "Pre-QC B2O Temperature(F) from 2011-2023")
+TempFPlot
+# Save plot
+ggsave(filename = "TempFPlot-PreQC.pdf", plot = TempFPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of temp in celcius
+TempCPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "temp_c")%>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Temperature (C)",
+         title = "Pre-QC B2O Temperature(C) from 2011-2023")
+TempCPlot
+# Save plot
+ggsave(filename = "TempCPlot-PreQC.pdf", plot = TempCPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of pH in pH units
+pHPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "pH") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "pH",
+         title = "Pre-QC B2O pH from 2011-2023")
+pHPlot
+# Save plot
+ggsave(filename = "pHPlot-PreQC.pdf", plot = pHPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of pH in mV
+pHmVPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "pH_mV") %>%
+  #filter(date >= "2021-01-01")%>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "pH (mV)",
+         title = "Pre-QC B2O pH(mV) from 2011-2023")
+pHmVPlot
+# Save plot
+ggsave(filename = "pHmVPlot-PreQC.pdf", plot = pHmVPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of salinity in psu
+SalinityPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "salinity_psu")%>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Salinity (PSU)",
+         title = "Pre-QC B2O Salinity(PSU) from 2011-2023")
+
+SalinityPlot
+# Save plot
+ggsave(filename = "SalinityPlot-PreQC.pdf", plot = SalinityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of conductivity in uS/cm
+ConductivityPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "conductivity_uScm")%>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Conductivity(uS/cm)",
+         title = "Pre-QC B2O Conductivity(uS/cm) from 2011-2023")
+ConductivityPlot
+# Save plot
+ggsave(filename = "ConductivityPlot-PreQC.pdf", plot = ConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of nlf conductivity in uS/cm
+NLFConductivityPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "nlf_conductivity_uScm") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "NLF Conductivity(uS/cm)",
+         title = "Pre-QC B2O NLF Conductivity(uS/cm) from 2011-2023")
+NLFConductivityPlot
+# Save plot
+ggsave(filename = "NLFConductivityPlot-PreQC.pdf", plot = NLFConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of specific conductivity in uS/cm
+SpConductivityPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "sp_conductivity_uScm") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Specific Conductivity(uS/cm)",
+         title = "Pre-QC B2O Specific Conductivity(uS/cm) from 2011-2023")
+SpConductivityPlot
+# Save plot
+ggsave(filename = "SpConductivityPlot-PreQC.pdf", plot = SpConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of DO in mg/L
+DOmgLPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "do_mgL") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen(mg/L)",
+         title = "Pre-QC B2O Dissolved Oxygen(mg/L) from 2011-2023")
+DOmgLPlot
+# Save plot
+ggsave(filename = "DOmgLPlot-PreQC.pdf", plot = DOmgLPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of DO in percent saturated
+DOPercentSaturatedPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "do_saturated_percent") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen Percent Saturated",
+         title = "Pre-QC B2O Dissolved Oxygen Percent Saturated from 2011-2023")
+DOPercentSaturatedPlot
+# Save plot
+ggsave(filename = "DOPercentSaturatedPlot-PreQC.pdf", plot = DOPercentSaturatedPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of DO in percent local
+DOPercentLocalPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "do_local_percent") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen Percent Local",
+         title = "Pre-QC B2O Dissolved Oxygen Percent Local from 2011-2023")
+DOPercentLocalPlot
+# Save plot
+ggsave(filename = "DOPercentLocalPlot-PreQC.pdf", plot = DOPercentLocalPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of ORP in mV
+ORPPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "orp_mV") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "ORP(mV)",
+         title = "Pre-QC B2O Oxidation-Reduction Potential(mV) from 2011-2023")
+ORPPlot
+# Save plot
+ggsave(filename = "ORPPlot-PreQC.pdf", plot = ORPPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of chlorophyll in RFU
+ChlorophyllRFUPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "chlorophyll_rfu") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Chlorophyll(RFU)",
+         title = "Pre-QC B2O Chlorophyll(RFU) from 2011-2023")
+ChlorophyllRFUPlot
+# Save plot
+ggsave(filename = "ChlorophyllRFUPlot-PreQC.pdf", plot = ChlorophyllRFUPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of chlorophyll in ug/L
+ChlorophyllugLPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "chlorophyll_ugL") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Chlorophyll(ug/L)",
+         title = "Pre-QC B2O Chlorophyll(ug/L) from 2011-2023")
+ChlorophyllugLPlot
+# Save plot
+ggsave(filename = "ChlorophyllugLPlot-PreQC.pdf", plot = ChlorophyllugLPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of total algae in cells/L
+TotalAlgaePlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "total_algae_cellsL") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Total Algae(cells/L)",
+         title = "Pre-QC B2O Total Algae(cells/L) from 2011-2023")
+TotalAlgaePlot
+# Save plot
+ggsave(filename = "TotalAlgaePlot-PreQC.pdf", plot = TotalAlgaePlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of total dissolved solids in mg/L
+TotalDissolvedSolidsPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "total_dissolved_solids_mgL") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Total Dissolved Solids(mg/L)",
+         title = "Pre-QC B2O Total Dissolved Solids(mg/L) from 2011-2023")
+TotalDissolvedSolidsPlot
+# Save plot
+ggsave(filename = "TotalDissolvedSolidsPlot-PreQC.pdf", plot = TotalDissolvedSolidsPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+
+# line graph of RO flow in gallons/min
+ROFlowPlot <- OceanWaterQualityFramePivot %>%
+  filter(variable == "ro_flow_gpm") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "RO Flow(gallons/minute)",
+         title = "Pre-QC B2O RO Flow(gallons/minute) from 2011-2023")
+ROFlowPlot
+# Save plot
+ggsave(filename = "ROFlowPlot-PreQC.pdf", plot = ROFlowPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PreQCPlots")
+  
+```
+
+# Preliminary Plotting After Initial Standard Deviation QC
+```{r Basic Plots - Post QC}
+# line graph of every variable - facet wrapped 
+PostQCAllVariablePlot <- QCOceanWaterQualityFrame %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  facet_wrap(~variable, ncol = 3, scales = "free")+
+  scale_x_date(breaks = waiver(), date_breaks = "12 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Water Quality by Variable from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Nutrient Value")
+# Save plot
+ggsave(filename = "AllVariablePlot-PostQC.pdf", plot = PostQCAllVariablePlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots", height = 12, width = 10)
+
+# line graph of temperature in fahrenheit
+PostQCTempFPlot <- SDFrameFull %>%
+  filter(variable == "temp_f") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Temperature (F)",
+         title = "Post-QC B2O Temperature(F) from 2011-2023")
+PostQCTempFPlot
+# Save plot
+ggsave(filename = "TempFPlot-PostQC.pdf", plot = PostQCTempFPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of temp in celcius
+PostQCTempCPlot <- SDFrameFull %>%
+  filter(variable == "temp_c")%>%
+  filter(variable_value > 19 & variable_value < 28) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Temperature (C)",
+         title = "Post-QC B2O Temperature(C) from 2011-2023")
+PostQCTempCPlot
+# Save plot
+ggsave(filename = "TempCPlot-PostQC.pdf", plot = PostQCTempCPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of pH in pH units
+PostQCpHPlot <- SDFrameFull %>%
+  filter(variable == "pH") %>%
+  filter(variable_value > 7 & variable_value < 10) %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "variable_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "pH",
+         title = "Post-QC B2O pH from 2011-2023")
+PostQCpHPlot
+# Save plot
+ggsave(filename = "pHPlot-PostQC.pdf", plot = PostQCpHPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of pH in mV
+PostQCpHmVPlot <- SDFrameFull %>%
+  filter(variable == "pH_mV") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "pH (mV)",
+         title = "Post-QC B2O pH(mV) from 2011-2023")
+PostQCpHmVPlot
+# Save plot
+ggsave(filename = "pHmVPlot-PostQC.pdf", plot = PostQCpHmVPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of salinity in psu
+PostQCSalinityPlot <- SDFrameFull %>%
+  filter(variable == "salinity_psu")%>%
+  filter(variable_value > 20)%>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Salinity (PSU)",
+         title = "PostQC B2O Salinity(PSU) from 2011-2023")
+PostQCSalinityPlot
+# Save plot
+ggsave(filename = "SalinityPlot-PostQC.pdf", plot = PostQCSalinityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of conductivity in uS/cm
+PostQCConductivityPlot <- SDFrameFull %>%
+  filter(variable == "conductivity_uScm")%>%
+  filter(variable_value > 30000)%>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Conductivity(uS/cm)",
+         title = "Post-QC B2O Conductivity(uS/cm) from 2011-2023")
+PostQCConductivityPlot
+# Save plot
+ggsave(filename = "ConductivityPlot-PostQC.pdf", plot = PostQCConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of nlf conductivity in uS/cm
+PostQCNLFConductivityPlot <- SDFrameFull %>%
+  filter(variable == "nlf_conductivity_uScm") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "variable_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "NLF Conductivity(uS/cm)",
+         title = "Post-QC B2O NLF Conductivity(uS/cm) from 2011-2023")
+PostQCNLFConductivityPlot
+# Save plot
+ggsave(filename = "NLFConductivityPlot-PostQC.pdf", plot = PostQCNLFConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of specific conductivity in uS/cm
+PostQCSpConductivityPlot <- SDFrameFull %>%
+  filter(variable == "sp_conductivity_uScm") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "variable_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Specific Conductivity(uS/cm)",
+         title = "Post-QC B2O Specific Conductivity(uS/cm) from 2011-2023")
+PostQCSpConductivityPlot
+# Save plot
+ggsave(filename = "SpConductivityPlot-PostQC.pdf", plot = PostQCSpConductivityPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of DO in mg/L
+PostQCDOmgLPlot <- SDFrameFull %>%
+  filter(variable == "do_mgL") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "variable_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen(mg/L)",
+         title = "Post-QC B2O Dissolved Oxygen(mg/L) from 2021-2023")
+PostQCDOmgLPlot
+# Save plot
+ggsave(filename = "DOmgLPlot-PostQC.pdf", plot = PostQCDOmgLPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of DO in percent saturated
+PostQCDOPercentSaturatedPlot <- SDFrameFull %>%
+  filter(variable == "do_saturated_percent") %>%
+  filter(variable_value < 100) %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "variable_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen Percent Saturated",
+         title = "Post-QC B2O Dissolved Oxygen Percent Saturated from 2019-2023")
+PostQCDOPercentSaturatedPlot
+# Save plot
+ggsave(filename = "DOPercentSaturatedPlot-PostQC.pdf", plot = PostQCDOPercentSaturatedPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of DO in percent local
+PostQCDOPercentLocalPlot <- SDFrameFull %>%
+  filter(variable == "do_local_percent") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen Percent Local",
+         title = "Post-QC B2O Dissolved Oxygen Percent Local from 2011-2023")
+PostQCDOPercentLocalPlot
+# Save plot
+ggsave(filename = "DOPercentLocalPlot-PostQC.pdf", plot = PostQCDOPercentLocalPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of ORP in mV
+PostQCORPPlot <- SDFrameFull %>%
+  filter(variable == "orp_mV") %>%
+  filter(variable_value > 0)%>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "ORP(mV)",
+         title = "Post-QC B2O Oxidation-Reduction Potential(mV) from 2011-2023")
+PostQCORPPlot
+# Save plot
+ggsave(filename = "ORPPlot-PostQC.pdf", plot = PostQCORPPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of chlorophyll in RFU
+PostQCChlorophyllRFUPlot <- SDFrameFull %>%
+  filter(variable == "chlorophyll_rfu") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "variable_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Chlorophyll(RFU)",
+         title = "Post-QC B2O Chlorophyll(RFU) from 2021-2023")
+PostQCChlorophyllRFUPlot
+# Save plot
+ggsave(filename = "ChlorophyllRFUPlot-PostQC.pdf", plot = PostQCChlorophyllRFUPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of chlorophyll in ug/L
+PostQCChlorophyllugLPlot <- SDFrameFull %>%
+  filter(variable == "chlorophyll_ugL") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Chlorophyll(ug/L)",
+         title = "Post-QC B2O Chlorophyll(ug/L) from 2011-2023")
+PostQCChlorophyllugLPlot
+# Save plot
+ggsave(filename = "ChlorophyllugLPlot-PostQC.pdf", plot = PostQCChlorophyllugLPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of total algae in cells/L
+PostQCTotalAlgaePlot <- SDFrameFull %>%
+  filter(variable == "total_algae_cellsL") %>%
+  filter(variable_value > 0) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Total Algae(cells/L)",
+         title = "Post-QC B2O Total Algae(cells/L) from 2011-2023")+
+  scale_x_date(date_labels = "%m-%d-%Y")
+PostQCTotalAlgaePlot
+# Save plot
+ggsave(filename = "TotalAlgaePlot-PostQC.pdf", plot = PostQCTotalAlgaePlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of total dissolved solids in mg/L
+PostQCTotalDissolvedSolidsPlot <- SDFrameFull %>%
+  filter(variable == "total_dissolved_solids_mgL") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "variable_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Total Dissolved Solids(mg/L)",
+         title = "Post-QC B2O Total Dissolved Solids(mg/L) from 2021-2023")
+PostQCTotalDissolvedSolidsPlot
+# Save plot
+ggsave(filename = "TotalDissolvedSolidsPlot-PostQC.pdf", plot = PostQCTotalDissolvedSolidsPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+
+# line graph of RO flow in gallons/min
+PostQCROFlowPlot <- SDFrameFull %>%
+  filter(variable == "ro_flow_gpm") %>%
+  ggline(x = "date",
+         y = "variable_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "RO Flow(gallons/minute)",
+         title = "Post-QC B2O RO Flow(gallons/minute) from 2011-2023")
+PostQCROFlowPlot
+# Save plot
+ggsave(filename = "ROFlowPlot-PostQC.pdf", plot = PostQCROFlowPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/PostQCPlots")
+  
+```
+
+# Preliminary Plotting of Mean Daily Values After Initial Standard Deviation QC
+```{r Basic Plots - Post QC Mean Daily Value}
+# line graph of every variable - facet wrapped 
+MDVAllVariablePlot <- MeanDailyValueFrame %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  facet_wrap(~variable, ncol = 3, scales = "free")+
+  scale_x_date(breaks = waiver(), date_breaks = "12 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Water Quality Mean Daily Value by Variable from 2011-2023",
+       subtitle = "Pre-QC: All Outliers Still Present")+
+  xlab("Date")+
+  ylab("Nutrient Value")
+# Save plot
+ggsave(filename = "AllVariablePlot-MDV.pdf", plot = MDVAllVariablePlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots", height = 12, width = 10)
+
+# line graph of every variable - facet wrapped 
+MDVPostQCAllVariablePlot <- QCMeanDailyValueFrame %>%
+  ggplot(aes(x = date, 
+             y = mean_daily_value)) +
+  geom_line() +
+  facet_wrap(~variable, ncol = 3, scales = "free")+
+  scale_x_date(breaks = waiver(), date_breaks = "12 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Water Quality Mean Daily Value by Variable from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Nutrient Value")
+# Save plot
+ggsave(filename = "AllVariablePlot-MDVPostQC.pdf", plot = MDVPostQCAllVariablePlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots", height = 12, width = 10)
+
+# line graph of temperature in fahrenheit
+MDVPostQCTempFPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "temp_f") %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Temperature (F)",
+         title = "Post-QC B2O Temperature(F) Mean Daily Value from 2011-2023")
+MDVPostQCTempFPlot
+# Save plot
+ggsave(filename = "TempFPlot-MDVPostQC.pdf", plot = MDVPostQCTempFPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of temp in celcius
+MDVPostQCTempCPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "temp_c")%>%
+  filter(mean_daily_value > 19 & mean_daily_value < 28) %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "mean_daily_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Temperature (C)",
+         title = "Post-QC B2O Temperature(C) Mean Daily Value from 2011-2023")
+MDVPostQCTempCPlot
+# Save plot
+ggsave(filename = "TempCPlot-MDVPostQC.pdf", plot = MDVPostQCTempCPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of pH in pH units
+MDVPostQCpHPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "pH") %>%
+  filter(mean_daily_value > 7 & mean_daily_value < 10) %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "mean_daily_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "pH",
+         title = "Post-QC B2O pH Mean Daily Value from 2011-2023")
+MDVPostQCpHPlot
+# Save plot
+ggsave(filename = "pHPlot-MDVPostQC.pdf", plot = MDVPostQCpHPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of pH in mV
+MDVPostQCpHmVPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "pH_mV") %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "pH (mV)",
+         title = "Post-QC B2O pH(mV) Mean Daily Value from 2011-2023")
+MDVPostQCpHmVPlot
+# Save plot
+ggsave(filename = "pHmVPlot-MDVPostQC.pdf", plot = MDVPostQCpHmVPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of salinity in psu
+MDVPostQCSalinityPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "salinity_psu")%>%
+  filter(mean_daily_value > 20)%>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Salinity (PSU)",
+         title = "PostQC B2O Salinity(PSU) Mean Daily Value from 2011-2023")
+MDVPostQCSalinityPlot
+# Save plot
+ggsave(filename = "SalinityPlot-MDVPostQC.pdf", plot = MDVPostQCSalinityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of conductivity in uS/cm
+MDVPostQCConductivityPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "conductivity_uScm")%>%
+  filter(mean_daily_value > 30000)%>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Conductivity(uS/cm)",
+         title = "Post-QC B2O Conductivity(uS/cm) Mean Daily Value from 2011-2023")
+MDVPostQCConductivityPlot
+# Save plot
+ggsave(filename = "ConductivityPlot-MDVPostQC.pdf", plot = MDVPostQCConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of nlf conductivity in uS/cm
+MDVPostQCNLFConductivityPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "nlf_conductivity_uScm") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "mean_daily_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "NLF Conductivity(uS/cm)",
+         title = "Post-QC B2O NLF Conductivity(uS/cm) Mean Daily Value from 2011-2023")
+MDVPostQCNLFConductivityPlot
+# Save plot
+ggsave(filename = "NLFConductivityPlot-MDVPostQC.pdf", plot = MDVPostQCNLFConductivityPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of specific conductivity in uS/cm
+MDVPostQCSpConductivityPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "sp_conductivity_uScm") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "mean_daily_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Specific Conductivity(uS/cm)",
+         title = "Post-QC B2O Specific Conductivity(uS/cm) Mean Daily Value from 2011-2023")
+MDVPostQCSpConductivityPlot
+# Save plot
+ggsave(filename = "SpConductivityPlot-MDVPostQC.pdf", plot = PostQCSpConductivityPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of DO in mg/L
+MDVPostQCDOmgLPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "do_mgL") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "mean_daily_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen(mg/L)",
+         title = "Post-QC B2O Dissolved Oxygen(mg/L) Mean Daily Value from 2021-2023")
+MDVPostQCDOmgLPlot
+# Save plot
+ggsave(filename = "DOmgLPlot-MDVPostQC.pdf", plot = MDVPostQCDOmgLPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of DO in percent saturated
+MDVPostQCDOPercentSaturatedPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "do_saturated_percent") %>%
+  filter(mean_daily_value < 100) %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "mean_daily_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen Percent Saturated",
+         title = "Post-QC B2O Dissolved Oxygen Percent Saturated Mean Daily Value from 2019-2023")
+MDVPostQCDOPercentSaturatedPlot
+# Save plot
+ggsave(filename = "DOPercentSaturatedPlot-MDVPostQC.pdf", plot = MDVPostQCDOPercentSaturatedPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of DO in percent local
+MDVPostQCDOPercentLocalPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "do_local_percent") %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Dissolved Oxygen Percent Local",
+         title = "Post-QC B2O Dissolved Oxygen Percent Local Mean Daily Value from 2011-2023")
+MDVPostQCDOPercentLocalPlot
+# Save plot
+ggsave(filename = "DOPercentLocalPlot-MDVPostQC.pdf", plot = MDVPostQCDOPercentLocalPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of ORP in mV
+MDVPostQCORPPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "orp_mV") %>%
+  filter(mean_daily_value > 0)%>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "ORP(mV)",
+         title = "Post-QC B2O Oxidation-Reduction Potential(mV) Mean Daily Value from 2011-2023")
+MDVPostQCORPPlot
+# Save plot
+ggsave(filename = "ORPPlot-MDVPostQC.pdf", plot = MDVPostQCORPPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of chlorophyll in RFU
+MDVPostQCChlorophyllRFUPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "chlorophyll_rfu") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "mean_daily_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Chlorophyll(RFU)",
+         title = "Post-QC B2O Chlorophyll(RFU) Mean Daily Value from 2021-2023")
+MDVPostQCChlorophyllRFUPlot
+# Save plot
+ggsave(filename = "ChlorophyllRFUPlot-MDVPostQC.pdf", plot = MDVPostQCChlorophyllRFUPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of chlorophyll in ug/L
+MDVPostQCChlorophyllugLPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "chlorophyll_ugL") %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Chlorophyll(ug/L)",
+         title = "Post-QC B2O Chlorophyll(ug/L) Mean Daily Value from 2011-2023")
+MDVPostQCChlorophyllugLPlot
+# Save plot
+ggsave(filename = "ChlorophyllugLPlot-MDVPostQC.pdf", plot = MDVPostQCChlorophyllugLPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of total algae in cells/L
+MDVPostQCTotalAlgaePlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "total_algae_cellsL") %>%
+  filter(mean_daily_value > 0) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Total Algae(cells/L)",
+         title = "Post-QC B2O Total Algae(cells/L) Mean Daily Value from 2011-2023")+
+  scale_x_date(date_labels = "%m-%d-%Y")
+MDVPostQCTotalAlgaePlot
+# Save plot
+ggsave(filename = "TotalAlgaePlot-MDVPostQC.pdf", plot = MDVPostQCTotalAlgaePlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of total dissolved solids in mg/L
+MDVPostQCTotalDissolvedSolidsPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "total_dissolved_solids_mgL") %>%
+  na.omit() %>%
+  remove_sd_outlier(cols = "mean_daily_value", 
+                    n_sigmas = 2) %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "Total Dissolved Solids(mg/L)",
+         title = "Post-QC B2O Total Dissolved Solids(mg/L) Mean Daily Value from 2021-2023")
+MDVPostQCTotalDissolvedSolidsPlot
+# Save plot
+ggsave(filename = "TotalDissolvedSolidsPlot-MDVPostQC.pdf", plot = MDVPostQCTotalDissolvedSolidsPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+
+# line graph of RO flow in gallons/min
+MDVPostQCROFlowPlot <- SDMeanDailyValueFrameFull %>%
+  filter(variable == "ro_flow_gpm") %>%
+  ggline(x = "date",
+         y = "mean_daily_value",
+         plot_type = "l",
+         xlab = "Date",
+         ylab = "RO Flow(gallons/minute)",
+         title = "Post-QC B2O RO Flow(gallons/minute) Mean Daily Value from 2011-2023")
+MDVPostQCROFlowPlot
+# Save plot
+ggsave(filename = "ROFlowPlot-MDVPostQC.pdf", plot = MDVPostQCROFlowPlot, 
+       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/YSIExoSonde/YSI-figures/MDVPostQCPlots")
+  
+```

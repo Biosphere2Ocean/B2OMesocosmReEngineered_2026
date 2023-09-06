@@ -10,16 +10,15 @@ output: html_notebook
 library(tidyverse)
 library(lubridate)
 library(here)
-library(ggpubr)
 ```
 
 # Import Data
 ```{r import data}
 # Wrangled data before QC -- outliers still present
-df <- read_csv("/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/01_DataWrangling/OceanWaterQualityFrame.csv")
+df <- read_csv(here("Data/CleanData/CleanDataYSI/01_DataWrangling/OceanWaterQualityFrame.csv"))
 
 # Data after QC -- values outside of 2 sigma away from mean of every month for every variable were turned into NA values
-dfQC <- read_csv("/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv") 
+dfQC <- read_csv(here("Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv"))
 ```
 # Data Formatting
 ```{r Pre-plotting Formatting}

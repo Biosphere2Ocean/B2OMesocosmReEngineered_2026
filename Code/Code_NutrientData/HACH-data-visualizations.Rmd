@@ -1,0 +1,449 @@
+---
+title: "HACH Nutrient Data Visualizations"
+Collaborators: Renee Grambihler
+Project: "Nutrient-Data"
+output:
+  html_document:
+    df_print: paged
+Institution: Biosphere 2 Ocean
+---
+## Libraries
+```{r libraries}
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(dataPreparation)
+library(ggpubr)
+# remove scientific notation
+options(scipen = 999)
+```
+
+## Import Data 
+```{r import data: B20NutrientData.xlsx}
+# download B20NutrientData excel file from the Box and import it into R with your own filepath in "" below. The Pre-formatted Data (2017-2022) is on one sheet, and the Formatted Data (2022-present) is on a different sheet. 
+
+# Import Pre-Formatted Data sheet from excel file (sheet "Pre-formatted Data")
+PreFormattedData <- read_excel("/Users/grambihler/Documents/Data/GitHub/NutrientData/RawData/B2ONutrientData.xlsx",
+                               sheet = "Pre-formatted Data",
+                               col_names = TRUE)
+
+# Import Formatted Data sheet from excel file (sheet "Data")
+FormattedData <- read_excel("/Users/grambihler/Documents/Data/GitHub/NutrientData/RawData/B2ONutrientData.xlsx", 
+                            sheet = "Data", 
+                            col_names = TRUE)
+```
+
+# Data Tidying
+## Pre-Formatted Data
+```{r data tidying: Pre-Formatted Data sheet}
+# get rid of (...##) at end of column names
+for (col in 1:ncol(PreFormattedData)){
+    colnames(PreFormattedData)[col] <-  gsub("\\.*[0123456789]", "", colnames(PreFormattedData)[col])
+    }
+
+# separating large dataframe into separate ones for each testing location (Ocean, Mangrove, Raceway 1, and Raceway 2) in order to add a Location column 
+OceanFrame <- PreFormattedData[, c(1:11, 39)]%>%
+  mutate(Location = "Ocean")
+
+MangroveFrame <- PreFormattedData[, c(1, 12:19, 39)] %>%
+  mutate(Location = "Mangroves",
+         Alkalinity = NA, 
+         Silica = NA, 
+         Iron = NA, 
+         Ammonia = NA)
+  
+RacewayFrame1 <- PreFormattedData[, c(1, 20:29, 39)] %>%
+  mutate(Location = "Raceway 1")
+
+RacewayFrame2 <- PreFormattedData[, c(1, 30:39)] %>%
+  mutate(Location = "Raceway 2",
+         ORP = NA)
+
+# combine the dataframes by rows to get longer format data
+PreFormattedDataTidy <- rbind(OceanFrame, MangroveFrame, RacewayFrame1, RacewayFrame2) %>%
+  mutate(Silica = as.numeric(Silica),
+         `Nitrate MR` = as.numeric(`Nitrate MR`),
+         `Nitrate HR` = as.numeric(`Nitrate HR`),
+         pH = as.numeric(pH),
+         Date = format(Date, "%m/%d/%y"))
+
+# pivot dataframe to get long format data by Nutrient
+PreFormattedDataPivot <- PreFormattedDataTidy %>%
+  pivot_longer(cols = Turbidity:ORP,
+               names_to = "Nutrients", 
+               values_to = "Nutrient Values") %>%
+  drop_na() %>%
+  mutate(`Nutrient Values` = as.numeric(`Nutrient Values`))
+
+```
+
+## Formatted Data
+```{r data tidying: Data sheet}
+FormattedDataTidy <- FormattedData %>%
+  mutate(Turbidity = round(Turbidity, digits = 1),
+         Phosphate = as.numeric(Phosphate),
+         Phosphate = round(Phosphate, digits = 2),
+         `Nitrate MR` = round(`Nitrate MR`, digits = 2), 
+         `Nitrate HR` = as.numeric(`Nitrate HR`),
+         `Nitrate HR` = round(`Nitrate HR`, digits = 2),
+         pH = round(pH, digits = 2),
+         Alkalinity = round(Alkalinity, digits = 1),
+         Silica = ifelse(Silica == "+++", 1.60, Silica),
+         Silica = round(as.numeric(Silica), digits = 2),
+         Iron = round(Iron, digits = 3),
+         Ammonia = as.numeric(Ammonia),
+         Ammonia = round(Ammonia, digits = 2),
+         Date = format(Date, "%m/%d/%y")) %>%
+  select(-Notes)
+
+FormattedDataPivot <- FormattedDataTidy %>%
+  pivot_longer(cols = Turbidity:Ammonia,
+               names_to = "Nutrients", 
+               values_to = "Nutrient Values") %>%
+  mutate(`Nutrient Values` = as.numeric(`Nutrient Values`))
+
+```
+
+## Combine Data
+```{r Combine data from Pre-formatted and Data sheets}
+AllData <- rbind(PreFormattedDataPivot, FormattedDataPivot) %>%
+  drop_na() %>%
+  mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+
+```
+
+# Pre-Quality Control Data Visualizations by Location
+```{r Pre-QC visualizations}
+# All Locations Plot
+PreQCAllLocationsPlot <- AllData %>%
+  filter(Nutrients != "ORP")%>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`, 
+             color = Location)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Nutrients for Ocean, Raceways, and Mangrove Mesocosms from 2018-Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# Save Plot
+ggsave(filename = "AllLocationsPlot-PreQC.pdf", 
+       plot = PreQCAllLocationsPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures",
+       width = 10, height = 7)
+
+# Ocean Plot
+PreQCOceanPlot <- AllData %>%
+  filter(Location == "Ocean") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Ocean Nutrients from 2019-Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot
+ggsave(filename = "OceanPlot-PreQC.pdf", plot = PreQCOceanPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+# Raceway 1 Plot
+PreQCRaceway1Plot <- AllData %>%
+  filter(Location == "Raceway 1") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Raceway 1 Nutrients 2020-Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot 
+ggsave(filename = "Raceway1Plot-PreQC.pdf", 
+       plot = PreQCRaceway1Plot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+# Raceway 2 Plot
+PreQCRaceway2Plot <- AllData %>%
+  filter(Location == "Raceway 2") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "2 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Raceway 2 Nutrients From 2021 to Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot 
+ggsave(filename = "Raceway2Plot-PreQC.pdf", 
+       plot = PreQCRaceway2Plot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+# Mangrove Plot
+PreQCMangrovePlot <- AllData %>%
+  filter(Location == "Mangroves") %>%
+  filter(Nutrients != "ORP")%>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Mangrove Nutrients from 2018-Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot
+ggsave(filename = "MangrovePlot-PreQC.pdf", 
+       plot = PreQCMangrovePlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+# Raceways 1 and 2 Plot
+PreQCRaceway1Raceway2Plot <- AllData %>%
+  filter(Location == "Raceway 1" | Location == "Raceway 2")%>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`,
+             color = Location)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Raceways 1 and 2 Nutrients From 2020 to Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot 
+ggsave(filename = "Raceway1Raceway2Plot-PreQC.pdf", 
+       plot = PreQCRaceway1Raceway2Plot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+```
+
+# Data Quality Control: Remove 2-sigma from Mean
+```{r Data QC}
+# function to recreate remove_sd_outlier() but better: identifies data points outside 2 standard deviations from the mean for each nutrient at each location and replaces the outliers with NA values
+remove_n_sigmas <- function(df, n_sigmas) {
+  locations <- c(unique(df$Location))
+  nutrients <- c(unique(df$Nutrients))
+  
+  QCAllData <- data.frame(matrix(ncol = ncol(df), nrow = 0))
+  colnames(QCAllData) <- colnames(AllData)
+  
+  for (l in locations) {
+    for (n in nutrients) {
+      LocationNutrientFrame <- df %>%
+        filter(Location == l & Nutrients == n)
+      
+      mean_nutrient_value <- mean(LocationNutrientFrame$`Nutrient Values`, na.rm = TRUE)
+      
+      sd_nutrient_value <- sd(LocationNutrientFrame$`Nutrient Values`, na.rm = TRUE)
+      
+      QCLocationNutrientFrame <- LocationNutrientFrame %>%
+        mutate(`Nutrient Values` = ifelse(`Nutrient Values` < mean_nutrient_value-n_sigmas*sd_nutrient_value | `Nutrient Values` > mean_nutrient_value+n_sigmas*sd_nutrient_value, NA, `Nutrient Values`))
+      
+      QCAllData <- rbind(QCLocationNutrientFrame, QCAllData)
+      }
+  }
+  return(QCAllData)
+  }
+
+# remove data outside 2-sigmas from mean based on location and nutrient categories
+QCAllData <- remove_n_sigmas(AllData, 2)
+```
+
+# Post-Quality Control Data Visualizations by Location
+```{r Post-QC Visualizations}
+# All Locations Plot
+PostQCAllLocationsPlot <- QCAllData %>%
+  filter(Nutrients != "ORP")%>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`, 
+             color = Location)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Nutrients for Ocean, Raceways, and Mangrove Mesocosms from 2018-Present",
+          subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+# Save Plot
+ggsave(filename = "AllLocationsPlot-PostQC.pdf", 
+       plot = PostQCAllLocationsPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures",
+       width = 10, height = 7)
+
+# Ocean Plot
+PostQCOceanPlot <- QCAllData %>%
+  filter(Location == "Ocean") %>%
+  filter(Nutrients != "ORP") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Ocean Nutrients from 2019-Present",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+# save plot
+ggsave(filename = "OceanPlot-PostQC.pdf", plot = PostQCOceanPlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+# Raceway 1 Plot
+PostQCRaceway1Plot <- QCAllData %>%
+  filter(Location == "Raceway 1") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Coral Raceway 1 Nutrients 2020-Present",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+# save plot 
+ggsave(filename = "Raceway1Plot-PostQC.pdf", 
+       plot = PostQCRaceway1Plot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+# Raceway 2 Plot
+PostQCRaceway2Plot <- QCAllData %>%
+  filter(Location == "Raceway 2") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "2 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Coral Raceway 2 Nutrients From 2021 to Present",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+# save plot 
+ggsave(filename = "Raceway2Plot-PostQC.pdf", 
+       plot = PostQCRaceway2Plot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+# Mangrove Plot
+PostQCMangrovePlot <- QCAllData %>%
+  filter(Location == "Mangroves") %>%
+  filter(Nutrients != "ORP")%>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Mangrove Nutrients from 2018-Present",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+# save plot
+ggsave(filename = "MangrovePlot-PostQC.pdf", 
+       plot = PostQCMangrovePlot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+# Raceways 1 and 2 Plot
+PostQCRaceway1Raceway2Plot <- QCAllData %>%
+  filter(Location == "Raceway 1" | Location == "Raceway 2")%>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`,
+             color = Location)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Raceways 1 and 2 Nutrients From 2020 to Present",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+# save plot 
+ggsave(filename = "Raceway1Raceway2Plot-PostQC.pdf", 
+       plot = PostQCRaceway1Raceway2Plot,
+       path = "/Users/grambihler/Documents/Data/GitHub/NutrientData/Figures", width = 10, height = 7)
+
+```
+

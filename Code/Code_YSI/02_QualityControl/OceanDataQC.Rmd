@@ -240,7 +240,7 @@ AllVariablePlotPostQCCutoff
 # Write Post-QC CSV
 ```{r Write Post-QC csv}
 write_csv(CutQCOceanWaterQualityFrame, 
-          file = "Data/CleanData/CleanData_YSI/02_QualityControl/QCOceanWaterQualityFrame-Cutoff.csv", 
+          file = "Data/CleanData/CleanData_YSI/02_QualityControl/QCOceanWaterQualityFrame.csv", 
           col_names = TRUE)  
 
 ```

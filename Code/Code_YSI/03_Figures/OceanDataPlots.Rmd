@@ -15,10 +15,12 @@ library(here)
 # Import Data
 ```{r import data}
 # Wrangled data before QC -- outliers still present
-df <- read_csv(here("Data/CleanData/CleanDataYSI/01_DataWrangling/OceanWaterQualityFrame.csv"))
+df <- read_csv("Data/CleanData/CleanData_YSI/01_DataWrangling/OceanWaterQualityFrame.csv")
 
 # Data after QC -- values outside of 2 sigma away from mean of every month for every variable were turned into NA values
-dfQC <- read_csv(here("Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv"))
+dfQC <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/QCOceanWaterQualityFrame.csv")
+
+dfQCCutoff <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/QCOceanWaterQualityFrame-Cutoff.csv")
 ```
 # Data Formatting
 ```{r Pre-plotting Formatting}
@@ -36,6 +38,11 @@ dfQCPivot <- dfQC %>%
                values_to = "variable_value")%>%
   mutate(date = as.Date(date, format = "%Y/%m/%d"))
 
+dfQCCutPivot <- dfQCCutoff %>%
+  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+               names_to = "variable",
+               values_to = "variable_value")%>%
+  mutate(date = as.Date(date, format = "%Y/%m/%d"))
 
 # df of mean value for each variable for each day
 # QCMeanDailyValueFrame <- QCOceanWaterQualityFrame %>%
@@ -482,7 +489,7 @@ AllVariablePlot_PostQC <- dfQCPivot %>%
   ylab("Nutrient Value")
 # Save plot
 ggsave(filename = "AllVariablePlot-PostQC.pdf", plot = AllVariablePlot_PostQC, 
-       path = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Figures/YSI-figures/PostQCPlots", height = 12, width = 10)
+       path = "Figures/Figures_YSI/02-PostQCPlots", height = 12, width = 10)
 
 # line graph of temperature in fahrenheit
 TempFPlot_PostQC <- dfQCPivot %>%

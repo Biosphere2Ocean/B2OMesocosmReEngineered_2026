@@ -21,8 +21,7 @@ options(scipen = 999)
 ## Import Raw Data
 ```{r Import Data}
 # uses csv file created in OceanDataWrangling.Rmd. do not need to re-run that file to use this csv
-path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/01_DataWrangling/"
-OceanWaterQualityFrame <- read_csv(here(path, "OceanWaterQualityFrame.csv"))
+OceanWaterQualityFrame <- read_csv("Data/CleanData/CleanData_YSI/01_DataWrangling/OceanWaterQualityFrame.csv")
 
 ```
 ## Plot Pre-QC Data
@@ -151,7 +150,7 @@ for (v in var_names) {
 ### Save QC Data
 ```{r Save QC Data}
 write_csv(dfQC, 
-          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv", 
+          file = "Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv", 
           col_names = TRUE)
 ```
 
@@ -189,37 +188,19 @@ AllVariablePlotPostQC
 ```
 
 
-### Implement Cutoffs -- might not be necessary -- check with diane
+### Implement Cutoffs
 ```{r Implement Cutoffs}
 # read in QCOceanWaterQualityFrame.csv that was created in a previous chunk
-path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/02_QualityControl/"
-QCOceanWaterQualityFrame <- read_csv(here(path, "QCOceanWaterQualityFrame.csv"))
+QCOceanWaterQualityFrame <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/QCOceanWaterQualityFrame.csv")
 
 # implement calibration cutoff values
 CutQCOceanWaterQualityFrame <- QCOceanWaterQualityFrame %>%
   mutate(date = as.Date(date, format = "%m/%d/%Y")) %>%
-  mutate(chlorophyll_ugL = ifelse(date > "2018/06/01" & chlorophyll_ugL < 500, 
-                                  NA, chlorophyll_ugL))%>%
-  #mutate(chlorophyll_ugL = ifelse(date < "2018/06/01" & chlorophyll_ugL > 200, 
-                                  #NA, chlorophyll_ugL))
-  mutate(conductivity_uScm = ifelse(conductivity_uScm < 32000 | conductivity_uScm > 75000, 
-                                    NA, conductivity_uScm)) %>%
-  mutate(do_saturated_percent = ifelse(do_saturated_percent < 85 | do_saturated_percent > 105, 
-                                       NA, do_saturated_percent)) %>%
-  mutate(orp_mV = ifelse(date > "2016/06/01" & date < "2020/06/01" & orp_mV < 650,
-                         NA, orp_mV))%>%
-  mutate(orp_mV = ifelse(orp_mV < 0, NA, orp_mV)) %>%
-  mutate(pH = ifelse(pH < 7.5 | pH > 9, NA, pH)) %>%
-  mutate(pH_mV = ifelse(pH_mV < -110 | pH_mV > -85, NA, pH_mV)) %>%
+  mutate(pH = ifelse(pH < 7.5, NA, pH)) %>%
   mutate(salinity_psu = ifelse(salinity_psu < 21, NA, salinity_psu)) %>%
   mutate(salinity_psu = ifelse(date > "2020/01/01" & salinity_psu < 31, NA, salinity_psu)) %>%
-  mutate(temp_c = ifelse(temp_c < 20 | temp_c > 28, NA, temp_c)) %>%
-  mutate(temp_f = ifelse(date > "2020/01/01" & temp_f < 75 | temp_f < 60, NA, temp_f)) %>%
-  mutate(total_algae_cellsL = ifelse(date < "2019/08/01" & total_algae_cellsL > 25000 | total_algae_cellsL < 0,
-                                     NA, total_algae_cellsL)) %>%
-  mutate(total_algae_rfu = ifelse(total_algae_rfu < 0 | total_algae_rfu > 25, NA, total_algae_rfu)) %>%
-  mutate(total_dissolved_solids_mgL = ifelse(total_dissolved_solids_mgL < 30000, 
-                                             NA, total_dissolved_solids_mgL))
+  mutate(salinity_psu = ifelse(date < "2013/01/01" & salinity_psu < 24, NA, salinity_psu)) %>%
+  mutate(temp_c = ifelse(temp_c < 20 | temp_c > 28, NA, temp_c))
 
 ```
 
@@ -259,7 +240,7 @@ AllVariablePlotPostQCCutoff
 # Write Post-QC CSV
 ```{r Write Post-QC csv}
 write_csv(CutQCOceanWaterQualityFrame, 
-          file = "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv", 
+          file = "Data/CleanData/CleanData_YSI/02_QualityControl/QCOceanWaterQualityFrame-Cutoff.csv", 
           col_names = TRUE)  
 
 ```

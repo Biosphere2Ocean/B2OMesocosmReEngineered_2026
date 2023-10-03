@@ -16,23 +16,21 @@ library(tidyverse)
 library(lubridate)
 library(here)
 # source("./QCFunction.R")
-
 # turns scientific notation off
 options(scipen = 999)
 ```
 
 ## Import Raw Data
+This uses csv file created in OceanDataWrangling.Rmd. You do not need to re-run that script to use this csv.
 ```{r Import Data}
-# uses csv file created in OceanDataWrangling.Rmd. do not need to re-run that file to use this csv
 # if you get an error when running line below, make sure to set R Markdown to run chunks in project directory: Tools > Global Options > R Markdown (in side panel) > "Evaluate chunks in directory:" drop down menu select Project
 
-df <- read_csv("Data/CleanData/CleanData_YSI/01_DataWrangling/OceanWaterQualityFrame.csv")
+df <- read_csv("Data/CleanData/CleanData_YSI/01_DataWrangling/01-OceanWaterQualityData.csv")
 
 ```
 ## Plot Pre-QC Data
+Make a quick plot of all variables using raw data (pre quality control) to see roughly what it looks like
 ```{r Visualize Data Before QC Performed}
-# make quick plot of all variables using raw data (pre quality control) to see roughly what it looks like
-
 # format data as long instead of wide so it is easier to facet in ggplot 
 dfPivot <- df %>%
   pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
@@ -40,7 +38,7 @@ dfPivot <- df %>%
                values_to = "variable_value")%>%
   mutate(date = as.Date(date, format = "%Y/%m/%d"))
 
-# this shows all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
+# this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
 AllVariablePlotPreQC <- dfPivot %>%
   #filter(variable == "pH") %>%
   ggplot(aes(x = date, 
@@ -69,34 +67,35 @@ AllVariablePlotPreQC
 
 ## Quality Control Data
 ### QC Function
+The following code defines a function to identify data points outside input standard deviations from the montlhy mean or median for each variable and replaces the identified outliers with NA values.
+At some point, this will be localized within a .R file called QCFunction.R, but for now, run the below chunk to quality control the data
 ```{r QC Function}
-# The following code defines a function to identify data points outside input standard deviations from the mean or median for each nutrient at each location and replaces the identified outliers with NA values
-# At some point, this will be localized within a .R file called QCFunction.R, but for now, run the below chunk to quality control the data
-
-# make empty dataframe to store QC'd data in 
-# with same column names and number of rows as df
+# make empty dataframe to store output from loop
+# creating with just 2 columns for now since "date" and "time" columns will not change
 dfQC <- data.frame(matrix(ncol = 2, nrow = nrow(df)))
 colnames(dfQC) <- c("date", "time")
 # filling in date and time columns with same values from df
 dfQC <- dfQC %>%
   mutate(date = df$date,
          time = df$time)
-# getting list of column names, excluding "date" and "time" 
+# getting list of column names from df, excluding "date" and "time" so we can use it to loop through
 var_names <- colnames(df)
 var_names <- var_names[! var_names %in% c("date", "time")]
 
 # loopin time
 for (v in var_names) {
-  # create frame with just date, time, and var columns
+  # select column from df to use in calculations (represented by v in the loop) and store as var
   var <- df[[v]]
-  
+  # frame with just date, time, and var columns - all from df
   dfVar <- df[, c("date", "time")]
   dfVar <- cbind(dfVar, var)
   
   dfVar <- dfVar %>%
-    mutate(date = format(as.Date(date), "%Y-%m"),#mutate date column so it's just year and month
+    # mutate date column so it's just year and month - this will allow us to do summary statistics by month
+    mutate(date = format(as.Date(date), "%Y-%m"),
            stat = NA) %>%
     group_by(date) %>%
+    # make columns for monthly standard deviation, mean, and median absolute deviation (mad) 
     mutate(sd_monthly = sd(as.numeric(var), na.rm = TRUE),
            mean_monthly = mean(as.numeric(var), na.rm = TRUE),
            mad_monthly = mad(as.numeric(var), na.rm = TRUE))
@@ -104,6 +103,9 @@ for (v in var_names) {
   # create vector of unique dates from dfVar. Will give just the unique year/month combos
   unique_dates <- unique(dfVar$date)
 
+  # test to see if the data for each month are normal
+  # if normal: use mean
+  # if not normal: use median
   for (d in unique_dates) {
     # filter dfVar by month and use only unique values
     dfVarNormal <- dfVar %>%
@@ -119,27 +121,37 @@ for (v in var_names) {
       shapiro_value <- shapiro.test(as.numeric(dfVarNormal$var))$p.value
     }
     
-    # if shapiro_value is not significant, then make stat values where date == d be equal to "mean", otherwise, set them equal to "median"
+    # if shapiro_value is not significant (data is normal), then make stat values where date == d be equal to "mean", otherwise, set them equal to "median"
     dfVar <- dfVar %>%
       mutate(stat = ifelse(date == d & shapiro_value >= 0.05,
                            "mean",
                            "median"))
   }
   
+  # calculate z-scores for each data point based on the monthly mean or median
+  # if the value of stat is "mean", then a normal z-score will be calculated using the mean
+  # if the value of stat is "median", then a modified z-score will be calculated using the median
+  # if the denominator in the suggested calculation is going to be 0 (sd_monthly for normal and mad_monthly for modified), then either the normal z-score will be calculated, or 0 will be put in for the zscore. Some reasoning is included below: 
   dfVar <- dfVar %>%
+    # create column called zscore and populate with NA values
     mutate(zscore = NA,
+           # if stat is median and mad_monthly is > 0, then calculate the modified z-score for zscore column, otherwise, keep original zscore value (NA in this case). This is to avoid dividing by 0
            zscore = ifelse(stat == "median" & mad_monthly > 0,
                            0.6745 * (var - mean_monthly) / mad_monthly,
                            zscore),
+           # if stat is mean and sd_monthly is > 0, then calculate normal z-score for zscore column, otherwise, keep original zscore value. This is to avoid dividing by 0.
            zscore = ifelse(stat == "mean" & sd_monthly > 0,
                            (var - mean_monthly)/sd_monthly,
                            zscore),
+           # if stat is mean and sd_monthly is < or = to 0, make zscore value 0, otherwise, keep original zscore value. If the data are normal, and the standard deviation is <=0, then the z-score should be 0 anyways. This is again to avoid dividing by 0.
            zscore = ifelse(stat == "mean" & sd_monthly <= 0,
                            0,
                            zscore), 
+           # if stat is median and mad_monthly is <= 0 and sd_monthly > 0, then calculate a normal z-score for zscore column, otherwise, keep original zscore value. This is to avoid dividing by 0: if median is suggested (non normal data) but the var value is not different from the median, this will give 0 as mad value (mad = constant * |var - median|; see ?mad for more details)
            zscore = ifelse(stat == "median" & mad_monthly <= 0 & sd_monthly > 0,
                            (var - mean_monthly)/sd_monthly,
                            zscore), 
+           # if stat is median and mad_monthly is <= 0 and sd_monthly <= 0, zscore is 0, otherwise, keep original zscore value
            zscore = ifelse(stat == "median" & mad_monthly <= 0 & sd_monthly <= 0, 
                            0,
                            zscore))
@@ -149,37 +161,47 @@ for (v in var_names) {
     mutate(var = ifelse(abs(zscore) > 2.00,
                         NA,
                         var))
-  
+  # replace var variable with new QC'd var column from dfVar
   var <- dfVar$var
   
+  # stick new QC'd var column into dfQC
   dfQC <- dfQC %>%
     cbind(var)
   
+  # set the column name of dfQC that is currently called "var" to be what v currently represents in the loop. Before this, the column names for dfQC are date, time, var. After this, the column names for dfQC are date, time, temp_f, temp_c, etc. Otherwise, you'd just keep replacing the data in var with new QC'd data but not saving it to a column with the name of the variable that data represents (like pH or temp_f).
   colnames(dfQC)[colnames(dfQC) == "var"] = v
   }
 
 ```
 
 ### Save QC Data
+Save QC'd data from above chunk to csv called 02-OceanWaterQualityData-QC. The next steps take the QC process further by implementing cutoff values. 
 ```{r Save QC Data}
 write_csv(dfQC, 
-          file = "Data/CleanData/CleanDataYSI/02_QualityControl/QCOceanWaterQualityFrame.csv", 
+          file = "Data/CleanData/CleanData_YSI/02_QualityControl/02-OceanWaterQualityData-QC.csv", 
           col_names = TRUE)
 ```
 
 
 ### Visualize QC Data Before Cutoffs Implemented
 ```{r Post-QC, Pre-Cutoffs Visualization}
-OceanWaterQualityFramePivot <- dfQC %>%
+# dfQC should still be in your environment if you did all of the above chunks already. If you are starting from this step, uncomment the below line: 
+# dfQC <- read_csv("Data/CleanData/CleanDataYSI/02_QualityControl/02-OceanWaterQualityData-QC.csv")
+
+# pivot dfQC to long format from wide so that facet wrapping is easier
+dfQCPivot <- dfQC %>%
   pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(date = as.Date(date, format = "%Y/%m/%d"))
 
-AllVariablePlotPostQC <- OceanWaterQualityFramePivot %>%
+# again, this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
+AllVariablePlotPostQC <- dfQCPivot %>%
+  ##filter(variable == "pH") %>%
   ggplot(aes(x = date, 
              y = variable_value)) +
   geom_line() +
+  # comment the below line if using the filter line
   facet_wrap(~variable, ncol = 3, scales = "free")+
   scale_x_date(breaks = waiver(), date_breaks = "1 year",
                date_labels = "%b %Y") +
@@ -202,12 +224,18 @@ AllVariablePlotPostQC
 
 
 ### Implement Cutoffs
+Based on the above plot, the variables pH, salinity_psu, and temp_c still have some remaining outliers. The below chunk will implement cutoffs to replace those outliers with NAs. The rules being used for cutoffs are:
+- pH < 7.5
+- salinity_psu < 21
+- salinity_psu < 31 & date > "2020/01/01"
+- salinity_psu < 24 & date < "2013/01/01"
+- temp_c < 20 or > 28
 ```{r Implement Cutoffs}
-# read in QCOceanWaterQualityFrame.csv that was created in a previous chunk
-QCOceanWaterQualityFrame <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/QCOceanWaterQualityFrame.csv")
+# read in QCOceanWaterQualityData.csv that was created in a previous chunk if it is not already in your environment
+# dfQC <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/02-OceanWaterQualityData-QC.csv")
 
 # implement calibration cutoff values
-CutQCOceanWaterQualityFrame <- QCOceanWaterQualityFrame %>%
+dfQCCutoff <- dfQC %>%
   mutate(date = as.Date(date, format = "%m/%d/%Y")) %>%
   mutate(pH = ifelse(pH < 7.5, NA, pH)) %>%
   mutate(salinity_psu = ifelse(salinity_psu < 21, NA, salinity_psu)) %>%
@@ -219,17 +247,22 @@ CutQCOceanWaterQualityFrame <- QCOceanWaterQualityFrame %>%
 
 
 ## Visualize Post-QC Data
+Visualize final QC'd data to see if there are anymore changes to make.
 ```{r Visualize Post-QC, Post-Cutoff Data}
-CutQCOceanWaterQualityFramePivot <- CutQCOceanWaterQualityFrame %>%
+# pivot dfQCCutoff to long format from wide so that facet wrapping is easier
+dfQCCutoffPivot <- dfQCCutoff %>%
   pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(date = as.Date(date, format = "%Y/%m/%d"))
 
-AllVariablePlotPostQCCutoff <- CutQCOceanWaterQualityFramePivot %>%
+# again, this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
+AllVariablePlotPostQCCutoff <- dfQCCutoffPivot %>%
+  #filter(variable == "pH") %>%
   ggplot(aes(x = date, 
              y = variable_value)) +
   geom_line() +
+  # comment below line if using filter line
   facet_wrap(~variable, ncol = 3, scales = "free")+
   scale_x_date(breaks = waiver(), date_breaks = "1 year",
                date_labels = "%b %Y") +
@@ -251,9 +284,10 @@ AllVariablePlotPostQCCutoff
 ```
 
 # Write Post-QC CSV
+Everything looks good, so we can write the final QC'd data to a csv file.
 ```{r Write Post-QC csv}
-write_csv(CutQCOceanWaterQualityFrame, 
-          file = "Data/CleanData/CleanData_YSI/02_QualityControl/QCOceanWaterQualityFrame.csv", 
+write_csv(dfQCCutoff, 
+          file = "Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv", 
           col_names = TRUE)  
 
 ```

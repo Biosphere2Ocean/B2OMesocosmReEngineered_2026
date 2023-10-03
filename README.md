@@ -6,53 +6,20 @@ Responsible member(s): Renee Grambihler, grambihler@arizona.edu
 Project Status: In Progress
 
 ## Repository Organization
-README.md: readme file
-
-`/Code`: contains all R scripts for wrangling, quality control, and data analyses  
-`/Data`: contains all data files used in R scripts  
-`/Metadata`: contains all metadata files for code scripts and data  
-
-Still editing:  
-exos.R: R file
-- initial YSI exo sonde QC and analysis file
-- Author/source: Dan Killam
-
-hoboph.R: R file
-- initial HOBO pH QC and analysis file
-- Author/source: Dan Killam
-
-YSI Data: folder
-- YSI exo sonde data files, csv
-    - StartDate_EndDate_YSI.csv
-    - raw csv files downloaded off of YSI exo sonde in B2 Ocean
-    - File Naming Format: YYMMDD_YYMMDD.csv
-    - Variable Names: 
-        - Date (MM/DD/YYYY)
-        - Time (HH:mm:ss)
-        - Time (Fract. Sec)
-        - Site Name
-        - Chlorophyll RFU
-        - Cond µS/cm
-        - nLF Cond µS/cm
-        - ODO % sat
-        - ODO % local
-        - ODO mg/L
-        - ORP mV
-        - Sal psu
-        - SpCond µS/cm
-        - TAL PE RFU
-        - TDS mg/L
-        - Wiper Position volt
-        - pH
-        - pH mV
-        - Temp °C
-        - Battery V
-        - Cable Pwr V
-- YSI_Calibration_Times.csv
-    - datetimes of calibrations for YSI exo sonde
-    - Variable Names: 
-        - Date (MM/DD/YYYY)
-        - Time Start (HH:mm:ss)
-        - Time End (HH:mm:ss)
-- Subfolder(s): 
-  - UTF-8 versions: UTF-8 csv versions of some YSI data files
+- README.md: readme file
+- `/Code`: contains all R scripts for wrangling, quality control, and data analyses
+  - `/Code_HOBO`: scripts pertaining HOBO probe data
+    - `/hoboph.R`: TBD
+  - `/Code_NutrientData`: scripts pertaining to Colorimetry data from B2 Ocean, Coral Raceways, and Mangroves
+  - `Code_RShiny`: scripts for RShiny data visualizations
+  - `Code_YSI`: scripts pertaining to YSI and historical B2 Ocean data
+- `/Data`: contains all data files used in R scripts
+  - `/CleanData`: data files that have been cleaned/processed and are ready for analyses
+    - `/CleanData_YSI`: clean Exo YSI Sonde data
+      - `/01_DataWrangling`: compiling and wrangling data
+      - `/02_QualityControl`: quality control pipeline
+  - `/RawData`: raw data files
+    - `/RawData_HOBO`: from HOBO sondes
+    - `/RawData_NutrientData`: from Colorimetry 
+    - `RawData_YSI`: from historical and YSI Exo Sonde
+- `/Metadata`: contains all metadata files for code scripts and data

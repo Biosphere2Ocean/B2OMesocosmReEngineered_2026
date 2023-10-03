@@ -1,6 +1,6 @@
 # OceanWaterQuality
 ## Repository Description
-Biosphere 2 Ocean Water Quality Data Pipeline compiled from historical data, YSI Exo Sonde data, HOBO probe data, and Colorimetry analyses.
+Biosphere 2 Ocean Water Quality Data Pipeline compiled from historical, YSI Exo Sonde, HOBO probe, and Colorimetry data. Includes data files, quality control, data analyses, and figure-making code (figures themselves are only included when they are finished products - contact member responsible for repository (see below) to gain access to in progress figures). 
 
 Responsible member(s): Renee Grambihler, grambihler@arizona.edu  
 Project Status: In Progress

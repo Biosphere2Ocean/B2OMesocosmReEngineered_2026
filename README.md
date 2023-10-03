@@ -8,9 +8,9 @@ Project Status: In Progress
 ## Repository Organization
 README.md: readme file
 
-`/Code`: contains all R scripts for wrangling, quality control, and data analyses /n
-`/Data`: contains all data files used in R scripts \n
-`/Metadata`: contains all metadata files for code scripts and data \n
+`/Code`: contains all R scripts for wrangling, quality control, and data analyses  
+`/Data`: contains all data files used in R scripts  
+`/Metadata`: contains all metadata files for code scripts and data  
 
 Still editing:
 exos.R: R file

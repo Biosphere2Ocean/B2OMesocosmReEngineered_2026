@@ -9,7 +9,9 @@ Project Status: In Progress
 README.md: readme file
 
 `/Code`: contains all R scripts for wrangling, quality control, and data analyses
+
 `/Data`: contains all data files used in R scripts
+
 `/Metadata`: contains all metadata files for code scripts and data
 
 Still editing:

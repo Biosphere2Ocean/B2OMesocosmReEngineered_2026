@@ -1,12 +1,18 @@
 # OceanWaterQuality
 ## Repository Description
-YSI Exo Sonde and HOBO data files and analysis pipeline
+Biosphere 2 Ocean Water Quality Data Pipeline compiled from historical data, YSI Exo Sonde data, HOBO probe data, and Colorimetry analyses.
 
 Responsible member(s): Renee Grambihler, grambihler@arizona.edu
+Project Status: In Progress
 
 ## Repository Organization
 README.md: readme file
 
+`/Code`: contains all R scripts for wrangling, quality control, and data analyses
+`/Data`: contains all data files used in R scripts
+`/Metadata`: contains all metadata files for code scripts and data
+
+Still editing:
 exos.R: R file
 - initial YSI exo sonde QC and analysis file
 - Author/source: Dan Killam
@@ -50,6 +56,3 @@ YSI Data: folder
         - Time End (HH:mm:ss)
 - Subfolder(s): 
   - UTF-8 versions: UTF-8 csv versions of some YSI data files
-
-## Change Log
-09/06/22: Renee created and populated repository and filled out readme

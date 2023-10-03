@@ -5,7 +5,12 @@ project: OceanWaterQuality
 institution: Biosphere 2 Ocean
 output: html_notebook
 ---
-# Import Libraries
+# Data Quality Control
+
+> Please Note:  If you have access to the file QCOceanWaterQualityFrame.csv, then you do not need to run this notebook in order to proceed with downstream data analyses. If you would like to see how the data was quality controlled, then continue.
+
+
+## Import Libraries
 ```{r Import Libraries}
 library(tidyverse)
 library(lubridate)
@@ -16,26 +21,32 @@ library(here)
 options(scipen = 999)
 ```
 
-
-# Data Quality Control
 ## Import Raw Data
 ```{r Import Data}
 # uses csv file created in OceanDataWrangling.Rmd. do not need to re-run that file to use this csv
-OceanWaterQualityFrame <- read_csv("Data/CleanData/CleanData_YSI/01_DataWrangling/OceanWaterQualityFrame.csv")
+# if you get an error when running line below, make sure to set R Markdown to run chunks in project directory: Tools > Global Options > R Markdown (in side panel) > "Evaluate chunks in directory:" drop down menu select Project
+
+df <- read_csv("Data/CleanData/CleanData_YSI/01_DataWrangling/OceanWaterQualityFrame.csv")
 
 ```
 ## Plot Pre-QC Data
 ```{r Visualize Data Before QC Performed}
-OceanWaterQualityFramePivot <- OceanWaterQualityFrame %>%
+# make quick plot of all variables using raw data (pre quality control) to see roughly what it looks like
+
+# format data as long instead of wide so it is easier to facet in ggplot 
+dfPivot <- df %>%
   pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(date = as.Date(date, format = "%Y/%m/%d"))
 
-AllVariablePlotPreQC <- OceanWaterQualityFramePivot %>%
+# this shows all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
+AllVariablePlotPreQC <- dfPivot %>%
+  #filter(variable == "pH") %>%
   ggplot(aes(x = date, 
              y = variable_value)) +
   geom_line() +
+  # can comment out below line if filtering by one variable
   facet_wrap(~variable, ncol = 3, scales = "free")+
   scale_x_date(breaks = waiver(), date_breaks = "1 year",
                date_labels = "%b %Y") +
@@ -60,24 +71,26 @@ AllVariablePlotPreQC
 ### QC Function
 ```{r QC Function}
 # The following code defines a function to identify data points outside input standard deviations from the mean or median for each nutrient at each location and replaces the identified outliers with NA values
+# At some point, this will be localized within a .R file called QCFunction.R, but for now, run the below chunk to quality control the data
 
-# empty dataframe with same column names and number of rows as OceanWaterQualityFrame
-dfQC <- data.frame(matrix(ncol = 2, nrow = nrow(OceanWaterQualityFrame)))
+# make empty dataframe to store QC'd data in 
+# with same column names and number of rows as df
+dfQC <- data.frame(matrix(ncol = 2, nrow = nrow(df)))
 colnames(dfQC) <- c("date", "time")
-# filling in date and time columns with same values from OceanWaterQualityFrame
+# filling in date and time columns with same values from df
 dfQC <- dfQC %>%
-  mutate(date = OceanWaterQualityFrame$date,
-         time = OceanWaterQualityFrame$time)
+  mutate(date = df$date,
+         time = df$time)
 # getting list of column names, excluding "date" and "time" 
-var_names <- colnames(OceanWaterQualityFrame)
+var_names <- colnames(df)
 var_names <- var_names[! var_names %in% c("date", "time")]
 
 # loopin time
 for (v in var_names) {
   # create frame with just date, time, and var columns
-  var <- OceanWaterQualityFrame[[v]]
+  var <- df[[v]]
   
-  dfVar <- OceanWaterQualityFrame[, c("date", "time")]
+  dfVar <- df[, c("date", "time")]
   dfVar <- cbind(dfVar, var)
   
   dfVar <- dfVar %>%

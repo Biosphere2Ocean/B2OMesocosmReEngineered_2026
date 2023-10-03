@@ -6,7 +6,7 @@ Responsible member(s): Renee Grambihler, grambihler@arizona.edu
 Project Status: In Progress
 
 ## Repository Organization
-- README.md: readme file
+- `README.md`: readme file
 - `/Code`: contains all R scripts for wrangling, quality control, and data analyses
   - `/Code_HOBO`: scripts pertaining HOBO probe data
     - `/hoboph.R`: TBD

@@ -1758,20 +1758,11 @@ display: none;
 <h2>Import Libraries</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHRpYmJsZXRpbWUpIFxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHRpYmJsZXRpbWUpIFxubGlicmFyeShsdWJyaWRhdGUpXG5vcHRpb25zKHNjaXBlbiA9IDkpXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)
-library(tibbletime) </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYdGliYmxldGltZeKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnN0YXRz4oCZOlxuXG4gICAgZmlsdGVyXG4ifQ== -->
-<pre><code>
-Attaching package: ‘tibbletime’
-
-The following object is masked from ‘package:stats’:
-
-    filter</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxub3B0aW9ucyhzY2lwZW4gPSA5OTkpXG5gYGAifQ== -->
-<pre class="r"><code>options(scipen = 999)</code></pre>
+library(tibbletime) 
+library(lubridate)
+options(scipen = 9)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1781,14 +1772,13 @@ The following object is masked from ‘package:stats’:
 <p>Read in fully QC’d data</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5kZiA8LSByZWFkX2NzdihcIkRhdGEvQ2xlYW5EYXRhL0NsZWFuRGF0YV9ZU0kvMDJfUXVhbGl0eUNvbnRyb2wvMDMtT2NlYW5XYXRlclF1YWxpdHlEYXRhLVFDQ3V0b2ZmLmNzdlwiKVxuYGBgIn0= -->
-<pre class="r"><code>
-df &lt;- read_csv(&quot;Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGYgPC0gcmVhZF9jc3YoXCJEYXRhL0NsZWFuRGF0YS9DbGVhbkRhdGFfWVNJLzAyX1F1YWxpdHlDb250cm9sLzAzLU9jZWFuV2F0ZXJRdWFsaXR5RGF0YS1RQ0N1dG9mZi5jc3ZcIilcbmBgYCJ9 -->
+<pre class="r"><code>df &lt;- read_csv(&quot;Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDYxNzgyIENvbHVtbnM6IDE54pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuZGJsICAoMTcpOiB0ZW1wX2YsIHRlbXBfYywgcEgsIHBIX21WLCBzYWxpbml0eV9wc3UsIGNvbmR1Y3Rpdml0eV91U2NtLCBubGZfY29uZHVjdGl2aXR5X3VTY20sLi4uXG5kYXRlICAoMSk6IGRhdGVcbnRpbWUgICgxKTogdGltZVxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
-<pre><code>Rows: 461782 Columns: 19── Column specification ─────────────────────────────────────────────────────────────────────────
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDYxNzgyIENvbHVtbnM6IDE54pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuZGJsICAoMTcpOiB0ZW1wX2YsIHRlbXBfYywgcEgsIHBIX21WLCBzYWxpbml0eV9wc3UsIGNvbmR1Y3Rpdml0eV91U2NtLCBubGZfY29uZHVjdGl2aXR5X3VTY20sIHNwX2NvbmR1Y3QuLi5cbmRhdGUgICgxKTogZGF0ZVxudGltZSAgKDEpOiB0aW1lXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
+<pre><code>Rows: 461782 Columns: 19── Column specification ────────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
-dbl  (17): temp_f, temp_c, pH, pH_mV, salinity_psu, conductivity_uScm, nlf_conductivity_uScm,...
+dbl  (17): temp_f, temp_c, pH, pH_mV, salinity_psu, conductivity_uScm, nlf_conductivity_uScm, sp_conduct...
 date  (1): date
 time  (1): time
 ℹ Use `spec()` to retrieve the full column specification for this data.
@@ -1802,7 +1792,7 @@ time  (1): time
 <p>Add datetime column and create timetibble ordered by day</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjb21iaW5lIGRhdGUgYW5kIHRpbWUgaW50byBkYXRldGltZSBjb2x1bW4gXG5kZkVkaXQgPC0gZGYgJT4lXG4gIG11dGF0ZShkYXRldGltZSA9IHBhc3RlKGRhdGUsIHRpbWUpLCAuYmVmb3JlID0gZGF0ZSxcbiAgICAgICAgIGRhdGV0aW1lID0gYXMuUE9TSVhjdChkYXRldGltZSkpICU+JSAjbWFrZSBzdXJlIGRhdGV0aW1lIGlzIFBPU0lYY3QgY2xhc3NcbiAgZGlzdGluY3QoKSAlPiUgI3JlbW92ZSBkdXBsaWNhdGUgcm93cyBmcm9tIGRmXG4gIHN1YnNldChpcy5uYShkYXRldGltZSk9PUZBTFNFKSAjcmVtb3ZlIE5BcyBmcm9tIGRhdGV0aW1lXG4gXG4jIGluc3BlY3QgZGYgdG8gc2VlIHdoYXQgdGhlIGNsYXNzZXMgb2YgZWFjaCBjb2x1bW4gYXJlXG4jIHN0cihkZkVkaXQpXG5cbiMgY3JlYXRlIGEgdGltZSB0aWJibGUgYW5kIG9yZGVyIGJ5IGRheSBmb3IgbmV4dCBzdGVwc1xudGJsIDwtIGFzX3RibF90aW1lKGRmRWRpdCwgaW5kZXggPSBkYXRldGltZSkgJT4lXG4gIGFycmFuZ2UoeW1kX2htcyhkYXRldGltZSkpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjb21iaW5lIGRhdGUgYW5kIHRpbWUgaW50byBkYXRldGltZSBjb2x1bW4gXG5kZkVkaXQgPC0gZGYgJT4lXG4gIG11dGF0ZShkYXRldGltZSA9IHBhc3RlKGRhdGUsIHRpbWUpLCAuYmVmb3JlID0gZGF0ZSxcbiAgICAgICAgIGRhdGV0aW1lID0gYXMuUE9TSVhjdChkYXRldGltZSkpICU+JSAjbWFrZSBzdXJlIGRhdGV0aW1lIGlzIFBPU0lYY3QgY2xhc3NcbiAgZGlzdGluY3QoKSAlPiUgI3JlbW92ZSBkdXBsaWNhdGUgcm93cyBmcm9tIGRmXG4gIHN1YnNldChpcy5uYShkYXRldGltZSk9PUZBTFNFKSAjcmVtb3ZlIE5BcyBmcm9tIGRhdGV0aW1lXG4gXG5kZkVkaXRQaXZvdCA8LSBkZkVkaXQgJT4lXG4gIHBpdm90X2xvbmdlcihjb2xzID0gdGVtcF9mOnRvdGFsX2Rpc3NvbHZlZF9zb2xpZHNfbWdMLFxuICAgICAgICAgICAgICAgbmFtZXNfdG8gPSBcInZhcmlhYmxlXCIsXG4gICAgICAgICAgICAgICB2YWx1ZXNfdG8gPSBcInZhcmlhYmxlX3ZhbHVlXCIpXG5cbiMgaW5zcGVjdCBkZiB0byBzZWUgd2hhdCB0aGUgY2xhc3NlcyBvZiBlYWNoIGNvbHVtbiBhcmVcbnN0cihkZkVkaXRQaXZvdClcbmBgYCJ9 -->
 <pre class="r"><code># combine date and time into datetime column 
 dfEdit &lt;- df %&gt;%
   mutate(datetime = paste(date, time), .before = date,
@@ -1810,44 +1800,136 @@ dfEdit &lt;- df %&gt;%
   distinct() %&gt;% #remove duplicate rows from df
   subset(is.na(datetime)==FALSE) #remove NAs from datetime
  
-# inspect df to see what the classes of each column are
-# str(dfEdit)
+dfEditPivot &lt;- dfEdit %&gt;%
+  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+               names_to = &quot;variable&quot;,
+               values_to = &quot;variable_value&quot;)
 
-# create a time tibble and order by day for next steps
-tbl &lt;- as_tbl_time(dfEdit, index = datetime) %&gt;%
-  arrange(ymd_hms(datetime))</code></pre>
+# inspect df to see what the classes of each column are
+str(dfEditPivot)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogVGhlcmUgd2FzIDEgd2FybmluZyBpbiBgcmVjb25zdHJ1Y3QoKWAuXG7ihLkgSW4gYXJndW1lbnQ6IGAuLjEgPSB5bWRfaG1zKGRhdGV0aW1lKWAuXG5DYXVzZWQgYnkgd2FybmluZzpcbiEgIDQyNzkgZmFpbGVkIHRvIHBhcnNlLlxuIn0= -->
-<pre><code>Warning: There was 1 warning in `reconstruct()`.
-ℹ In argument: `..1 = ymd_hms(datetime)`.
-Caused by warning:
-!  4279 failed to parse.</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoidGliYmxlIFs3LDg1MCwxNDEgw5cgNV0gKFMzOiB0YmxfZGYvdGJsL2RhdGEuZnJhbWUpXG4gJCBkYXRldGltZSAgICAgIDogUE9TSVhjdFsxOjc4NTAxNDFdLCBmb3JtYXQ6IFwiMjAxMS0wNy0yMiAxNDo0NTowMFwiIFwiMjAxMS0wNy0yMiAxNDo0NTowMFwiIFwiMjAxMS0wNy0yMiAxNDo0NTowMFwiIC4uLlxuICQgZGF0ZSAgICAgICAgICA6IERhdGVbMTo3ODUwMTQxXSwgZm9ybWF0OiBcIjIwMTEtMDctMjJcIiBcIjIwMTEtMDctMjJcIiBcIjIwMTEtMDctMjJcIiAuLi5cbiAkIHRpbWUgICAgICAgICAgOiAnaG1zJyBudW0gWzE6Nzg1MDE0MV0gMTQ6NDU6MDAgMTQ6NDU6MDAgMTQ6NDU6MDAgMTQ6NDU6MDAgLi4uXG4gIC4uLSBhdHRyKCosIFwidW5pdHNcIik9IGNociBcInNlY3NcIlxuICQgdmFyaWFibGUgICAgICA6IGNociBbMTo3ODUwMTQxXSBcInRlbXBfZlwiIFwidGVtcF9jXCIgXCJwSFwiIFwicEhfbVZcIiAuLi5cbiAkIHZhcmlhYmxlX3ZhbHVlOiBudW0gWzE6Nzg1MDE0MV0gNzYuMiAyNC41IDguNSBOQSAyOS43IC4uLlxuIn0= -->
+<pre><code>tibble [7,850,141 × 5] (S3: tbl_df/tbl/data.frame)
+ $ datetime      : POSIXct[1:7850141], format: &quot;2011-07-22 14:45:00&quot; &quot;2011-07-22 14:45:00&quot; &quot;2011-07-22 14:45:00&quot; ...
+ $ date          : Date[1:7850141], format: &quot;2011-07-22&quot; &quot;2011-07-22&quot; &quot;2011-07-22&quot; ...
+ $ time          : &#39;hms&#39; num [1:7850141] 14:45:00 14:45:00 14:45:00 14:45:00 ...
+  ..- attr(*, &quot;units&quot;)= chr &quot;secs&quot;
+ $ variable      : chr [1:7850141] &quot;temp_f&quot; &quot;temp_c&quot; &quot;pH&quot; &quot;pH_mV&quot; ...
+ $ variable_value: num [1:7850141] 76.2 24.5 8.5 NA 29.7 ...</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
 <div id="whole-time-series-statistics" class="section level2">
 <h2>Whole Time Series Statistics</h2>
+<p>Summary statistics over entire time period of data</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZXaG9sZSA8LSBkZkVkaXQgJT4lXG4gIHN1bW1hcmlzZShhY3Jvc3Mod2hlcmUoaXMubnVtZXJpYyksIFxuICAgICAgICAgICAgICAgICAgIH4gbWVhbigueCwgbmEucm0gPSBUUlVFKSxcbiAgICAgICAgICAgICAgICAgICB+IG1pbigueCwgbmEucm0gPSBUUlVFKSkpXG5cbmBgYCJ9 -->
-<pre class="r"><code>dfWhole &lt;- dfEdit %&gt;%
-  summarise(across(where(is.numeric), 
-                   ~ mean(.x, na.rm = TRUE),
-                   ~ min(.x, na.rm = TRUE)))
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZXaG9sZSA8LSBkZkVkaXRQaXZvdCAlPiVcbiAgcmVmcmFtZShtZWFuID0gbWVhbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSwgXG4gICAgICAgICAgbWVkaWFuID0gbWVkaWFuKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLFxuICAgICAgICAgIHN0ZCA9IHNkKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLFxuICAgICAgICAgIElRUiA9IElRUih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSxcbiAgICAgICAgICBtaW4gPSBtaW4odmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksXG4gICAgICAgICAgbWF4ID0gbWF4KHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLFxuICAgICAgICAgIC5ieSA9IHZhcmlhYmxlKSU+JVxuICAgbXV0YXRlKGFjcm9zcyh3aGVyZShpcy5udW1lcmljKSwgcm91bmQsIDIpKVxuXG5gYGAifQ== -->
+<pre class="r"><code>dfWhole &lt;- dfEditPivot %&gt;%
+  reframe(mean = mean(variable_value, na.rm = TRUE), 
+          median = median(variable_value, na.rm = TRUE),
+          std = sd(variable_value, na.rm = TRUE),
+          IQR = IQR(variable_value, na.rm = TRUE),
+          min = min(variable_value, na.rm = TRUE),
+          max = max(variable_value, na.rm = TRUE),
+          .by = variable)%&gt;%
+   mutate(across(where(is.numeric), round, 2))
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYHN1bW1hcmlzZSgpYDpcbuKEuSBJbiBhcmd1bWVudDogYGFjcm9zcyh3aGVyZShpcy5udW1lcmljKSwgfm1lYW4oLngsIG5hLnJtID0gVFJVRSksIH5taW4oLngsIG5hLnJtID0gVFJVRSkpYC5cbkNhdXNlZCBieSBlcnJvciBpbiBgYWNyb3NzKClgOlxuISBDYW4ndCBjb21wdXRlIGNvbHVtbiBgdGVtcF9mYC5cbkNhdXNlZCBieSBlcnJvciBpbiBgZm4oKWA6XG4hIHVudXNlZCBhcmd1bWVudCAofm1pbigueCwgbmEucm0gPSBUUlVFKSlcbkJhY2t0cmFjZTpcbiAgMS4gZGZFZGl0ICU+JSAuLi5cbiAxMS4gZHBseXI6OmFjcm9zcyh3aGVyZShpcy5udW1lcmljKSwgfm1lYW4oLngsIG5hLnJtID0gVFJVRSksIH5taW4oLngsIG5hLnJtID0gVFJVRSkpXG4gMTIuIGJhc2U6OndpdGhDYWxsaW5nSGFuZGxlcnMoLi4uKVxuIn0= -->
-<pre><code>Error in `summarise()`:
-ℹ In argument: `across(where(is.numeric), ~mean(.x, na.rm = TRUE), ~min(.x, na.rm = TRUE))`.
-Caused by error in `across()`:
-! Can&#39;t compute column `temp_f`.
-Caused by error in `fn()`:
-! unused argument (~min(.x, na.rm = TRUE))
-Backtrace:
-  1. dfEdit %&gt;% ...
- 11. dplyr::across(where(is.numeric), ~mean(.x, na.rm = TRUE), ~min(.x, na.rm = TRUE))
- 12. base::withCallingHandlers(...)</code></pre>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="yearly-statistics" class="section level2">
+<h2>Yearly Statistics</h2>
+<p>Summary statistics by year</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZZZWFyIDwtIGRmRWRpdFBpdm90ICU+JVxuICBtdXRhdGUoeWVhciA9IHllYXIoZGF0ZXRpbWUpKSU+JVxuICBncm91cF9ieSh5ZWFyLCB2YXJpYWJsZSkgJT4lXG4gIHJlZnJhbWUobWVhbiA9IG1lYW4odmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksIFxuICAgICAgICAgIG1lZGlhbiA9IG1lZGlhbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSxcbiAgICAgICAgICBzdGQgPSBzZCh2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSxcbiAgICAgICAgICBJUVIgPSBJUVIodmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksXG4gICAgICAgICAgbWluID0gbWluKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLFxuICAgICAgICAgIG1heCA9IG1heCh2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSklPiVcbiAgbmEub21pdCgpICU+JVxuICBtdXRhdGUoYWNyb3NzKHdoZXJlKGlzLm51bWVyaWMpLCByb3VuZCwgMikpXG5gYGAifQ== -->
+<pre class="r"><code>dfYear &lt;- dfEditPivot %&gt;%
+  mutate(year = year(datetime))%&gt;%
+  group_by(year, variable) %&gt;%
+  reframe(mean = mean(variable_value, na.rm = TRUE), 
+          median = median(variable_value, na.rm = TRUE),
+          std = sd(variable_value, na.rm = TRUE),
+          IQR = IQR(variable_value, na.rm = TRUE),
+          min = min(variable_value, na.rm = TRUE),
+          max = max(variable_value, na.rm = TRUE))%&gt;%
+  na.omit() %&gt;%
+  mutate(across(where(is.numeric), round, 2))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogVGhlcmUgd2VyZSAyMDYgd2FybmluZ3MgaW4gYHJlZnJhbWUoKWAuXG5UaGUgZmlyc3Qgd2FybmluZyB3YXM6XG7ihLkgSW4gYXJndW1lbnQ6IGBtaW4gPSBtaW4odmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSlgLlxu4oS5IEluIGdyb3VwIDE6IGB5ZWFyID0gMjAxMWAsIGB2YXJpYWJsZSA9IFwiY2hsb3JvcGh5bGxfcmZ1XCJgLlxuQ2F1c2VkIGJ5IHdhcm5pbmcgaW4gYG1pbigpYDpcbiEgbm8gbm9uLW1pc3NpbmcgYXJndW1lbnRzIHRvIG1pbjsgcmV0dXJuaW5nIEluZlxu4oS5IFJ1biBcdTAwMWJdODs7aWRlOnJ1bjpkcGx5cjo6bGFzdF9kcGx5cl93YXJuaW5ncygpXHUwMDA3ZHBseXI6Omxhc3RfZHBseXJfd2FybmluZ3MoKVx1MDAxYl04OztcdTAwMDcgdG8gc2VlIHRoZSAyMDUgcmVtYWluaW5nIHdhcm5pbmdzLlxuIn0= -->
+<pre><code>Warning: There were 206 warnings in `reframe()`.
+The first warning was:
+ℹ In argument: `min = min(variable_value, na.rm = TRUE)`.
+ℹ In group 1: `year = 2011`, `variable = &quot;chlorophyll_rfu&quot;`.
+Caused by warning in `min()`:
+! no non-missing arguments to min; returning Inf
+ℹ Run ]8;;ide:run:dplyr::last_dplyr_warnings()dplyr::last_dplyr_warnings()]8;; to see the 205 remaining warnings.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="monthly-statistics" class="section level2">
+<h2>Monthly Statistics</h2>
+<p>Summary statistics by month</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZNb250aCA8LSBkZkVkaXRQaXZvdCAlPiVcbiAgbXV0YXRlKHllYXIgPSB5ZWFyKGRhdGV0aW1lKSkgJT4lXG4gIG11dGF0ZShtb250aCA9IG1vbnRoKGRhdGV0aW1lLCBsYWJlbCA9IFRSVUUsIGFiYnIgPSBGQUxTRSkpICU+JVxuICBncm91cF9ieSh5ZWFyLCBtb250aCwgdmFyaWFibGUpICU+JVxuICByZWZyYW1lKG1lYW4gPSBtZWFuKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLCBcbiAgICAgICAgICBtZWRpYW4gPSBtZWRpYW4odmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksXG4gICAgICAgICAgc3RkID0gc2QodmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksXG4gICAgICAgICAgSVFSID0gSVFSKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLFxuICAgICAgICAgIG1pbiA9IG1pbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSxcbiAgICAgICAgICBtYXggPSBtYXgodmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSkpJT4lXG4gIG5hLm9taXQoKSAlPiVcbiAgbXV0YXRlKGFjcm9zcyh3aGVyZShpcy5udW1lcmljKSwgcm91bmQsIDIpKVxuXG5gYGAifQ== -->
+<pre class="r"><code>dfMonth &lt;- dfEditPivot %&gt;%
+  mutate(year = year(datetime)) %&gt;%
+  mutate(month = month(datetime, label = TRUE, abbr = FALSE)) %&gt;%
+  group_by(year, month, variable) %&gt;%
+  reframe(mean = mean(variable_value, na.rm = TRUE), 
+          median = median(variable_value, na.rm = TRUE),
+          std = sd(variable_value, na.rm = TRUE),
+          IQR = IQR(variable_value, na.rm = TRUE),
+          min = min(variable_value, na.rm = TRUE),
+          max = max(variable_value, na.rm = TRUE))%&gt;%
+  na.omit() %&gt;%
+  mutate(across(where(is.numeric), round, 2))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogVGhlcmUgd2VyZSAyMzY2IHdhcm5pbmdzIGluIGByZWZyYW1lKClgLlxuVGhlIGZpcnN0IHdhcm5pbmcgd2FzOlxu4oS5IEluIGFyZ3VtZW50OiBgbWluID0gbWluKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpYC5cbuKEuSBJbiBncm91cCAxOiBgeWVhciA9IDIwMTFgLCBgbW9udGggPSBKdWx5YCwgYHZhcmlhYmxlID0gXCJjaGxvcm9waHlsbF9yZnVcImAuXG5DYXVzZWQgYnkgd2FybmluZyBpbiBgbWluKClgOlxuISBubyBub24tbWlzc2luZyBhcmd1bWVudHMgdG8gbWluOyByZXR1cm5pbmcgSW5mXG7ihLkgUnVuIFx1MDAxYl04OztpZGU6cnVuOmRwbHlyOjpsYXN0X2RwbHlyX3dhcm5pbmdzKClcdTAwMDdkcGx5cjo6bGFzdF9kcGx5cl93YXJuaW5ncygpXHUwMDFiXTg7O1x1MDAwNyB0byBzZWUgdGhlIDIzNjUgcmVtYWluaW5nIHdhcm5pbmdzLlxuIn0= -->
+<pre><code>Warning: There were 2366 warnings in `reframe()`.
+The first warning was:
+ℹ In argument: `min = min(variable_value, na.rm = TRUE)`.
+ℹ In group 1: `year = 2011`, `month = July`, `variable = &quot;chlorophyll_rfu&quot;`.
+Caused by warning in `min()`:
+! no non-missing arguments to min; returning Inf
+ℹ Run ]8;;ide:run:dplyr::last_dplyr_warnings()dplyr::last_dplyr_warnings()]8;; to see the 2365 remaining warnings.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="daily-statistics" class="section level2">
+<h2>Daily Statistics</h2>
+<p>Summary statistics by day</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZEYXkgPC0gZGZFZGl0UGl2b3QgJT4lXG4gIG11dGF0ZSh5ZWFyID0geWVhcihkYXRldGltZSkpICU+JVxuICBtdXRhdGUobW9udGggPSBtb250aChkYXRldGltZSwgbGFiZWwgPSBUUlVFLCBhYmJyID0gRkFMU0UpKSAlPiVcbiAgbXV0YXRlKGRheSA9IGRheShkYXRldGltZSkpICU+JVxuICBncm91cF9ieSh5ZWFyLCBtb250aCwgZGF5LCB2YXJpYWJsZSkgJT4lXG4gIHJlZnJhbWUobWVhbiA9IG1lYW4odmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksIFxuICAgICAgICAgIG1lZGlhbiA9IG1lZGlhbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSxcbiAgICAgICAgICBzdGQgPSBzZCh2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSxcbiAgICAgICAgICBJUVIgPSBJUVIodmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksXG4gICAgICAgICAgbWluID0gbWluKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLFxuICAgICAgICAgIG1heCA9IG1heCh2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSklPiVcbiAgbmEub21pdCgpICU+JVxuICBtdXRhdGUoYWNyb3NzKHdoZXJlKGlzLm51bWVyaWMpLCByb3VuZCwgMikpXG5gYGAifQ== -->
+<pre class="r"><code>dfDay &lt;- dfEditPivot %&gt;%
+  mutate(year = year(datetime)) %&gt;%
+  mutate(month = month(datetime, label = TRUE, abbr = FALSE)) %&gt;%
+  mutate(day = day(datetime)) %&gt;%
+  group_by(year, month, day, variable) %&gt;%
+  reframe(mean = mean(variable_value, na.rm = TRUE), 
+          median = median(variable_value, na.rm = TRUE),
+          std = sd(variable_value, na.rm = TRUE),
+          IQR = IQR(variable_value, na.rm = TRUE),
+          min = min(variable_value, na.rm = TRUE),
+          max = max(variable_value, na.rm = TRUE))%&gt;%
+  na.omit() %&gt;%
+  mutate(across(where(is.numeric), round, 2))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogVGhlcmUgd2VyZSA2ODgzMCB3YXJuaW5ncyBpbiBgcmVmcmFtZSgpYC5cblRoZSBmaXJzdCB3YXJuaW5nIHdhczpcbuKEuSBJbiBhcmd1bWVudDogYG1pbiA9IG1pbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKWAuXG7ihLkgSW4gZ3JvdXAgMTogYHllYXIgPSAyMDExYCwgYG1vbnRoID0gSnVseWAsIGBkYXkgPSAyMmAsIGB2YXJpYWJsZSA9IFwiY2hsb3JvcGh5bGxfcmZ1XCJgLlxuQ2F1c2VkIGJ5IHdhcm5pbmcgaW4gYG1pbigpYDpcbiEgbm8gbm9uLW1pc3NpbmcgYXJndW1lbnRzIHRvIG1pbjsgcmV0dXJuaW5nIEluZlxu4oS5IFJ1biBcdTAwMWJdODs7aWRlOnJ1bjpkcGx5cjo6bGFzdF9kcGx5cl93YXJuaW5ncygpXHUwMDA3ZHBseXI6Omxhc3RfZHBseXJfd2FybmluZ3MoKVx1MDAxYl04OztcdTAwMDcgdG8gc2VlIHRoZSA2ODgyOSByZW1haW5pbmcgd2FybmluZ3MuXG4ifQ== -->
+<pre><code>Warning: There were 68830 warnings in `reframe()`.
+The first warning was:
+ℹ In argument: `min = min(variable_value, na.rm = TRUE)`.
+ℹ In group 1: `year = 2011`, `month = July`, `day = 22`, `variable = &quot;chlorophyll_rfu&quot;`.
+Caused by warning in `min()`:
+! no non-missing arguments to min; returning Inf
+ℹ Run ]8;;ide:run:dplyr::last_dplyr_warnings()dplyr::last_dplyr_warnings()]8;; to see the 68829 remaining warnings.</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1877,7 +1959,7 @@ hobophday&lt;-hobotbl %&gt;%
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiWVNJIERhdGEgRGVzY3JpcHRpdmUgU3RhdGlzdGljcyIKY29sbGFib3JhdG9yczogUmVuZWUgR3JhbWJpaGxlcgpwcm9qZWN0OiBPY2VhbldhdGVyUXVhbGl0eQppbnN0aXR1dGlvbjogQmlvc3BoZXJlIDIgT2NlYW4Kb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQojIERlc2NyaXB0aXZlIFN0YXRpc3RpY3MKIyMgSW1wb3J0IExpYnJhcmllcwpgYGB7ciBJbXBvcnQgTGlicmFyaWVzfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeSh0aWJibGV0aW1lKSAKb3B0aW9ucyhzY2lwZW4gPSA5OTkpCmBgYAoKIyMgSW1wb3J0IERhdGEKUmVhZCBpbiBmdWxseSBRQydkIGRhdGEKYGBge3IgSW1wb3J0IERhdGF9CmRmIDwtIHJlYWRfY3N2KCJEYXRhL0NsZWFuRGF0YS9DbGVhbkRhdGFfWVNJLzAyX1F1YWxpdHlDb250cm9sLzAzLU9jZWFuV2F0ZXJRdWFsaXR5RGF0YS1RQ0N1dG9mZi5jc3YiKQoKYGBgCgojIyBNaW5vciBEYXRhIE1hbmlwdWxhdGlvbgpBZGQgZGF0ZXRpbWUgY29sdW1uIGFuZCBjcmVhdGUgdGltZXRpYmJsZSBvcmRlcmVkIGJ5IGRheQpgYGB7ciBkYXRhIG1hbmlwfQojIGNvbWJpbmUgZGF0ZSBhbmQgdGltZSBpbnRvIGRhdGV0aW1lIGNvbHVtbiAKZGZFZGl0IDwtIGRmICU+JQogIG11dGF0ZShkYXRldGltZSA9IHBhc3RlKGRhdGUsIHRpbWUpLCAuYmVmb3JlID0gZGF0ZSwKICAgICAgICAgZGF0ZXRpbWUgPSBhcy5QT1NJWGN0KGRhdGV0aW1lKSkgJT4lICNtYWtlIHN1cmUgZGF0ZXRpbWUgaXMgUE9TSVhjdCBjbGFzcwogIGRpc3RpbmN0KCkgJT4lICNyZW1vdmUgZHVwbGljYXRlIHJvd3MgZnJvbSBkZgogIHN1YnNldChpcy5uYShkYXRldGltZSk9PUZBTFNFKSAjcmVtb3ZlIE5BcyBmcm9tIGRhdGV0aW1lCiAKIyBpbnNwZWN0IGRmIHRvIHNlZSB3aGF0IHRoZSBjbGFzc2VzIG9mIGVhY2ggY29sdW1uIGFyZQojIHN0cihkZkVkaXQpCgojIGNyZWF0ZSBhIHRpbWUgdGliYmxlIGFuZCBvcmRlciBieSBkYXkgZm9yIG5leHQgc3RlcHMKdGJsIDwtIGFzX3RibF90aW1lKGRmRWRpdCwgaW5kZXggPSBkYXRldGltZSkgJT4lCiAgYXJyYW5nZSh5bWRfaG1zKGRhdGV0aW1lKSkKCmBgYAoKIyMgV2hvbGUgVGltZSBTZXJpZXMgU3RhdGlzdGljcwpgYGB7ciB3aG9sZSB0aW1lIHNlcmllcyBzdGF0c30KCmRmV2hvbGUgPC0gZGZFZGl0ICU+JQogIHN1bW1hcmlzZShhY3Jvc3Mod2hlcmUoaXMubnVtZXJpYyksIH4gbWVhbigueCwgbmEucm0gPSBUUlVFKSkpICU+JQogIHN1bW1hcmlzZShhY3Jvc3Mod2hlcmUoaXMubnVtZXJpYyksIH4gbWluKC54LCBuYS5ybSA9IFRSVUUpKSkKICAKICAKICAKICAKICBkYXRhLmZyYW1lKG1hdHJpeChuY29sID0gNiwgbnJvdyA9IDE3KSkKY29sbmFtZXMoZGZXaG9sZSkgPC0gYygidmFyaWFibGUiLCAibWluIiwgIm1heCIsICJtZWFuIiwgIm1lZGlhbiIsICJzdGQiKQoKdmFyX25hbWVzIDwtIGNvbG5hbWVzKGRmKQp2YXJfbmFtZXMgPC0gdmFyX25hbWVzWyEgdmFyX25hbWVzICVpbiUgYygiZGF0ZSIsICJ0aW1lIildCgpkZldob2xlIDwtIGRmV2hvbGUgJT4lCiAgbXV0YXRlKHZhcmlhYmxlID0gdmFyX25hbWVzLAogICAgICAgICBtaW4gPSBtaW4oKSkKCiMgdGJsV2hvbGUgPC0gdGJsICU+JQojICAgY29sbGFwc2VfYnkoInllYXIiKSAlPiUKIyAgIGdyb3VwX2J5KGRhdGUpICU+JQojICAgc3VtbWFyaXNlX2lmKGlzLm51bWVyaWMsIG1lYW4pCgpgYGAKCgojIyMgRXhhbXBsZSBjb2RlIGZyb20gRGFuCmBgYHtyIGV4YW1wbGUgY29kZX0KaG9ib3BoPC0gZGlzdGluY3QoaG9ib3BoKSNyZW1vdmUgYW55IGR1cGxpY2F0ZSByb3dzCmhvYm9waDwtc3Vic2V0KGhvYm9waCxpcy5uYShob2JvcGgkRGF0ZXRpbWUpPT1GQUxTRSkgI3JlbW92ZSBhbnkgTkFzCgpob2JvcGggPC0gaG9ib3BoICU+JSAKICBtdXRhdGVfYXQoYygyOjQpLCBhcy5udW1lcmljKSAjbWFrZSBhbnkgY29sdW1ucyB0aGF0IG1pZ2h0IGJlIHN0dWNrIGFzIGZhY3RvcnMgbnVtZXJpYwpob2JvcGg8LWFzX3RibF90aW1lKGhvYm9waCxpbmRleD1EYXRldGltZSkgI2NyZWF0ZSBhIHRpbWUgdGliYmxlCmhvYm90Ymw8LSBob2JvcGggJT4lIGFycmFuZ2UoeW1kX2htcyhob2JvcGgkRGF0ZXRpbWUpKSAjb3JkZXIgYnkgZGF5CgojdGhpcyBzeW50YXggY2FuIGJlIHVzZWQgdG8gYWdncmVnYXRlIHRoZSBkYXRhIGJ5IGFsbCBzb3J0cyBvZiBwZXJpb2RzIGluY2x1ZGluZyB3ZWVrLCBob3VyLCBldGMKaG9ib3BoZGF5PC1ob2JvdGJsICU+JQogIGNvbGxhcHNlX2J5KCJkYXkiKSAlPiUKICBncm91cF9ieShEYXRldGltZSxEYXRlKSU+JQogIHN1bW1hcmlzZShhY3Jvc3Mod2hlcmUoaXMubnVtZXJpYyksIH4gbWVhbigueCwgbmEucm0gPSBUUlVFKSkpCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiWVNJIERhdGEgRGVzY3JpcHRpdmUgU3RhdGlzdGljcyIKY29sbGFib3JhdG9yczogUmVuZWUgR3JhbWJpaGxlcgpwcm9qZWN0OiBPY2VhbldhdGVyUXVhbGl0eQppbnN0aXR1dGlvbjogQmlvc3BoZXJlIDIgT2NlYW4Kb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQojIERlc2NyaXB0aXZlIFN0YXRpc3RpY3MKIyMgSW1wb3J0IExpYnJhcmllcwpgYGB7ciBJbXBvcnQgTGlicmFyaWVzfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeSh0aWJibGV0aW1lKSAKbGlicmFyeShsdWJyaWRhdGUpCm9wdGlvbnMoc2NpcGVuID0gOTk5KQpgYGAKCiMjIEltcG9ydCBEYXRhClJlYWQgaW4gZnVsbHkgUUMnZCBkYXRhCmBgYHtyIEltcG9ydCBEYXRhfQpkZiA8LSByZWFkX2NzdigiRGF0YS9DbGVhbkRhdGEvQ2xlYW5EYXRhX1lTSS8wMl9RdWFsaXR5Q29udHJvbC8wMy1PY2VhbldhdGVyUXVhbGl0eURhdGEtUUNDdXRvZmYuY3N2IikKCmBgYAoKIyMgTWlub3IgRGF0YSBNYW5pcHVsYXRpb24KQWRkIGRhdGV0aW1lIGNvbHVtbiBhbmQgY3JlYXRlIHRpbWV0aWJibGUgb3JkZXJlZCBieSBkYXkKYGBge3IgZGF0YSBtYW5pcH0KIyBjb21iaW5lIGRhdGUgYW5kIHRpbWUgaW50byBkYXRldGltZSBjb2x1bW4gCmRmRWRpdCA8LSBkZiAlPiUKICBtdXRhdGUoZGF0ZXRpbWUgPSBwYXN0ZShkYXRlLCB0aW1lKSwgLmJlZm9yZSA9IGRhdGUsCiAgICAgICAgIGRhdGV0aW1lID0gYXMuUE9TSVhjdChkYXRldGltZSkpICU+JSAjbWFrZSBzdXJlIGRhdGV0aW1lIGlzIFBPU0lYY3QgY2xhc3MKICBkaXN0aW5jdCgpICU+JSAjcmVtb3ZlIGR1cGxpY2F0ZSByb3dzIGZyb20gZGYKICBzdWJzZXQoaXMubmEoZGF0ZXRpbWUpPT1GQUxTRSkgI3JlbW92ZSBOQXMgZnJvbSBkYXRldGltZQogCmRmRWRpdFBpdm90IDwtIGRmRWRpdCAlPiUKICBwaXZvdF9sb25nZXIoY29scyA9IHRlbXBfZjp0b3RhbF9kaXNzb2x2ZWRfc29saWRzX21nTCwKICAgICAgICAgICAgICAgbmFtZXNfdG8gPSAidmFyaWFibGUiLAogICAgICAgICAgICAgICB2YWx1ZXNfdG8gPSAidmFyaWFibGVfdmFsdWUiKQoKIyBpbnNwZWN0IGRmIHRvIHNlZSB3aGF0IHRoZSBjbGFzc2VzIG9mIGVhY2ggY29sdW1uIGFyZQpzdHIoZGZFZGl0UGl2b3QpCgpgYGAKCiMjIFdob2xlIFRpbWUgU2VyaWVzIFN0YXRpc3RpY3MKU3VtbWFyeSBzdGF0aXN0aWNzIG92ZXIgZW50aXJlIHRpbWUgcGVyaW9kIG9mIGRhdGEKYGBge3Igd2hvbGUgdGltZSBzZXJpZXMgc3RhdHN9CmRmV2hvbGUgPC0gZGZFZGl0UGl2b3QgJT4lCiAgcmVmcmFtZShtZWFuID0gbWVhbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSwgCiAgICAgICAgICBtZWRpYW4gPSBtZWRpYW4odmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksCiAgICAgICAgICBzdGQgPSBzZCh2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSwKICAgICAgICAgIElRUiA9IElRUih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSwKICAgICAgICAgIG1pbiA9IG1pbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSwKICAgICAgICAgIG1heCA9IG1heCh2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSwKICAgICAgICAgIC5ieSA9IHZhcmlhYmxlKSU+JQogICBtdXRhdGUoYWNyb3NzKHdoZXJlKGlzLm51bWVyaWMpLCByb3VuZCwgMikpCgpgYGAKCiMjIFllYXJseSBTdGF0aXN0aWNzClN1bW1hcnkgc3RhdGlzdGljcyBieSB5ZWFyCmBgYHtyIHN0YXRzIGJ5IHllYXJ9CmRmWWVhciA8LSBkZkVkaXRQaXZvdCAlPiUKICBtdXRhdGUoeWVhciA9IHllYXIoZGF0ZXRpbWUpKSU+JQogIGdyb3VwX2J5KHllYXIsIHZhcmlhYmxlKSAlPiUKICByZWZyYW1lKG1lYW4gPSBtZWFuKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLCAKICAgICAgICAgIG1lZGlhbiA9IG1lZGlhbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSwKICAgICAgICAgIHN0ZCA9IHNkKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgSVFSID0gSVFSKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgbWluID0gbWluKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgbWF4ID0gbWF4KHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpKSU+JQogIG5hLm9taXQoKSAlPiUKICBtdXRhdGUoYWNyb3NzKHdoZXJlKGlzLm51bWVyaWMpLCByb3VuZCwgMikpCgpgYGAKCiMjIE1vbnRobHkgU3RhdGlzdGljcwpTdW1tYXJ5IHN0YXRpc3RpY3MgYnkgbW9udGgKYGBge3Igc3RhdHMgYnkgbW9udGh9CmRmTW9udGggPC0gZGZFZGl0UGl2b3QgJT4lCiAgbXV0YXRlKHllYXIgPSB5ZWFyKGRhdGV0aW1lKSkgJT4lCiAgbXV0YXRlKG1vbnRoID0gbW9udGgoZGF0ZXRpbWUsIGxhYmVsID0gVFJVRSwgYWJiciA9IEZBTFNFKSkgJT4lCiAgZ3JvdXBfYnkoeWVhciwgbW9udGgsIHZhcmlhYmxlKSAlPiUKICByZWZyYW1lKG1lYW4gPSBtZWFuKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLCAKICAgICAgICAgIG1lZGlhbiA9IG1lZGlhbih2YXJpYWJsZV92YWx1ZSwgbmEucm0gPSBUUlVFKSwKICAgICAgICAgIHN0ZCA9IHNkKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgSVFSID0gSVFSKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgbWluID0gbWluKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgbWF4ID0gbWF4KHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpKSU+JQogIG5hLm9taXQoKSAlPiUKICBtdXRhdGUoYWNyb3NzKHdoZXJlKGlzLm51bWVyaWMpLCByb3VuZCwgMikpCgpgYGAKIyMgRGFpbHkgU3RhdGlzdGljcwpTdW1tYXJ5IHN0YXRpc3RpY3MgYnkgZGF5CmBgYHtyIHN0YXRzIGJ5IGRheX0KZGZEYXkgPC0gZGZFZGl0UGl2b3QgJT4lCiAgbXV0YXRlKHllYXIgPSB5ZWFyKGRhdGV0aW1lKSkgJT4lCiAgbXV0YXRlKG1vbnRoID0gbW9udGgoZGF0ZXRpbWUsIGxhYmVsID0gVFJVRSwgYWJiciA9IEZBTFNFKSkgJT4lCiAgbXV0YXRlKGRheSA9IGRheShkYXRldGltZSkpICU+JSAjaWYgd2FudCBkYXlzIG9mIHdlZWsgaW5zdGVhZCBvZiBudW1iZXJzIG9mIG1vbnRoLCB1c2Ugd2RheSgpCiAgZ3JvdXBfYnkoeWVhciwgbW9udGgsIGRheSwgdmFyaWFibGUpICU+JQogIHJlZnJhbWUobWVhbiA9IG1lYW4odmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksIAogICAgICAgICAgbWVkaWFuID0gbWVkaWFuKHZhcmlhYmxlX3ZhbHVlLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgc3RkID0gc2QodmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksCiAgICAgICAgICBJUVIgPSBJUVIodmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksCiAgICAgICAgICBtaW4gPSBtaW4odmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSksCiAgICAgICAgICBtYXggPSBtYXgodmFyaWFibGVfdmFsdWUsIG5hLnJtID0gVFJVRSkpJT4lCiAgbmEub21pdCgpICU+JQogIG11dGF0ZShhY3Jvc3Mod2hlcmUoaXMubnVtZXJpYyksIHJvdW5kLCAyKSkKCmBgYAoKIyMjIEV4YW1wbGUgY29kZSBmcm9tIERhbgpgYGB7ciBleGFtcGxlIGNvZGV9CmhvYm9waDwtIGRpc3RpbmN0KGhvYm9waCkjcmVtb3ZlIGFueSBkdXBsaWNhdGUgcm93cwpob2JvcGg8LXN1YnNldChob2JvcGgsaXMubmEoaG9ib3BoJERhdGV0aW1lKT09RkFMU0UpICNyZW1vdmUgYW55IE5BcwoKaG9ib3BoIDwtIGhvYm9waCAlPiUgCiAgbXV0YXRlX2F0KGMoMjo0KSwgYXMubnVtZXJpYykgI21ha2UgYW55IGNvbHVtbnMgdGhhdCBtaWdodCBiZSBzdHVjayBhcyBmYWN0b3JzIG51bWVyaWMKaG9ib3BoPC1hc190YmxfdGltZShob2JvcGgsaW5kZXg9RGF0ZXRpbWUpICNjcmVhdGUgYSB0aW1lIHRpYmJsZQpob2JvdGJsPC0gaG9ib3BoICU+JSBhcnJhbmdlKHltZF9obXMoaG9ib3BoJERhdGV0aW1lKSkgI29yZGVyIGJ5IGRheQoKI3RoaXMgc3ludGF4IGNhbiBiZSB1c2VkIHRvIGFnZ3JlZ2F0ZSB0aGUgZGF0YSBieSBhbGwgc29ydHMgb2YgcGVyaW9kcyBpbmNsdWRpbmcgd2VlaywgaG91ciwgZXRjCmhvYm9waGRheTwtaG9ib3RibCAlPiUKICBjb2xsYXBzZV9ieSgiZGF5IikgJT4lCiAgZ3JvdXBfYnkoRGF0ZXRpbWUsRGF0ZSklPiUKICBzdW1tYXJpc2UoYWNyb3NzKHdoZXJlKGlzLm51bWVyaWMpLCB+IG1lYW4oLngsIG5hLnJtID0gVFJVRSkpKQpgYGAKCg==</div>
 
 
 

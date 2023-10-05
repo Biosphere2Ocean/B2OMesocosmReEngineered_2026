@@ -10,6 +10,7 @@ output: html_notebook
 ```{r Import Libraries}
 library(tidyverse)
 library(tibbletime) 
+library(lubridate)
 options(scipen = 999)
 ```
 
@@ -30,42 +31,83 @@ dfEdit <- df %>%
   distinct() %>% #remove duplicate rows from df
   subset(is.na(datetime)==FALSE) #remove NAs from datetime
  
-# inspect df to see what the classes of each column are
-# str(dfEdit)
+dfEditPivot <- dfEdit %>%
+  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+               names_to = "variable",
+               values_to = "variable_value")
 
-# create a time tibble and order by day for next steps
-tbl <- as_tbl_time(dfEdit, index = datetime) %>%
-  arrange(ymd_hms(datetime))
+# inspect df to see what the classes of each column are
+str(dfEditPivot)
 
 ```
 
 ## Whole Time Series Statistics
+Summary statistics over entire time period of data
 ```{r whole time series stats}
-
-dfWhole <- dfEdit %>%
-  summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE))) %>%
-  summarise(across(where(is.numeric), ~ min(.x, na.rm = TRUE)))
-  
-  
-  
-  
-  data.frame(matrix(ncol = 6, nrow = 17))
-colnames(dfWhole) <- c("variable", "min", "max", "mean", "median", "std")
-
-var_names <- colnames(df)
-var_names <- var_names[! var_names %in% c("date", "time")]
-
-dfWhole <- dfWhole %>%
-  mutate(variable = var_names,
-         min = min())
-
-# tblWhole <- tbl %>%
-#   collapse_by("year") %>%
-#   group_by(date) %>%
-#   summarise_if(is.numeric, mean)
+dfWhole <- dfEditPivot %>%
+  reframe(mean = mean(variable_value, na.rm = TRUE), 
+          median = median(variable_value, na.rm = TRUE),
+          std = sd(variable_value, na.rm = TRUE),
+          IQR = IQR(variable_value, na.rm = TRUE),
+          min = min(variable_value, na.rm = TRUE),
+          max = max(variable_value, na.rm = TRUE),
+          .by = variable)%>%
+   mutate(across(where(is.numeric), round, 2))
 
 ```
 
+## Yearly Statistics
+Summary statistics by year
+```{r stats by year}
+dfYear <- dfEditPivot %>%
+  mutate(year = year(datetime))%>%
+  group_by(year, variable) %>%
+  reframe(mean = mean(variable_value, na.rm = TRUE), 
+          median = median(variable_value, na.rm = TRUE),
+          std = sd(variable_value, na.rm = TRUE),
+          IQR = IQR(variable_value, na.rm = TRUE),
+          min = min(variable_value, na.rm = TRUE),
+          max = max(variable_value, na.rm = TRUE))%>%
+  na.omit() %>%
+  mutate(across(where(is.numeric), round, 2))
+
+```
+
+## Monthly Statistics
+Summary statistics by month
+```{r stats by month}
+dfMonth <- dfEditPivot %>%
+  mutate(year = year(datetime)) %>%
+  mutate(month = month(datetime, label = TRUE, abbr = FALSE)) %>%
+  group_by(year, month, variable) %>%
+  reframe(mean = mean(variable_value, na.rm = TRUE), 
+          median = median(variable_value, na.rm = TRUE),
+          std = sd(variable_value, na.rm = TRUE),
+          IQR = IQR(variable_value, na.rm = TRUE),
+          min = min(variable_value, na.rm = TRUE),
+          max = max(variable_value, na.rm = TRUE))%>%
+  na.omit() %>%
+  mutate(across(where(is.numeric), round, 2))
+
+```
+## Daily Statistics
+Summary statistics by day
+```{r stats by day}
+dfDay <- dfEditPivot %>%
+  mutate(year = year(datetime)) %>%
+  mutate(month = month(datetime, label = TRUE, abbr = FALSE)) %>%
+  mutate(day = day(datetime)) %>% #if want days of week instead of numbers of month, use wday()
+  group_by(year, month, day, variable) %>%
+  reframe(mean = mean(variable_value, na.rm = TRUE), 
+          median = median(variable_value, na.rm = TRUE),
+          std = sd(variable_value, na.rm = TRUE),
+          IQR = IQR(variable_value, na.rm = TRUE),
+          min = min(variable_value, na.rm = TRUE),
+          max = max(variable_value, na.rm = TRUE))%>%
+  na.omit() %>%
+  mutate(across(where(is.numeric), round, 2))
+
+```
 
 ### Example code from Dan
 ```{r example code}

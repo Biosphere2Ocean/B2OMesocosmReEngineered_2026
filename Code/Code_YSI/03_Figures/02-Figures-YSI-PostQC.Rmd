@@ -1,0 +1,555 @@
+---
+title: "YSI Figures Post-QC"
+Collaborators: Renee Grambihler
+Project: OceanWaterQuality
+Institution: Biosphere 2 Ocean
+output: html_notebook
+---
+
+## Import Libraries
+```{r Libraries}
+library(tidyverse)
+library(lubridate)
+```
+
+# Import Data
+```{r import data}
+# Data after QC -- values outside of 2 sigma away from mean of every month for every variable were turned into NA values
+dfQC <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/02-OceanWaterQualityData-QC.csv")
+
+# Data after QC and Cutoff values implemented
+dfQCCutoff <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv")
+```
+
+# Data Formatting
+```{r data formatting}
+# pivot dfQC longer for easier all-variable plotting
+dfQCPivot <- dfQC %>%
+  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+               names_to = "variable",
+               values_to = "variable_value")%>%
+  mutate(date = as.Date(date, format = "%Y/%m/%d"))
+
+# pivot dfQCCut longer for easier all-variable plotting
+dfQCCutPivot <- dfQCCutoff %>%
+  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+               names_to = "variable",
+               values_to = "variable_value")%>%
+  mutate(date = as.Date(date, format = "%Y/%m/%d"))
+```
+
+# Plotting
+# After Initial Standard Deviation QC
+```{r Basic Plots - Post QC}
+# line graph of every variable - facet wrapped 
+AllVariablePlot_PostQC <- dfQCPivot %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  facet_wrap(~variable, ncol = 3, scales = "free")+
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Water Quality by Variable from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Nutrient Value")
+# Save plot
+ggsave(filename = "AllVariablePlot-PostQC.pdf", plot = AllVariablePlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots", height = 12, width = 10)
+
+# line graph of temperature in fahrenheit
+TempFPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "temp_f") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Temperature (ºF) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Temperature (ºF)")
+# Save plot
+ggsave(filename = "TempFPlot-PostQC.pdf", plot = TempFPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of temp in celcius
+TempCPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "temp_c")%>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Temperature (ºC) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Temperature (ºC)")
+# Save plot
+ggsave(filename = "TempCPlot-PostQC.pdf", plot = TempCPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of pH in pH units
+pHPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "pH") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O pH from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("pH")
+# Save plot
+ggsave(filename = "pHPlot-PostQC.pdf", plot = pHPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of pH in mV
+pHmVPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "pH_mV") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O pH (mV) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("pH (mV)")
+# Save plot
+ggsave(filename = "pHmVPlot-PostQC.pdf", plot = pHmVPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of salinity in psu
+SalinityPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "salinity_psu")%>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Salinity (PSU) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Salinity (PSU)")
+# Save plot
+ggsave(filename = "SalinityPlot-PostQC.pdf", plot = SalinityPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of conductivity in uS/cm
+ConductivityPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "conductivity_uScm")%>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Conductivity (µS/cm) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Conductivity (µS/cm)")
+# Save plot
+ggsave(filename = "ConductivityPlot-PostQC.pdf", plot = ConductivityPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of nlf conductivity in uS/cm
+NLFConductivityPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "nlf_conductivity_uScm") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O NLF Conductivity (µS/cm) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("NLF Conductivity (µS/cm)")
+# Save plot
+ggsave(filename = "NLFConductivityPlot-PostQC.pdf", plot = NLFConductivityPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of specific conductivity in uS/cm
+SpConductivityPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "sp_conductivity_uScm") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Specific Conductivity (µS/cm) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Specific Conductivity (µS/cm)")
+# Save plot
+ggsave(filename = "SpConductivityPlot-PostQC.pdf", plot = SpConductivityPlot_PostQC,
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of DO in mg/L
+DOmgLPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "do_mgL") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Dissolved Oxygen (mg/L) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Dissolved Oxygen (mg/L)")
+# Save plot
+ggsave(filename = "DOmgLPlot-PostQC.pdf", plot = DOmgLPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of DO in percent saturated
+DOPercentSaturatedPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "do_saturated_percent") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Saturated Dissolved Oxygen (%) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Saturated Dissolved Oxygen (%)")
+# Save plot
+ggsave(filename = "DOPercentSaturatedPlot-PostQC.pdf", plot = DOPercentSaturatedPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of DO in percent local
+DOPercentLocalPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "do_local_percent") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Local Dissolved Oxygen (%) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Local Dissolved Oxygen (%)")
+# Save plot
+ggsave(filename = "DOPercentLocalPlot-PostQC.pdf", plot = DOPercentLocalPlot_PostQC,
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of ORP in mV
+ORPPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "orp_mV") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O ORP (mV) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("ORP (mV)")
+# Save plot
+ggsave(filename = "ORPPlot-PostQC.pdf", plot = ORPPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of chlorophyll in RFU
+ChlorophyllRFUPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "chlorophyll_rfu") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Chlorophyll (RFU) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Chlorophyll (RFU)")
+# Save plot
+ggsave(filename = "ChlorophyllRFUPlot-PostQC.pdf", plot = ChlorophyllRFUPlot_PostQC,
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of chlorophyll in ug/L
+ChlorophyllugLPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "chlorophyll_ugL") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Chlorophyll (µg/L) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Chlorophyll (µg/L)")
+# Save plot
+ggsave(filename = "ChlorophyllugLPlot-PostQC.pdf", plot = ChlorophyllugLPlot_PostQC,
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of total algae in cells/L
+TotalAlgaePlot_PostQC <- dfQCPivot %>%
+  filter(variable == "total_algae_cellsL") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Total Algae (cells/L) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Total Algae (cells/L)")
+# Save plot
+ggsave(filename = "TotalAlgaePlot-PostQC.pdf", plot = TotalAlgaePlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of total dissolved solids in mg/L
+TotalDissolvedSolidsPlot_PostQC <- dfQCPivot %>%
+  filter(variable == "total_dissolved_solids_mgL") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Total Dissolved Solids (mg/L) from 2011-2023",
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
+  xlab("Date")+
+  ylab("Total Dissolved Solids (mg/L)")
+# Save plot
+ggsave(filename = "TotalDissolvedSolidsPlot-PostQC.pdf", plot = TotalDissolvedSolidsPlot_PostQC, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+  
+```
+
+## After Cutoff Values were Implemented
+```{r plotting cutoffs}
+# just plotting All Variables, pH, Salinity PSU, and Temp C since those were the only variables that were changed with the cutoff values
+# line graph of every variable - facet wrapped 
+AllVariablePlot_PostQCCutoff <- dfQCCutPivot %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  facet_wrap(~variable, ncol = 3, scales = "free")+
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Water Quality by Variable from 2011-2023",
+       subtitle = "Post-QC and Cutoffs: Data Outside 2-Sigma from Mean and Cutoff Values have been Removed\npH < 7.5; Salinity (PSU) < 21; Temp (ºC) < 20 and > 28")+
+  xlab("Date")+
+  ylab("Nutrient Value")
+# Save plot
+ggsave(filename = "AllVariablePlot-PostQCCutoff.pdf", 
+       plot = AllVariablePlot_PostQCCutoff, 
+       path = "Figures/Figures_YSI/02-PostQCPlots", height = 12, width = 10)
+
+# line graph of temp in celcius
+TempCPlot_PostQCCutoff <- dfQCCutPivot %>%
+  filter(variable == "temp_c")%>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Temperature (ºC) from 2011-2023",
+       subtitle = "Post-QC and Cutoffs: Data Outside 2-Sigma from Mean and Cutoff Values have been Removed\nValues Less Than 20 and Greater Than 28 Removed")+
+  xlab("Date")+
+  ylab("Temperature (ºC)")
+# Save plot
+ggsave(filename = "TempCPlot-PostQCCutoff.pdf", plot = TempCPlot_PostQCCutoff, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of pH in pH units
+pHPlot_PostQCCutoff <- dfQCCutPivot %>%
+  filter(variable == "pH") %>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O pH from 2011-2023",
+       subtitle = "Post-QC and Cutoffs: Data Outside 2-Sigma from Mean and Cutoff Values have been Removed\nValues Less Than 7.5 Removed")+
+  xlab("Date")+
+  ylab("pH")
+# Save plot
+ggsave(filename = "pHPlot-PostQCCutoff.pdf", plot = pHPlot_PostQCCutoff, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+# line graph of salinity in psu
+SalinityPlot_PostQCCutoff <- dfQCCutPivot %>%
+  filter(variable == "salinity_psu")%>%
+  ggplot(aes(x = date, 
+             y = variable_value)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "1 year",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O Salinity (PSU) from 2011-2023",
+       subtitle = "Post-QC and Cutoffs: Data Outside 2-Sigma from Mean and Cutoff Values have been Removed\nValues Less Than 21 Removed")+
+  xlab("Date")+
+  ylab("Salinity (PSU)")
+# Save plot
+ggsave(filename = "SalinityPlot-PostQCCutoff.pdf", plot = SalinityPlot_PostQCCutoff, 
+       path = "Figures/Figures_YSI/02-PostQCPlots")
+
+```
+

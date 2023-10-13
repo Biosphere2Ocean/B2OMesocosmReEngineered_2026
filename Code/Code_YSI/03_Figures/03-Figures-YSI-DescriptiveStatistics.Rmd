@@ -1,0 +1,29 @@
+---
+title: "YSI Figures Post-QC"
+Collaborators: Renee Grambihler
+Project: OceanWaterQuality
+Institution: Biosphere 2 Ocean
+output: html_notebook
+---
+
+## Import Libraries
+```{r Libraries}
+library(tidyverse)
+library(lubridate)
+```
+
+## Import Data
+```{r import data}
+# whole time series
+dfWhole <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/WholeSeriesDescriptiveStats.csv")
+
+# yearly
+dfYear <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/YearlyDescriptiveStats.csv")
+
+# monthly
+dfMonth <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/MonthlyDescriptiveStats.csv")
+
+# daily
+dfDay <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/DailyDescriptiveStats.csv")
+```
+

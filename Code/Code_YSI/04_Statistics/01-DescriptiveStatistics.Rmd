@@ -54,6 +54,8 @@ dfWhole <- dfEditPivot %>%
           .by = variable)%>%
    mutate(across(where(is.numeric), round, 2))
 
+dfWhole[sapply(dfWhole, is.infinite)] <- NA #turn infinite values into NAs that were introduced when running min and max on variables that did not have any data
+
 ```
 
 ## Yearly Statistics
@@ -68,8 +70,9 @@ dfYear <- dfEditPivot %>%
           IQR = IQR(variable_value, na.rm = TRUE),
           min = min(variable_value, na.rm = TRUE),
           max = max(variable_value, na.rm = TRUE))%>%
-  na.omit() %>%
   mutate(across(where(is.numeric), round, 2))
+
+dfYear[sapply(dfYear, is.infinite)] <- NA #turn infinite values into NAs that were introduced when running min and max on variables that did not have any data
 
 ```
 
@@ -86,8 +89,9 @@ dfMonth <- dfEditPivot %>%
           IQR = IQR(variable_value, na.rm = TRUE),
           min = min(variable_value, na.rm = TRUE),
           max = max(variable_value, na.rm = TRUE))%>%
-  na.omit() %>%
   mutate(across(where(is.numeric), round, 2))
+
+dfMonth[sapply(dfMonth, is.infinite)] <- NA #turn infinite values into NAs that were introduced when running min and max on variables that did not have any data
 
 ```
 ## Daily Statistics
@@ -104,8 +108,9 @@ dfDay <- dfEditPivot %>%
           IQR = IQR(variable_value, na.rm = TRUE),
           min = min(variable_value, na.rm = TRUE),
           max = max(variable_value, na.rm = TRUE))%>%
-  na.omit() %>%
   mutate(across(where(is.numeric), round, 2))
+
+dfDay[sapply(dfDay, is.infinite)] <- NA #turn infinite values into NAs that were introduced when running min and max on variables that did not have any data
 
 ```
 

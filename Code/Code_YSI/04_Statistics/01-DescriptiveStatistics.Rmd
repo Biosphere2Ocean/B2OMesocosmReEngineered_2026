@@ -56,6 +56,8 @@ dfWhole <- dfEditPivot %>%
 
 dfWhole[sapply(dfWhole, is.infinite)] <- NA #turn infinite values into NAs that were introduced when running min and max on variables that did not have any data
 
+write_csv(dfWhole, "Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/WholeSeriesDescriptiveStats.csv")
+
 ```
 
 ## Yearly Statistics
@@ -73,6 +75,8 @@ dfYear <- dfEditPivot %>%
   mutate(across(where(is.numeric), round, 2))
 
 dfYear[sapply(dfYear, is.infinite)] <- NA #turn infinite values into NAs that were introduced when running min and max on variables that did not have any data
+
+write_csv(dfYear, "Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/YearlyDescriptiveStats.csv")
 
 ```
 
@@ -93,7 +97,10 @@ dfMonth <- dfEditPivot %>%
 
 dfMonth[sapply(dfMonth, is.infinite)] <- NA #turn infinite values into NAs that were introduced when running min and max on variables that did not have any data
 
+write_csv(dfMonth, "Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/MonthlyDescriptiveStats.csv")
+
 ```
+
 ## Daily Statistics
 Summary statistics by day
 ```{r stats by day}
@@ -111,6 +118,8 @@ dfDay <- dfEditPivot %>%
   mutate(across(where(is.numeric), round, 2))
 
 dfDay[sapply(dfDay, is.infinite)] <- NA #turn infinite values into NAs that were introduced when running min and max on variables that did not have any data
+
+write_csv(dfDay, "Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/DailyDescriptiveStats.csv")
 
 ```
 

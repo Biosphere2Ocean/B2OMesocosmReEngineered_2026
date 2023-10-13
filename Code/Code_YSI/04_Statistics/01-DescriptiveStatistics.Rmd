@@ -70,6 +70,8 @@ dfYear <- dfEditPivot %>%
           median = median(variable_value, na.rm = TRUE),
           std = sd(variable_value, na.rm = TRUE),
           IQR = IQR(variable_value, na.rm = TRUE),
+          Q1 = quantile(variable_value, 0.25, na.rm = TRUE), 
+          Q2 = quantile(variable_value, 0.75, na.rm = TRUE),
           min = min(variable_value, na.rm = TRUE),
           max = max(variable_value, na.rm = TRUE))%>%
   mutate(across(where(is.numeric), round, 2))

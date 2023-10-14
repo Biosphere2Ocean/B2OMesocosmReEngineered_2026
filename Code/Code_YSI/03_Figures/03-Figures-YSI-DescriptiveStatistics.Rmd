@@ -14,6 +14,9 @@ library(lubridate)
 
 ## Import Data
 ```{r import data}
+# qc cutoff data
+df <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv")
+
 # whole time series
 dfWhole <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/WholeSeriesDescriptiveStats.csv")
 
@@ -29,15 +32,15 @@ dfDay <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/DailyDe
 
 ## Data Formatting
 ```{r data formatting}
-dfYearPivot <- dfYear %>%
-  mutate(std_lower = mean - std,
-         std_upper = mean + std,
-         .after = std)
+dfPivot <- df %>%
+  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+               names_to = "variable",
+               values_to = "variable_value")
 
-
-  pivot_longer(cols = mean:max,
-               names_to = "stat",
-               values_to = "stat_value")
+# dfYear <- dfYear %>%
+#   mutate(std_lower = mean - std,
+#          std_upper = mean + std,
+#          .after = std)
 
 ```
 
@@ -47,33 +50,89 @@ dfYearPivot <- dfYear %>%
 # whole time series #not sure if want to plot this yet bc it's just one value instead of multiple values spanning  time intervals
 
 # yearly
-pHPlot_year <- dfYearPivot %>%
-  filter(variable == "pH") 
-
-%>%
-  ggplot(aes(x = year, 
-             y = mean)) +
-  geom_line(color = "red") +
+pHPlot_year <- dfYear %>%
+  filter(variable == "pH") %>%
+  ggplot(aes(x = year)) +
+  geom_ribbon(aes(y = mean,
+                  ymin = mean - std,
+                  ymax = mean + std,
+                  fill = "Standard Deviation"), 
+              alpha = 0.2,
+              show.legend = TRUE) +
+  geom_ribbon(aes(y = median,
+                  ymin = Q1,
+                  ymax = Q3,
+                  fill = "Interquartile Range"), 
+              alpha = 0.2,
+              show.legend = TRUE) +
+  geom_ribbon(aes(y = mean,
+                  ymin = min,
+                  ymax = max,
+                  fill = "Range"), 
+              alpha = 0.1,
+              show.legend = TRUE) +
+  geom_line(aes(y = mean, color = "Mean"), show.legend = TRUE) +
+  geom_line(aes(y = median, color = "Median"), show.legend = TRUE) +
   scale_x_continuous(n.breaks = length(unique(dfYear$year)))+
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
         axis.line = element_line(colour = "black"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
   theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O pH Statistics from 2011-2023")+
+  labs(title = "B2O pH Yearly Statistics from 2011-2023")+
   xlab("Date")+
   ylab("pH")
+
 # Save plot
 # ggsave(filename = "TempFPlot-PostQC.pdf", plot = TempFPlot_PostQC, 
 #        path = "Figures/Figures_YSI/02-PostQCPlots")
 pHPlot_year
 
 # monthly
+pHPlot_month <- dfMonth %>%
+  mutate(date = paste(year, month, 01, sep = "-"),
+         date = as.Date(strptime(date, format = "%Y-%b-%d"))) %>%
+  filter(variable == "pH",
+         date >= "2015-01-01" & date < "2023-01-01") %>%
+  ggplot(aes(x = as.Date(yday(date), "2021-01-01"),
+             y = mean,
+             color = factor(year(date)))) +
+  geom_line() +
+  # geom_line(aes(y = median, color = "Median"), show.legend = TRUE) +
+  scale_x_date(date_breaks = "months", date_labels = "%b")+
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "B2O pH Monthly Statistics from 2011-2023")+
+  xlab("Date")+
+  ylab("pH")
+pHPlot_month
 
 # daily
 
+```
+
+```{r test chunk}
+x <- seq(0.01, .99, length.out = 100)
+df <- data.frame(
+  x = rep(x, 2),
+  y = c(qlogis(x), 2 * qlogis(x)),
+  group = rep(c("a","b"),
+  each = 100)
+)
+p <- ggplot(df, aes(x=x, y=y, group=group))
+p
+# These work
+p + geom_line(linetype = 2)
+p + geom_line(aes(colour = group), linetype = 2)
+p + geom_line(aes(colour = x))
 ```
 

@@ -1,4 +1,4 @@
-year,variable,mean,median,std,IQR,Q1,Q2,min,max
+year,variable,mean,median,std,IQR,Q1,Q3,min,max
 2011,chlorophyll_rfu,NA,NA,NA,NA,NA,NA,NA,NA
 2011,chlorophyll_ugL,NA,NA,NA,NA,NA,NA,NA,NA
 2011,conductivity_uScm,44677.21,45200,1447.08,2500,43200,45700,41300,47100

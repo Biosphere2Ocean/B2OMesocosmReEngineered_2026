@@ -37,7 +37,7 @@ dfEditPivot <- dfEdit %>%
                values_to = "variable_value")
 
 # inspect df to see what the classes of each column are
-str(dfEditPivot)
+# str(dfEditPivot)
 
 ```
 
@@ -71,7 +71,7 @@ dfYear <- dfEditPivot %>%
           std = sd(variable_value, na.rm = TRUE),
           IQR = IQR(variable_value, na.rm = TRUE),
           Q1 = quantile(variable_value, 0.25, na.rm = TRUE), 
-          Q2 = quantile(variable_value, 0.75, na.rm = TRUE),
+          Q3 = quantile(variable_value, 0.75, na.rm = TRUE),
           min = min(variable_value, na.rm = TRUE),
           max = max(variable_value, na.rm = TRUE))%>%
   mutate(across(where(is.numeric), round, 2))

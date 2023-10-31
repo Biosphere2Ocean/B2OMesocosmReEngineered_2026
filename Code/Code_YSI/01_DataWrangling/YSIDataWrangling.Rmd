@@ -20,7 +20,7 @@ options(scipen = 999)
 ## Files from Wei-Ren: 2011 - 2021
 ```{r Read in SCADA files from 2011-2021}
 # file path to folder containing old scada database 2011-2021 ocean water quality files
-path <- "/Users/grambihler/Documents/Data/GitHub/OceanWaterQuality/Data/RawData/RawDataYSI/SCADA/SCADA_2011_2021"
+path <- "Data/RawData/RawDataYSI/SCADA/SCADA_2011_2021"
 
 # data from 7/22/11 - 8/4/14
 ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"),

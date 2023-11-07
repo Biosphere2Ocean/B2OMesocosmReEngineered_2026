@@ -24,6 +24,27 @@ dfPivot <- df %>%
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(date = as.Date(date, format = "%Y/%m/%d"))
+
+# character vector of variable names as they appear in the dataframes
+variable_names <- unique(dfPivot$variable)
+
+# character vector of variable names as they should be written on a graph
+variable_text <- c("Temperature (ºF)", "Temperature (ºC)", "pH", "pH (mV)",
+                   "Salinity (PSU)", "Conductivity (µS/cm)", 
+                   "NLF Conductivity (µS/cm", "Specific Conductivity (µS/cm)",
+                   "Dissolved Oxygen (mg/L)", "Dissolved Oxygen, Saturated (%)",
+                   "Dissolved Oxygen, Local (%)", "ORP (mV)", "Chlorophyll (RFU)",
+                   "Chlorophyll (µg/L)", "Total Algae (RFU)", "Total Algae (cells/L)",
+                   "Total Dissolved Solids (mg/L)")
+
+
+# character vector of file names for plots
+file_names <- c("TempFPlot", "TempCPlot", "pHPlot", "pHmVPlot", "SalinityPlot",
+                "ConductivityPlot", "NlfConductivityPlot", "SpConductivityPlot",
+                "DomglPlot", "DoSatPlot", "DoLocalPlot", "OrpPlot", "ChlorophyllRfuPlot",
+                "ChlorophylluglPlot", "TotalAlgaeRfuPlot", "TotalAlgaeCellsLPlot",
+                "TotalDissolvedSolidsPlot")
+
 ```
 
 # Plotting
@@ -53,9 +74,14 @@ AllVariablePlot_PreQC <- dfPivot %>%
 ggsave(filename = "AllVariablePlot-PreQC.pdf", plot = AllVariablePlot_PreQC, 
        path = "Figures/Figures_YSI/01-PreQCPlots", height = 12, width = 10)
 
-# line graph of temperature in fahrenheit
-TempFPlot_PreQC <- dfPivot %>%
-  filter(variable == "temp_f") %>%
+
+# individual line graphs of each variable
+# list to save plots from loop into
+plotList_preqc <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+plotList_preqc[[i]] <- dfPivot %>%
+  filter(variable == variable_names[i]) %>%
   ggplot(aes(x = date, 
              y = variable_value)) +
   geom_line() +
@@ -69,373 +95,17 @@ TempFPlot_PreQC <- dfPivot %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
   theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Temperature (ºF) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Temperature (ºF)")
-# Save plot
-ggsave(filename = "TempFPlot-PreQC.pdf", plot = TempFPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
+  labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
+       subtitle = "Pre-QC: All Outliers Still Present", 
+       x = "Date",
+       y = variable_text[i])
 
-# line graph of temp in celcius
-TempCPlot_PreQC <- dfPivot %>%
-  filter(variable == "temp_c") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Temperature (ºC) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Temperature (ºC)")
-# Save plot
-ggsave(filename = "TempCPlot-PreQC.pdf", plot = TempCPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
+print(plotList_preqc[[i]])
 
-# line graph of pH in pH units
-pHPlot_PreQC <- dfPivot %>%
-  filter(variable == "pH") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O pH from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("pH")
 # Save plot
-ggsave(filename = "pHPlot-PreQC.pdf", plot = pHPlot_PreQC, 
+ggsave(plot = plotList_preqc[[i]],
+       filename = paste(file_names[i],"-PreQC.pdf", sep = ""),
        path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of pH in mV
-pHmVPlot_PreQC <- dfPivot %>%
-  filter(variable == "pH_mV") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O pH (mV) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("pH (mV)")
-# Save plot
-ggsave(filename = "pHmVPlot-PreQC.pdf", plot = pHmVPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of salinity in psu
-SalinityPlot_PreQC <- dfPivot %>%
-  filter(variable == "salinity_psu") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Salinity (PSU) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Salinity (PSU)")
-# Save plot
-ggsave(filename = "SalinityPlot-PreQC.pdf", plot = SalinityPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of conductivity in uS/cm
-ConductivityPlot_PreQC <- dfPivot %>%
-  filter(variable == "conductvity_uScm") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Conductivity (µS/cm) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Conductivity (µS/cm)")
-# Save plot
-ggsave(filename = "ConductivityPlot-PreQC.pdf", plot = ConductivityPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of nlf conductivity in uS/cm
-NLFConductivityPlot_PreQC <- dfPivot %>%
-  filter(variable == "nlf_conductivity_uScm") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O NLF Conductivity (µS/cm) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("NLF Conductivity (µS/cm)")
-# Save plot
-ggsave(filename = "NLFConductivityPlot-PreQC.pdf", plot = NLFConductivityPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of specific conductivity in uS/cm
-SpConductivityPlot_PreQC <- dfPivot %>%
-  filter(variable == "sp_conductivity_uScm") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Specific Conductivity (µS/cm) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Specific Conductivity (µS/cm)")
-# Save plot
-ggsave(filename = "SpConductivityPlot-PreQC.pdf", plot = SpConductivityPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of DO in mg/L
-DOmgLPlot_PreQC <- dfPivot %>%
-  filter(variable == "do_mgL") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Dissolved Oxygen (mg/L) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Dissolved Oxygen (mg/L)")
-# Save plot
-ggsave(filename = "DOmgLPlot-PreQC.pdf", plot = DOmgLPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of DO in percent saturated
-DOPercentSaturatedPlot_PreQC <- dfPivot %>%
-  filter(variable == "do_saturated_percent") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Saturated Dissolved Oxygen (%) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Saturated Dissolved Oxygen (%)")
-# Save plot
-ggsave(filename = "DOPercentSaturatedPlot-PreQC.pdf", plot = DOPercentSaturatedPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of DO in percent local
-DOPercentLocalPlot_PreQC <- dfPivot %>%
-  filter(variable == "do_local_percent") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Local Dissolved Oxygen (%) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Local Dissolved Oxygen (%)")
-# Save plot
-ggsave(filename = "DOPercentLocalPlot-PreQC.pdf", plot = DOPercentLocalPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of ORP in mV
-ORPPlot_PreQC <- dfPivot %>%
-  filter(variable == "orp_mV") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O ORP (mV) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("ORP (mV)")
-# Save plot
-ggsave(filename = "ORPPlot-PreQC.pdf", plot = ORPPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of chlorophyll in RFU
-ChlorophyllRFUPlot_PreQC <- dfPivot %>%
-  filter(variable == "chlorophyll_rfu") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Chlorophyll (RFU) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Chlorophyll (RFU)")
-# Save plot
-ggsave(filename = "ChlorophyllRFUPlot-PreQC.pdf", plot = ChlorophyllRFUPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of chlorophyll in ug/L
-ChlorophyllugLPlot_PreQC <- dfPivot %>%
-  filter(variable == "chlorophyll_ugL") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Chlorophyll (µg/L) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Chlorophyll (µg/L)")
-# Save plot
-ggsave(filename = "ChlorophyllugLPlot-PreQC.pdf", plot = ChlorophyllugLPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of total algae in cells/L
-TotalAlgaePlot_PreQC <- dfPivot %>%
-  filter(variable == "total_algae_cellsL") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Total Algae (cells/L) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Total Algae (cells/L)")
-# Save plot
-ggsave(filename = "TotalAlgaePlot-PreQC.pdf", plot = TotalAlgaePlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
-# line graph of total dissolved solids in mg/L
-TotalDissolvedSolidsPlot_PreQC <- dfPivot %>%
-  filter(variable == "total_dissolved_solids_mgL") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Total Dissolved Solids (mg/L) from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Total Dissolved Solids (mg/L)")
-# Save plot
-ggsave(filename = "TotalDissolvedSolidsPlot-PreQC.pdf", plot = TotalDissolvedSolidsPlot_PreQC, 
-       path = "Figures/Figures_YSI/01-PreQCPlots")
-
+}
 
 ```

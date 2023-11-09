@@ -68,6 +68,7 @@ PreFormattedDataTidy <- rbind(OceanFrame, MangroveFrame, RacewayFrame1, RacewayF
 
 ## Formatted Data
 ```{r data tidying: Data sheet}
+# changing --- and +++ values to the lowest (---) and highest (+++) value for the range read by each nutrient test (see metadata for full explanation of each range). 
 FormattedDataTidy <- FormattedData %>%
   mutate(Turbidity = round(Turbidity, digits = 1),
          Phosphate = ifelse(Phosphate == "---", 0.02, Phosphate),

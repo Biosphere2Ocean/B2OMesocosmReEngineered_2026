@@ -61,7 +61,8 @@ PreFormattedDataTidy <- rbind(OceanFrame, MangroveFrame, RacewayFrame1, RacewayF
          `Nitrate MR` = as.numeric(`Nitrate MR`),
          `Nitrate HR` = as.numeric(`Nitrate HR`),
          pH = as.numeric(pH),
-         Date = format(Date, "%m/%d/%y")) %>%
+         Date = format(Date, "%m/%d/%y"), 
+         Notes = NA) %>%
   relocate(Location, .after = Date)
 
 ```
@@ -97,8 +98,7 @@ FormattedDataTidy <- FormattedData %>%
          Ammonia = round(Ammonia, digits = 2),
          Date = format(Date, "%m/%d/%y"),
          ORP = NA) %>%
-  relocate(ORP, .after = Ammonia) %>%
-  select(-Notes)
+  relocate(ORP, .after = Ammonia) 
 
 ```
 
@@ -107,8 +107,8 @@ FormattedDataTidy <- FormattedData %>%
 AllData <- rbind(PreFormattedDataTidy, FormattedDataTidy) %>%
   mutate(Date = as.Date(Date, format = "%m/%d/%y"))
 
-AllDataPivot <- rbind(PreFormattedDataPivot, FormattedDataPivot) %>%
-  mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+# AllDataPivot <- rbind(PreFormattedDataPivot, FormattedDataPivot) %>%
+#   mutate(Date = as.Date(Date, format = "%m/%d/%y"))
 
 ```
 

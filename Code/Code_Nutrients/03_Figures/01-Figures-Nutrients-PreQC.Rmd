@@ -26,7 +26,10 @@ df <- read_csv("Data/CleanData/CleanData_Nutrients/B2ONutrientData-Clean.csv")
 dfPivot <- df %>%
   pivot_longer(cols = Turbidity:Ammonia,
                names_to = "Nutrients",
-               values_to = "Nutrient Values")
+               values_to = "Nutrient Values") %>%
+  select(-ORP, -Initials, -Notes) %>%
+  na.omit()
+  
 ```
 
 
@@ -51,6 +54,7 @@ PreQCAllLocationsPlot <- dfPivot %>%
   theme(strip.background = element_rect(fill = "white"))+
   labs(title = "Biosphere 2 Nutrients for Ocean, Raceways, and Mangrove Mesocosms from 2018-Present",
        subtitle = "Pre-QC: All Outliers Still Present")
+PreQCAllLocationsPlot
 # Save Plot
 ggsave(filename = "AllLocationsPlot-PreQC.pdf", 
        plot = PreQCAllLocationsPlot,

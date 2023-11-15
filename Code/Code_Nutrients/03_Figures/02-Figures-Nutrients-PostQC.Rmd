@@ -26,12 +26,14 @@ dfQC <- read_csv("Data/CleanData/CleanData_Nutrients/B2ONutrientData-Clean-QC.cs
 dfQCPivot <- dfQC %>%
    pivot_longer(cols = Turbidity:Ammonia,
                names_to = "Nutrients",
-               values_to = "Nutrient Values")
+               values_to = "Nutrient Values") %>%
+  na.omit()
 
 ```
 
 # Post-Quality Control Data Visualizations by Location
-```{r Post-QC Visualizations}
+## Nutrients Together
+```{r all nutrients on plot}
 # All Locations Plot
 PostQCAllLocationsPlot <- dfQCPivot %>%
   ggplot(aes(x = Date,
@@ -182,44 +184,205 @@ ggsave(filename = "Raceway1Raceway2Plot-PostQC.pdf",
 
 ```
 
-# Plots for fun
-```{r more plots}
-dfQC %>%
-  filter(Location == "Raceway 1" | Location == "Raceway 2")%>%
-  filter(Date > "2020-04-01") %>%
-  ggplot(aes(x = Date,
-             y = Ammonia,
-             color = Location)) +
+## Individual Nutrients
+```{r loop set-up}
+# set up vectors to use in loops below
+
+# name of each nutrient
+variable_names <- unique(dfQCPivot$Nutrients)
+# text to use in each plot title for each nutrient
+variable_text <- c("Nitrate MR (mg/L)", "Nitrate HR (mg/L)", "Turbidity (FAU)", "Phosphate (mg/L)",
+                   "pH", "Silica (mg/L)", "Alkalinity mg/L", "Iron (mg/L)", "Ammonia (mg/L)")
+# file name for each plot
+file_names <- c("NitrateMRPlot", "NitrateHRPlot", "TurbidityPlot", "PhosphatePlot", "pHPlot",
+                "SilicaPlot", "AlkalinityPlot", "IronPlot", "AmmoniaPlot")
+
+```
+
+### Ocean
+```{r individual nutrients: Ocean}
+# individual line graphs of each nutrient sampled in the Ocean
+# list to save plots from loop into
+plotList_ocean <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+plotList_ocean[[i]] <- dfQCPivot %>%
+  filter(Location == "Ocean" & Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`)) +
   geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "6 months",
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
                date_labels = "%b %Y") +
   theme_bw() + 
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(), 
         panel.background = element_blank(), 
         axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
   theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "Biosphere 2 Raceways 1 and 2 Nutrients From 2020 to Present",
-       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+  labs(title = paste("Biosphere 2 Ocean", variable_text[i], "from 2018-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
 
-dfQCAmmonia <- dfQC %>%
-  select(Date, Location, Ammonia) %>%
-  mutate(Date = as.Date(Date))
+print(plotList_ocean[[i]])
 
-dfQCAmmonia %>%
-  filter(Location == "Raceway 1" | Location == "Raceway 2")%>%
-  filter(Date > "2022-09-01") %>%
-  na.omit() %>%
-  ggplot(aes(x = Date,
-             y = Ammonia,
+# Save plot
+ggsave(plot = plotList_ocean[[i]],
+       filename = paste(file_names[i],".pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Ocean")
+}
+
+```
+
+### Mangroves
+```{r individual nutrients: Mangroves}
+# individual line graphs of each nutrient sampled in the Mangrove Biome
+# list to save plots from loop into
+plotList_mangroves <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+plotList_mangroves[[i]] <- dfQCPivot %>%
+  filter(Location == "Mangroves" & Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Mangroves", variable_text[i], "from 2018-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_mangroves[[i]])
+
+# Save plot
+ggsave(plot = plotList_mangroves[[i]],
+       filename = paste(file_names[i],".pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Mangroves")
+}
+
+```
+
+### Raceway 1
+```{r individual nutrients: Raceway 1}
+# individual line graphs of each nutrient sampled in Coral Raceway 1
+# list to save plots from loop into
+plotList_raceway1 <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+plotList_raceway1[[i]] <- dfQCPivot %>%
+  filter(Location == "Raceway 1" & Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Coral Raceway 1", variable_text[i], "from 2020-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_raceway1[[i]])
+
+# Save plot
+ggsave(plot = plotList_raceway1[[i]],
+       filename = paste(file_names[i],".pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway1")
+}
+
+```
+
+### Raceway 2
+```{r individual nutrients: Raceway 2}
+# individual line graphs of each nutrient sampled in Coral Raceway 2
+# list to save plots from loop into
+plotList_raceway2 <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+plotList_raceway2[[i]] <- dfQCPivot %>%
+  filter(Location == "Raceway 2" & Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`)) +
+  geom_line() +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Coral Raceway 2", variable_text[i], "from 2020-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_raceway2[[i]])
+
+# Save plot
+ggsave(plot = plotList_raceway2[[i]],
+       filename = paste(file_names[i],".pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway2")
+}
+
+```
+
+### Raceway 1 and Raceway 2
+```{r individual nutrients: Raceway 1 and Raceway 2}
+# individual line graphs of each nutrient sampled in Coral Raceways 1 and 2
+# list to save plots from loop into
+plotList_raceway12 <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+plotList_raceway12[[i]] <- dfQCPivot %>%
+  filter(Location == "Raceway 1" | Location == "Raceway 2") %>%
+  filter(Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`, 
              color = Location)) +
   geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "2 months",
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
                date_labels = "%b %Y") +
-  labs(title = "Biosphere 2 Raceways 1 and 2 Nutrients From 2020 to Present",
-       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Coral Raceways 1 and 2", variable_text[i], "from 2020-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_raceway12[[i]])
+
+# Save plot
+ggsave(plot = plotList_raceway12[[i]],
+       filename = paste(file_names[i],".pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/BothRaceways")
+}
 
 ```
 

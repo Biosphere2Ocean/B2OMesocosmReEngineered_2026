@@ -105,7 +105,32 @@ FormattedDataTidy <- FormattedData %>%
 ## Combine Data
 ```{r Combine data from Pre-formatted and Data sheets}
 AllData <- rbind(PreFormattedDataTidy, FormattedDataTidy) %>%
-  mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+  mutate(Turbidity = round(Turbidity, digits = 1),
+         Phosphate = ifelse(Phosphate == "---", 0.02, Phosphate),
+         Phosphate = ifelse(Phosphate == "+++", 2.50, Phosphate),
+         Phosphate = as.numeric(Phosphate),
+         Phosphate = round(Phosphate, digits = 2),
+         `Nitrate MR` = ifelse(`Nitrate MR` == "---", 0.2, `Nitrate MR`),
+         `Nitrate MR` = ifelse(`Nitrate MR` == "+++", 5.0, `Nitrate MR`),
+         `Nitrate MR` = as.numeric(`Nitrate MR`),
+         `Nitrate MR` = round(`Nitrate MR`, digits = 2),
+         `Nitrate HR` = ifelse(`Nitrate HR` == "---", 0.3, `Nitrate HR`),
+         `Nitrate HR` = ifelse(`Nitrate HR` == "+++", 30.0, `Nitrate HR`),
+         `Nitrate HR` = as.numeric(`Nitrate HR`),
+         `Nitrate HR` = round(`Nitrate HR`, digits = 2),
+         pH = round(pH, digits = 2),
+         Alkalinity = round(Alkalinity, digits = 1),
+         Silica = ifelse(Silica == "---", 0.01, Silica),
+         Silica = ifelse(Silica == "+++", 1.60, Silica),
+         Silica = round(as.numeric(Silica), digits = 2),
+         Iron = ifelse(Iron == "---", 0.009, Iron),
+         Iron = ifelse(Iron == "+++", 1.400, Iron),
+         Iron = round(Iron, digits = 3),
+         Ammonia = ifelse(Ammonia == "---", 0.01, Ammonia),
+         Ammonia = ifelse(Ammonia == "+++", 0.50, Ammonia),
+         Ammonia = as.numeric(Ammonia),
+         Ammonia = round(Ammonia, digits = 2),
+         Date = as.Date(Date, format = "%m/%d/%y")) 
 
 # AllDataPivot <- rbind(PreFormattedDataPivot, FormattedDataPivot) %>%
 #   mutate(Date = as.Date(Date, format = "%m/%d/%y"))

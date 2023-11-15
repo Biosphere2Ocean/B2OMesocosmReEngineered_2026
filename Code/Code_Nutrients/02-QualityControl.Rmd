@@ -15,203 +15,85 @@ options(scipen = 999)
 
 # Import Data
 ```{r import data}
-df <- read_csv("Data/CleanData/CleanData_Nutrients/B2ONutrientData-Clean.csv")
+# use B2ONutrientData-Clean.csv
+# drop ORP, Initials, Notes columns
+df <- read_csv("Data/CleanData/CleanData_Nutrients/B2ONutrientData-Clean.csv") %>%
+  select(-ORP, -Initials, -Notes)
 ```
 
-# Data Formatting
-```{r data formatting}
-df2 <- df %>%
-  select(-ORP, -Initials)
-
-```
-
-```{r testing qc function}
+# Quality Control
+For each nutrient in each location, turn values outside 2-sigma from mean into NA
+```{r QC}
 # make empty dataframe to store output from loop
 # creating with just 2 columns for now since "date" and "location" columns will not change
-dfQC <- data.frame(matrix(ncol = ncol(df2), nrow = nrow(df2)))
-colnames(dfQC) <- colnames(df2)
-# # filling in date and location column with same values from df
-# dfQC <- dfQC %>%
-#   mutate(date = df$Date,
-#          location = df$Location)
+dfQC <- data.frame(matrix(ncol = ncol(df)))
+colnames(dfQC) <- colnames(df)
+
 # getting list of column names from df, excluding "date" and "location" so we can use it to loop through
-nutrient_list <- colnames(df2)
+nutrient_list <- colnames(df)
 nutrient_list <- nutrient_list[! nutrient_list %in% c("Date", "Location")]
 # list of locations
-location_list <- c(unique(df2$Location))
+location_list <- c(unique(df$Location))
 
 for (l in location_list) {
+  # filter df by location, l
+  dfLocation <- df %>%
+    filter(Location == l)
+  
+  dfLocationQC <- dfLocation %>%
+    select(Date, Location)
+  
   for (n in nutrient_list) {
     # select column from df to use in calculations (represented by n in the loop) and store as nutrient
-    nutrient <- df2[[n]]
+    nutrient_col <- dfLocation[[n]]
     # frame with just date, location, and nutrient columns - all from df
-    dfLocationNutrient <- df2[, c("Date", "Location")]
-    dfLocationNutrient <- cbind(dfLocationNutrient, nutrient)
-    # filter by location
-    dfLocationNutrient <- dfLocationNutrient %>%
-      filter(Location == l)
+    dfLocationNutrient <- dfLocation[, c("Date", "Location")]
+    dfLocationNutrient <- cbind(dfLocationNutrient, nutrient_col)
     
-    mean_nutrient_value <- mean(dfLocationNutrient$nutrient, na.rm = TRUE)
-
-    sd_nutrient_value <- sd(dfLocationNutrient$nutrient, na.rm = TRUE)
-
-    dfQCLocationNutrient <- dfLocationNutrient %>%
-      mutate(nutrient = ifelse(nutrient > abs((mean_nutrient_value-2)/sd_nutrient_value),
-                        NA,
-                        nutrient))
-
-    # replace var variable with new QC'd var column from dfVar
-    nutrient <- dfLocationNutrient$nutrient
+    # find mean
+    mean_nutrient_value <- mean(nutrient_col, na.rm = TRUE)
+    # find standard deviation
+    sd_nutrient_value <- sd(nutrient_col, na.rm = TRUE)
     
-    # stick new QC'd var column into dfQC
-    dfQC <- dfQC %>%
-      cbind(var)
-    
-    # set the column name of dfQC that is currently called "nutrient" to be what v currently represents in the loop. Before this, the column names for dfQC are date, time, var. After this, the column names for dfQC are date, time, temp_f, temp_c, etc. Otherwise, you'd just keep replacing the data in var with new QC'd data but not saving it to a column with the name of the variable that data represents (like pH or temp_f).
-    colnames(dfQC)[colnames(dfQC) == "var"] = v
-  }
-}
-
-
-```
-
-
-# Data Quality Control: Remove 2-sigma from Mean
-```{r Data QC}
-# function to recreate remove_sd_outlier() but better: identifies data points outside 2 standard deviations from the mean for each nutrient at each location and replaces the outliers with NA values
-remove_n_sigmas <- function(df, n_sigmas) {
-  locations <- c(unique(df$Location))
-  nutrients <- c(unique(df$Nutrients))
-  
-  QCAllData <- data.frame(matrix(ncol = ncol(df), nrow = 0))
-  colnames(QCAllData) <- colnames(AllData)
-  
-  for (l in locations) {
-    for (n in nutrients) {
-      LocationNutrientFrame <- df %>%
-        filter(Location == l & Nutrients == n)
-      
-      mean_nutrient_value <- mean(LocationNutrientFrame$`Nutrient Values`, na.rm = TRUE)
-      
-      sd_nutrient_value <- sd(LocationNutrientFrame$`Nutrient Values`, na.rm = TRUE)
-      
-      QCLocationNutrientFrame <- LocationNutrientFrame %>%
-        mutate(`Nutrient Values` = ifelse(`Nutrient Values` < mean_nutrient_value-n_sigmas*sd_nutrient_value | `Nutrient Values` > mean_nutrient_value+n_sigmas*sd_nutrient_value, NA, `Nutrient Values`))
-      
-      QCAllData <- rbind(QCLocationNutrientFrame, QCAllData)
-      }
-  }
-  return(QCAllData)
-  }
-
-# remove data outside 2-sigmas from mean based on location and nutrient categories
-QCAllData <- remove_n_sigmas(AllData, 2)
-```
-
-### QC Function
-The following code defines a function to identify data points outside input standard deviations from the montlhy mean or median for each variable and replaces the identified outliers with NA values.
-At some point, this will be localized within a .R file called QCFunction.R, but for now, run the below chunk to quality control the data
-```{r QC Function}
-# make empty dataframe to store output from loop
-# creating with just 2 columns for now since "date" and "time" columns will not change
-dfQC <- data.frame(matrix(ncol = 2, nrow = nrow(df)))
-colnames(dfQC) <- c("date", "time")
-# filling in date and time columns with same values from df
-dfQC <- dfQC %>%
-  mutate(date = df$date,
-         time = df$time)
-# getting list of column names from df, excluding "date" and "time" so we can use it to loop through
-var_names <- colnames(df)
-var_names <- var_names[! var_names %in% c("date", "time")]
-
-# loopin time
-for (v in var_names) {
-  # select column from df to use in calculations (represented by v in the loop) and store as var
-  var <- df[[v]]
-  # frame with just date, time, and var columns - all from df
-  dfVar <- df[, c("date", "time")]
-  dfVar <- cbind(dfVar, var)
-  
-  dfVar <- dfVar %>%
-    # mutate date column so it's just year and month - this will allow us to do summary statistics by month
-    mutate(date = format(as.Date(date), "%Y-%m"),
-           stat = NA) %>%
-    group_by(date) %>%
-    # make columns for monthly standard deviation, mean, and median absolute deviation (mad) 
-    mutate(sd_monthly = sd(as.numeric(var), na.rm = TRUE),
-           mean_monthly = mean(as.numeric(var), na.rm = TRUE),
-           mad_monthly = mad(as.numeric(var), na.rm = TRUE))
-  
-  # create vector of unique dates from dfVar. Will give just the unique year/month combos
-  unique_dates <- unique(dfVar$date)
-
-  # test to see if the data for each month are normal
-  # if normal: use mean
-  # if not normal: use median
-  for (d in unique_dates) {
-    # filter dfVar by month and use only unique values
-    dfVarNormal <- dfVar %>%
-      filter(date == d) %>%
-      unique()
-    
-    # run shapiro test on var values if there are more than 3 unique values. 
-    # p-value will be saved in shapiro_value if above is true, otherwise, sample will be considered non-normal, and shapiro_value will be saved as 0 
-    shapiro_value <- NA
-    if (length(unique(dfVarNormal$var)) <= 3) {
-      shapiro_value <- 0
-    } else {
-      shapiro_value <- shapiro.test(as.numeric(dfVarNormal$var))$p.value
+    # if standard deviation is < 0 or NA, make sd_nutrient_value 1 so that we don't divide by 0 in next step
+    if (sd_nutrient_value < 0 | is.na(sd_nutrient_value) == TRUE){
+      sd_nutrient_value <- 1
     }
     
-    # if shapiro_value is not significant (data is normal), then make stat values where date == d be equal to "mean", otherwise, set them equal to "median"
-    dfVar <- dfVar %>%
-      mutate(stat = ifelse(date == d & shapiro_value >= 0.05,
-                           "mean",
-                           "median"))
-  }
-  
-  # calculate z-scores for each data point based on the monthly mean or median
-  # if the value of stat is "mean", then a normal z-score will be calculated using the mean
-  # if the value of stat is "median", then a modified z-score will be calculated using the median
-  # if the denominator in the suggested calculation is going to be 0 (sd_monthly for normal and mad_monthly for modified), then either the normal z-score will be calculated, or 0 will be put in for the zscore. Some reasoning is included below: 
-  dfVar <- dfVar %>%
-    # create column called zscore and populate with NA values
-    mutate(zscore = NA,
-           # if stat is median and mad_monthly is > 0, then calculate the modified z-score for zscore column, otherwise, keep original zscore value (NA in this case). This is to avoid dividing by 0
-           zscore = ifelse(stat == "median" & mad_monthly > 0,
-                           0.6745 * (var - mean_monthly) / mad_monthly,
-                           zscore),
-           # if stat is mean and sd_monthly is > 0, then calculate normal z-score for zscore column, otherwise, keep original zscore value. This is to avoid dividing by 0.
-           zscore = ifelse(stat == "mean" & sd_monthly > 0,
-                           (var - mean_monthly)/sd_monthly,
-                           zscore),
-           # if stat is mean and sd_monthly is < or = to 0, make zscore value 0, otherwise, keep original zscore value. If the data are normal, and the standard deviation is <=0, then the z-score should be 0 anyways. This is again to avoid dividing by 0.
-           zscore = ifelse(stat == "mean" & sd_monthly <= 0,
-                           0,
-                           zscore), 
-           # if stat is median and mad_monthly is <= 0 and sd_monthly > 0, then calculate a normal z-score for zscore column, otherwise, keep original zscore value. This is to avoid dividing by 0: if median is suggested (non normal data) but the var value is not different from the median, this will give 0 as mad value (mad = constant * |var - median|; see ?mad for more details)
-           zscore = ifelse(stat == "median" & mad_monthly <= 0 & sd_monthly > 0,
-                           (var - mean_monthly)/sd_monthly,
-                           zscore), 
-           # if stat is median and mad_monthly is <= 0 and sd_monthly <= 0, zscore is 0, otherwise, keep original zscore value
-           zscore = ifelse(stat == "median" & mad_monthly <= 0 & sd_monthly <= 0, 
-                           0,
-                           zscore))
+    # go through nutrient_col; if value is NA or absolute value of z-score is > 2, make value NA, otherwise, leave alone
+    dfQCLocationNutrient <- dfLocationNutrient %>%
+      mutate(nutrient_col = ifelse(is.na(mean_nutrient_value) == TRUE |
+                                     abs((nutrient_col-mean_nutrient_value)/sd_nutrient_value) > 2,
+                                   NA,
+                                   nutrient_col))
+    
+    # select nutrient_col as nutrient_col_qc (for redundancy)
+    nutrient_col_qc <- dfQCLocationNutrient$nutrient_col
+    
+    # stick new QC'd nutrient column into dfLocationQC
+    dfLocationQC <- dfLocationQC %>%
+      cbind(nutrient_col_qc)
 
-  # if absolute value of z-score is greater than 2.00, then turn var value into NA; otherwise, leave as is
-  dfVar <- dfVar %>%
-    mutate(var = ifelse(abs(zscore) > 2.00,
-                        NA,
-                        var))
-  # replace var variable with new QC'd var column from dfVar
-  var <- dfVar$var
-  
-  # stick new QC'd var column into dfQC
-  dfQC <- dfQC %>%
-    cbind(var)
-  
-  # set the column name of dfQC that is currently called "var" to be what v currently represents in the loop. Before this, the column names for dfQC are date, time, var. After this, the column names for dfQC are date, time, temp_f, temp_c, etc. Otherwise, you'd just keep replacing the data in var with new QC'd data but not saving it to a column with the name of the variable that data represents (like pH or temp_f).
-  colnames(dfQC)[colnames(dfQC) == "var"] = v
+    # set the column name of dfLocationQC that is currently called "nutrient" to be what n currently represents in the loop. this is a really important step!!!!!
+    colnames(dfLocationQC)[colnames(dfLocationQC) == "nutrient_col_qc"] = n
   }
+  
+  # bind all rows and columns of dfLocationQC to dfQC
+  dfQC <- dfQC %>%
+    rbind(dfLocationQC)
+  
+}
+
+# remove rows where Date is NA; make sure Date values are in yyyy-mm-dd format and not numeric
+dfQC <- dfQC %>%
+  filter(is.na(Date) == FALSE) %>%
+  mutate(Date = as.Date(Date))
 
 ```
+
+### Save QC'd Data
+```{r save data}
+write_csv(dfQC,
+          file = "Data/CleanData/CleanData_Nutrients/B2ONutrientData-Clean-QC.csv")
+```
+

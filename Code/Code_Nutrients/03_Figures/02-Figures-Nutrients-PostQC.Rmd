@@ -202,9 +202,10 @@ file_names <- c("NitrateMRPlot", "NitrateHRPlot", "TurbidityPlot", "PhosphatePlo
 ### Ocean
 ```{r individual nutrients: Ocean}
 # individual line graphs of each nutrient sampled in the Ocean
+
 # list to save plots from loop into
 plotList_ocean <- list()
-# loop through each variable, plot, save
+# loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
 plotList_ocean[[i]] <- dfQCPivot %>%
   filter(Location == "Ocean" & Nutrients == variable_names[i]) %>%
@@ -230,8 +231,41 @@ print(plotList_ocean[[i]])
 
 # Save plot
 ggsave(plot = plotList_ocean[[i]],
-       filename = paste(file_names[i],".pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Ocean")
+       filename = paste(file_names[i],"-Line.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Ocean/LineGraphs")
+}
+
+# list to save plots from loop into
+plotList_ocean <- list()
+# loop through each variable, plot line graph with Loess curve, save
+for (i in 1:length(variable_names)) {
+plotList_ocean[[i]] <- dfQCPivot %>%
+  filter(Location == "Ocean" & Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`)) +
+  geom_line() +
+  geom_smooth() +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Ocean", variable_text[i], "from 2018-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_ocean[[i]])
+
+# Save plot
+ggsave(plot = plotList_ocean[[i]],
+       filename = paste(file_names[i],"-Loess.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Ocean/LoessGraphs")
 }
 
 ```
@@ -239,9 +273,10 @@ ggsave(plot = plotList_ocean[[i]],
 ### Mangroves
 ```{r individual nutrients: Mangroves}
 # individual line graphs of each nutrient sampled in the Mangrove Biome
+
 # list to save plots from loop into
 plotList_mangroves <- list()
-# loop through each variable, plot, save
+# loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
 plotList_mangroves[[i]] <- dfQCPivot %>%
   filter(Location == "Mangroves" & Nutrients == variable_names[i]) %>%
@@ -267,8 +302,41 @@ print(plotList_mangroves[[i]])
 
 # Save plot
 ggsave(plot = plotList_mangroves[[i]],
-       filename = paste(file_names[i],".pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Mangroves")
+       filename = paste(file_names[i],"-Line.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Mangroves/LineGraphs")
+}
+
+# list to save plots from loop into
+plotList_mangroves <- list()
+# loop through each variable, plot line graph with Loess curve, save
+for (i in 1:length(variable_names)) {
+plotList_mangroves[[i]] <- dfQCPivot %>%
+  filter(Location == "Mangroves" & Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`)) +
+  geom_line() +
+  geom_smooth() +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Mangroves", variable_text[i], "from 2018-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_mangroves[[i]])
+
+# Save plot
+ggsave(plot = plotList_mangroves[[i]],
+       filename = paste(file_names[i],"-Loess.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Mangroves/LoessGraphs")
 }
 
 ```
@@ -276,9 +344,10 @@ ggsave(plot = plotList_mangroves[[i]],
 ### Raceway 1
 ```{r individual nutrients: Raceway 1}
 # individual line graphs of each nutrient sampled in Coral Raceway 1
+
 # list to save plots from loop into
 plotList_raceway1 <- list()
-# loop through each variable, plot, save
+# loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
 plotList_raceway1[[i]] <- dfQCPivot %>%
   filter(Location == "Raceway 1" & Nutrients == variable_names[i]) %>%
@@ -304,8 +373,41 @@ print(plotList_raceway1[[i]])
 
 # Save plot
 ggsave(plot = plotList_raceway1[[i]],
-       filename = paste(file_names[i],".pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway1")
+       filename = paste(file_names[i],"-Line.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway1/LineGraphs")
+}
+
+# list to save plots from loop into
+plotList_raceway1 <- list()
+# loop through each variable, plot line graph with Loess curve, save
+for (i in 1:length(variable_names)) {
+plotList_raceway1[[i]] <- dfQCPivot %>%
+  filter(Location == "Raceway 1" & Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`)) +
+  geom_line() +
+  geom_smooth() +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Coral Raceway 1", variable_text[i], "from 2020-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_raceway1[[i]])
+
+# Save plot
+ggsave(plot = plotList_raceway1[[i]],
+       filename = paste(file_names[i],"-Loess.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway1/LoessGraphs")
 }
 
 ```
@@ -313,9 +415,10 @@ ggsave(plot = plotList_raceway1[[i]],
 ### Raceway 2
 ```{r individual nutrients: Raceway 2}
 # individual line graphs of each nutrient sampled in Coral Raceway 2
+
 # list to save plots from loop into
 plotList_raceway2 <- list()
-# loop through each variable, plot, save
+# loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
 plotList_raceway2[[i]] <- dfQCPivot %>%
   filter(Location == "Raceway 2" & Nutrients == variable_names[i]) %>%
@@ -341,8 +444,41 @@ print(plotList_raceway2[[i]])
 
 # Save plot
 ggsave(plot = plotList_raceway2[[i]],
-       filename = paste(file_names[i],".pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway2")
+       filename = paste(file_names[i],"-Line.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway2/LineGraphs")
+}
+
+# list to save plots from loop into
+plotList_raceway2 <- list()
+# loop through each variable, plot line graph with Loess curve, save
+for (i in 1:length(variable_names)) {
+plotList_raceway2[[i]] <- dfQCPivot %>%
+  filter(Location == "Raceway 2" & Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`)) +
+  geom_line() +
+  geom_smooth() +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Coral Raceway 2", variable_text[i], "from 2020-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_raceway2[[i]])
+
+# Save plot
+ggsave(plot = plotList_raceway2[[i]],
+       filename = paste(file_names[i],"-Loess.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway2/LoessGraphs")
 }
 
 ```
@@ -350,9 +486,10 @@ ggsave(plot = plotList_raceway2[[i]],
 ### Raceway 1 and Raceway 2
 ```{r individual nutrients: Raceway 1 and Raceway 2}
 # individual line graphs of each nutrient sampled in Coral Raceways 1 and 2
+
 # list to save plots from loop into
 plotList_raceway12 <- list()
-# loop through each variable, plot, save
+# loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
 plotList_raceway12[[i]] <- dfQCPivot %>%
   filter(Location == "Raceway 1" | Location == "Raceway 2") %>%
@@ -380,8 +517,43 @@ print(plotList_raceway12[[i]])
 
 # Save plot
 ggsave(plot = plotList_raceway12[[i]],
-       filename = paste(file_names[i],".pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/BothRaceways")
+       filename = paste(file_names[i],"-Line.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/BothRaceways/LineGraphs")
+}
+
+# list to save plots from loop into
+plotList_raceway12 <- list()
+# loop through each variable, plot line graph with Loess curve, save
+for (i in 1:length(variable_names)) {
+plotList_raceway12[[i]] <- dfQCPivot %>%
+  filter(Location == "Raceway 1" | Location == "Raceway 2") %>%
+  filter(Nutrients == variable_names[i]) %>%
+  ggplot(aes(x = Date, 
+             y = `Nutrient Values`, 
+             color = Location)) +
+  geom_line() +
+  geom_smooth() +
+  scale_x_date(breaks = waiver(), date_breaks = "4 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = paste("Biosphere 2 Coral Raceways 1 and 2", variable_text[i], "from 2020-2023"),
+       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       x = "Date",
+       y = variable_text[i])
+
+print(plotList_raceway12[[i]])
+
+# Save plot
+ggsave(plot = plotList_raceway12[[i]],
+       filename = paste(file_names[i],"-Loess.pdf", sep = ""),
+       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/BothRaceways/LoessGraphs")
 }
 
 ```

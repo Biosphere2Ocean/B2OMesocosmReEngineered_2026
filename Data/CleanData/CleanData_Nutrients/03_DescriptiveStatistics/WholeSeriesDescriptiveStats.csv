@@ -1,0 +1,37 @@
+Location,nutrient,mean,median,std,IQR,min,max
+Ocean,Turbidity,0.13,0,0.52,0,0,3
+Ocean,Phosphate,0.08,0.07,0.06,0.09,0,0.27
+Ocean,Nitrate MR,1,1,0.32,0.52,0.4,1.7
+Ocean,Nitrate HR,1.45,1.4,0.56,0.74,0.1,2.83
+Ocean,pH,8.2,8.19,0.16,0.21,7.85,8.57
+Ocean,Alkalinity,126.95,128,9.45,11.25,102,152.4
+Ocean,Silica,1.08,0.95,0.62,1.13,0,2.18
+Ocean,Iron,0.01,0,0.01,0.01,0,0.04
+Ocean,Ammonia,0.02,0.01,0.02,0.02,0,0.06
+Mangroves,Turbidity,17.82,18,3.38,4,9,27
+Mangroves,Phosphate,0.7,0.68,0.21,0.28,0.25,1.32
+Mangroves,Nitrate MR,1.04,1,0.41,0.51,0.2,1.9
+Mangroves,Nitrate HR,1.02,1,0.7,0.96,0,3.67
+Mangroves,pH,8.29,8.3,0.22,0.29,7.85,8.75
+Mangroves,Alkalinity,642.07,639.5,26.37,41.2,613,677
+Mangroves,Silica,0.18,0.18,NA,0,0.18,0.18
+Mangroves,Iron,0.03,0.03,NA,0,0.03,0.03
+Mangroves,Ammonia,NA,NA,NA,NA,NA,NA
+Raceway 1,Turbidity,0.62,0,1.39,0,0,6
+Raceway 1,Phosphate,0.06,0.05,0.06,0.07,0,0.38
+Raceway 1,Nitrate MR,1.35,1.4,0.35,0.5,0.6,2.1
+Raceway 1,Nitrate HR,1.8,1.73,0.63,0.87,0.5,3.23
+Raceway 1,pH,8,7.94,0.17,0.25,7.34,8.52
+Raceway 1,Alkalinity,109.88,107,17.04,21,69,165
+Raceway 1,Silica,0.35,0.24,0.33,0.21,0,1.65
+Raceway 1,Iron,0.01,0.01,0.01,0.01,0,0.04
+Raceway 1,Ammonia,0.01,0.01,0.02,0.01,0,0.05
+Raceway 2,Turbidity,0.14,0,0.52,0,0,3
+Raceway 2,Phosphate,0.05,0.04,0.04,0.06,0,0.17
+Raceway 2,Nitrate MR,1.52,1.5,0.43,0.69,0.7,2.4
+Raceway 2,Nitrate HR,1.97,1.93,0.69,1,0.4,3.6
+Raceway 2,pH,7.92,7.91,0.1,0.12,7.7,8.21
+Raceway 2,Alkalinity,101.49,100,19.56,29.7,66,158.4
+Raceway 2,Silica,0.25,0.21,0.19,0.12,0,1.14
+Raceway 2,Iron,0.01,0.01,0.01,0.01,0,0.04
+Raceway 2,Ammonia,0.01,0,0.01,0.01,0,0.03

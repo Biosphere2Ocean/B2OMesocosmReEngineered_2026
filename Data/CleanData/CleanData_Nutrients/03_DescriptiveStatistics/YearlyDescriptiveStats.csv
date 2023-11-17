@@ -1,0 +1,253 @@
+date,Location,nutrient,mean,median,std,IQR,Q1,Q3,min,max
+2017,Ocean,Turbidity,0,0,0,0,0,0,0,0
+2017,Ocean,Phosphate,0.05,0.05,0.01,0,0.05,0.05,0.04,0.06
+2017,Ocean,Nitrate MR,0.88,0.9,0.13,0.2,0.8,1,0.7,1
+2017,Ocean,Nitrate HR,1.48,1.5,0.15,0.1,1.4,1.5,1.3,1.7
+2017,Ocean,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Ocean,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Ocean,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Ocean,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Ocean,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Ocean,Turbidity,0.14,0,0.56,0,0,0,0,3
+2018,Ocean,Phosphate,0.09,0.09,0.05,0.06,0.06,0.12,0.03,0.22
+2018,Ocean,Nitrate MR,1.01,1,0.21,0.4,0.8,1.2,0.7,1.5
+2018,Ocean,Nitrate HR,1.7,1.8,0.47,0.65,1.33,1.98,0.9,2.8
+2018,Ocean,pH,8.3,8.3,0.08,0.06,8.27,8.32,8.2,8.39
+2018,Ocean,Alkalinity,132,132,NA,0,132,132,132,132
+2018,Ocean,Silica,0.3,0.31,0.03,0.03,0.29,0.32,0.26,0.33
+2018,Ocean,Iron,0,0,0,0,0,0,0,0
+2018,Ocean,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Ocean,Turbidity,0.1,0,0.42,0,0,0,0,2
+2019,Ocean,Phosphate,0.03,0.03,0.03,0.05,0,0.05,0,0.17
+2019,Ocean,Nitrate MR,0.77,0.7,0.27,0.4,0.6,1,0.4,1.5
+2019,Ocean,Nitrate HR,1.27,1.2,0.58,0.75,0.92,1.67,0.1,2.7
+2019,Ocean,pH,8.4,8.44,0.11,0.11,8.37,8.48,8,8.5
+2019,Ocean,Alkalinity,123.58,125.2,10.59,17,115,132,102,145.2
+2019,Ocean,Silica,0.6,0.45,0.49,0.49,0.28,0.77,0,1.91
+2019,Ocean,Iron,0.01,0,0.01,0.01,0,0.01,0,0.02
+2019,Ocean,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Ocean,Turbidity,0.1,0,0.42,0,0,0,0,2
+2020,Ocean,Phosphate,0.05,0.04,0.05,0.05,0.02,0.07,0,0.19
+2020,Ocean,Nitrate MR,0.89,0.7,0.41,0.6,0.6,1.2,0.4,1.7
+2020,Ocean,Nitrate HR,1.23,1.1,0.6,0.8,0.8,1.6,0.3,2.8
+2020,Ocean,pH,8.26,8.25,0.15,0.12,8.16,8.29,8.05,8.57
+2020,Ocean,Alkalinity,128.14,128.5,10.38,9.75,123.25,133,102,152
+2020,Ocean,Silica,0.8,0.55,0.53,0.74,0.41,1.15,0.02,1.82
+2020,Ocean,Iron,0,0,0.01,0,0,0,0,0.03
+2020,Ocean,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2021,Ocean,Turbidity,0.14,0,0.58,0,0,0,0,3
+2021,Ocean,Phosphate,0.11,0.11,0.07,0.11,0.05,0.16,0,0.27
+2021,Ocean,Nitrate MR,1.15,1.2,0.28,0.3,1,1.3,0.5,1.6
+2021,Ocean,Nitrate HR,1.52,1.5,0.47,0.7,1.2,1.9,0.7,2.4
+2021,Ocean,pH,8.18,8.18,0.1,0.11,8.14,8.25,7.97,8.4
+2021,Ocean,Alkalinity,128.46,128,6.93,7,125,132,112,143
+2021,Ocean,Silica,1.33,1.58,0.57,1.07,0.79,1.86,0.45,2.09
+2021,Ocean,Iron,0,0,0,0.01,0,0.01,0,0.02
+2021,Ocean,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2022,Ocean,Turbidity,0.23,0,0.68,0,0,0,0,3
+2022,Ocean,Phosphate,0.11,0.11,0.07,0.08,0.07,0.15,0,0.24
+2022,Ocean,Nitrate MR,1.02,1,0.24,0.3,0.9,1.2,0.5,1.43
+2022,Ocean,Nitrate HR,1.33,1.35,0.45,0.4,1.1,1.5,0.4,2.37
+2022,Ocean,pH,8.07,8.07,0.1,0.12,8,8.12,7.86,8.25
+2022,Ocean,Alkalinity,122.61,122,8.83,13,117,130,104.5,142
+2022,Ocean,Silica,1.66,1.61,0.37,0.29,1.6,1.89,0.04,2.18
+2022,Ocean,Iron,0.01,0.01,0.01,0.01,0,0.01,0,0.04
+2022,Ocean,Ammonia,0.03,0.03,0.03,0.02,0.02,0.04,0.01,0.05
+2023,Ocean,Turbidity,0.07,0,0.45,0,0,0,0,3
+2023,Ocean,Phosphate,0.1,0.09,0.07,0.11,0.03,0.15,0,0.27
+2023,Ocean,Nitrate MR,1.22,1.2,0.27,0.4,1.03,1.43,0.66,1.7
+2023,Ocean,Nitrate HR,1.68,1.8,0.61,0.83,1.3,2.13,0.23,2.83
+2023,Ocean,pH,8.11,8.13,0.14,0.23,7.99,8.22,7.85,8.36
+2023,Ocean,Alkalinity,132.11,131,7.21,8.4,128,136.4,117,152.4
+2023,Ocean,Silica,1.23,1.41,0.48,0.87,0.73,1.6,0.55,2.11
+2023,Ocean,Iron,0.01,0.01,0.01,0.01,0,0.02,0,0.04
+2023,Ocean,Ammonia,0.02,0.01,0.02,0.03,0,0.03,0,0.06
+2017,Mangroves,Turbidity,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Mangroves,Phosphate,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Mangroves,Nitrate MR,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Mangroves,Nitrate HR,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Mangroves,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Mangroves,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Mangroves,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Mangroves,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Mangroves,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Mangroves,Turbidity,14.33,15,2.18,2,14,16,10,17
+2018,Mangroves,Phosphate,0.96,0.99,0.14,0.07,0.97,1.04,0.68,1.12
+2018,Mangroves,Nitrate MR,1.23,1.1,0.44,0.67,0.9,1.57,0.7,1.8
+2018,Mangroves,Nitrate HR,1.62,1.55,0.72,0.82,1.05,1.88,0.9,2.9
+2018,Mangroves,pH,8.6,8.6,NA,0,8.6,8.6,8.6,8.6
+2018,Mangroves,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Mangroves,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Mangroves,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Mangroves,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Mangroves,Turbidity,17.23,17,2.86,2.5,15.75,18.25,10,25
+2019,Mangroves,Phosphate,0.62,0.6,0.22,0.24,0.47,0.71,0.25,1.31
+2019,Mangroves,Nitrate MR,0.92,0.9,0.38,0.4,0.7,1.1,0.2,1.8
+2019,Mangroves,Nitrate HR,0.85,0.8,0.53,0.52,0.5,1.02,0,2.4
+2019,Mangroves,pH,8.38,8.41,0.18,0.16,8.31,8.47,7.9,8.74
+2019,Mangroves,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Mangroves,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Mangroves,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Mangroves,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Mangroves,Turbidity,19.37,19,3.06,4,17,21,10,27
+2020,Mangroves,Phosphate,0.85,0.81,0.21,0.23,0.69,0.92,0.51,1.32
+2020,Mangroves,Nitrate MR,0.8,0.8,0.42,0.75,0.43,1.17,0.2,1.8
+2020,Mangroves,Nitrate HR,0.69,0.5,0.64,0.7,0.3,1,0,2.5
+2020,Mangroves,pH,8.32,8.24,0.19,0.16,8.21,8.37,8.14,8.75
+2020,Mangroves,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Mangroves,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Mangroves,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Mangroves,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2021,Mangroves,Turbidity,18.27,19,3.65,5.25,15.75,21,9,25
+2021,Mangroves,Phosphate,0.76,0.78,0.15,0.15,0.68,0.82,0.34,1.12
+2021,Mangroves,Nitrate MR,1.15,1.2,0.29,0.35,0.95,1.3,0.5,1.8
+2021,Mangroves,Nitrate HR,0.97,1,0.48,0.65,0.65,1.3,0.1,1.9
+2021,Mangroves,pH,8.23,8.23,0.11,0.08,8.19,8.27,8.08,8.36
+2021,Mangroves,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2021,Mangroves,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2021,Mangroves,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2021,Mangroves,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2022,Mangroves,Turbidity,17.76,18,2.85,3,16,19,12,23
+2022,Mangroves,Phosphate,0.66,0.65,0.17,0.21,0.55,0.76,0.36,1.13
+2022,Mangroves,Nitrate MR,1.11,1.1,0.4,0.49,0.88,1.37,0.3,1.83
+2022,Mangroves,Nitrate HR,1.07,1.06,0.8,1.13,0.43,1.55,0,3.5
+2022,Mangroves,pH,7.96,7.96,0.09,0.13,7.9,8.03,7.85,8.08
+2022,Mangroves,Alkalinity,630.67,627,19.76,19.5,620,639.5,613,652
+2022,Mangroves,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2022,Mangroves,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2022,Mangroves,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2023,Mangroves,Turbidity,16.83,17,3.77,4.75,14.25,19,9,27
+2023,Mangroves,Phosphate,0.56,0.54,0.16,0.21,0.43,0.64,0.32,1.07
+2023,Mangroves,Nitrate MR,1.24,1.3,0.37,0.55,0.95,1.5,0.5,1.9
+2023,Mangroves,Nitrate HR,1.47,1.4,0.78,0.87,0.96,1.83,0.23,3.67
+2023,Mangroves,pH,8.09,8.08,0.05,0.05,8.07,8.12,8.02,8.16
+2023,Mangroves,Alkalinity,653.47,665,30.96,29.3,641.7,671,618.4,677
+2023,Mangroves,Silica,0.18,0.18,NA,0,0.18,0.18,0.18,0.18
+2023,Mangroves,Iron,0.03,0.03,NA,0,0.03,0.03,0.03,0.03
+2023,Mangroves,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,Turbidity,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,Phosphate,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,Nitrate MR,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,Nitrate HR,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 1,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,Turbidity,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,Phosphate,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,Nitrate MR,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,Nitrate HR,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 1,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,Turbidity,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,Phosphate,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,Nitrate MR,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,Nitrate HR,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 1,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 1,Turbidity,2.55,3,1.9,2,1,3,0,6
+2020,Raceway 1,Phosphate,0.1,0.07,0.11,0.08,0.04,0.12,0,0.38
+2020,Raceway 1,Nitrate MR,1.36,1.4,0.39,0.5,1.1,1.6,0.6,2.1
+2020,Raceway 1,Nitrate HR,1.61,1.6,0.58,0.6,1.15,1.75,0.9,3
+2020,Raceway 1,pH,8.18,8.2,0.13,0.14,8.12,8.26,7.97,8.52
+2020,Raceway 1,Alkalinity,117.94,116.5,21.15,32.25,102.5,134.75,85,164
+2020,Raceway 1,Silica,0.53,0.35,0.45,0.34,0.3,0.64,0,1.65
+2020,Raceway 1,Iron,0.01,0.01,0,0.01,0,0.01,0,0.02
+2020,Raceway 1,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2021,Raceway 1,Turbidity,1,0,1.7,2,0,2,0,6
+2021,Raceway 1,Phosphate,0.07,0.07,0.04,0.06,0.04,0.1,0,0.19
+2021,Raceway 1,Nitrate MR,1.35,1.4,0.32,0.4,1.1,1.5,0.7,1.9
+2021,Raceway 1,Nitrate HR,1.67,1.75,0.51,0.7,1.3,2,0.5,2.7
+2021,Raceway 1,pH,8.13,8.14,0.12,0.12,8.09,8.21,7.88,8.36
+2021,Raceway 1,Alkalinity,116.07,113,20.61,24.5,102,126.5,69,165
+2021,Raceway 1,Silica,0.68,0.48,0.45,0.49,0.37,0.86,0.24,1.64
+2021,Raceway 1,Iron,0.01,0,0.01,0.01,0,0.01,0,0.04
+2021,Raceway 1,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2022,Raceway 1,Turbidity,0.18,0,0.74,0,0,0,0,4
+2022,Raceway 1,Phosphate,0.06,0.05,0.05,0.05,0.02,0.07,0,0.28
+2022,Raceway 1,Nitrate MR,1.19,1.2,0.33,0.45,0.95,1.4,0.7,2.03
+2022,Raceway 1,Nitrate HR,1.73,1.6,0.7,0.8,1.3,2.1,0.5,3.2
+2022,Raceway 1,pH,7.86,7.86,0.06,0.08,7.83,7.91,7.71,7.94
+2022,Raceway 1,Alkalinity,99.56,99,7.41,8.88,95.75,104.62,80,117
+2022,Raceway 1,Silica,0.24,0.2,0.16,0.16,0.14,0.3,0,0.77
+2022,Raceway 1,Iron,0.01,0.01,0.01,0.01,0,0.01,0,0.04
+2022,Raceway 1,Ammonia,0.01,0,0.01,0.01,0,0.01,0,0.03
+2023,Raceway 1,Turbidity,0.1,0,0.46,0,0,0,0,3
+2023,Raceway 1,Phosphate,0.04,0.03,0.05,0.04,0.01,0.05,0,0.21
+2023,Raceway 1,Nitrate MR,1.46,1.48,0.34,0.5,1.2,1.7,0.9,2.1
+2023,Raceway 1,Nitrate HR,2.02,2.03,0.63,0.87,1.61,2.48,0.5,3.23
+2023,Raceway 1,pH,7.9,7.9,0.13,0.13,7.85,7.98,7.34,8.09
+2023,Raceway 1,Alkalinity,111.84,113,14.96,20.25,102.75,123,73.6,136.4
+2023,Raceway 1,Silica,0.2,0.21,0.1,0.11,0.14,0.25,0,0.51
+2023,Raceway 1,Iron,0.01,0.01,0.01,0.02,0,0.02,0,0.04
+2023,Raceway 1,Ammonia,0.01,0.01,0.02,0.01,0,0.01,0,0.05
+2017,Raceway 2,Turbidity,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 2,Phosphate,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 2,Nitrate MR,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 2,Nitrate HR,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 2,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 2,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 2,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 2,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2017,Raceway 2,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,Turbidity,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,Phosphate,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,Nitrate MR,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,Nitrate HR,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2018,Raceway 2,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,Turbidity,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,Phosphate,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,Nitrate MR,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,Nitrate HR,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2019,Raceway 2,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,Turbidity,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,Phosphate,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,Nitrate MR,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,Nitrate HR,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,pH,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,Alkalinity,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,Silica,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,Iron,NA,NA,NA,NA,NA,NA,NA,NA
+2020,Raceway 2,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2021,Raceway 2,Turbidity,0.28,0,0.66,0,0,0,0,2
+2021,Raceway 2,Phosphate,0.08,0.07,0.05,0.07,0.05,0.12,0,0.17
+2021,Raceway 2,Nitrate MR,1.62,1.75,0.41,0.6,1.3,1.9,0.8,2.3
+2021,Raceway 2,Nitrate HR,1.95,1.95,0.68,0.85,1.5,2.35,0.4,3.4
+2021,Raceway 2,pH,8.02,8.01,0.1,0.13,7.94,8.07,7.87,8.21
+2021,Raceway 2,Alkalinity,96.68,96.5,8.99,14.25,88.5,102.75,82,119
+2021,Raceway 2,Silica,0.15,0.1,0.17,0.16,0.06,0.22,0.02,0.34
+2021,Raceway 2,Iron,0.01,0.01,0.01,0.02,0,0.02,0,0.04
+2021,Raceway 2,Ammonia,NA,NA,NA,NA,NA,NA,NA,NA
+2022,Raceway 2,Turbidity,0.13,0,0.48,0,0,0,0,2
+2022,Raceway 2,Phosphate,0.04,0.04,0.04,0.05,0.02,0.07,0,0.14
+2022,Raceway 2,Nitrate MR,1.31,1.2,0.43,0.5,1,1.5,0.7,2.4
+2022,Raceway 2,Nitrate HR,1.76,1.7,0.69,0.8,1.3,2.1,0.5,3.4
+2022,Raceway 2,pH,7.85,7.85,0.06,0.08,7.82,7.89,7.73,7.93
+2022,Raceway 2,Alkalinity,87.29,81,16.54,13.25,77,90.25,66,135
+2022,Raceway 2,Silica,0.22,0.16,0.24,0.1,0.13,0.23,0,1.14
+2022,Raceway 2,Iron,0.01,0.01,0.01,0.01,0,0.01,0,0.04
+2022,Raceway 2,Ammonia,0.01,0,0.01,0.01,0,0.01,0,0.03
+2023,Raceway 2,Turbidity,0.09,0,0.46,0,0,0,0,3
+2023,Raceway 2,Phosphate,0.03,0.02,0.03,0.05,0,0.05,0,0.14
+2023,Raceway 2,Nitrate MR,1.6,1.56,0.39,0.57,1.33,1.9,0.7,2.4
+2023,Raceway 2,Nitrate HR,2.13,2.12,0.66,0.95,1.65,2.6,0.63,3.6
+2023,Raceway 2,pH,7.91,7.92,0.09,0.1,7.87,7.97,7.7,8.09
+2023,Raceway 2,Alkalinity,113.33,113,17.28,19,103,122,73,158.4
+2023,Raceway 2,Silica,0.28,0.23,0.15,0.11,0.19,0.3,0.11,0.75
+2023,Raceway 2,Iron,0.01,0.01,0.01,0.01,0.01,0.01,0,0.04
+2023,Raceway 2,Ammonia,0,0,0.01,0.01,0,0.01,0,0.03

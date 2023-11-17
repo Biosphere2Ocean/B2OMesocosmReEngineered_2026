@@ -1,0 +1,105 @@
+---
+title: "Nutrient Figures: Descriptive Statistics"
+Collaborators: Renee Grambihler
+Project: OceanWaterQuality
+Institution: Biosphere 2 Ocean
+output: html_notebook
+---
+
+## Import Libraries
+```{r Libraries}
+library(tidyverse)
+library(lubridate)
+```
+
+# Import Data
+```{r import data}
+# qc data
+df <- read_csv("Data/CleanData/CleanData_Nutrients/02_QualityControl/B2ONutrientdata-Clean-QC.csv")
+
+# whole time series data
+dfWhole <- read_csv("Data/CleanData/CleanData_Nutrients/03_DescriptiveStatistics/WholeSeriesDescriptiveStats.csv")
+
+# yearly time series data
+dfYear <- read_csv("Data/CleanData/CleanData_Nutrients/03_DescriptiveStatistics/YearlyDescriptiveStats.csv")
+
+# monthly time series data
+dfMonth <- read_csv("Data/CleanData/CleanData_Nutrients/03_DescriptiveStatistics/MonthlyDescriptiveStats.csv")
+
+```
+
+## Data Formatting
+```{r data formatting}
+# character vector of nutrient names as they appear in the dataframes
+nutrient_names <- unique(dfWhole$nutrient)
+
+# character vector of location names as they appear in the dataframes
+location_names <- unique(dfWhole$Location)
+
+# character vector of nutrient names as they should be written on a graph
+nutrient_text <- c("Turbidity (FAU)", "Phosphate (mg/L)", "Nitrate MR (mg/L)", "Nitrate HR (mg/L)",
+                   "pH", "Alkalinity mg/L", "Silica (mg/L)", "Iron (mg/L)", "Ammonia (mg/L)")
+# file name for each plot
+file_names <- c("TurbidityPlot", "PhosphatePlot", "NitrateMRPlot", "NitrateHRPlot", "pHPlot",
+                "AlkalinityPlot", "SilicaPlot", "IronPlot", "AmmoniaPlot")
+
+```
+
+# Line Plots
+## Yearly
+```{r yearly plots}
+# whole time series #not sure if want to plot this yet bc it's just one value instead of multiple values spanning  time intervals
+
+# plots of mean, median, std, iqr for each year over course of time series
+
+# list for plots to populate from loop
+plotList_year <- list()
+
+for (l in 1:length(location_names)) {
+  plotList_year <- list()
+  for (i in 1:length(nutrient_names)) {
+    plotList_year[[i]] <- dfYear %>%
+      filter(Location == location_names[l]) %>%
+      filter(nutrient == nutrient_names[i]) %>%
+      ggplot((aes(x = date))) +
+      geom_ribbon(aes(y = mean,
+                      ymin = mean - std,
+                      ymax = mean + std,
+                      fill = "Standard Deviation"), 
+                  alpha = 0.2,
+                  show.legend = TRUE) +
+      geom_ribbon(aes(y = median,
+                      ymin = Q1,
+                      ymax = Q3,
+                      fill = "Interquartile Range"), 
+                  alpha = 0.2,
+                  show.legend = TRUE) +
+      geom_line(aes(y = mean, color = "Mean"), 
+                show.legend = TRUE) +
+      geom_line(aes(y = median, color = "Median"), 
+                show.legend = TRUE) +
+      scale_x_continuous(n.breaks = length(unique(dfYear$date)))+
+      scale_color_manual(values = c("red", "blue")) +
+      scale_fill_manual(values = c("blue", "red")) +
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))+
+      labs(title = paste("B2", location_names[l], nutrient_text[i], "Yearly Statistics"),
+           x = "Date",
+           y = nutrient_text[i],
+           fill = "",
+           color = "")
+    print(plotList_year[[i]])
+    # Save plot
+    ggsave(plot = plotList_year[[i]],
+           filename = paste(file_names[i],"-Year-DescriptiveStats.pdf", sep = ""),
+           path = paste("Figures/Figures_Nutrients/03-DescriptiveStatisticsPlots/YearlyStatistics", location_names[l], sep = "/"))
+  }
+}
+
+```

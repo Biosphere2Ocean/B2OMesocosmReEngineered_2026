@@ -1,5 +1,5 @@
 ---
-title: "YSI Figures Post-QC"
+title: "YSI Figures: Descriptive Statistics"
 Collaborators: Renee Grambihler
 Project: OceanWaterQuality
 Institution: Biosphere 2 Ocean

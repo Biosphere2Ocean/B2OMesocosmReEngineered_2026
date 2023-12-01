@@ -95,16 +95,16 @@ cor_mat_stats$P[is.na(cor_mat_stats$P)] <- 1 #turn NAs into 1's (insignificant)
   dev.off()
 }
 
-# Scatter Plots
-dfScatter <- df %>%
-  select(-c(pH_mV, nlf_conductivity_uScm, sp_conductivity_uScm, do_mgL,
-            do_saturated_percent, chlorophyll_ugL, total_algae_cellsL))
-{ # open pdf graphics driver
-  pdf(file = "Figures/Figures_YSI/04-CorrelationPlots/CorrelationChart.pdf")
-  chart.Correlation(dfScatter, histogram=TRUE, pch=19)
-  # close graphics driver
-  dev.off()
-  }
+# Scatter Plots -- large file
+# dfScatter <- df %>%
+#   select(-c(pH_mV, nlf_conductivity_uScm, sp_conductivity_uScm, do_mgL,
+#             do_saturated_percent, chlorophyll_ugL, total_algae_cellsL))
+# { # open pdf graphics driver
+#   pdf(file = "Figures/Figures_YSI/04-CorrelationPlots/CorrelationChart.pdf")
+#   chart.Correlation(dfScatter, histogram=TRUE, pch=19)
+#   # close graphics driver
+#   dev.off()
+#   }
 
 # Heat Map
 col<- colorRampPalette(c("blue", "white", "red"))(20) #get colors

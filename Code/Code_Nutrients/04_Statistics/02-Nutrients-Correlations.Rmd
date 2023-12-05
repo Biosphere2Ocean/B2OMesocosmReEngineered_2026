@@ -14,6 +14,7 @@ library(lubridate)
 library(Hmisc)
 library(corrplot)
 library(PerformanceAnalytics)
+source("Code/Code_Nutrients/04_Statistics/CorrelationFunction.R")
 options(scipen = 999)
 ```
 
@@ -22,4 +23,190 @@ options(scipen = 999)
 # use 03-OceanWaterQualityData-QCCutoff.csv
 df <- read_csv("Data/CleanData/CleanData_Nutrients/02_QualityControl/B2ONutrientData-Clean-QC.csv")
 
+```
+
+## Separate Data into Locations
+```{r separate dataframes}
+# ocean
+dfOcean <- df %>%
+  filter(Location == "Ocean")
+
+# mangroves
+dfMangroves <- df %>%
+  filter(Location == "Mangroves")
+
+# raceway 1
+dfRaceway1 <- df %>%
+  filter(Location == "Raceway 1")
+
+# raceway 2
+dfRaceway2 <- df %>%
+  filter(Location == "Raceway 2")
+
+```
+
+## Create Correlation Matrices
+### All Locations
+```{r correlation matrix: all}
+# take out non-numeric columns from df
+cormatAll <- df %>%
+  select(-Date, -Location)
+# make correlation matrix and round values to nearest hundreth
+cormatAll <- cor(cormatAll, use = "pairwise.complete.obs") %>%
+  round(2)
+# turn NA values into 0 (no correlation)
+cormatAll[is.na(cormatAll)] <- 0
+
+```
+
+### Ocean
+```{r correlation matrix: ocean}
+# take out non-numeric columns from df
+cormatOcean <- dfOcean %>%
+  select(-Date, -Location)
+# make correlation matrix and round values to nearest hundreth
+cormatOcean <- cor(cormatOcean, use = "pairwise.complete.obs") %>%
+  round(2)
+# turn NA values into 0 (no correlation)
+cormatOcean[is.na(cormatOcean)] <- 0
+
+```
+
+### Mangroves
+```{r correlation matrix: mangroves}
+# take out non-numeric columns from df
+cormatMangroves <- dfMangroves %>%
+  select(-Date, -Location)
+# make correlation matrix and round values to nearest hundreth
+cormatMangroves <- cor(cormatMangroves, use = "pairwise.complete.obs") %>%
+  round(2)
+# turn NA values into 0 (no correlation)
+cormatMangroves[is.na(cormatMangroves)] <- 0
+
+```
+
+### Raceway 1
+```{r correlation matrix: raceway 1}
+# take out non-numeric columns from df
+cormatRaceway1 <- dfRaceway1 %>%
+  select(-Date, -Location)
+# make correlation matrix and round values to nearest hundreth
+cormatRaceway1 <- cor(cormatRaceway1, use = "pairwise.complete.obs") %>%
+  round(2)
+# turn NA values into 0 (no correlation)
+cormatRaceway1[is.na(cormatRaceway1)] <- 0
+
+```
+
+### Raceway 2
+```{r correlation matrix: raceway 2}
+# take out non-numeric columns from df
+cormatRaceway2 <- dfRaceway2 %>%
+  select(-Date, -Location)
+# make correlation matrix and round values to nearest hundreth
+cormatRaceway2 <- cor(cormatRaceway2, use = "pairwise.complete.obs") %>%
+  round(2)
+# turn NA values into 0 (no correlation)
+cormatRaceway2[is.na(cormatRaceway2)] <- 0
+
+```
+
+
+## Get Significant Statistics
+### All
+```{r significant stats: all}
+# create nested list of matrices: p-values, n, r values
+cormatAll_stats <- rcorr(as.matrix(cormatAll))
+
+# full flattened correlation matrix
+cormatAll_stats_flat <- flattenCorrMatrix(cormatAll_stats$r, cormatAll_stats$P) %>%
+  mutate(across(3:4, ~ round(.x, 2))) 
+write_csv(cormatAll_stats_flat, 
+          file = "Data/CleanData/Nutrients/04_Correlations/All/01-Correlations-AllLocations-Total.csv")
+
+# flattened correlation matrix with only p-values <= 0.05
+cormatAll_stats_flat_sig <- cormatAll_stats_flat %>%
+  filter(p_value <= 0.05)
+write_csv(cormatAll_stats_flat_sig, 
+          file = "Data/CleanData/Nutrients/04_Correlations/All/02-Correlations-AllLocations-Significant.csv")
+  
+```
+
+### Ocean
+```{r significant stats: ocean}
+# create nested list of matrices: p-values, n, r values
+cormatOcean_stats <- rcorr(as.matrix(cormatOcean))
+
+# full flattened correlation matrix
+cormatOcean_stats_flat <- flattenCorrMatrix(cormatOcean_stats$r, cormatOcean_stats$P) %>%
+  mutate(across(3:4, ~ round(.x, 2))) 
+write_csv(cormatOcean_stats_flat, 
+          file = "Data/CleanData/Nutrients/04_Correlations/Ocean/01-Correlations-Ocean-Total.csv")
+
+# flattened correlation matrix with only p-values <= 0.05
+cormatOcean_stats_flat_sig <- cormatOcean_stats_flat %>%
+  filter(p_value <= 0.05)
+write_csv(cormatOcean_stats_flat_sig, 
+          file = "Data/CleanData/Nutrients/04_Correlations/Ocean/02-Correlations-Ocean-Significant.csv")
+  
+```
+
+### Mangroves
+```{r significant stats: mangroves}
+# create nested list of matrices: p-values, n, r values
+cormatMangroves_stats <- rcorr(as.matrix(cormatMangroves))
+
+# full flattened correlation matrix
+cormatMangroves_stats_flat <- flattenCorrMatrix(cormatMangroves_stats$r,
+                                                cormatMangroves_stats$P) %>%
+  mutate(across(3:4, ~ round(.x, 2))) 
+write_csv(cormatMangroves_stats_flat, 
+          file = "Data/CleanData/Nutrients/04_Correlations/Mangroves/01-Correlations-Mangroves-Total.csv")
+
+# flattened correlation matrix with only p-values <= 0.05
+cormatMangroves_stats_flat_sig <- cormatMangroves_stats_flat %>%
+  filter(p_value <= 0.05)
+write_csv(cormatMangroves_stats_flat_sig, 
+          file = "Data/CleanData/Nutrients/04_Correlations/Mangroves/02-Correlations-Mangroves-Significant.csv")
+  
+```
+
+### Raceway 1
+```{r significant stats: raceway 1}
+# create nested list of matrices: p-values, n, r values
+cormatRaceway1_stats <- rcorr(as.matrix(cormatRaceway1))
+
+# full flattened correlation matrix
+cormatRaceway1_stats_flat <- flattenCorrMatrix(cormatRaceway1_stats$r,
+                                                cormatRaceway1_stats$P) %>%
+  mutate(across(3:4, ~ round(.x, 2))) 
+write_csv(cormatRaceway1_stats_flat, 
+          file = "Data/CleanData/Nutrients/04_Correlations/Raceway1/01-Correlations-Raceway1-Total.csv")
+
+# flattened correlation matrix with only p-values <= 0.05
+cormatRaceway1_stats_flat_sig <- cormatRaceway1_stats_flat %>%
+  filter(p_value <= 0.05)
+write_csv(cormatRaceway1_stats_flat_sig, 
+          file = "Data/CleanData/Nutrients/04_Correlations/Raceway1/02-Correlations-Raceway1-Significant.csv")
+  
+```
+
+### Raceway 2
+```{r significant stats: raceway 2}
+# create nested list of matrices: p-values, n, r values
+cormatRaceway2_stats <- rcorr(as.matrix(cormatRaceway2))
+
+# full flattened correlation matrix
+cormatRaceway2_stats_flat <- flattenCorrMatrix(cormatRaceway2_stats$r,
+                                                cormatRaceway2_stats$P) %>%
+  mutate(across(3:4, ~ round(.x, 2))) 
+write_csv(cormatRaceway2_stats_flat, 
+          file = "Data/CleanData/Nutrients/04_Correlations/Raceway2/01-Correlations-Raceway2-Total.csv")
+
+# flattened correlation matrix with only p-values <= 0.05
+cormatRaceway2_stats_flat_sig <- cormatRaceway2_stats_flat %>%
+  filter(p_value <= 0.05)
+write_csv(cormatRaceway2_stats_flat_sig, 
+          file = "Data/CleanData/Nutrients/04_Correlations/Raceway2/02-Correlations-Raceway2-Significant.csv")
+  
 ```

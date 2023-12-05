@@ -1,0 +1,37 @@
+row,column,cor_coeff,p_value
+Turbidity,Phosphate,-0.1,0.81
+Turbidity,Nitrate MR,-0.51,0.16
+Phosphate,Nitrate MR,-0.09,0.81
+Turbidity,Nitrate HR,-0.48,0.2
+Phosphate,Nitrate HR,-0.2,0.61
+Nitrate MR,Nitrate HR,0.93,0
+Turbidity,pH,-0.19,0.62
+Phosphate,pH,0.15,0.7
+Nitrate MR,pH,0.15,0.7
+Nitrate HR,pH,0.07,0.87
+Turbidity,Alkalinity,-0.34,0.36
+Phosphate,Alkalinity,-0.52,0.16
+Nitrate MR,Alkalinity,0.35,0.35
+Nitrate HR,Alkalinity,0.37,0.33
+pH,Alkalinity,0.36,0.34
+Turbidity,Silica,-0.29,0.45
+Phosphate,Silica,-0.05,0.89
+Nitrate MR,Silica,0.05,0.9
+Nitrate HR,Silica,0.12,0.77
+pH,Silica,0.05,0.89
+Alkalinity,Silica,0.4,0.29
+Turbidity,Iron,-0.07,0.85
+Phosphate,Iron,-0.04,0.93
+Nitrate MR,Iron,-0.1,0.79
+Nitrate HR,Iron,-0.13,0.75
+pH,Iron,-0.18,0.65
+Alkalinity,Iron,-0.14,0.72
+Silica,Iron,-0.05,0.9
+Turbidity,Ammonia,0.23,0.54
+Phosphate,Ammonia,0.13,0.75
+Nitrate MR,Ammonia,0.02,0.95
+Nitrate HR,Ammonia,-0.07,0.86
+pH,Ammonia,-0.03,0.93
+Alkalinity,Ammonia,-0.41,0.27
+Silica,Ammonia,-0.99,0
+Iron,Ammonia,0.03,0.94

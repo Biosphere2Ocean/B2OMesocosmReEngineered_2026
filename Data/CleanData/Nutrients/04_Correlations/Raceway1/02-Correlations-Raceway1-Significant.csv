@@ -1,0 +1,4 @@
+row,column,cor_coeff,p_value
+Nitrate MR,Nitrate HR,0.89,0
+Nitrate HR,Silica,-0.66,0.05
+pH,Silica,0.66,0.05

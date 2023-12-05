@@ -1,0 +1,25 @@
+---
+title: "Nutrients Data Correlations"
+collaborators: Renee Grambihler
+project: OceanWaterQuality
+institution: Biosphere 2 Ocean
+output: html_notebook
+---
+# Correlations
+## Import Libraries
+```{r Import Libraries}
+library(tidyverse)
+# library(tibbletime) 
+library(lubridate)
+library(Hmisc)
+library(corrplot)
+library(PerformanceAnalytics)
+options(scipen = 999)
+```
+
+## Import Data
+```{r import data}
+# use 03-OceanWaterQualityData-QCCutoff.csv
+df <- read_csv("Data/CleanData/CleanData_Nutrients/02_QualityControl/B2ONutrientData-Clean-QC.csv")
+
+```

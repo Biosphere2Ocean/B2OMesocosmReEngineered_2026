@@ -1,0 +1,12 @@
+row,column,cor_coeff,p_value
+Turbidity,Phosphate,0.92,0
+Turbidity,Nitrate MR,-0.66,0.05
+Phosphate,Nitrate MR,-0.73,0.02
+Turbidity,Nitrate HR,-0.76,0.02
+Phosphate,Nitrate HR,-0.84,0
+Nitrate MR,Nitrate HR,0.94,0
+Nitrate MR,pH,-0.78,0.01
+Nitrate HR,pH,-0.72,0.03
+Turbidity,Alkalinity,0.81,0.01
+Phosphate,Alkalinity,0.88,0
+Nitrate HR,Alkalinity,-0.66,0.05

@@ -14,14 +14,14 @@ library(lubridate)
 library(Hmisc)
 library(corrplot)
 library(PerformanceAnalytics)
-source("Code/Code_Nutrients/04_Statistics/CorrelationFunction.R")
+source("Code/Nutrients/04_Statistics/CorrelationFunction.R")
 options(scipen = 999)
 ```
 
 ## Import Data
 ```{r import data}
 # use 03-OceanWaterQualityData-QCCutoff.csv
-df <- read_csv("Data/CleanData/CleanData_Nutrients/02_QualityControl/B2ONutrientData-Clean-QC.csv")
+df <- read_csv("Data/Clean/Nutrients/02_QualityControl/01-Nutrients-Data-Clean-QC.csv")
 
 ```
 
@@ -122,13 +122,13 @@ cormatAll_stats <- rcorr(as.matrix(cormatAll))
 cormatAll_stats_flat <- flattenCorrMatrix(cormatAll_stats$r, cormatAll_stats$P) %>%
   mutate(across(3:4, ~ round(.x, 2))) 
 write_csv(cormatAll_stats_flat, 
-          file = "Data/CleanData/Nutrients/04_Correlations/All/01-Correlations-AllLocations-Total.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/All/01-Correlations-AllLocations-Total.csv")
 
 # flattened correlation matrix with only p-values <= 0.05
 cormatAll_stats_flat_sig <- cormatAll_stats_flat %>%
   filter(p_value <= 0.05)
 write_csv(cormatAll_stats_flat_sig, 
-          file = "Data/CleanData/Nutrients/04_Correlations/All/02-Correlations-AllLocations-Significant.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/All/02-Correlations-AllLocations-Significant.csv")
   
 ```
 
@@ -141,13 +141,13 @@ cormatOcean_stats <- rcorr(as.matrix(cormatOcean))
 cormatOcean_stats_flat <- flattenCorrMatrix(cormatOcean_stats$r, cormatOcean_stats$P) %>%
   mutate(across(3:4, ~ round(.x, 2))) 
 write_csv(cormatOcean_stats_flat, 
-          file = "Data/CleanData/Nutrients/04_Correlations/Ocean/01-Correlations-Ocean-Total.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/Ocean/01-Correlations-Ocean-Total.csv")
 
 # flattened correlation matrix with only p-values <= 0.05
 cormatOcean_stats_flat_sig <- cormatOcean_stats_flat %>%
   filter(p_value <= 0.05)
 write_csv(cormatOcean_stats_flat_sig, 
-          file = "Data/CleanData/Nutrients/04_Correlations/Ocean/02-Correlations-Ocean-Significant.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/Ocean/02-Correlations-Ocean-Significant.csv")
   
 ```
 
@@ -161,13 +161,13 @@ cormatMangroves_stats_flat <- flattenCorrMatrix(cormatMangroves_stats$r,
                                                 cormatMangroves_stats$P) %>%
   mutate(across(3:4, ~ round(.x, 2))) 
 write_csv(cormatMangroves_stats_flat, 
-          file = "Data/CleanData/Nutrients/04_Correlations/Mangroves/01-Correlations-Mangroves-Total.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/Mangroves/01-Correlations-Mangroves-Total.csv")
 
 # flattened correlation matrix with only p-values <= 0.05
 cormatMangroves_stats_flat_sig <- cormatMangroves_stats_flat %>%
   filter(p_value <= 0.05)
 write_csv(cormatMangroves_stats_flat_sig, 
-          file = "Data/CleanData/Nutrients/04_Correlations/Mangroves/02-Correlations-Mangroves-Significant.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/Mangroves/02-Correlations-Mangroves-Significant.csv")
   
 ```
 
@@ -181,13 +181,13 @@ cormatRaceway1_stats_flat <- flattenCorrMatrix(cormatRaceway1_stats$r,
                                                 cormatRaceway1_stats$P) %>%
   mutate(across(3:4, ~ round(.x, 2))) 
 write_csv(cormatRaceway1_stats_flat, 
-          file = "Data/CleanData/Nutrients/04_Correlations/Raceway1/01-Correlations-Raceway1-Total.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/Raceway1/01-Correlations-Raceway1-Total.csv")
 
 # flattened correlation matrix with only p-values <= 0.05
 cormatRaceway1_stats_flat_sig <- cormatRaceway1_stats_flat %>%
   filter(p_value <= 0.05)
 write_csv(cormatRaceway1_stats_flat_sig, 
-          file = "Data/CleanData/Nutrients/04_Correlations/Raceway1/02-Correlations-Raceway1-Significant.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/Raceway1/02-Correlations-Raceway1-Significant.csv")
   
 ```
 
@@ -201,12 +201,12 @@ cormatRaceway2_stats_flat <- flattenCorrMatrix(cormatRaceway2_stats$r,
                                                 cormatRaceway2_stats$P) %>%
   mutate(across(3:4, ~ round(.x, 2))) 
 write_csv(cormatRaceway2_stats_flat, 
-          file = "Data/CleanData/Nutrients/04_Correlations/Raceway2/01-Correlations-Raceway2-Total.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/Raceway2/01-Correlations-Raceway2-Total.csv")
 
 # flattened correlation matrix with only p-values <= 0.05
 cormatRaceway2_stats_flat_sig <- cormatRaceway2_stats_flat %>%
   filter(p_value <= 0.05)
 write_csv(cormatRaceway2_stats_flat_sig, 
-          file = "Data/CleanData/Nutrients/04_Correlations/Raceway2/02-Correlations-Raceway2-Significant.csv")
+          file = "Data/Clean/Nutrients/04_Correlations/Raceway2/02-Correlations-Raceway2-Significant.csv")
   
 ```

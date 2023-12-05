@@ -9,18 +9,14 @@ output: html_notebook
 ## Import Libraries
 ```{r Import Libraries}
 library(tidyverse)
-# library(tibbletime) 
-library(lubridate)
-library(Hmisc)
-library(corrplot)
-library(PerformanceAnalytics)
+source("Code/Functions/CorrelationFunction.R")
 options(scipen = 999)
 ```
 
 ## Import Data
 ```{r import data}
 # use 03-OceanWaterQualityData-QCCutoff.csv
-df <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv")
+df <- read_csv("Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
 
 ```
 
@@ -42,80 +38,17 @@ cor_mat[is.na(cor_mat)] <- 0
 # create nested list of matrices: p-values, n, r values
 cor_mat_stats <- rcorr(as.matrix(cor_mat))
 
-# flattenCorrMatrix function to make stats look nice. source:http://www.sthda.com/english/wiki/correlation-matrix-a-quick-start-guide-to-analyze-format-and-visualize-a-correlation-matrix-using-r-software 
-# cormat : matrix of the correlation coefficients
-# pmat : matrix of the correlation p-values
-flattenCorrMatrix <- function(cormat, pmat) {
-  ut <- upper.tri(cormat)
-  data.frame(
-    row = rownames(cormat)[row(cormat)[ut]],
-    column = rownames(cormat)[col(cormat)[ut]],
-    cor_coeff  =(cormat)[ut],
-    p_value = pmat[ut]
-    )
-}
-
 # full flattened correlation matrix
 cor_mat_stats_flat <- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %>%
   mutate(across(3:4, ~ round(.x, 2))) 
 write_csv(cor_mat_stats_flat, 
-          file = "Data/CleanData/CleanData_YSI/04_Correlations/YSICorrelations.csv")
+          file = "Data/Clean/YSI/04_Correlations/01-YSI-Correlations.csv")
 
 # flattened correlation matrix with only p-values <= 0.05
 cor_mat_stats_flat_sig <- cor_mat_stats_flat %>%
   filter(p_value <= 0.05)
 write_csv(cor_mat_stats_flat, 
-          file = "Data/CleanData/CleanData_YSI/04_Correlations/YSICorrelations-Significant.csv")
+          file = "Data/Clean/YSI/04_Correlations/02-YSI-Correlations-Significant.csv")
   
-```
-
-## Correlation Plots
-```{r cor plots}
-# Correlogram
-{ # open pdf graphics driver
-  pdf(file = "Figures/Figures_YSI/04-CorrelationPlots/Correlogram.pdf")
-  # make correlation plot
-  corrplot(cor_mat, type = "upper", order = "hclust", 
-           tl.col = "black", tl.srt = 45, mar = c(0, 0, 5, 0),
-           title = "Biosphere 2 Ocean Water Quality Correlations")
-  # close graphics driver
-  dev.off()
-}
-
-# Correlogram with Significance
-cor_mat_stats$P[is.na(cor_mat_stats$P)] <- 1 #turn NAs into 1's (insignificant)
-{ # open pdf graphics driver
-  pdf(file = "Figures/Figures_YSI/04-CorrelationPlots/CorrelogramPValues.pdf")
-  corrplot(cor_mat_stats$r, type="upper", order="hclust", 
-           tl.col = "black", tl.srt = 45, mar = c(0, 1, 5, 0),
-           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = "blank",
-           title = "Biosphere 2 Ocean Water Quality Significant Correlations \n
-           P-Value < 0.05")
-  # close graphics driver
-  dev.off()
-}
-
-# Scatter Plots -- large file
-# dfScatter <- df %>%
-#   select(-c(pH_mV, nlf_conductivity_uScm, sp_conductivity_uScm, do_mgL,
-#             do_saturated_percent, chlorophyll_ugL, total_algae_cellsL))
-# { # open pdf graphics driver
-#   pdf(file = "Figures/Figures_YSI/04-CorrelationPlots/CorrelationChart.pdf")
-#   chart.Correlation(dfScatter, histogram=TRUE, pch=19)
-#   # close graphics driver
-#   dev.off()
-#   }
-
-# Heat Map
-col<- colorRampPalette(c("blue", "white", "red"))(20) #get colors
-{ # open pdf graphics driver
-  pdf(file = "Figures/Figures_YSI/04-CorrelationPlots/HeatMap.pdf")
-  heatmap(x = cor_mat, col = col, symm = TRUE,
-          title = "Biosphere 2 Ocean Water Quality Heat Map", 
-          margins = c(12,12))
-  # close graphics driver
-  dev.off()
-}
-
 ```
 

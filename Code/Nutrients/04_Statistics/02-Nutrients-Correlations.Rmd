@@ -9,12 +9,7 @@ output: html_notebook
 ## Import Libraries
 ```{r Import Libraries}
 library(tidyverse)
-# library(tibbletime) 
-library(lubridate)
-library(Hmisc)
-library(corrplot)
-library(PerformanceAnalytics)
-source("Code/Nutrients/04_Statistics/CorrelationFunction.R")
+source("Code/Functions/CorrelationFunction.R")
 options(scipen = 999)
 ```
 

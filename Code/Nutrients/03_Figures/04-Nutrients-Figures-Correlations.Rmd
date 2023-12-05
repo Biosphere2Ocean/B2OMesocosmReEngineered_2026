@@ -1,0 +1,81 @@
+---
+title: "Nutrients Figures: Correlations"
+Collaborators: Renee Grambihler
+Project: OceanWaterQuality
+Institution: Biosphere 2 Ocean
+output: html_notebook
+---
+# Nutrient Correlations
+## Import Libraries
+```{r import libraries}
+library(tidyverse)
+library(Hmisc)
+library(corrplot)
+library(PerformanceAnalytics)
+options(scipen = 999)
+```
+
+## Import Data
+```{r import data}
+
+```
+
+
+## Correlation Plots
+### All
+```{r cor plots}
+# Correlogram
+{ # open pdf graphics driver
+  pdf(file = "Figures/Nutrients/04_Correlations/01-Nutrients-Correlogram.pdf")
+  # make correlation plot
+  corrplot(cor_mat, type = "upper", order = "hclust", 
+           tl.col = "black", tl.srt = 45, mar = c(0, 0, 5, 0),
+           title = "Biosphere 2 Ocean Water Quality Correlations")
+  # close graphics driver
+  dev.off()
+}
+
+# Correlogram with Significance
+cor_mat_stats$P[is.na(cor_mat_stats$P)] <- 1 #turn NAs into 1's (insignificant)
+{ # open pdf graphics driver
+  pdf(file = "Figures/Nutrients/04_Correlations/02-Nutrients-Correlogram-PValues.pdf")
+  corrplot(cor_mat_stats$r, type="upper", order="hclust", 
+           tl.col = "black", tl.srt = 45, mar = c(0, 1, 5, 0),
+           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = "blank",
+           title = "Biosphere 2 Ocean Water Quality Significant Correlations \n
+           P-Value < 0.05")
+  # close graphics driver
+  dev.off()
+}
+
+# Heat Map
+col<- colorRampPalette(c("blue", "white", "red"))(20) #get colors
+{ # open pdf graphics driver
+  pdf(file = "Figures/Nutrients/04_Correlations/03-Nutrients-HeatMap.pdf")
+  heatmap(x = cor_mat, col = col, symm = TRUE,
+          title = "Biosphere 2 Ocean Water Quality Heat Map", 
+          margins = c(12,12))
+  # close graphics driver
+  dev.off()
+}
+
+# Scatter Plots -- large files
+dfScatter <- df %>%
+  select(-c(pH_mV, nlf_conductivity_uScm, sp_conductivity_uScm, do_mgL,
+            do_saturated_percent, chlorophyll_ugL, total_algae_cellsL))
+{ # open pdf graphics driver
+  pdf(file = "Figures/Nutrients/04_Correlations/04-Nutrients-CorrelationChart.pdf")
+  chart.Correlation(dfScatter, histogram=TRUE, pch=19)
+  # close graphics driver
+  dev.off()
+  }
+
+```
+
+### Ocean
+
+### Mangroves
+
+### Raceway 1
+
+### Raceway 2

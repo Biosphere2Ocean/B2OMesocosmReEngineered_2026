@@ -9,6 +9,7 @@ output: html_notebook
 ## Import Libraries
 ```{r Import Libraries}
 library(tidyverse)
+library(Hmisc)
 source("Code/Functions/CorrelationFunction.R")
 options(scipen = 999)
 ```
@@ -47,7 +48,7 @@ write_csv(cor_mat_stats_flat,
 # flattened correlation matrix with only p-values <= 0.05
 cor_mat_stats_flat_sig <- cor_mat_stats_flat %>%
   filter(p_value <= 0.05)
-write_csv(cor_mat_stats_flat, 
+write_csv(cor_mat_stats_flat_sig, 
           file = "Data/Clean/YSI/04_Correlations/02-YSI-Correlations-Significant.csv")
   
 ```

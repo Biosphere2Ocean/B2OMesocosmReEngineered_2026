@@ -105,20 +105,20 @@ cor_mat_stats_flat_ocean <- flattenCorrMatrix(cor_mat_ocean$r, cor_mat_ocean$P) 
   dev.off()
 }
 
-# # Correlogram with Significance
-# cor_mat_stats_ocean$P[is.na(cor_mat_stats_ocean$P)] <- 1 #turn NAs into 1's (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
-# { # open pdf graphics driver
-#   pdf(file = "Figures/Nutrients/04_Correlations/Ocean/Nutrients-Correlations-Ocean-Correlogram-PValues.pdf",
-#       width = 13, height = 10)
-#   corrplot(cor_mat_stats_ocean$r, method = "shade", type="full", order="original", 
-#            diag = TRUE, 
-#            tl.col = "black", tl.srt = 45, mar = c(0, 0, 4, 0),
-#            p.mat = cor_mat_stats_ocean$P, sig.level = 0.05, insig = "p-value",
-#            title = "Biosphere 2 Ocean Nutrient Water Quality Significant Correlations \n
-#            P-Value < 0.05")
-#   # close graphics driver
-#   dev.off()
-# }
+# Correlogram with Significance
+cor_mat_ocean$P[is.na(cor_mat_ocean$P)] <- 1 #turn NAs into 1's (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
+{ # open pdf graphics driver
+  pdf(file = "Figures/Nutrients/04_Correlations/Ocean/Nutrients-Correlations-Ocean-Correlogram-PValues.pdf",
+      width = 13, height = 10)
+  corrplot(cor_mat_ocean$r, method = "shade", type="full", order="original",
+           diag = TRUE,
+           tl.col = "black", tl.srt = 45, mar = c(0, 0, 4, 0),
+           p.mat = cor_mat_ocean$P, sig.level = 0.05, insig = "p-value",
+           title = "Biosphere 2 Ocean Nutrient Water Quality Significant Correlations \n
+           P-Values Labeled")
+  # close graphics driver
+  dev.off()
+}
 
 ```
 

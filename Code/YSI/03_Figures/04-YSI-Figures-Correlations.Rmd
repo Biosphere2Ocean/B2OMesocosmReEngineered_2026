@@ -12,7 +12,7 @@ library(tidyverse)
 library(Hmisc)
 library(corrplot)
 library(PerformanceAnalytics)
-#source("Code/Functions/CorrelationFunction.R")
+source("Code/Functions/CorrelationFunction.R")
 options(scipen = 999)
 ```
 
@@ -42,16 +42,10 @@ df_cor <- df %>%
          `Temperature (ºF)` = temp_f,
          `Total Algae (RFU)` = total_algae_rfu)
 
-cor_mat <- cor(df_cor, use = "pairwise.complete.obs") %>%
-  round(2)
-
 ```
 
 ## Get Significant Statistics
 ```{r significant stats}
-# turn NA values into 0 (no correlation)
-# cor_mat_stats[is.na(cor_mat)] <- 0
-
 # create nested list of matrices: p-values, n, r values
 cor_mat_stats <- rcorr(as.matrix(cor_mat))
 
@@ -71,7 +65,7 @@ cor_mat_stats_flat <- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %>%
   pdf(file = "Figures/YSI/04_Correlations/01-YSI-Correlations-Correlogram.pdf", 
       width = 13, height = 10)
   # make correlation plot
-  corrplot(cor_mat, method = "number", type = "full", diag = TRUE,
+  corrplot(cor_mat_stats$r, method = "number", type = "full", diag = TRUE,
            order = "original", 
            tl.col = "black", tl.srt = 45, mar = c(0, 0, 3, 0),
            title = "Biosphere 2 Ocean YSI Water Quality Correlations")

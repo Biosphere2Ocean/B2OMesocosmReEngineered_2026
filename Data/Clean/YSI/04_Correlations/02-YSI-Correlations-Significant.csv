@@ -1,50 +1,29 @@
 row,column,cor_coeff,p_value
-temp_f,temp_c,0.8,0
-temp_f,pH_mV,-0.52,0.03
-pH_mV,salinity_psu,-0.54,0.02
-pH_mV,conductivity_uScm,-0.56,0.02
-salinity_psu,conductivity_uScm,0.97,0
-pH_mV,nlf_conductivity_uScm,-0.75,0
-salinity_psu,nlf_conductivity_uScm,0.71,0
-conductivity_uScm,nlf_conductivity_uScm,0.76,0
-pH_mV,sp_conductivity_uScm,-0.75,0
-salinity_psu,sp_conductivity_uScm,0.71,0
-conductivity_uScm,sp_conductivity_uScm,0.76,0
-nlf_conductivity_uScm,sp_conductivity_uScm,1,0
-conductivity_uScm,do_mgL,-0.51,0.04
-conductivity_uScm,do_saturated_percent,-0.49,0.05
-do_mgL,do_saturated_percent,0.97,0
-do_mgL,do_local_percent,1,0
-do_saturated_percent,do_local_percent,0.97,0
-pH_mV,orp_mV,0.63,0.01
-nlf_conductivity_uScm,orp_mV,-0.49,0.05
-sp_conductivity_uScm,orp_mV,-0.5,0.04
-temp_f,chlorophyll_rfu,-0.49,0.04
-pH_mV,chlorophyll_rfu,0.8,0
-salinity_psu,chlorophyll_rfu,-0.73,0
-conductivity_uScm,chlorophyll_rfu,-0.8,0
-nlf_conductivity_uScm,chlorophyll_rfu,-0.88,0
-sp_conductivity_uScm,chlorophyll_rfu,-0.88,0
-orp_mV,chlorophyll_rfu,0.53,0.03
-temp_c,chlorophyll_ugL,0.62,0.01
-salinity_psu,chlorophyll_ugL,0.48,0.05
-conductivity_uScm,chlorophyll_ugL,0.49,0.04
-pH_mV,total_algae_rfu,0.72,0
-salinity_psu,total_algae_rfu,-0.75,0
-conductivity_uScm,total_algae_rfu,-0.8,0
-nlf_conductivity_uScm,total_algae_rfu,-0.74,0
-sp_conductivity_uScm,total_algae_rfu,-0.75,0
-orp_mV,total_algae_rfu,0.51,0.03
-chlorophyll_rfu,total_algae_rfu,0.91,0
-temp_c,total_algae_cellsL,0.62,0.01
-salinity_psu,total_algae_cellsL,0.51,0.04
-conductivity_uScm,total_algae_cellsL,0.51,0.04
-chlorophyll_ugL,total_algae_cellsL,0.98,0
-pH_mV,total_dissolved_solids_mgL,-0.77,0
-salinity_psu,total_dissolved_solids_mgL,0.73,0
-conductivity_uScm,total_dissolved_solids_mgL,0.77,0
-nlf_conductivity_uScm,total_dissolved_solids_mgL,1,0
-sp_conductivity_uScm,total_dissolved_solids_mgL,1,0
-orp_mV,total_dissolved_solids_mgL,-0.48,0.05
-chlorophyll_rfu,total_dissolved_solids_mgL,-0.9,0
-total_algae_rfu,total_dissolved_solids_mgL,-0.77,0
+Temperature (ºF),Temperature (ºC),0.97,0
+Temperature (ºF),pH (mV),-0.56,0.04
+pH (mV),Salinity (PSU),-0.55,0.04
+pH (mV),Conductivity (µS/cm),-0.57,0.03
+Salinity (PSU),Conductivity (µS/cm),0.97,0
+pH (mV),"Conductivity, Non-Linear Function (µS/cm)",-0.73,0
+Salinity (PSU),"Conductivity, Non-Linear Function (µS/cm)",0.78,0
+Conductivity (µS/cm),"Conductivity, Non-Linear Function (µS/cm)",0.83,0
+pH (mV),"Conductivity, Specific (µS/cm)",-0.74,0
+Salinity (PSU),"Conductivity, Specific (µS/cm)",0.78,0
+Conductivity (µS/cm),"Conductivity, Specific (µS/cm)",0.83,0
+"Conductivity, Non-Linear Function (µS/cm)","Conductivity, Specific (µS/cm)",1,0
+Dissolved Oxygen (mg/L),"Dissolved Oxygen, Saturated (%)",0.97,0
+Dissolved Oxygen (mg/L),"Dissolved Oxygen, Local (%)",1,0
+"Dissolved Oxygen, Saturated (%)","Dissolved Oxygen, Local (%)",0.97,0
+pH (mV),Oxygen Reduction Potential (mV),0.64,0.01
+Temperature (ºF),Chlorophyll (RFU),-0.54,0.04
+pH (mV),Chlorophyll (RFU),0.79,0
+Salinity (PSU),Chlorophyll (RFU),-0.74,0
+Conductivity (µS/cm),Chlorophyll (RFU),-0.82,0
+"Conductivity, Non-Linear Function (µS/cm)",Chlorophyll (RFU),-0.88,0
+"Conductivity, Specific (µS/cm)",Chlorophyll (RFU),-0.88,0
+pH (mV),Total Algae (RFU),0.71,0
+Salinity (PSU),Total Algae (RFU),-0.75,0
+Conductivity (µS/cm),Total Algae (RFU),-0.8,0
+"Conductivity, Non-Linear Function (µS/cm)",Total Algae (RFU),-0.73,0
+"Conductivity, Specific (µS/cm)",Total Algae (RFU),-0.73,0
+Chlorophyll (RFU),Total Algae (RFU),0.91,0

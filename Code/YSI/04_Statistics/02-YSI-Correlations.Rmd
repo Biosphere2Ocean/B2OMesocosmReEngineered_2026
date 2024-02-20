@@ -23,10 +23,25 @@ df <- read_csv("Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
 
 ## Create Correlation Matrix
 ```{r correlation matrix}
-df <- df %>%
-  select(-date, -time)
+df_cor <- df %>%
+  # take out columns that will give NA values in correlations (not enough observations)
+  select(-date, -time, -chlorophyll_ugL, 
+         -total_algae_cellsL, -total_dissolved_solids_mgL) %>%
+  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu)
 
-cor_mat <- cor(df, use = "pairwise.complete.obs") %>%
+cor_mat <- cor(df_cor, use = "pairwise.complete.obs") %>%
   round(2)
 
 # turn NA values into 0 (no correlation)

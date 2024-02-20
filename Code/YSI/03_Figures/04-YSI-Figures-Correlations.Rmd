@@ -83,11 +83,10 @@ cor_mat_stats$P[is.na(cor_mat_stats$P)] <- 1 #turn NAs into 1's (insignificant) 
 { # open pdf graphics driver
   pdf(file = "Figures/YSI/04_Correlations/02-YSI-Correlations-Correlogram-PValues.pdf",
       width = 13, height = 10)
-  corrplot(cor_mat_stats$r, method = "circle", type="upper", order="original", 
+  corrplot(cor_mat_stats$r, method = "number", type="full", order="original", 
            diag = TRUE, 
            tl.col = "black", tl.srt = 45, mar = c(0, 0, 4, 0),
-           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = "label_sig",
-           na.label = "square",
+           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = "blank",
            title = "Biosphere 2 Ocean Water Quality Significant Correlations \n
            P-Value < 0.05")
   # close graphics driver

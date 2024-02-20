@@ -1499,6 +1499,8 @@ window.initializeCodeFolding = function(show) {
   // select all R code blocks
   var rCodeBlocks = $('pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan, pre.julia, pre.foldable');
   rCodeBlocks.each(function() {
+    // skip if the block has fold-none class
+    if ($(this).hasClass('fold-none')) return;
 
     // create a collapsable div to wrap the code in
     var div = $('<div class="collapse r-code-collapse"></div>');
@@ -1509,12 +1511,14 @@ window.initializeCodeFolding = function(show) {
     $(this).detach().appendTo(div);
 
     // add a show code button right above
-    var showCodeText = $('<span>' + (showThis ? 'Hide' : 'Code') + '</span>');
+    var showCodeText = $('<span>' + (showThis ? 'Hide' : 'Show') + '</span>');
     var showCodeButton = $('<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm code-folding-btn pull-right float-right"></button>');
     showCodeButton.append(showCodeText);
     showCodeButton
         .attr('data-toggle', 'collapse')
+        .attr('data-bs-toggle', 'collapse') // BS5
         .attr('data-target', '#' + id)
+        .attr('data-bs-target', '#' + id)   // BS5
         .attr('aria-expanded', showThis)
         .attr('aria-controls', id);
 
@@ -1533,7 +1537,7 @@ window.initializeCodeFolding = function(show) {
     //   * Change text
     //   * add a class for intermediate states styling
     div.on('hide.bs.collapse', function () {
-      showCodeText.text('Code');
+      showCodeText.text('Show');
       showCodeButton.addClass('btn-collapsing');
     });
     div.on('hidden.bs.collapse', function () {
@@ -1604,6 +1608,7 @@ if (window.hljs) {
 
 
 
+
 <style type="text/css">
 #rmd-source-code {
 display: none;
@@ -1634,6 +1639,9 @@ outline: none;
 }
 summary {
 display: list-item;
+}
+details > summary > p:only-child {
+display: inline;
 }
 pre code {
 padding: 0;
@@ -1674,23 +1682,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1733,7 +1735,7 @@ display: none;
 <div id="header">
 
 <div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
 <ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
@@ -1773,10 +1775,10 @@ options(scipen = 999)</code></pre>
 <pre class="r"><code># use 03-OceanWaterQualityData-QCCutoff.csv
 df &lt;- read_csv(&quot;Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDYxNzgyIENvbHVtbnM6IDE54pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuZGJsICAoMTcpOiB0ZW1wX2YsIHRlbXBfYywgcEgsIHBIX21WLCBzYWxpbml0eV9wc3UsIGNvbmR1Y3Rpdml0eV91U2NtLCBubGZfY29uZC4uLlxuZGF0ZSAgKDEpOiBkYXRlXG50aW1lICAoMSk6IHRpbWVcbuKEuSBVc2UgYHNwZWMoKWAgdG8gcmV0cmlldmUgdGhlIGZ1bGwgY29sdW1uIHNwZWNpZmljYXRpb24gZm9yIHRoaXMgZGF0YS5cbuKEuSBTcGVjaWZ5IHRoZSBjb2x1bW4gdHlwZXMgb3Igc2V0IGBzaG93X2NvbF90eXBlcyA9IEZBTFNFYCB0byBxdWlldCB0aGlzIG1lc3NhZ2UuXG4ifQ== -->
-<pre><code>Rows: 461782 Columns: 19── Column specification ───────────────────────────────────────────────────────────
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDYxNzgyIENvbHVtbnM6IDE54pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuZGJsICAoMTcpOiB0ZW1wX2YsIHRlbXBfYywgcEgsIHBIX21WLCBzYWxpbml0eV9wc3UsIGNvbmR1Y3Rpdml0eV91U2NtLCBubGZfY29uZHVjdGl2aXR5X3VTY20uLi5cbmRhdGUgICgxKTogZGF0ZVxudGltZSAgKDEpOiB0aW1lXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
+<pre><code>Rows: 461782 Columns: 19── Column specification ────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
-dbl  (17): temp_f, temp_c, pH, pH_mV, salinity_psu, conductivity_uScm, nlf_cond...
+dbl  (17): temp_f, temp_c, pH, pH_mV, salinity_psu, conductivity_uScm, nlf_conductivity_uScm...
 date  (1): date
 time  (1): time
 ℹ Use `spec()` to retrieve the full column specification for this data.
@@ -1789,7 +1791,7 @@ time  (1): time
 <h2>Create Correlation Matrix</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfY29yIDwtIGRmICU+JVxuICAjIHRha2Ugb3V0IGNvbHVtbnMgdGhhdCB3aWxsIGdpdmUgTkEgdmFsdWVzIGluIGNvcnJlbGF0aW9ucyAobm90IGVub3VnaCBvYnNlcnZhdGlvbnMpXG4gIHNlbGVjdCgtZGF0ZSwgLXRpbWUsIC1jaGxvcm9waHlsbF91Z0wsIFxuICAgICAgICAgLXRvdGFsX2FsZ2FlX2NlbGxzTCwgLXRvdGFsX2Rpc3NvbHZlZF9zb2xpZHNfbWdMKSAlPiVcbiAgcmVuYW1lKGBDaGxvcm9waHlsbCAoUkZVKWAgPSBjaGxvcm9waHlsbF9yZnUsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCA9IGNvbmR1Y3Rpdml0eV91U2NtLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBkb19sb2NhbF9wZXJjZW50LFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4gKG1nL0wpYCA9IGRvX21nTCxcbiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBTYXR1cmF0ZWQgKCUpYCA9IGRvX3NhdHVyYXRlZF9wZXJjZW50LFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWAgPSBubGZfY29uZHVjdGl2aXR5X3VTY20sXG4gICAgICAgICBgT3h5Z2VuIFJlZHVjdGlvbiBQb3RlbnRpYWwgKG1WKWAgPSBvcnBfbVYsXG4gICAgICAgICBgcEggKG1WKWAgPSBwSF9tVixcbiAgICAgICAgIGBTYWxpbml0eSAoUFNVKWAgPSBzYWxpbml0eV9wc3UsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5LCBTcGVjaWZpYyAowrVTL2NtKWAgPSBzcF9jb25kdWN0aXZpdHlfdVNjbSxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpDKWAgPSB0ZW1wX2MsXG4gICAgICAgICBgVGVtcGVyYXR1cmUgKMK6RilgID0gdGVtcF9mLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChSRlUpYCA9IHRvdGFsX2FsZ2FlX3JmdSlcblxuY29yX21hdCA8LSBjb3IoZGZfY29yLCB1c2UgPSBcInBhaXJ3aXNlLmNvbXBsZXRlLm9ic1wiKSAlPiVcbiAgcm91bmQoMilcblxuIyB0dXJuIE5BIHZhbHVlcyBpbnRvIDAgKG5vIGNvcnJlbGF0aW9uKVxuY29yX21hdFtpcy5uYShjb3JfbWF0KV0gPC0gMFxuXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfY29yIDwtIGRmICU+JVxuICAjIHRha2Ugb3V0IGNvbHVtbnMgdGhhdCB3aWxsIGdpdmUgTkEgdmFsdWVzIGluIGNvcnJlbGF0aW9ucyAobm90IGVub3VnaCBvYnNlcnZhdGlvbnMpXG4gIHNlbGVjdCgtZGF0ZSwgLXRpbWUsIC1jaGxvcm9waHlsbF91Z0wsIFxuICAgICAgICAgLXRvdGFsX2FsZ2FlX2NlbGxzTCwgLXRvdGFsX2Rpc3NvbHZlZF9zb2xpZHNfbWdMKSAlPiVcbiAgcmVuYW1lKGBDaGxvcm9waHlsbCAoUkZVKWAgPSBjaGxvcm9waHlsbF9yZnUsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCA9IGNvbmR1Y3Rpdml0eV91U2NtLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBkb19sb2NhbF9wZXJjZW50LFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4gKG1nL0wpYCA9IGRvX21nTCxcbiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBTYXR1cmF0ZWQgKCUpYCA9IGRvX3NhdHVyYXRlZF9wZXJjZW50LFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWAgPSBubGZfY29uZHVjdGl2aXR5X3VTY20sXG4gICAgICAgICBgT3h5Z2VuIFJlZHVjdGlvbiBQb3RlbnRpYWwgKG1WKWAgPSBvcnBfbVYsXG4gICAgICAgICBgcEggKG1WKWAgPSBwSF9tVixcbiAgICAgICAgIGBTYWxpbml0eSAoUFNVKWAgPSBzYWxpbml0eV9wc3UsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5LCBTcGVjaWZpYyAowrVTL2NtKWAgPSBzcF9jb25kdWN0aXZpdHlfdVNjbSxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpDKWAgPSB0ZW1wX2MsXG4gICAgICAgICBgVGVtcGVyYXR1cmUgKMK6RilgID0gdGVtcF9mLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChSRlUpYCA9IHRvdGFsX2FsZ2FlX3JmdSlcblxuXG5gYGAifQ== -->
 <pre class="r"><code>df_cor &lt;- df %&gt;%
   # take out columns that will give NA values in correlations (not enough observations)
   select(-date, -time, -chlorophyll_ugL, 
@@ -1807,12 +1809,6 @@ time  (1): time
          `Temperature (ºC)` = temp_c,
          `Temperature (ºF)` = temp_f,
          `Total Algae (RFU)` = total_algae_rfu)
-
-cor_mat &lt;- cor(df_cor, use = &quot;pairwise.complete.obs&quot;) %&gt;%
-  round(2)
-
-# turn NA values into 0 (no correlation)
-cor_mat[is.na(cor_mat)] &lt;- 0
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
@@ -1822,9 +1818,9 @@ cor_mat[is.na(cor_mat)] &lt;- 0
 <h2>Get Significant Statistics</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgbmVzdGVkIGxpc3Qgb2YgbWF0cmljZXM6IHAtdmFsdWVzLCBuLCByIHZhbHVlc1xuY29yX21hdF9zdGF0cyA8LSByY29ycihhcy5tYXRyaXgoY29yX21hdCkpXG5cbiMgZnVsbCBmbGF0dGVuZWQgY29ycmVsYXRpb24gbWF0cml4XG5jb3JfbWF0X3N0YXRzX2ZsYXQgPC0gZmxhdHRlbkNvcnJNYXRyaXgoY29yX21hdF9zdGF0cyRyLCBjb3JfbWF0X3N0YXRzJFApICU+JVxuICBtdXRhdGUoYWNyb3NzKDM6NCwgfiByb3VuZCgueCwgMikpKSBcbndyaXRlX2Nzdihjb3JfbWF0X3N0YXRzX2ZsYXQsIFxuICAgICAgICAgIGZpbGUgPSBcIkRhdGEvQ2xlYW4vWVNJLzA0X0NvcnJlbGF0aW9ucy8wMS1ZU0ktQ29ycmVsYXRpb25zLmNzdlwiKVxuXG4jIGZsYXR0ZW5lZCBjb3JyZWxhdGlvbiBtYXRyaXggd2l0aCBvbmx5IHAtdmFsdWVzIDw9IDAuMDVcbmNvcl9tYXRfc3RhdHNfZmxhdF9zaWcgPC0gY29yX21hdF9zdGF0c19mbGF0ICU+JVxuICBmaWx0ZXIocF92YWx1ZSA8PSAwLjA1KVxud3JpdGVfY3N2KGNvcl9tYXRfc3RhdHNfZmxhdF9zaWcsIFxuICAgICAgICAgIGZpbGUgPSBcIkRhdGEvQ2xlYW4vWVNJLzA0X0NvcnJlbGF0aW9ucy8wMi1ZU0ktQ29ycmVsYXRpb25zLVNpZ25pZmljYW50LmNzdlwiKVxuICBcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgbmVzdGVkIGxpc3Qgb2YgbWF0cmljZXM6IHAtdmFsdWVzLCBuLCByIHZhbHVlc1xuY29yX21hdF9zdGF0cyA8LSByY29ycihhcy5tYXRyaXgoZGZfY29yKSlcblxuIyBmdWxsIGZsYXR0ZW5lZCBjb3JyZWxhdGlvbiBtYXRyaXhcbmNvcl9tYXRfc3RhdHNfZmxhdCA8LSBmbGF0dGVuQ29yck1hdHJpeChjb3JfbWF0X3N0YXRzJHIsIGNvcl9tYXRfc3RhdHMkUCkgJT4lXG4gIG11dGF0ZShhY3Jvc3MoMzo0LCB+IHJvdW5kKC54LCAyKSkpIFxud3JpdGVfY3N2KGNvcl9tYXRfc3RhdHNfZmxhdCwgXG4gICAgICAgICAgZmlsZSA9IFwiRGF0YS9DbGVhbi9ZU0kvMDRfQ29ycmVsYXRpb25zLzAxLVlTSS1Db3JyZWxhdGlvbnMuY3N2XCIpXG5cbiMgZmxhdHRlbmVkIGNvcnJlbGF0aW9uIG1hdHJpeCB3aXRoIG9ubHkgcC12YWx1ZXMgPD0gMC4wNVxuY29yX21hdF9zdGF0c19mbGF0X3NpZyA8LSBjb3JfbWF0X3N0YXRzX2ZsYXQgJT4lXG4gIGZpbHRlcihwX3ZhbHVlIDw9IDAuMDUpXG53cml0ZV9jc3YoY29yX21hdF9zdGF0c19mbGF0X3NpZywgXG4gICAgICAgICAgZmlsZSA9IFwiRGF0YS9DbGVhbi9ZU0kvMDRfQ29ycmVsYXRpb25zLzAyLVlTSS1Db3JyZWxhdGlvbnMtU2lnbmlmaWNhbnQuY3N2XCIpXG4gIFxuYGBgIn0= -->
 <pre class="r"><code># create nested list of matrices: p-values, n, r values
-cor_mat_stats &lt;- rcorr(as.matrix(cor_mat))
+cor_mat_stats &lt;- rcorr(as.matrix(df_cor))
 
 # full flattened correlation matrix
 cor_mat_stats_flat &lt;- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %&gt;%
@@ -1845,7 +1841,7 @@ write_csv(cor_mat_stats_flat_sig,
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiWVNJIERhdGEgQ29ycmVsYXRpb25zIgpjb2xsYWJvcmF0b3JzOiBSZW5lZSBHcmFtYmlobGVyCnByb2plY3Q6IE9jZWFuV2F0ZXJRdWFsaXR5Cmluc3RpdHV0aW9uOiBCaW9zcGhlcmUgMiBPY2VhbgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCiMgQ29ycmVsYXRpb25zCiMjIEltcG9ydCBMaWJyYXJpZXMKYGBge3IgSW1wb3J0IExpYnJhcmllc30KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoSG1pc2MpCnNvdXJjZSgiQ29kZS9GdW5jdGlvbnMvQ29ycmVsYXRpb25GdW5jdGlvbi5SIikKb3B0aW9ucyhzY2lwZW4gPSA5OTkpCmBgYAoKIyMgSW1wb3J0IERhdGEKYGBge3IgaW1wb3J0IGRhdGF9CiMgdXNlIDAzLU9jZWFuV2F0ZXJRdWFsaXR5RGF0YS1RQ0N1dG9mZi5jc3YKZGYgPC0gcmVhZF9jc3YoIkRhdGEvQ2xlYW4vWVNJLzAyX1F1YWxpdHlDb250cm9sLzAyLVlTSS1EYXRhLVFDQ3V0b2ZmLmNzdiIpCgpgYGAKCiMjIENyZWF0ZSBDb3JyZWxhdGlvbiBNYXRyaXgKYGBge3IgY29ycmVsYXRpb24gbWF0cml4fQpkZl9jb3IgPC0gZGYgJT4lCiAgIyB0YWtlIG91dCBjb2x1bW5zIHRoYXQgd2lsbCBnaXZlIE5BIHZhbHVlcyBpbiBjb3JyZWxhdGlvbnMgKG5vdCBlbm91Z2ggb2JzZXJ2YXRpb25zKQogIHNlbGVjdCgtZGF0ZSwgLXRpbWUsIC1jaGxvcm9waHlsbF91Z0wsIAogICAgICAgICAtdG90YWxfYWxnYWVfY2VsbHNMLCAtdG90YWxfZGlzc29sdmVkX3NvbGlkc19tZ0wpICU+JQogIHJlbmFtZShgQ2hsb3JvcGh5bGwgKFJGVSlgID0gY2hsb3JvcGh5bGxfcmZ1LAogICAgICAgICBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCA9IGNvbmR1Y3Rpdml0eV91U2NtLAogICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgTG9jYWwgKCUpYCA9IGRvX2xvY2FsX3BlcmNlbnQsCiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuIChtZy9MKWAgPSBkb19tZ0wsCiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBTYXR1cmF0ZWQgKCUpYCA9IGRvX3NhdHVyYXRlZF9wZXJjZW50LAogICAgICAgICBgQ29uZHVjdGl2aXR5LCBOb24tTGluZWFyIEZ1bmN0aW9uICjCtVMvY20pYCA9IG5sZl9jb25kdWN0aXZpdHlfdVNjbSwKICAgICAgICAgYE94eWdlbiBSZWR1Y3Rpb24gUG90ZW50aWFsIChtVilgID0gb3JwX21WLAogICAgICAgICBgcEggKG1WKWAgPSBwSF9tViwKICAgICAgICAgYFNhbGluaXR5IChQU1UpYCA9IHNhbGluaXR5X3BzdSwKICAgICAgICAgYENvbmR1Y3Rpdml0eSwgU3BlY2lmaWMgKMK1Uy9jbSlgID0gc3BfY29uZHVjdGl2aXR5X3VTY20sCiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpDKWAgPSB0ZW1wX2MsCiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpGKWAgPSB0ZW1wX2YsCiAgICAgICAgIGBUb3RhbCBBbGdhZSAoUkZVKWAgPSB0b3RhbF9hbGdhZV9yZnUpCgpjb3JfbWF0IDwtIGNvcihkZl9jb3IsIHVzZSA9ICJwYWlyd2lzZS5jb21wbGV0ZS5vYnMiKSAlPiUKICByb3VuZCgyKQoKIyB0dXJuIE5BIHZhbHVlcyBpbnRvIDAgKG5vIGNvcnJlbGF0aW9uKQpjb3JfbWF0W2lzLm5hKGNvcl9tYXQpXSA8LSAwCgpgYGAKCiMjIEdldCBTaWduaWZpY2FudCBTdGF0aXN0aWNzCmBgYHtyIH0KIyBjcmVhdGUgbmVzdGVkIGxpc3Qgb2YgbWF0cmljZXM6IHAtdmFsdWVzLCBuLCByIHZhbHVlcwpjb3JfbWF0X3N0YXRzIDwtIHJjb3JyKGFzLm1hdHJpeChjb3JfbWF0KSkKCiMgZnVsbCBmbGF0dGVuZWQgY29ycmVsYXRpb24gbWF0cml4CmNvcl9tYXRfc3RhdHNfZmxhdCA8LSBmbGF0dGVuQ29yck1hdHJpeChjb3JfbWF0X3N0YXRzJHIsIGNvcl9tYXRfc3RhdHMkUCkgJT4lCiAgbXV0YXRlKGFjcm9zcygzOjQsIH4gcm91bmQoLngsIDIpKSkgCndyaXRlX2Nzdihjb3JfbWF0X3N0YXRzX2ZsYXQsIAogICAgICAgICAgZmlsZSA9ICJEYXRhL0NsZWFuL1lTSS8wNF9Db3JyZWxhdGlvbnMvMDEtWVNJLUNvcnJlbGF0aW9ucy5jc3YiKQoKIyBmbGF0dGVuZWQgY29ycmVsYXRpb24gbWF0cml4IHdpdGggb25seSBwLXZhbHVlcyA8PSAwLjA1CmNvcl9tYXRfc3RhdHNfZmxhdF9zaWcgPC0gY29yX21hdF9zdGF0c19mbGF0ICU+JQogIGZpbHRlcihwX3ZhbHVlIDw9IDAuMDUpCndyaXRlX2Nzdihjb3JfbWF0X3N0YXRzX2ZsYXRfc2lnLCAKICAgICAgICAgIGZpbGUgPSAiRGF0YS9DbGVhbi9ZU0kvMDRfQ29ycmVsYXRpb25zLzAyLVlTSS1Db3JyZWxhdGlvbnMtU2lnbmlmaWNhbnQuY3N2IikKICAKYGBgCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiWVNJIERhdGEgQ29ycmVsYXRpb25zIgpjb2xsYWJvcmF0b3JzOiBSZW5lZSBHcmFtYmlobGVyCnByb2plY3Q6IE9jZWFuV2F0ZXJRdWFsaXR5Cmluc3RpdHV0aW9uOiBCaW9zcGhlcmUgMiBPY2VhbgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCiMgQ29ycmVsYXRpb25zCiMjIEltcG9ydCBMaWJyYXJpZXMKYGBge3IgSW1wb3J0IExpYnJhcmllc30KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoSG1pc2MpCnNvdXJjZSgiQ29kZS9GdW5jdGlvbnMvQ29ycmVsYXRpb25GdW5jdGlvbi5SIikKb3B0aW9ucyhzY2lwZW4gPSA5OTkpCmBgYAoKIyMgSW1wb3J0IERhdGEKYGBge3IgaW1wb3J0IGRhdGF9CiMgdXNlIDAzLU9jZWFuV2F0ZXJRdWFsaXR5RGF0YS1RQ0N1dG9mZi5jc3YKZGYgPC0gcmVhZF9jc3YoIkRhdGEvQ2xlYW4vWVNJLzAyX1F1YWxpdHlDb250cm9sLzAyLVlTSS1EYXRhLVFDQ3V0b2ZmLmNzdiIpCgpgYGAKCiMjIENyZWF0ZSBDb3JyZWxhdGlvbiBNYXRyaXgKYGBge3IgY29ycmVsYXRpb24gbWF0cml4fQpkZl9jb3IgPC0gZGYgJT4lCiAgIyB0YWtlIG91dCBjb2x1bW5zIHRoYXQgd2lsbCBnaXZlIE5BIHZhbHVlcyBpbiBjb3JyZWxhdGlvbnMgKG5vdCBlbm91Z2ggb2JzZXJ2YXRpb25zKQogIHNlbGVjdCgtZGF0ZSwgLXRpbWUsIC1jaGxvcm9waHlsbF91Z0wsIAogICAgICAgICAtdG90YWxfYWxnYWVfY2VsbHNMLCAtdG90YWxfZGlzc29sdmVkX3NvbGlkc19tZ0wpICU+JQogIHJlbmFtZShgQ2hsb3JvcGh5bGwgKFJGVSlgID0gY2hsb3JvcGh5bGxfcmZ1LAogICAgICAgICBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCA9IGNvbmR1Y3Rpdml0eV91U2NtLAogICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgTG9jYWwgKCUpYCA9IGRvX2xvY2FsX3BlcmNlbnQsCiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuIChtZy9MKWAgPSBkb19tZ0wsCiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBTYXR1cmF0ZWQgKCUpYCA9IGRvX3NhdHVyYXRlZF9wZXJjZW50LAogICAgICAgICBgQ29uZHVjdGl2aXR5LCBOb24tTGluZWFyIEZ1bmN0aW9uICjCtVMvY20pYCA9IG5sZl9jb25kdWN0aXZpdHlfdVNjbSwKICAgICAgICAgYE94eWdlbiBSZWR1Y3Rpb24gUG90ZW50aWFsIChtVilgID0gb3JwX21WLAogICAgICAgICBgcEggKG1WKWAgPSBwSF9tViwKICAgICAgICAgYFNhbGluaXR5IChQU1UpYCA9IHNhbGluaXR5X3BzdSwKICAgICAgICAgYENvbmR1Y3Rpdml0eSwgU3BlY2lmaWMgKMK1Uy9jbSlgID0gc3BfY29uZHVjdGl2aXR5X3VTY20sCiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpDKWAgPSB0ZW1wX2MsCiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpGKWAgPSB0ZW1wX2YsCiAgICAgICAgIGBUb3RhbCBBbGdhZSAoUkZVKWAgPSB0b3RhbF9hbGdhZV9yZnUpCgoKYGBgCgojIyBHZXQgU2lnbmlmaWNhbnQgU3RhdGlzdGljcwpgYGB7ciB9CiMgY3JlYXRlIG5lc3RlZCBsaXN0IG9mIG1hdHJpY2VzOiBwLXZhbHVlcywgbiwgciB2YWx1ZXMKY29yX21hdF9zdGF0cyA8LSByY29ycihhcy5tYXRyaXgoZGZfY29yKSkKCiMgZnVsbCBmbGF0dGVuZWQgY29ycmVsYXRpb24gbWF0cml4CmNvcl9tYXRfc3RhdHNfZmxhdCA8LSBmbGF0dGVuQ29yck1hdHJpeChjb3JfbWF0X3N0YXRzJHIsIGNvcl9tYXRfc3RhdHMkUCkgJT4lCiAgbXV0YXRlKGFjcm9zcygzOjQsIH4gcm91bmQoLngsIDIpKSkgCndyaXRlX2Nzdihjb3JfbWF0X3N0YXRzX2ZsYXQsIAogICAgICAgICAgZmlsZSA9ICJEYXRhL0NsZWFuL1lTSS8wNF9Db3JyZWxhdGlvbnMvMDEtWVNJLUNvcnJlbGF0aW9ucy5jc3YiKQoKIyBmbGF0dGVuZWQgY29ycmVsYXRpb24gbWF0cml4IHdpdGggb25seSBwLXZhbHVlcyA8PSAwLjA1CmNvcl9tYXRfc3RhdHNfZmxhdF9zaWcgPC0gY29yX21hdF9zdGF0c19mbGF0ICU+JQogIGZpbHRlcihwX3ZhbHVlIDw9IDAuMDUpCndyaXRlX2Nzdihjb3JfbWF0X3N0YXRzX2ZsYXRfc2lnLCAKICAgICAgICAgIGZpbGUgPSAiRGF0YS9DbGVhbi9ZU0kvMDRfQ29ycmVsYXRpb25zLzAyLVlTSS1Db3JyZWxhdGlvbnMtU2lnbmlmaWNhbnQuY3N2IikKICAKYGBgCgo=</div>
 
 
 

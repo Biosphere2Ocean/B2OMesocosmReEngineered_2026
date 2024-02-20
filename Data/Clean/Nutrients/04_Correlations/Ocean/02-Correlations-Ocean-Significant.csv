@@ -1,0 +1,11 @@
+row,column,cor_coeff,p_value
+Phosphate,Nitrate MR,0.35,0
+Phosphate,Nitrate HR,0.2,0
+Nitrate MR,Nitrate HR,0.57,0
+Phosphate,pH,-0.32,0
+Nitrate MR,pH,-0.22,0
+Phosphate,Silica,0.35,0
+pH,Silica,-0.34,0
+Alkalinity,Silica,0.15,0.03
+Nitrate MR,Iron,0.15,0.03
+pH,Iron,-0.15,0.03

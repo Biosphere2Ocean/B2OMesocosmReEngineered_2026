@@ -12,6 +12,7 @@ library(tidyverse)
 library(Hmisc)
 library(corrplot)
 library(PerformanceAnalytics)
+#source("Code/Functions/CorrelationFunction.R")
 options(scipen = 999)
 ```
 
@@ -64,7 +65,7 @@ cor_mat_stats_flat <- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %>%
 ```
 
 ## Correlation Plots
-```{r cor plots}
+``` {r cor plots}
 # Correlogram
 { # open pdf graphics driver
   pdf(file = "Figures/YSI/04_Correlations/01-YSI-Correlations-Correlogram.pdf", 

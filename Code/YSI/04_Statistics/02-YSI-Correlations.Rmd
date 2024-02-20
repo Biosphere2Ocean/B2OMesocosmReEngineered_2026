@@ -41,18 +41,13 @@ df_cor <- df %>%
          `Temperature (ºF)` = temp_f,
          `Total Algae (RFU)` = total_algae_rfu)
 
-cor_mat <- cor(df_cor, use = "pairwise.complete.obs") %>%
-  round(2)
-
-# turn NA values into 0 (no correlation)
-cor_mat[is.na(cor_mat)] <- 0
 
 ```
 
 ## Get Significant Statistics
 ```{r }
 # create nested list of matrices: p-values, n, r values
-cor_mat_stats <- rcorr(as.matrix(cor_mat))
+cor_mat_stats <- rcorr(as.matrix(df_cor))
 
 # full flattened correlation matrix
 cor_mat_stats_flat <- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %>%

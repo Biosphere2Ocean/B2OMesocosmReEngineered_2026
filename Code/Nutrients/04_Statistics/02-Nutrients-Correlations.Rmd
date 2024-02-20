@@ -58,12 +58,31 @@ cormatAll[is.na(cormatAll)] <- 0
 ```{r correlation matrix: ocean}
 # take out non-numeric columns from df
 cormatOcean <- dfOcean %>%
-  select(-Date, -Location)
+  select(-Date, -Location, -Ammonia)
 # make correlation matrix and round values to nearest hundreth
-cormatOcean <- cor(cormatOcean, use = "pairwise.complete.obs") %>%
+cormatOcean <- rcorr(as.matrix(cormatOcean))
+
+cor_mat_ocean_pvals <- cormatOcean$P %>%
   round(2)
-# turn NA values into 0 (no correlation)
-cormatOcean[is.na(cormatOcean)] <- 0
+
+cor_mat_ocean_coefs <- cormatOcean$r %>%
+  round(2)
+
+# full flattened correlation matrix
+cormatOcean_stats_flat <- flattenCorrMatrix(cormatOcean$r, cormatOcean$P) %>%
+  mutate(across(3:4, ~ round(.x, 2)))
+
+write_csv(cormatOcean_stats_flat, 
+          file = "Data/Clean/Nutrients/04_Correlations/Ocean/01-Correlations-Ocean-Total.csv")
+
+# flattened correlation matrix with only p-values <= 0.05
+cormatOcean_stats_flat_sig <- cormatOcean_stats_flat %>%
+  filter(p_value <= 0.05)
+write_csv(cormatOcean_stats_flat_sig, 
+          file = "Data/Clean/Nutrients/04_Correlations/Ocean/02-Correlations-Ocean-Significant.csv")
+
+
+
 
 ```
 

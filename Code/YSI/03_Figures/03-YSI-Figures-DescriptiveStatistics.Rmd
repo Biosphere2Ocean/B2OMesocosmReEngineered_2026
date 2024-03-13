@@ -107,14 +107,16 @@ print(plotList_year[[i]])
 # Save plot
 ggsave(plot = plotList_year[[i]],
        filename = paste(file_names[i],"-Year-DescriptiveStats.pdf", sep = ""),
-       path = "Figures/Figures_YSI/03-DescriptiveStatisticsPlots/YearlyStatistics")
+       path = "Figures/YSI/03_DescriptiveStatistics/Yearly")
 }
 
 ```
 
 ## Monthly
+### Seasonal Cycle
 ```{r monthly plots}
-# line plots showing monthly means each year
+# line plots for each parameter showing monthly means with each year stacked on the same plot to emphasize seasonal cycles
+
 plotList_month <- list()
 
 for (i in 1:length(variable_names)) {
@@ -125,14 +127,8 @@ for (i in 1:length(variable_names)) {
            date >= "2011-01-01" & date < "2023-01-01") %>%
     ggplot(aes(x = as.Date(yday(date), "2021-01-01"),
                color = factor(year(date)),
-               y = mean)) +
+               y = median)) +
     geom_line() +
-    # geom_ribbon(aes(y = mean,
-    #               ymin = mean - std,
-    #               ymax = mean + std), 
-    #           alpha = 0.2,
-    #           show.legend = TRUE) +
-    # geom_line(aes(y = median, color = "Median"), show.legend = TRUE) +
     scale_x_date(date_breaks = "months", date_labels = "%b")+
     theme_bw() +
     theme(panel.grid.major = element_blank(),
@@ -142,20 +138,53 @@ for (i in 1:length(variable_names)) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
     theme(strip.background = element_rect(fill = "white"))+
-    labs(title = paste("B2O", variable_text[i], "Monthly Mean from 2011-2023"), 
+    labs(title = paste("B2O", variable_text[i], "Monthly Median from 2011-2023"), 
          x = "Date",
          y = variable_text[i], 
          color = "Year")
   print(plotList_month[[i]])
   # Save plot
   ggsave(plot = plotList_month[[i]],
-         filename = paste(file_names[i],"-Month-DescriptiveStats.pdf", sep = ""),
-         path = "Figures/Figures_YSI/03-DescriptiveStatisticsPlots/MonthlyStatistics")
+         filename = paste(file_names[i],"-DescriptiveStats-Month-Seasonal.pdf", sep = ""),
+         path = "Figures/YSI/03_DescriptiveStatistics/Monthly/Seasonal")
 }
 
-# line plots showing monthly medians each year?
 
 ```
+
+### Total Interval
+```{r}
+plotList_month <- list()
+
+for (i in 1:length(variable_names)) {
+  plotList_month[[i]] <- dfMonth %>%
+    mutate(date = paste(year, month, 01, sep = "-"),
+           date = as.Date(strptime(date, format = "%Y-%b-%d"))) %>%
+    filter(variable == variable_names[i],
+           year >= "2011" & year < "2023") %>%
+    ggplot(aes(x = date,
+               y = median)) +
+    geom_line() +
+    scale_x_date(date_breaks = "years", date_labels = "%Y")+
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = "black"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+    theme(strip.background = element_rect(fill = "white"))+
+    labs(title = paste("B2O Monthly Median", variable_text[i], "from 2011-2023"), 
+         x = "Date",
+         y = variable_text[i])
+  print(plotList_month[[i]])
+  # Save plot
+  ggsave(plot = plotList_month[[i]],
+         filename = paste(file_names[i],"-DescriptiveStats-Month-TimeSeries.pdf", sep = ""),
+         path = "Figures/YSI/03_DescriptiveStatistics/Monthly/TimeSeries")
+}
+```
+
 
 
 ## Daily

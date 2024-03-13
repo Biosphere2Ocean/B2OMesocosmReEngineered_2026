@@ -15,19 +15,19 @@ library(lubridate)
 ## Import Data
 ```{r import data}
 # qc cutoff data
-df <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv")
+df <- read_csv("Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
 
 # whole time series
-dfWhole <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/WholeSeriesDescriptiveStats.csv")
+dfWhole <- read_csv("Data/Clean/YSI/03_DescriptiveStatistics/01-YSI-SeriesDescriptiveStats-Whole.csv")
 
 # yearly
-dfYear <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/YearlyDescriptiveStats.csv")
+dfYear <- read_csv("Data/Clean/YSI/03_DescriptiveStatistics/02-YSI-DescriptiveStats-Yearly.csv")
 
 # monthly
-dfMonth <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/MonthlyDescriptiveStats.csv")
+dfMonth <- read_csv("Data/Clean/YSI/03_DescriptiveStatistics/03-YSI-DescriptiveStats-Monthly.csv")
 
 # daily
-dfDay <- read_csv("Data/CleanData/CleanData_YSI/03_DescriptiveStatistics/DailyDescriptiveStats.csv")
+dfDay <- read_csv("Data/Clean/YSI/03_DescriptiveStatistics/04-YSI-DescriptiveStats-Daily.csv")
 ```
 
 ## Data Formatting

@@ -15,16 +15,16 @@ library(lubridate)
 # Import Data
 ```{r import data}
 # qc data
-df <- read_csv("Data/CleanData/CleanData_Nutrients/02_QualityControl/B2ONutrientdata-Clean-QC.csv")
+df <- read_csv("Data/Clean/Nutrients/02_QualityControl/01-Nutrients-Data-Clean-QC.csv")
 
 # whole time series data
-dfWhole <- read_csv("Data/CleanData/CleanData_Nutrients/03_DescriptiveStatistics/WholeSeriesDescriptiveStats.csv")
+dfWhole <- read_csv("Data/Clean/Nutrients/03_DescriptiveStatistics/01-Nutrients-DescriptiveStats-Whole.csv")
 
 # yearly time series data
-dfYear <- read_csv("Data/CleanData/CleanData_Nutrients/03_DescriptiveStatistics/YearlyDescriptiveStats.csv")
+dfYear <- read_csv("Data/Clean/Nutrients/03_DescriptiveStatistics/02-Nutrients-DescriptiveStats-Yearly.csv")
 
 # monthly time series data
-dfMonth <- read_csv("Data/CleanData/CleanData_Nutrients/03_DescriptiveStatistics/MonthlyDescriptiveStats.csv")
+dfMonth <- read_csv("Data/Clean/Nutrients/03_DescriptiveStatistics/03-Nutrients-DescriptiveStats-Monthly.csv")
 
 ```
 
@@ -134,7 +134,8 @@ for (i in 1:length(nutrient_names)) {
 ```
 
 ## Monthly
-```{r monthly line plots}
+### Seasonal Cycle
+```{r monthly seasonal line plots}
 # plots of mean, median, std, iqr for each month over course of time series
 # list for plots to populate from loop
 plotList <- list()
@@ -172,13 +173,54 @@ for (l in 1:length(location_names)) {
     print(plotList_location[[i]])
     # Save plot
     ggsave(plot = plotList_location[[i]],
-           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Month-Line.pdf", sep = "-"),
-           path = paste("Figures/Figures_NutrientData/03-DescriptiveStatisticsPlots/MonthlyStatistics/LineGraphs",location_names[l], sep = "/"))
+           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Month-Line-Seasonal.pdf", sep = "-"),
+           path = paste("Figures/Nutrients/03_DescriptiveStatistics/Monthly/01_Line",location_names[l],"Seasonal", sep = "/"))
   }
   plotList <- c(plotList, plotList_location)
 }
 
 ```
+
+### Time Series
+```{r monthly whole time series line plots}
+# plots of mean, median, std, iqr for each month over course of time series
+# list for plots to populate from loop
+plotList <- list()
+for (l in 1:length(location_names)) {
+  plotList_location <- list()
+  for (i in 1:length(nutrient_names)) {
+    plotList_location[[i]] <- dfMonth %>%
+      mutate(date = paste(date, 01, sep = "-"),
+             date = as.Date(date, format = "%Y-%m-%d")) %>%
+      filter(Location == location_names[l]) %>%
+      filter(nutrient == nutrient_names[i]) %>%
+      ggplot(aes(x = date,
+                 y = median)) +
+      geom_line() +
+      scale_x_date(date_breaks = "years", date_labels = "%Y")+
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))+
+      labs(title = paste("B2", location_names[l], nutrient_text[i], "Monthly Median"),
+           x = "Date",
+           y = nutrient_text[i], 
+           color = "Year")
+    print(plotList_location[[i]])
+    # Save plot
+    ggsave(plot = plotList_location[[i]],
+           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Month-Line-TimeSeries.pdf", sep = "-"),
+           path = paste("Figures/Nutrients/03_DescriptiveStatistics/Monthly/01_Line",location_names[l],"TimeSeries", sep = "/"))
+  }
+  plotList <- c(plotList, plotList_location)
+}
+
+```
+
 
 # Loess Plots
 ## Yearly

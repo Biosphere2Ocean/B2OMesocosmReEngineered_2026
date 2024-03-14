@@ -16,14 +16,14 @@ options(scipen = 999)
 # Import Data
 ```{r import data}
 # use B2ONutrientData-Clean-QC.csv
-dfQC <- read_csv("Data/CleanData/CleanData_Nutrients/B2ONutrientData-Clean-QC.csv")
+df <- read_csv("Data/Clean/Nutrients/02_QualityControl/01-Nutrients-Data-Clean-QC.csv")
 
 ```
 
 # Data Formatting
 ```{r data formatting}
 # make long format data frame for plots showing all nutrients at a location (faceted)
-dfQCPivot <- dfQC %>%
+dfPivot <- df %>%
    pivot_longer(cols = Turbidity:Ammonia,
                names_to = "Nutrients",
                values_to = "Nutrient Values") %>%
@@ -35,7 +35,7 @@ dfQCPivot <- dfQC %>%
 ## Nutrients Together
 ```{r all nutrients on plot}
 # All Locations Plot
-PostQCAllLocationsPlot <- dfQCPivot %>%
+PostQCAllLocationsPlot <- dfPivot %>%
   ggplot(aes(x = Date,
              y = `Nutrient Values`, 
              color = Location)) +
@@ -56,11 +56,11 @@ PostQCAllLocationsPlot <- dfQCPivot %>%
 # Save Plot
 ggsave(filename = "AllLocationsPlot-PostQC.pdf", 
        plot = PostQCAllLocationsPlot,
-       path = "Figures/Figures_NutrientData/02-PostQCPlots",
+       path = "Figures/Nutrients/02_PostQC",
        width = 10, height = 7)
 
 # Ocean Plot
-PostQCOceanPlot <- dfQCPivot %>%
+PostQCOceanPlot <- dfPivot %>%
   filter(Location == "Ocean") %>%
   ggplot(aes(x = Date,
              y = `Nutrient Values`)) +
@@ -80,10 +80,10 @@ PostQCOceanPlot <- dfQCPivot %>%
        subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
 # save plot
 ggsave(filename = "OceanPlot-PostQC.pdf", plot = PostQCOceanPlot,
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Ocean", width = 10, height = 7)
+       path = "Figures/Nutrients/02_PostQC/Ocean", width = 10, height = 7)
 
 # Raceway 1 Plot
-PostQCRaceway1Plot <- dfQCPivot %>%
+PostQCRaceway1Plot <- dfPivot %>%
   filter(Location == "Raceway 1") %>%
   filter(Date > "2020-04-01") %>%
   ggplot(aes(x = Date,
@@ -105,10 +105,10 @@ PostQCRaceway1Plot <- dfQCPivot %>%
 # save plot 
 ggsave(filename = "Raceway1Plot-PostQC.pdf", 
        plot = PostQCRaceway1Plot,
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway1", width = 10, height = 7)
+       path = "Figures/Nutrients/02_PostQC/Raceways/Raceway1", width = 10, height = 7)
 
 # Raceway 2 Plot
-PostQCRaceway2Plot <- dfQCPivot %>%
+PostQCRaceway2Plot <- dfPivot %>%
   filter(Location == "Raceway 2") %>%
   filter(Date > "2020-04-01") %>%
   ggplot(aes(x = Date,
@@ -130,10 +130,10 @@ PostQCRaceway2Plot <- dfQCPivot %>%
 # save plot 
 ggsave(filename = "Raceway2Plot-PostQC.pdf", 
        plot = PostQCRaceway2Plot,
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway2", width = 10, height = 7)
+       path = "Figures/Nutrients/02_PostQC/Raceways/Raceway2", width = 10, height = 7)
 
 # Mangrove Plot
-PostQCMangrovePlot <- dfQCPivot %>%
+PostQCMangrovePlot <- dfPivot %>%
   filter(Location == "Mangroves") %>%
   ggplot(aes(x = Date,
              y = `Nutrient Values`)) +
@@ -154,10 +154,10 @@ PostQCMangrovePlot <- dfQCPivot %>%
 # save plot
 ggsave(filename = "MangrovePlot-PostQC.pdf", 
        plot = PostQCMangrovePlot,
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Mangroves", width = 10, height = 7)
+       path = "Figures/Nutrients/02_PostQC/Mangroves", width = 10, height = 7)
 
 # Raceways 1 and 2 Plot
-PostQCRaceway1Raceway2Plot <- dfQCPivot %>%
+PostQCRaceway1Raceway2Plot <- dfPivot %>%
   filter(Location == "Raceway 1" | Location == "Raceway 2")%>%
   filter(Date > "2020-04-01") %>%
   ggplot(aes(x = Date,
@@ -180,7 +180,7 @@ PostQCRaceway1Raceway2Plot <- dfQCPivot %>%
 # save plot 
 ggsave(filename = "Raceway1Raceway2Plot-PostQC.pdf", 
        plot = PostQCRaceway1Raceway2Plot,
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/BothRaceways", width = 10, height = 7)
+       path = "Figures/Nutrients/02_PostQC/Raceways/BothRaceways", width = 10, height = 7)
 
 ```
 
@@ -189,7 +189,9 @@ ggsave(filename = "Raceway1Raceway2Plot-PostQC.pdf",
 # set up vectors to use in loops below
 
 # name of each nutrient
-variable_names <- unique(dfQCPivot$Nutrients)
+variable_names <- unique(dfPivot$Nutrients)
+# name of each location
+location_names <- unique(dfPivot$Location)
 # text to use in each plot title for each nutrient
 variable_text <- c("Nitrate MR (mg/L)", "Nitrate HR (mg/L)", "Turbidity (FAU)", "Phosphate (mg/L)",
                    "pH", "Silica (mg/L)", "Alkalinity mg/L", "Iron (mg/L)", "Ammonia (mg/L)")
@@ -207,7 +209,7 @@ file_names <- c("NitrateMRPlot", "NitrateHRPlot", "TurbidityPlot", "PhosphatePlo
 plotList_ocean <- list()
 # loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
-plotList_ocean[[i]] <- dfQCPivot %>%
+plotList_ocean[[i]] <- dfPivot %>%
   filter(Location == "Ocean" & Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
              y = `Nutrient Values`)) +
@@ -232,14 +234,14 @@ print(plotList_ocean[[i]])
 # Save plot
 ggsave(plot = plotList_ocean[[i]],
        filename = paste(file_names[i],"-Line.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Ocean/LineGraphs")
+       path = "Figures/Nutrients/02_PostQC/Ocean/LineGraphs")
 }
 
 # list to save plots from loop into
 plotList_ocean <- list()
 # loop through each variable, plot line graph with Loess curve, save
 for (i in 1:length(variable_names)) {
-plotList_ocean[[i]] <- dfQCPivot %>%
+plotList_ocean[[i]] <- dfPivot %>%
   filter(Location == "Ocean" & Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
              y = `Nutrient Values`)) +
@@ -265,7 +267,7 @@ print(plotList_ocean[[i]])
 # Save plot
 ggsave(plot = plotList_ocean[[i]],
        filename = paste(file_names[i],"-Loess.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Ocean/LoessGraphs")
+       path = "Figures/Nutrients/02_PostQC/Ocean/LoessGraphs")
 }
 
 ```
@@ -278,7 +280,7 @@ ggsave(plot = plotList_ocean[[i]],
 plotList_mangroves <- list()
 # loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
-plotList_mangroves[[i]] <- dfQCPivot %>%
+plotList_mangroves[[i]] <- dfPivot %>%
   filter(Location == "Mangroves" & Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
              y = `Nutrient Values`)) +
@@ -303,14 +305,14 @@ print(plotList_mangroves[[i]])
 # Save plot
 ggsave(plot = plotList_mangroves[[i]],
        filename = paste(file_names[i],"-Line.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Mangroves/LineGraphs")
+       path = "Figures/Nutrients/02_PostQC/Mangroves/LineGraphs")
 }
 
 # list to save plots from loop into
 plotList_mangroves <- list()
 # loop through each variable, plot line graph with Loess curve, save
 for (i in 1:length(variable_names)) {
-plotList_mangroves[[i]] <- dfQCPivot %>%
+plotList_mangroves[[i]] <- dfPivot %>%
   filter(Location == "Mangroves" & Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
              y = `Nutrient Values`)) +
@@ -336,7 +338,7 @@ print(plotList_mangroves[[i]])
 # Save plot
 ggsave(plot = plotList_mangroves[[i]],
        filename = paste(file_names[i],"-Loess.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Mangroves/LoessGraphs")
+       path = "Figures/Nutrients/02_PostQC/Mangroves/LoessGraphs")
 }
 
 ```
@@ -349,7 +351,7 @@ ggsave(plot = plotList_mangroves[[i]],
 plotList_raceway1 <- list()
 # loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
-plotList_raceway1[[i]] <- dfQCPivot %>%
+plotList_raceway1[[i]] <- dfPivot %>%
   filter(Location == "Raceway 1" & Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
              y = `Nutrient Values`)) +
@@ -374,14 +376,14 @@ print(plotList_raceway1[[i]])
 # Save plot
 ggsave(plot = plotList_raceway1[[i]],
        filename = paste(file_names[i],"-Line.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway1/LineGraphs")
+       path = "Figures/Nutrients/02_PostQC/Raceways/Raceway1/LineGraphs")
 }
 
 # list to save plots from loop into
 plotList_raceway1 <- list()
 # loop through each variable, plot line graph with Loess curve, save
 for (i in 1:length(variable_names)) {
-plotList_raceway1[[i]] <- dfQCPivot %>%
+plotList_raceway1[[i]] <- dfPivot %>%
   filter(Location == "Raceway 1" & Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
              y = `Nutrient Values`)) +
@@ -407,7 +409,7 @@ print(plotList_raceway1[[i]])
 # Save plot
 ggsave(plot = plotList_raceway1[[i]],
        filename = paste(file_names[i],"-Loess.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway1/LoessGraphs")
+       path = "Figures/Nutrients/02_PostQC/Raceways/Raceway1/LoessGraphs")
 }
 
 ```
@@ -420,7 +422,7 @@ ggsave(plot = plotList_raceway1[[i]],
 plotList_raceway2 <- list()
 # loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
-plotList_raceway2[[i]] <- dfQCPivot %>%
+plotList_raceway2[[i]] <- dfPivot %>%
   filter(Location == "Raceway 2" & Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
              y = `Nutrient Values`)) +
@@ -445,14 +447,14 @@ print(plotList_raceway2[[i]])
 # Save plot
 ggsave(plot = plotList_raceway2[[i]],
        filename = paste(file_names[i],"-Line.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway2/LineGraphs")
+       path = "Figures/Nutrients/02_PostQC/Raceways/Raceway2/LineGraphs")
 }
 
 # list to save plots from loop into
 plotList_raceway2 <- list()
 # loop through each variable, plot line graph with Loess curve, save
 for (i in 1:length(variable_names)) {
-plotList_raceway2[[i]] <- dfQCPivot %>%
+plotList_raceway2[[i]] <- dfPivot %>%
   filter(Location == "Raceway 2" & Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
              y = `Nutrient Values`)) +
@@ -478,7 +480,7 @@ print(plotList_raceway2[[i]])
 # Save plot
 ggsave(plot = plotList_raceway2[[i]],
        filename = paste(file_names[i],"-Loess.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/Raceway2/LoessGraphs")
+       path = "Figures/Nutrients/02_PostQC/Raceways/Raceway2/LoessGraphs")
 }
 
 ```
@@ -491,7 +493,7 @@ ggsave(plot = plotList_raceway2[[i]],
 plotList_raceway12 <- list()
 # loop through each variable, plot line graph, save
 for (i in 1:length(variable_names)) {
-plotList_raceway12[[i]] <- dfQCPivot %>%
+plotList_raceway12[[i]] <- dfPivot %>%
   filter(Location == "Raceway 1" | Location == "Raceway 2") %>%
   filter(Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
@@ -518,14 +520,14 @@ print(plotList_raceway12[[i]])
 # Save plot
 ggsave(plot = plotList_raceway12[[i]],
        filename = paste(file_names[i],"-Line.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/BothRaceways/LineGraphs")
+       path = "Figures/Nutrients/02_PostQC/Raceways/BothRaceways/LineGraphs")
 }
 
 # list to save plots from loop into
 plotList_raceway12 <- list()
 # loop through each variable, plot line graph with Loess curve, save
 for (i in 1:length(variable_names)) {
-plotList_raceway12[[i]] <- dfQCPivot %>%
+plotList_raceway12[[i]] <- dfPivot %>%
   filter(Location == "Raceway 1" | Location == "Raceway 2") %>%
   filter(Nutrients == variable_names[i]) %>%
   ggplot(aes(x = Date, 
@@ -553,7 +555,48 @@ print(plotList_raceway12[[i]])
 # Save plot
 ggsave(plot = plotList_raceway12[[i]],
        filename = paste(file_names[i],"-Loess.pdf", sep = ""),
-       path = "Figures/Figures_NutrientData/02-PostQCPlots/Raceways/BothRaceways/LoessGraphs")
+       path = "Figures/Nutrients/02_PostQC/Raceways/BothRaceways/LoessGraphs")
+}
+
+```
+
+## Seasonal
+### Loess
+```{r seasonal cycle}
+# plots of mean, median, std, iqr for each month over course of time series
+# list for plots to populate from loop
+plotList <- list()
+for (l in 1:length(location_names)) {
+  plotList_location <- list()
+  for (i in 1:length(variable_names)) {
+    plotList_location[[i]] <- dfPivot %>%
+      filter(Location == location_names[l]) %>%
+      filter(Nutrients == variable_names[i]) %>%
+      ggplot(aes(x = as.Date(yday(Date)),
+                 color = factor(year(Date)),
+                 y = `Nutrient Values`)) +
+      #geom_line() +
+      geom_smooth() +
+      scale_x_date(date_breaks = "months", date_labels = "%b")+
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))+
+      labs(title = paste("B2", location_names[l], variable_text[i]),
+           x = "Date",
+           y = variable_text[i], 
+           color = "Year")
+    print(plotList_location[[i]])
+    # Save plot
+    ggsave(plot = plotList_location[[i]],
+           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Month-Line-Seasonal.pdf", sep = "-"),
+           path = paste("Figures/Nutrients/02_PostQC",location_names[l],"Seasonal", sep = "/"))
+  }
+  plotList <- c(plotList, plotList_location)
 }
 
 ```

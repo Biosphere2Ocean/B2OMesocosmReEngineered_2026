@@ -15,8 +15,8 @@ options(scipen = 999)
 
 # Import Data
 ```{r import data}
-# use B2ONutrientData-Clean.csv
-df <- read_csv("Data/CleanData/CleanData_Nutrients/B2ONutrientData-Clean.csv")
+# use 01-Nutrients-Data-Clean.csv
+df <- read_csv("Data/Clean/Nutrients/01_DataWrangling/01-Nutrients-Data-Clean.csv")
 
 ```
 
@@ -34,7 +34,8 @@ dfPivot <- df %>%
 
 
 # Pre-Quality Control Data Visualizations by Location
-```{r Pre-QC visualizations}
+## All Locations
+```{r All Locations Plot}
 # All Locations Plot
 PreQCAllLocationsPlot <- dfPivot %>%
   ggplot(aes(x = Date,
@@ -58,9 +59,12 @@ PreQCAllLocationsPlot
 # Save Plot
 ggsave(filename = "AllLocationsPlot-PreQC.pdf", 
        plot = PreQCAllLocationsPlot,
-       path = "Figures/Figures_NutrientData/01-PreQCPlots",
+       path = "Figures/Nutrients/01_PreQCPlots",
        width = 10, height = 7)
+```
 
+## Ocean
+```{r Ocean Plot}
 # Ocean Plot
 PreQCOceanPlot <- dfPivot %>%
   filter(Location == "Ocean") %>%
@@ -82,8 +86,12 @@ PreQCOceanPlot <- dfPivot %>%
        subtitle = "Pre-QC: All Outliers Still Present")
 # save plot
 ggsave(filename = "OceanPlot-PreQC.pdf", plot = PreQCOceanPlot,
-       path = "Figures/Figures_NutrientData/01-PreQCPlots/Ocean", width = 10, height = 7)
+       path = "Figures/Nutrients/01_PreQCPlots", width = 10, height = 7)
 
+```
+
+## Raceway 1
+```{r Raceway 1 Plot}
 # Raceway 1 Plot
 PreQCRaceway1Plot <- dfPivot %>%
   filter(Location == "Raceway 1") %>%
@@ -107,8 +115,11 @@ PreQCRaceway1Plot <- dfPivot %>%
 # save plot 
 ggsave(filename = "Raceway1Plot-PreQC.pdf", 
        plot = PreQCRaceway1Plot,
-       path = "Figures/Figures_NutrientData/01-PreQCPlots/Raceways/Raceway1", width = 10, height = 7)
+       path = "Figures/Nutrients/01_PreQCPlots", width = 10, height = 7)
+```
 
+## Raceway 2
+```{r Raceway 2 Plot}
 # Raceway 2 Plot
 PreQCRaceway2Plot <- dfPivot %>%
   filter(Location == "Raceway 2") %>%
@@ -132,8 +143,11 @@ PreQCRaceway2Plot <- dfPivot %>%
 # save plot 
 ggsave(filename = "Raceway2Plot-PreQC.pdf", 
        plot = PreQCRaceway2Plot,
-       path = "Figures/Figures_NutrientData/01-PreQCPlots/Raceways/Raceway2", width = 10, height = 7)
+       path = "Figures/Nutrients/01_PreQCPlots", width = 10, height = 7)
+```
 
+## Mangroves
+```{r Mangroves Plot}
 # Mangrove Plot
 PreQCMangrovePlot <- dfPivot %>%
   filter(Location == "Mangroves") %>%
@@ -156,8 +170,11 @@ PreQCMangrovePlot <- dfPivot %>%
 # save plot
 ggsave(filename = "MangrovePlot-PreQC.pdf", 
        plot = PreQCMangrovePlot,
-       path = "Figures/Figures_NutrientData/01-PreQCPlots/Mangroves", width = 10, height = 7)
+       path = "Figures/Nutrients/01_PreQCPlots", width = 10, height = 7)
+```
 
+## Raceways 1 and 2
+```{r Raceways 1 and 2 Plot}
 # Raceways 1 and 2 Plot
 PreQCRaceway1Raceway2Plot <- dfPivot %>%
   filter(Location == "Raceway 1" | Location == "Raceway 2")%>%
@@ -182,7 +199,7 @@ PreQCRaceway1Raceway2Plot <- dfPivot %>%
 # save plot 
 ggsave(filename = "Raceway1Raceway2Plot-PreQC.pdf", 
        plot = PreQCRaceway1Raceway2Plot,
-       path = "Figures/Figures_NutrientData/01-PreQCPlots/Raceways/BothRaceways", width = 10, height = 7)
+       path = "Figures/Nutrients/01_PreQCPlots", width = 10, height = 7)
 
 ```
 

@@ -15,35 +15,35 @@ library(lubridate)
 # Import Data
 ```{r import data}
 # Data after QC -- values outside of 2 sigma away from mean of every month for every variable were turned into NA values
-dfQC <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/02-OceanWaterQualityData-QC.csv")
+df <- read_csv("Data/Clean/YSI/02_QualityControl/01-YSI-Data-QC.csv")
 
 # Data after QC and Cutoff values implemented
-dfQCCutoff <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv")
+dfCutoff <- read_csv("Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
 ```
 
 # Data Formatting
 ```{r data formatting}
-# pivot dfQC longer for easier all-variable plotting
-dfQCPivot <- dfQC %>%
+# pivot df longer for easier all-variable plotting
+dfPivot <- df %>%
   pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(date = as.Date(date, format = "%Y/%m/%d"))
 
-# pivot dfQCCut longer for easier all-variable plotting
-dfQCCutPivot <- dfQCCutoff %>%
+# pivot dfCut longer for easier all-variable plotting
+dfCutPivot <- dfCutoff %>%
   pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(date = as.Date(date, format = "%Y/%m/%d"))
 
 # character vector of variable names as they appear in the dataframes
-variable_names <- unique(dfQCPivot$variable)
+variable_names <- unique(dfPivot$variable)
 
 # character vector of variable names as they should be written on a graph
 variable_text <- c("Temperature (ºF)", "Temperature (ºC)", "pH", "pH (mV)",
                    "Salinity (PSU)", "Conductivity (µS/cm)", 
-                   "NLF Conductivity (µS/cm", "Specific Conductivity (µS/cm)",
+                   "NLF Conductivity (µS/cm)", "Specific Conductivity (µS/cm)",
                    "Dissolved Oxygen (mg/L)", "Dissolved Oxygen, Saturated (%)",
                    "Dissolved Oxygen, Local (%)", "ORP (mV)", "Chlorophyll (RFU)",
                    "Chlorophyll (µg/L)", "Total Algae (RFU)", "Total Algae (cells/L)",
@@ -60,10 +60,11 @@ file_names <- c("TempFPlot", "TempCPlot", "pHPlot", "pHmVPlot", "SalinityPlot",
 ```
 
 # Plotting
-# After Initial Standard Deviation QC
-```{r Basic Plots - Post QC}
-# line graph of every variable - facet wrapped 
-AllVariablePlot_PostQC <- dfQCPivot %>%
+## Compare Initial Standard Deviation QC to QC with Cutoffs Implemented
+### All Variables on Same Line Graph
+```{r Initial Vs Cutoffs Line Graphs, Facet Wrapped}
+# line graph of every variable (facet wrapped) after initial standard deviation QC
+AllVariablePlot_PostQC <- dfPivot %>%
   ggplot(aes(x = date, 
              y = variable_value)) +
   geom_line() +
@@ -84,49 +85,11 @@ AllVariablePlot_PostQC <- dfQCPivot %>%
   ylab("Nutrient Value")
 # Save plot
 ggsave(filename = "AllVariablePlot-PostQC.pdf", plot = AllVariablePlot_PostQC, 
-       path = "Figures/Figures_YSI/02-PostQCPlots", height = 12, width = 10)
+       path = "Figures/YSI/02_PostQC", height = 12, width = 10)
 
 
-# individual line graphs of each variable
-# list to save plots from loop into
-plotList_postqc <- list()
-# loop through each variable, plot, save
-for (i in 1:length(variable_names)) {
-plotList_postqc[[i]] <- dfQCPivot %>%
-  filter(variable == variable_names[i]) %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
-       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
-       x = "Date",
-       y = variable_text[i])
-
-print(plotList_postqc[[i]])
-
-# Save plot
-ggsave(plot = plotList_preqc[[i]],
-       filename = paste(file_names[i],"-PostQC.pdf", sep = ""),
-       path = "Figures/Figures_YSI/02-PostQCPlots")
-}
-
-```
-
-## After Cutoff Values were Implemented
-```{r plotting cutoffs}
-# just plotting All Variables, pH, Salinity PSU, and Temp C since those were the only variables that were changed with the cutoff values
-# line graph of every variable - facet wrapped 
-AllVariablePlot_PostQCCutoff <- dfQCCutPivot %>%
+# line graph of every variable (facet wrapped) after initial QC and Cutoffs
+AllVariablePlot_PostQCCutoff <- dfCutPivot %>%
   ggplot(aes(x = date, 
              y = variable_value)) +
   geom_line() +
@@ -148,78 +111,218 @@ AllVariablePlot_PostQCCutoff <- dfQCCutPivot %>%
 # Save plot
 ggsave(filename = "AllVariablePlot-PostQCCutoff.pdf", 
        plot = AllVariablePlot_PostQCCutoff, 
-       path = "Figures/Figures_YSI/02-PostQCPlots", height = 12, width = 10)
-
-# line graph of temp in celcius
-TempCPlot_PostQCCutoff <- dfQCCutPivot %>%
-  filter(variable == "temp_c")%>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Temperature (ºC) from 2011-2023",
-       subtitle = "Post-QC and Cutoffs: Data Outside 2-Sigma from Mean and Cutoff Values have been Removed\nValues Less Than 20 and Greater Than 28 Removed")+
-  xlab("Date")+
-  ylab("Temperature (ºC)")
-# Save plot
-ggsave(filename = "TempCPlot-PostQCCutoff.pdf", plot = TempCPlot_PostQCCutoff, 
-       path = "Figures/Figures_YSI/02-PostQCPlots")
-
-# line graph of pH in pH units
-pHPlot_PostQCCutoff <- dfQCCutPivot %>%
-  filter(variable == "pH") %>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O pH from 2011-2023",
-       subtitle = "Post-QC and Cutoffs: Data Outside 2-Sigma from Mean and Cutoff Values have been Removed\nValues Less Than 7.5 Removed")+
-  xlab("Date")+
-  ylab("pH")
-# Save plot
-ggsave(filename = "pHPlot-PostQCCutoff.pdf", plot = pHPlot_PostQCCutoff, 
-       path = "Figures/Figures_YSI/02-PostQCPlots")
-
-# line graph of salinity in psu
-SalinityPlot_PostQCCutoff <- dfQCCutPivot %>%
-  filter(variable == "salinity_psu")%>%
-  ggplot(aes(x = date, 
-             y = variable_value)) +
-  geom_line() +
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Salinity (PSU) from 2011-2023",
-       subtitle = "Post-QC and Cutoffs: Data Outside 2-Sigma from Mean and Cutoff Values have been Removed\nValues Less Than 21 Removed")+
-  xlab("Date")+
-  ylab("Salinity (PSU)")
-# Save plot
-ggsave(filename = "SalinityPlot-PostQCCutoff.pdf", plot = SalinityPlot_PostQCCutoff, 
-       path = "Figures/Figures_YSI/02-PostQCPlots")
+       path = "Figures/YSI/02_PostQC", height = 12, width = 10)
 
 ```
+
+## After Cutoff Values Were Implemented
+### Individual Graphs
+#### Line Graphs
+##### Time Series
+```{r Line Graphs: Time Series}
+# individual line graphs of each variable after cutoffs have been implemented for pH, Salinity, and Temp C
+
+# list to save plots from loop into
+plotList_postqc <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+  plotList_postqc[[i]] <- dfCutPivot %>%
+    filter(variable == variable_names[i]) %>%
+    filter(ifelse(variable == "nlf_conductivity_uScm" |
+                    variable == "pH_mV" |
+                    variable == "sp_conductivity_uScm" |
+                    variable == "do_mgL" |
+                    variable == "do_local_percent" |
+                    variable == "chlorophyll_rfu" |
+                    variable == "total_dissolved_solids_mgL", 
+                  date >= "2021-01-01",
+                  date == date)) %>%
+    filter(ifelse(variable == "do_saturated_percent" |
+                    variable == "chlorophyll_ugL" |
+                    variable == "total_algae_rfu" |
+                    variable == "total_algae_cellsL", 
+                  date >= "2018-01-01", 
+                  date == date)) %>%
+    ggplot(aes(x = date, 
+               y = variable_value)) +
+    geom_line() +
+    scale_x_date(date_breaks = "1 year",
+                 date_labels = "%b %Y") +
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+    theme(strip.background = element_rect(fill = "white"))+
+    labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
+         subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+         x = "Date",
+         y = variable_text[i])
+  
+  print(plotList_postqc[[i]])
+  
+  # Save plot
+  ggsave(plot = plotList_postqc[[i]],
+         filename = paste(file_names[i],"-PostQC-Line-TimeSeries.pdf", sep = ""),
+         path = "Figures/YSI/02_PostQC/LineGraphs/TimeSeries")
+}
+
+```
+##### Seasonal
+```{r Line Graphs: Seasonal}
+# loop through each variable, plot line graph showing data for each year stacked on same plot, save plot
+# list to save plots from loop into
+plotList_postqc <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+  plotList_postqc[[i]] <- dfCutPivot %>%
+    filter(variable == variable_names[i]) %>%
+    filter(ifelse(variable == "nlf_conductivity_uScm" |
+                    variable == "pH_mV" |
+                    variable == "sp_conductivity_uScm" |
+                    variable == "do_mgL" |
+                    variable == "do_local_percent" |
+                    variable == "chlorophyll_rfu" |
+                    variable == "total_dissolved_solids_mgL", 
+                  date >= "2021-01-01",
+                  date == date)) %>%
+    filter(ifelse(variable == "do_saturated_percent" |
+                    variable == "chlorophyll_ugL" |
+                    variable == "total_algae_rfu" |
+                    variable == "total_algae_cellsL", 
+                  date >= "2018-01-01", 
+                  date == date)) %>%
+    ggplot(aes(x = as.Date(yday(date), "2021-01-01"), #use each day of the year as the x axis data
+               color = factor(year(date)), #plot data from each year separately as its own color
+               y = variable_value)) + #use variable values as y axis data
+    geom_line() +
+    scale_x_date(date_breaks = "months", date_labels = "%b") +
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+    theme(strip.background = element_rect(fill = "white"))+
+    labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
+         subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+         x = "Date",
+         y = variable_text[i])
+  
+  print(plotList_postqc[[i]])
+  
+  # Save plot
+  ggsave(plot = plotList_postqc[[i]],
+         filename = paste(file_names[i],"-PostQC-Line-Seasonal.pdf", sep = ""),
+         path = "Figures/YSI/02_PostQC/LineGraphs/Seasonal")
+}
+
+```
+####Loess Graphs
+##### Time Series
+```{r Loess Graphs: Time Series}
+# individual line graphs of each variable after cutoffs have been implemented for pH, Salinity, and Temp C
+
+# list to save plots from loop into
+plotList_postqc <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+  plotList_postqc[[i]] <- dfCutPivot %>%
+    filter(variable == variable_names[i]) %>%
+    filter(ifelse(variable == "nlf_conductivity_uScm" |
+                    variable == "pH_mV" |
+                    variable == "sp_conductivity_uScm" |
+                    variable == "do_mgL" |
+                    variable == "do_local_percent" |
+                    variable == "chlorophyll_rfu" |
+                    variable == "total_dissolved_solids_mgL", 
+                  date >= "2021-01-01",
+                  date == date)) %>%
+    filter(ifelse(variable == "do_saturated_percent" |
+                    variable == "chlorophyll_ugL" |
+                    variable == "total_algae_rfu" |
+                    variable == "total_algae_cellsL", 
+                  date >= "2018-01-01", 
+                  date == date)) %>%
+    ggplot(aes(x = date, 
+               y = variable_value)) +
+    geom_line() +
+    geom_smooth() +
+    scale_x_date(date_breaks = "1 year",
+                 date_labels = "%b %Y") +
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+    theme(strip.background = element_rect(fill = "white"))+
+    labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
+         subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+         x = "Date",
+         y = variable_text[i])
+  
+  print(plotList_postqc[[i]])
+  
+  # Save plot
+  ggsave(plot = plotList_postqc[[i]],
+         filename = paste(file_names[i],"-PostQC-Loess-TimeSeries.pdf", sep = ""),
+         path = "Figures/YSI/02_PostQC/LoessGraphs/TimeSeries")
+}
+```
+##### Seasonal
+```{r Loess Graphs: Seasonal}
+# loop through each variable, plot line graph showing data for each year stacked on same plot, save plot
+# list to save plots from loop into
+plotList_postqc <- list()
+# loop through each variable, plot, save
+for (i in 1:length(variable_names)) {
+  plotList_postqc[[i]] <- dfCutPivot %>%
+    filter(variable == variable_names[i]) %>%
+    filter(ifelse(variable == "nlf_conductivity_uScm" |
+                    variable == "pH_mV" |
+                    variable == "sp_conductivity_uScm" |
+                    variable == "do_mgL" |
+                    variable == "do_local_percent" |
+                    variable == "chlorophyll_rfu" |
+                    variable == "total_dissolved_solids_mgL", 
+                  date >= "2021-01-01",
+                  date == date)) %>%
+    filter(ifelse(variable == "do_saturated_percent" |
+                    variable == "chlorophyll_ugL" |
+                    variable == "total_algae_rfu" |
+                    variable == "total_algae_cellsL", 
+                  date >= "2018-01-01", 
+                  date == date)) %>%
+    ggplot(aes(x = as.Date(yday(date), "2021-01-01"), #use each day of the year as the x axis data
+               color = factor(year(date)), #plot data from each year separately as its own color
+               y = variable_value)) + #use variable values as y axis data
+    geom_smooth() +
+    scale_x_date(date_breaks = "months", date_labels = "%b") +
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(), 
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+    theme(strip.background = element_rect(fill = "white"))+
+    labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
+         subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+         x = "Date",
+         y = variable_text[i])
+  
+  print(plotList_postqc[[i]])
+  
+  # Save plot
+  ggsave(plot = plotList_postqc[[i]],
+         filename = paste(file_names[i],"-PostQC-Loess-Seasonal.pdf", sep = ""),
+         path = "Figures/YSI/02_PostQC/LoessGraphs/Seasonal")
+}
+
+```
+

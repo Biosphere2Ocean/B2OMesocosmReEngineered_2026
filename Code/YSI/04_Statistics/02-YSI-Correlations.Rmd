@@ -20,10 +20,10 @@ options(scipen = 999)
 df <- read_csv("Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
 
 ```
-
-## Create Correlation Matrix
-```{r correlation matrix}
-df_cor <- df %>%
+# Total Time Series
+## Data Formatting
+```{r Total: data formatting}
+df_corTotal <- df %>%
   # take out columns that will give NA values in correlations (not enough observations)
   select(-date, -time, -chlorophyll_ugL, 
          -total_algae_cellsL, -total_dissolved_solids_mgL) %>%
@@ -44,22 +44,68 @@ df_cor <- df %>%
 
 ```
 
-## Get Significant Statistics
-```{r }
+## Create Correlation Matrices
+```{r total: create, format correlation matrices}
 # create nested list of matrices: p-values, n, r values
-cor_mat_stats <- rcorr(as.matrix(df_cor))
+cor_mat_statsTotal <- rcorr(as.matrix(df_corTotal))
 
 # full flattened correlation matrix
-cor_mat_stats_flat <- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %>%
+cor_mat_stats_flatTotal <- flattenCorrMatrix(cor_mat_statsTotal$r, cor_mat_statsTotal$P) %>%
   mutate(across(3:4, ~ round(.x, 2))) 
-write_csv(cor_mat_stats_flat, 
-          file = "Data/Clean/YSI/04_Correlations/01-YSI-Correlations.csv")
+write_csv(cor_mat_stats_flatTotal, 
+          file = "Data/Clean/YSI/04_Correlations/TotalTimeSeries/YSI-Correlations-TotalTimeSeries.csv")
 
 # flattened correlation matrix with only p-values <= 0.05
-cor_mat_stats_flat_sig <- cor_mat_stats_flat %>%
+cor_mat_stats_flat_sigTotal <- cor_mat_stats_flatTotal %>%
   filter(p_value <= 0.05)
-write_csv(cor_mat_stats_flat_sig, 
-          file = "Data/Clean/YSI/04_Correlations/02-YSI-Correlations-Significant.csv")
+write_csv(cor_mat_stats_flat_sigTotal, 
+          file = "Data/Clean/YSI/04_Correlations/TotalTimeSeries/YSI-Correlations-Significant-TotalTimeSeries.csv")
+  
+```
+
+# Shortened Time Series
+## Data Formatting
+```{r Short: data formatting}
+df_corShort <- df %>%
+  # remove dates before jan 1 2018 to get shortened time series that will acutely compare variables that started to be measured later in time
+  filter(date >= "2018-01-01") %>%
+  # take out columns that will give NA values in correlations (not enough observations)
+  select(-date, -time, -chlorophyll_ugL, 
+         -total_algae_cellsL) %>%
+  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu,
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
+
+
+```
+
+## Create Correlation Matrices
+```{r short: create, format correlation matrices}
+# create nested list of matrices: p-values, n, r values
+cor_mat_statsShort <- rcorr(as.matrix(df_corShort))
+
+# full flattened correlation matrix
+cor_mat_stats_flatShort <- flattenCorrMatrix(cor_mat_statsShort$r, cor_mat_statsShort$P) %>%
+  mutate(across(3:4, ~ round(.x, 2))) 
+write_csv(cor_mat_stats_flatShort, 
+          file = "Data/Clean/YSI/04_Correlations/ShortenedTimeSeries/YSI-Correlations-ShortenedTimeSeries.csv")
+
+# flattened correlation matrix with only p-values <= 0.05
+cor_mat_stats_flat_sigShort <- cor_mat_stats_flatShort %>%
+  filter(p_value <= 0.05)
+write_csv(cor_mat_stats_flat_sigShort, 
+          file = "Data/Clean/YSI/04_Correlations/ShortenedTimeSeries/YSI-Correlations-Significant-ShortenedTimeSeries.csv")
   
 ```
 

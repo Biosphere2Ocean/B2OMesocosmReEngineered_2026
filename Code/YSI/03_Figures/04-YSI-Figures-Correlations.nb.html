@@ -1773,10 +1773,10 @@ options(scipen = 999)</code></pre>
 <pre class="r"><code># use 03-OceanWaterQualityData-QCCutoff.csv
 df &lt;- read_csv(&quot;Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDYxNzgyIENvbHVtbnM6IDE54pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuZGJsICAoMTcpOiB0ZW1wX2YsIHRlbXBfYywgcEgsIHBIX21WLCBzYWxpbml0eV9wc3UsIGNvbmR1Y3Rpdml0eV91U2NtLCBubGZfY29uZHVjdGl2aXR5X3VTY20uLi5cbmRhdGUgICgxKTogZGF0ZVxudGltZSAgKDEpOiB0aW1lXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 461782 Columns: 19── Column specification ────────────────────────────────────────────────────────────────────────
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDYxNzgyIENvbHVtbnM6IDE54pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuZGJsICAoMTcpOiB0ZW1wX2YsIHRlbXBfYywgcEgsIHBIX21WLCBzYWxpbml0eV9wc3UsIGNvbmR1Y3Rpdml0eV91U2NtLCBubGZfY29uZHVjdGl2aXR5X3VTY20sIHNwX2NvbmQuLi5cbmRhdGUgICgxKTogZGF0ZVxudGltZSAgKDEpOiB0aW1lXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
+<pre><code>Rows: 461782 Columns: 19── Column specification ─────────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
-dbl  (17): temp_f, temp_c, pH, pH_mV, salinity_psu, conductivity_uScm, nlf_conductivity_uScm...
+dbl  (17): temp_f, temp_c, pH, pH_mV, salinity_psu, conductivity_uScm, nlf_conductivity_uScm, sp_cond...
 date  (1): date
 time  (1): time
 ℹ Use `spec()` to retrieve the full column specification for this data.
@@ -1784,12 +1784,15 @@ time  (1): time
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<div id="create-correlation-matrix" class="section level2">
-<h2>Create Correlation Matrix</h2>
+</div>
+<div id="total-time-series" class="section level1">
+<h1>Total Time Series</h1>
+<div id="data-formatting" class="section level2">
+<h2>Data Formatting</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfY29yIDwtIGRmICU+JVxuICAjIHRha2Ugb3V0IGNvbHVtbnMgdGhhdCB3aWxsIGdpdmUgTkEgdmFsdWVzIGluIGNvcnJlbGF0aW9ucyAobm90IGVub3VnaCBvYnNlcnZhdGlvbnMpXG4gIHNlbGVjdCgtZGF0ZSwgLXRpbWUsIC1jaGxvcm9waHlsbF91Z0wsIFxuICAgICAgICAgLXRvdGFsX2FsZ2FlX2NlbGxzTCwgLXRvdGFsX2Rpc3NvbHZlZF9zb2xpZHNfbWdMKSAlPiVcbiAgcmVuYW1lKGBDaGxvcm9waHlsbCAoUkZVKWAgPSBjaGxvcm9waHlsbF9yZnUsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCA9IGNvbmR1Y3Rpdml0eV91U2NtLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBkb19sb2NhbF9wZXJjZW50LFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4gKG1nL0wpYCA9IGRvX21nTCxcbiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBTYXR1cmF0ZWQgKCUpYCA9IGRvX3NhdHVyYXRlZF9wZXJjZW50LFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWAgPSBubGZfY29uZHVjdGl2aXR5X3VTY20sXG4gICAgICAgICBgT3h5Z2VuIFJlZHVjdGlvbiBQb3RlbnRpYWwgKG1WKWAgPSBvcnBfbVYsXG4gICAgICAgICBgcEggKG1WKWAgPSBwSF9tVixcbiAgICAgICAgIGBTYWxpbml0eSAoUFNVKWAgPSBzYWxpbml0eV9wc3UsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5LCBTcGVjaWZpYyAowrVTL2NtKWAgPSBzcF9jb25kdWN0aXZpdHlfdVNjbSxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpDKWAgPSB0ZW1wX2MsXG4gICAgICAgICBgVGVtcGVyYXR1cmUgKMK6RilgID0gdGVtcF9mLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChSRlUpYCA9IHRvdGFsX2FsZ2FlX3JmdSlcblxuY29yX21hdCA8LSBjb3IoZGZfY29yLCB1c2UgPSBcInBhaXJ3aXNlLmNvbXBsZXRlLm9ic1wiKSAlPiVcbiAgcm91bmQoMilcblxuYGBgIn0= -->
-<pre class="r"><code>df_cor &lt;- df %&gt;%
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfY29yVG90YWwgPC0gZGYgJT4lXG4gICMgdGFrZSBvdXQgY29sdW1ucyB0aGF0IHdpbGwgZ2l2ZSBOQSB2YWx1ZXMgaW4gY29ycmVsYXRpb25zIChub3QgZW5vdWdoIG9ic2VydmF0aW9ucylcbiAgc2VsZWN0KC1kYXRlLCAtdGltZSwgLWNobG9yb3BoeWxsX3VnTCwgXG4gICAgICAgICAtdG90YWxfYWxnYWVfY2VsbHNMLCAtdG90YWxfZGlzc29sdmVkX3NvbGlkc19tZ0wpICU+JVxuICByZW5hbWUoYENobG9yb3BoeWxsIChSRlUpYCA9IGNobG9yb3BoeWxsX3JmdSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHkgKMK1Uy9jbSlgID0gY29uZHVjdGl2aXR5X3VTY20sXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgTG9jYWwgKCUpYCA9IGRvX2xvY2FsX3BlcmNlbnQsXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gZG9fbWdMLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIFNhdHVyYXRlZCAoJSlgID0gZG9fc2F0dXJhdGVkX3BlcmNlbnQsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5LCBOb24tTGluZWFyIEZ1bmN0aW9uICjCtVMvY20pYCA9IG5sZl9jb25kdWN0aXZpdHlfdVNjbSxcbiAgICAgICAgIGBPeHlnZW4gUmVkdWN0aW9uIFBvdGVudGlhbCAobVYpYCA9IG9ycF9tVixcbiAgICAgICAgIGBwSCAobVYpYCA9IHBIX21WLFxuICAgICAgICAgYFNhbGluaXR5IChQU1UpYCA9IHNhbGluaXR5X3BzdSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IHNwX2NvbmR1Y3Rpdml0eV91U2NtLFxuICAgICAgICAgYFRlbXBlcmF0dXJlICjCukMpYCA9IHRlbXBfYyxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpGKWAgPSB0ZW1wX2YsXG4gICAgICAgICBgVG90YWwgQWxnYWUgKFJGVSlgID0gdG90YWxfYWxnYWVfcmZ1KVxuXG5gYGAifQ== -->
+<pre class="r"><code>df_corTotal &lt;- df %&gt;%
   # take out columns that will give NA values in correlations (not enough observations)
   select(-date, -time, -chlorophyll_ugL, 
          -total_algae_cellsL, -total_dissolved_solids_mgL) %&gt;%
@@ -1806,9 +1809,6 @@ time  (1): time
          `Temperature (ºC)` = temp_c,
          `Temperature (ºF)` = temp_f,
          `Total Algae (RFU)` = total_algae_rfu)
-
-cor_mat &lt;- cor(df_cor, use = &quot;pairwise.complete.obs&quot;) %&gt;%
-  round(2)
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
@@ -1818,14 +1818,14 @@ cor_mat &lt;- cor(df_cor, use = &quot;pairwise.complete.obs&quot;) %&gt;%
 <h2>Get Significant Statistics</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgbmVzdGVkIGxpc3Qgb2YgbWF0cmljZXM6IHAtdmFsdWVzLCBuLCByIHZhbHVlc1xuY29yX21hdF9zdGF0cyA8LSByY29ycihhcy5tYXRyaXgoY29yX21hdCkpXG5cbmNvcl9tYXRfcHZhbHMgPC0gY29yX21hdF9zdGF0cyRQXG5cbiMgZnVsbCBmbGF0dGVuZWQgY29ycmVsYXRpb24gbWF0cml4XG5jb3JfbWF0X3N0YXRzX2ZsYXQgPC0gZmxhdHRlbkNvcnJNYXRyaXgoY29yX21hdF9zdGF0cyRyLCBjb3JfbWF0X3N0YXRzJFApICU+JVxuICBtdXRhdGUoYWNyb3NzKDM6NCwgfiByb3VuZCgueCwgMikpKSBcblxuXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgbmVzdGVkIGxpc3Qgb2YgbWF0cmljZXM6IHAtdmFsdWVzLCBuLCByIHZhbHVlc1xuY29yX21hdF9zdGF0c1RvdGFsIDwtIHJjb3JyKGFzLm1hdHJpeChkZl9jb3JUb3RhbCkpXG5cbmNvcl9tYXRfcHZhbHNUb3RhbCA8LSBjb3JfbWF0X3N0YXRzVG90YWwkUFxuXG4jIGZ1bGwgZmxhdHRlbmVkIGNvcnJlbGF0aW9uIG1hdHJpeFxuY29yX21hdF9zdGF0c19mbGF0VG90YWwgPC0gZmxhdHRlbkNvcnJNYXRyaXgoY29yX21hdF9zdGF0c1RvdGFsJHIsIGNvcl9tYXRfc3RhdHNUb3RhbCRQKSAlPiVcbiAgbXV0YXRlKGFjcm9zcygzOjQsIH4gcm91bmQoLngsIDIpKSkgXG5cblxuYGBgIn0= -->
 <pre class="r"><code># create nested list of matrices: p-values, n, r values
-cor_mat_stats &lt;- rcorr(as.matrix(cor_mat))
+cor_mat_statsTotal &lt;- rcorr(as.matrix(df_corTotal))
 
-cor_mat_pvals &lt;- cor_mat_stats$P
+cor_mat_pvalsTotal &lt;- cor_mat_statsTotal$P
 
 # full flattened correlation matrix
-cor_mat_stats_flat &lt;- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %&gt;%
+cor_mat_stats_flatTotal &lt;- flattenCorrMatrix(cor_mat_statsTotal$r, cor_mat_statsTotal$P) %&gt;%
   mutate(across(3:4, ~ round(.x, 2))) 
 </code></pre>
 <!-- rnb-source-end -->
@@ -1836,16 +1836,17 @@ cor_mat_stats_flat &lt;- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %&g
 <h2>Correlation Plots</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDb3JyZWxvZ3JhbVxueyAjIG9wZW4gcGRmIGdyYXBoaWNzIGRyaXZlclxuICBwZGYoZmlsZSA9IFwiRmlndXJlcy9ZU0kvMDRfQ29ycmVsYXRpb25zLzAxLVlTSS1Db3JyZWxhdGlvbnMtQ29ycmVsb2dyYW0ucGRmXCIsIFxuICAgICAgd2lkdGggPSAxMywgaGVpZ2h0ID0gMTApXG4gICMgbWFrZSBjb3JyZWxhdGlvbiBwbG90XG4gIGNvcnJwbG90KGNvcl9tYXRfc3RhdHMkciwgbWV0aG9kID0gXCJudW1iZXJcIiwgdHlwZSA9IFwiZnVsbFwiLCBkaWFnID0gVFJVRSxcbiAgICAgICAgICAgb3JkZXIgPSBcIm9yaWdpbmFsXCIsIFxuICAgICAgICAgICB0bC5jb2wgPSBcImJsYWNrXCIsIHRsLnNydCA9IDQ1LCBtYXIgPSBjKDAsIDAsIDMsIDApLFxuICAgICAgICAgICB0aXRsZSA9IFwiQmlvc3BoZXJlIDIgT2NlYW4gWVNJIFdhdGVyIFF1YWxpdHkgQ29ycmVsYXRpb25zXCIpXG4gICMgY2xvc2UgZ3JhcGhpY3MgZHJpdmVyXG4gIGRldi5vZmYoKVxufVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDb3JyZWxvZ3JhbVxueyAjIG9wZW4gcGRmIGdyYXBoaWNzIGRyaXZlclxuICBwZGYoZmlsZSA9IFwiRmlndXJlcy9ZU0kvMDRfQ29ycmVsYXRpb25zL1RvdGFsVGltZVNlcmllcy9ZU0ktQ29ycmVsYXRpb25zLUNvcnJlbG9ncmFtLVRvdGFsVGltZVNlcmllcy5wZGZcIiwgXG4gICAgICB3aWR0aCA9IDEzLCBoZWlnaHQgPSAxMylcbiAgIyBtYWtlIGNvcnJlbGF0aW9uIHBsb3RcbiAgY29ycnBsb3QoY29yX21hdF9zdGF0c1RvdGFsJHIsIG1ldGhvZCA9IFwibnVtYmVyXCIsIHR5cGUgPSBcImZ1bGxcIiwgZGlhZyA9IFRSVUUsXG4gICAgICAgICAgIG9yZGVyID0gXCJvcmlnaW5hbFwiLCBcbiAgICAgICAgICAgdGwuY29sID0gXCJibGFja1wiLCB0bC5zcnQgPSA0NSwgbWFyID0gYygwLCAwLCA2LCAwKSxcbiAgICAgICAgICAgdGl0bGUgPSBcIkJpb3NwaGVyZSAyIE9jZWFuIFlTSSBXYXRlciBRdWFsaXR5IENvcnJlbGF0aW9ucyBcXG5cbiAgICAgICAgICAgV2hvbGUgVGltZSBTZXJpZXMgQ29tcGFyaXNvblwiKVxuICAjIGNsb3NlIGdyYXBoaWNzIGRyaXZlclxuICBkZXYub2ZmKClcbn1cbmBgYCJ9 -->
 <pre class="r"><code># Correlogram
 { # open pdf graphics driver
-  pdf(file = &quot;Figures/YSI/04_Correlations/01-YSI-Correlations-Correlogram.pdf&quot;, 
-      width = 13, height = 10)
+  pdf(file = &quot;Figures/YSI/04_Correlations/TotalTimeSeries/YSI-Correlations-Correlogram-TotalTimeSeries.pdf&quot;, 
+      width = 13, height = 13)
   # make correlation plot
-  corrplot(cor_mat_stats$r, method = &quot;number&quot;, type = &quot;full&quot;, diag = TRUE,
+  corrplot(cor_mat_statsTotal$r, method = &quot;number&quot;, type = &quot;full&quot;, diag = TRUE,
            order = &quot;original&quot;, 
-           tl.col = &quot;black&quot;, tl.srt = 45, mar = c(0, 0, 3, 0),
-           title = &quot;Biosphere 2 Ocean YSI Water Quality Correlations&quot;)
+           tl.col = &quot;black&quot;, tl.srt = 45, mar = c(0, 0, 6, 0),
+           title = &quot;Biosphere 2 Ocean YSI Water Quality Correlations \n
+           Whole Time Series Comparison&quot;)
   # close graphics driver
   dev.off()
 }</code></pre>
@@ -1854,17 +1855,115 @@ cor_mat_stats_flat &lt;- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %&g
 <pre><code>null device 
           1 </code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDb3JyZWxvZ3JhbSB3aXRoIFNpZ25pZmljYW5jZVxuY29yX21hdF9zdGF0cyRQW2lzLm5hKGNvcl9tYXRfc3RhdHMkUCldIDwtIDEgI3R1cm4gTkFzIGludG8gMSdzIChpbnNpZ25pZmljYW50KSAtLSBvbmx5IE5BIHZhbHVlcyBhcmUgb24gdGhlIGRpYWdvbmFsICh0ZW1wX2YgY29tcGFyZWQgdG8gdGVtcF9mIGV0YylcbnsgIyBvcGVuIHBkZiBncmFwaGljcyBkcml2ZXJcbiAgcGRmKGZpbGUgPSBcIkZpZ3VyZXMvWVNJLzA0X0NvcnJlbGF0aW9ucy8wMi1ZU0ktQ29ycmVsYXRpb25zLUNvcnJlbG9ncmFtLVBWYWx1ZXMucGRmXCIsXG4gICAgICB3aWR0aCA9IDEzLCBoZWlnaHQgPSAxMClcbiAgY29ycnBsb3QoY29yX21hdF9zdGF0cyRyLCBtZXRob2QgPSBcIm51bWJlclwiLCB0eXBlPVwiZnVsbFwiLCBvcmRlcj1cIm9yaWdpbmFsXCIsIFxuICAgICAgICAgICBkaWFnID0gVFJVRSwgXG4gICAgICAgICAgIHRsLmNvbCA9IFwiYmxhY2tcIiwgdGwuc3J0ID0gNDUsIG1hciA9IGMoMCwgMCwgNCwgMCksXG4gICAgICAgICAgIHAubWF0ID0gY29yX21hdF9zdGF0cyRQLCBzaWcubGV2ZWwgPSAwLjA1LCBpbnNpZyA9IFwiYmxhbmtcIixcbiAgICAgICAgICAgdGl0bGUgPSBcIkJpb3NwaGVyZSAyIE9jZWFuIFdhdGVyIFF1YWxpdHkgU2lnbmlmaWNhbnQgQ29ycmVsYXRpb25zIFxcblxuICAgICAgICAgICBQLVZhbHVlIDwgMC4wNVwiKVxuICAjIGNsb3NlIGdyYXBoaWNzIGRyaXZlclxuICBkZXYub2ZmKClcbn1cbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDb3JyZWxvZ3JhbSB3aXRoIFNpZ25pZmljYW5jZVxuY29yX21hdF9zdGF0c1RvdGFsJFBbaXMubmEoY29yX21hdF9zdGF0c1RvdGFsJFApXSA8LSAxICN0dXJuIE5BcyBpbnRvIDEncyAoaW5zaWduaWZpY2FudCkgLS0gb25seSBOQSB2YWx1ZXMgYXJlIG9uIHRoZSBkaWFnb25hbCAodGVtcF9mIGNvbXBhcmVkIHRvIHRlbXBfZiBldGMpXG57ICMgb3BlbiBwZGYgZ3JhcGhpY3MgZHJpdmVyXG4gIHBkZihmaWxlID0gXCJGaWd1cmVzL1lTSS8wNF9Db3JyZWxhdGlvbnMvVG90YWxUaW1lU2VyaWVzL1lTSS1Db3JyZWxhdGlvbnMtQ29ycmVsb2dyYW0tU2lnbmlmaWNhbnQtVG90YWxUaW1lU2VyaWVzLnBkZlwiLFxuICAgICAgd2lkdGggPSAxMywgaGVpZ2h0ID0gMTMpXG4gIGNvcnJwbG90KGNvcl9tYXRfc3RhdHNUb3RhbCRyLCBtZXRob2QgPSBcIm51bWJlclwiLCB0eXBlPVwiZnVsbFwiLCBvcmRlcj1cIm9yaWdpbmFsXCIsIFxuICAgICAgICAgICBkaWFnID0gVFJVRSwgXG4gICAgICAgICAgIHRsLmNvbCA9IFwiYmxhY2tcIiwgdGwuc3J0ID0gNDUsIG1hciA9IGMoMCwgMCwgNiwgMCksXG4gICAgICAgICAgIHAubWF0ID0gY29yX21hdF9zdGF0c1RvdGFsJFAsIHNpZy5sZXZlbCA9IDAuMDUsIGluc2lnID0gXCJibGFua1wiLFxuICAgICAgICAgICB0aXRsZSA9IFwiQmlvc3BoZXJlIDIgT2NlYW4gV2F0ZXIgUXVhbGl0eSBTaWduaWZpY2FudCBDb3JyZWxhdGlvbnMgXFxuXG4gICAgICAgICAgIFdob2xlIFRpbWUgU2VyaWVzIENvbXBhcmlzb24gXFxuXG4gICAgICAgICAgIFAtVmFsdWUgPCAwLjA1XCIpXG4gICMgY2xvc2UgZ3JhcGhpY3MgZHJpdmVyXG4gIGRldi5vZmYoKVxufVxuYGBgIn0= -->
 <pre class="r"><code># Correlogram with Significance
-cor_mat_stats$P[is.na(cor_mat_stats$P)] &lt;- 1 #turn NAs into 1&#39;s (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
+cor_mat_statsTotal$P[is.na(cor_mat_statsTotal$P)] &lt;- 1 #turn NAs into 1&#39;s (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
 { # open pdf graphics driver
-  pdf(file = &quot;Figures/YSI/04_Correlations/02-YSI-Correlations-Correlogram-PValues.pdf&quot;,
-      width = 13, height = 10)
-  corrplot(cor_mat_stats$r, method = &quot;number&quot;, type=&quot;full&quot;, order=&quot;original&quot;, 
+  pdf(file = &quot;Figures/YSI/04_Correlations/TotalTimeSeries/YSI-Correlations-Correlogram-Significant-TotalTimeSeries.pdf&quot;,
+      width = 13, height = 13)
+  corrplot(cor_mat_statsTotal$r, method = &quot;number&quot;, type=&quot;full&quot;, order=&quot;original&quot;, 
            diag = TRUE, 
-           tl.col = &quot;black&quot;, tl.srt = 45, mar = c(0, 0, 4, 0),
-           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = &quot;blank&quot;,
+           tl.col = &quot;black&quot;, tl.srt = 45, mar = c(0, 0, 6, 0),
+           p.mat = cor_mat_statsTotal$P, sig.level = 0.05, insig = &quot;blank&quot;,
            title = &quot;Biosphere 2 Ocean Water Quality Significant Correlations \n
+           Whole Time Series Comparison \n
+           P-Value &lt; 0.05&quot;)
+  # close graphics driver
+  dev.off()
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoibnVsbCBkZXZpY2UgXG4gICAgICAgICAgMSBcbiJ9 -->
+<pre><code>null device 
+          1 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="shortened-time-series" class="section level1">
+<h1>Shortened Time Series</h1>
+<div id="data-formatting-1" class="section level2">
+<h2>Data Formatting</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfY29yU2hvcnQgPC0gZGYgJT4lXG4gICMgcmVtb3ZlIGRhdGVzIGJlZm9yZSBqYW4gMSAyMDE4IHRvIGdldCBzaG9ydGVuZWQgdGltZSBzZXJpZXMgdGhhdCB3aWxsIGFjdXRlbHkgY29tcGFyZSB2YXJpYWJsZXMgdGhhdCBzdGFydGVkIHRvIGJlIG1lYXN1cmVkIGxhdGVyIGluIHRpbWVcbiAgZmlsdGVyKGRhdGUgPj0gXCIyMDE4LTAxLTAxXCIpICU+JVxuICAjIHRha2Ugb3V0IGNvbHVtbnMgdGhhdCB3aWxsIGdpdmUgTkEgdmFsdWVzIGluIGNvcnJlbGF0aW9ucyAobm90IGVub3VnaCBvYnNlcnZhdGlvbnMpXG4gIHNlbGVjdCgtZGF0ZSwgLXRpbWUsIC1jaGxvcm9waHlsbF91Z0wsIC10b3RhbF9hbGdhZV9jZWxsc0wpICU+JVxuICByZW5hbWUoYENobG9yb3BoeWxsIChSRlUpYCA9IGNobG9yb3BoeWxsX3JmdSxcbiAgICAgICAgIGBUb3RhbCBEaXNzb2x2ZWQgU29saWRzIChtZy9MKWAgPSB0b3RhbF9kaXNzb2x2ZWRfc29saWRzX21nTCxcbiAgICAgICAgIGBDb25kdWN0aXZpdHkgKMK1Uy9jbSlgID0gY29uZHVjdGl2aXR5X3VTY20sXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgTG9jYWwgKCUpYCA9IGRvX2xvY2FsX3BlcmNlbnQsXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gZG9fbWdMLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIFNhdHVyYXRlZCAoJSlgID0gZG9fc2F0dXJhdGVkX3BlcmNlbnQsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5LCBOb24tTGluZWFyIEZ1bmN0aW9uICjCtVMvY20pYCA9IG5sZl9jb25kdWN0aXZpdHlfdVNjbSxcbiAgICAgICAgIGBPeHlnZW4gUmVkdWN0aW9uIFBvdGVudGlhbCAobVYpYCA9IG9ycF9tVixcbiAgICAgICAgIGBwSCAobVYpYCA9IHBIX21WLFxuICAgICAgICAgYFNhbGluaXR5IChQU1UpYCA9IHNhbGluaXR5X3BzdSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IHNwX2NvbmR1Y3Rpdml0eV91U2NtLFxuICAgICAgICAgYFRlbXBlcmF0dXJlICjCukMpYCA9IHRlbXBfYyxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpGKWAgPSB0ZW1wX2YsXG4gICAgICAgICBgVG90YWwgQWxnYWUgKFJGVSlgID0gdG90YWxfYWxnYWVfcmZ1KVxuXG5gYGAifQ== -->
+<pre class="r"><code>df_corShort &lt;- df %&gt;%
+  # remove dates before jan 1 2018 to get shortened time series that will acutely compare variables that started to be measured later in time
+  filter(date &gt;= &quot;2018-01-01&quot;) %&gt;%
+  # take out columns that will give NA values in correlations (not enough observations)
+  select(-date, -time, -chlorophyll_ugL, -total_algae_cellsL) %&gt;%
+  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="get-significant-statistics-1" class="section level2">
+<h2>Get Significant Statistics</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgbmVzdGVkIGxpc3Qgb2YgbWF0cmljZXM6IHAtdmFsdWVzLCBuLCByIHZhbHVlc1xuY29yX21hdF9zdGF0c1Nob3J0IDwtIHJjb3JyKGFzLm1hdHJpeChkZl9jb3JTaG9ydCkpXG5cbmNvcl9tYXRfcHZhbHNTaG9ydCA8LSBjb3JfbWF0X3N0YXRzU2hvcnQkUFxuXG4jIGZ1bGwgZmxhdHRlbmVkIGNvcnJlbGF0aW9uIG1hdHJpeFxuY29yX21hdF9zdGF0c19mbGF0U2hvcnQgPC0gZmxhdHRlbkNvcnJNYXRyaXgoY29yX21hdF9zdGF0c1Nob3J0JHIsIGNvcl9tYXRfc3RhdHNTaG9ydCRQKSAlPiVcbiAgbXV0YXRlKGFjcm9zcygzOjQsIH4gcm91bmQoLngsIDIpKSkgXG5cblxuYGBgIn0= -->
+<pre class="r"><code># create nested list of matrices: p-values, n, r values
+cor_mat_statsShort &lt;- rcorr(as.matrix(df_corShort))
+
+cor_mat_pvalsShort &lt;- cor_mat_statsShort$P
+
+# full flattened correlation matrix
+cor_mat_stats_flatShort &lt;- flattenCorrMatrix(cor_mat_statsShort$r, cor_mat_statsShort$P) %&gt;%
+  mutate(across(3:4, ~ round(.x, 2))) 
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="correlation-plots-1" class="section level2">
+<h2>Correlation Plots</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDb3JyZWxvZ3JhbVxueyAjIG9wZW4gcGRmIGdyYXBoaWNzIGRyaXZlclxuICBwZGYoZmlsZSA9IFwiRmlndXJlcy9ZU0kvMDRfQ29ycmVsYXRpb25zL1Nob3J0ZW5lZFRpbWVTZXJpZXMvWVNJLUNvcnJlbGF0aW9ucy1Db3JyZWxvZ3JhbS1TaG9ydGVuZWRUaW1lU2VyaWVzLnBkZlwiLCBcbiAgICAgIHdpZHRoID0gMTMsIGhlaWdodCA9IDEzKVxuICAjIG1ha2UgY29ycmVsYXRpb24gcGxvdFxuICBjb3JycGxvdChjb3JfbWF0X3N0YXRzU2hvcnQkciwgbWV0aG9kID0gXCJudW1iZXJcIiwgdHlwZSA9IFwiZnVsbFwiLCBkaWFnID0gVFJVRSxcbiAgICAgICAgICAgb3JkZXIgPSBcIm9yaWdpbmFsXCIsIFxuICAgICAgICAgICB0bC5jb2wgPSBcImJsYWNrXCIsIHRsLnNydCA9IDQ1LCBtYXIgPSBjKDAsIDAsIDYsIDApLFxuICAgICAgICAgICB0aXRsZSA9IFwiQmlvc3BoZXJlIDIgT2NlYW4gWVNJIFdhdGVyIFF1YWxpdHkgQ29ycmVsYXRpb25zIFxcblxuICAgICAgICAgICBTaG9ydGVuZWQgVGltZSBTZXJpZXMgQ29tcGFyaXNvbjogMDEtMDEtMjAxOC1QcmVzZW50XCIpXG4gICMgY2xvc2UgZ3JhcGhpY3MgZHJpdmVyXG4gIGRldi5vZmYoKVxufVxuYGBgIn0= -->
+<pre class="r"><code># Correlogram
+{ # open pdf graphics driver
+  pdf(file = &quot;Figures/YSI/04_Correlations/ShortenedTimeSeries/YSI-Correlations-Correlogram-ShortenedTimeSeries.pdf&quot;, 
+      width = 13, height = 13)
+  # make correlation plot
+  corrplot(cor_mat_statsShort$r, method = &quot;number&quot;, type = &quot;full&quot;, diag = TRUE,
+           order = &quot;original&quot;, 
+           tl.col = &quot;black&quot;, tl.srt = 45, mar = c(0, 0, 6, 0),
+           title = &quot;Biosphere 2 Ocean YSI Water Quality Correlations \n
+           Shortened Time Series Comparison: 01-01-2018-Present&quot;)
+  # close graphics driver
+  dev.off()
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoibnVsbCBkZXZpY2UgXG4gICAgICAgICAgMSBcbiJ9 -->
+<pre><code>null device 
+          1 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDb3JyZWxvZ3JhbSB3aXRoIFNpZ25pZmljYW5jZVxuY29yX21hdF9zdGF0c1Nob3J0JFBbaXMubmEoY29yX21hdF9zdGF0c1Nob3J0JFApXSA8LSAxICN0dXJuIE5BcyBpbnRvIDEncyAoaW5zaWduaWZpY2FudCkgLS0gb25seSBOQSB2YWx1ZXMgYXJlIG9uIHRoZSBkaWFnb25hbCAodGVtcF9mIGNvbXBhcmVkIHRvIHRlbXBfZiBldGMpXG57ICMgb3BlbiBwZGYgZ3JhcGhpY3MgZHJpdmVyXG4gIHBkZihmaWxlID0gXCJGaWd1cmVzL1lTSS8wNF9Db3JyZWxhdGlvbnMvU2hvcnRlbmVkVGltZVNlcmllcy9ZU0ktQ29ycmVsYXRpb25zLUNvcnJlbG9ncmFtLVNpZ25pZmljYW50LVNob3J0ZW5lZFRpbWVTZXJpZXMucGRmXCIsXG4gICAgICB3aWR0aCA9IDEzLCBoZWlnaHQgPSAxMylcbiAgY29ycnBsb3QoY29yX21hdF9zdGF0c1Nob3J0JHIsIG1ldGhvZCA9IFwibnVtYmVyXCIsIHR5cGU9XCJmdWxsXCIsIG9yZGVyPVwib3JpZ2luYWxcIiwgXG4gICAgICAgICAgIGRpYWcgPSBUUlVFLCBcbiAgICAgICAgICAgdGwuY29sID0gXCJibGFja1wiLCB0bC5zcnQgPSA0NSwgbWFyID0gYygwLCAwLCA2LCAwKSxcbiAgICAgICAgICAgcC5tYXQgPSBjb3JfbWF0X3N0YXRzU2hvcnQkUCwgc2lnLmxldmVsID0gMC4wNSwgaW5zaWcgPSBcImJsYW5rXCIsXG4gICAgICAgICAgIHRpdGxlID0gXCJCaW9zcGhlcmUgMiBPY2VhbiBXYXRlciBRdWFsaXR5IFNpZ25pZmljYW50IENvcnJlbGF0aW9ucyBcXG5cbiAgICAgICAgICAgU2hvcnRlbmVkIFRpbWUgU2VyaWVzIENvbXBhcmlzb246IDAxLTAxLTIwMTgtUHJlc2VudCBcXG5cbiAgICAgICAgICAgUC1WYWx1ZSA8IDAuMDVcIilcbiAgIyBjbG9zZSBncmFwaGljcyBkcml2ZXJcbiAgZGV2Lm9mZigpXG59XG5gYGAifQ== -->
+<pre class="r"><code># Correlogram with Significance
+cor_mat_statsShort$P[is.na(cor_mat_statsShort$P)] &lt;- 1 #turn NAs into 1&#39;s (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
+{ # open pdf graphics driver
+  pdf(file = &quot;Figures/YSI/04_Correlations/ShortenedTimeSeries/YSI-Correlations-Correlogram-Significant-ShortenedTimeSeries.pdf&quot;,
+      width = 13, height = 13)
+  corrplot(cor_mat_statsShort$r, method = &quot;number&quot;, type=&quot;full&quot;, order=&quot;original&quot;, 
+           diag = TRUE, 
+           tl.col = &quot;black&quot;, tl.srt = 45, mar = c(0, 0, 6, 0),
+           p.mat = cor_mat_statsShort$P, sig.level = 0.05, insig = &quot;blank&quot;,
+           title = &quot;Biosphere 2 Ocean Water Quality Significant Correlations \n
+           Shortened Time Series Comparison: 01-01-2018-Present \n
            P-Value &lt; 0.05&quot;)
   # close graphics driver
   dev.off()
@@ -1878,7 +1977,7 @@ cor_mat_stats$P[is.na(cor_mat_stats$P)] &lt;- 1 #turn NAs into 1&#39;s (insignif
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiWVNJIEZpZ3VyZXM6IENvcnJlbGF0aW9ucyIKQ29sbGFib3JhdG9yczogUmVuZWUgR3JhbWJpaGxlcgpQcm9qZWN0OiBPY2VhbldhdGVyUXVhbGl0eQpJbnN0aXR1dGlvbjogQmlvc3BoZXJlIDIgT2NlYW4Kb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyBJbXBvcnQgTGlicmFyaWVzCmBgYHtyIGltcG9ydCBsaWJyYXJpZXN9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KEhtaXNjKQpsaWJyYXJ5KGNvcnJwbG90KQpsaWJyYXJ5KFBlcmZvcm1hbmNlQW5hbHl0aWNzKQpzb3VyY2UoIkNvZGUvRnVuY3Rpb25zL0NvcnJlbGF0aW9uRnVuY3Rpb24uUiIpCm9wdGlvbnMoc2NpcGVuID0gOTk5KQpgYGAKCiNJbXBvcnQgRGF0YQpgYGB7ciBpbXBvcnQgZGF0YX0KIyB1c2UgMDMtT2NlYW5XYXRlclF1YWxpdHlEYXRhLVFDQ3V0b2ZmLmNzdgpkZiA8LSByZWFkX2NzdigiRGF0YS9DbGVhbi9ZU0kvMDJfUXVhbGl0eUNvbnRyb2wvMDItWVNJLURhdGEtUUNDdXRvZmYuY3N2IikKYGBgCgojIyBDcmVhdGUgQ29ycmVsYXRpb24gTWF0cml4CmBgYHtyIGNvcnJlbGF0aW9uIG1hdHJpeH0KZGZfY29yIDwtIGRmICU+JQogICMgdGFrZSBvdXQgY29sdW1ucyB0aGF0IHdpbGwgZ2l2ZSBOQSB2YWx1ZXMgaW4gY29ycmVsYXRpb25zIChub3QgZW5vdWdoIG9ic2VydmF0aW9ucykKICBzZWxlY3QoLWRhdGUsIC10aW1lLCAtY2hsb3JvcGh5bGxfdWdMLCAKICAgICAgICAgLXRvdGFsX2FsZ2FlX2NlbGxzTCwgLXRvdGFsX2Rpc3NvbHZlZF9zb2xpZHNfbWdMKSAlPiUKICByZW5hbWUoYENobG9yb3BoeWxsIChSRlUpYCA9IGNobG9yb3BoeWxsX3JmdSwKICAgICAgICAgYENvbmR1Y3Rpdml0eSAowrVTL2NtKWAgPSBjb25kdWN0aXZpdHlfdVNjbSwKICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBkb19sb2NhbF9wZXJjZW50LAogICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gZG9fbWdMLAogICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWAgPSBkb19zYXR1cmF0ZWRfcGVyY2VudCwKICAgICAgICAgYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWAgPSBubGZfY29uZHVjdGl2aXR5X3VTY20sCiAgICAgICAgIGBPeHlnZW4gUmVkdWN0aW9uIFBvdGVudGlhbCAobVYpYCA9IG9ycF9tViwKICAgICAgICAgYHBIIChtVilgID0gcEhfbVYsCiAgICAgICAgIGBTYWxpbml0eSAoUFNVKWAgPSBzYWxpbml0eV9wc3UsCiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IHNwX2NvbmR1Y3Rpdml0eV91U2NtLAogICAgICAgICBgVGVtcGVyYXR1cmUgKMK6QylgID0gdGVtcF9jLAogICAgICAgICBgVGVtcGVyYXR1cmUgKMK6RilgID0gdGVtcF9mLAogICAgICAgICBgVG90YWwgQWxnYWUgKFJGVSlgID0gdG90YWxfYWxnYWVfcmZ1KQoKYGBgCgojIyBHZXQgU2lnbmlmaWNhbnQgU3RhdGlzdGljcwpgYGB7ciBzaWduaWZpY2FudCBzdGF0c30KIyBjcmVhdGUgbmVzdGVkIGxpc3Qgb2YgbWF0cmljZXM6IHAtdmFsdWVzLCBuLCByIHZhbHVlcwpjb3JfbWF0X3N0YXRzIDwtIHJjb3JyKGFzLm1hdHJpeChjb3JfbWF0KSkKCmNvcl9tYXRfcHZhbHMgPC0gY29yX21hdF9zdGF0cyRQCgojIGZ1bGwgZmxhdHRlbmVkIGNvcnJlbGF0aW9uIG1hdHJpeApjb3JfbWF0X3N0YXRzX2ZsYXQgPC0gZmxhdHRlbkNvcnJNYXRyaXgoY29yX21hdF9zdGF0cyRyLCBjb3JfbWF0X3N0YXRzJFApICU+JQogIG11dGF0ZShhY3Jvc3MoMzo0LCB+IHJvdW5kKC54LCAyKSkpIAoKCmBgYAoKIyMgQ29ycmVsYXRpb24gUGxvdHMKYGBgIHtyIGNvciBwbG90c30KIyBDb3JyZWxvZ3JhbQp7ICMgb3BlbiBwZGYgZ3JhcGhpY3MgZHJpdmVyCiAgcGRmKGZpbGUgPSAiRmlndXJlcy9ZU0kvMDRfQ29ycmVsYXRpb25zLzAxLVlTSS1Db3JyZWxhdGlvbnMtQ29ycmVsb2dyYW0ucGRmIiwgCiAgICAgIHdpZHRoID0gMTMsIGhlaWdodCA9IDEwKQogICMgbWFrZSBjb3JyZWxhdGlvbiBwbG90CiAgY29ycnBsb3QoY29yX21hdF9zdGF0cyRyLCBtZXRob2QgPSAibnVtYmVyIiwgdHlwZSA9ICJmdWxsIiwgZGlhZyA9IFRSVUUsCiAgICAgICAgICAgb3JkZXIgPSAib3JpZ2luYWwiLCAKICAgICAgICAgICB0bC5jb2wgPSAiYmxhY2siLCB0bC5zcnQgPSA0NSwgbWFyID0gYygwLCAwLCAzLCAwKSwKICAgICAgICAgICB0aXRsZSA9ICJCaW9zcGhlcmUgMiBPY2VhbiBZU0kgV2F0ZXIgUXVhbGl0eSBDb3JyZWxhdGlvbnMiKQogICMgY2xvc2UgZ3JhcGhpY3MgZHJpdmVyCiAgZGV2Lm9mZigpCn0KCiMgQ29ycmVsb2dyYW0gd2l0aCBTaWduaWZpY2FuY2UKY29yX21hdF9zdGF0cyRQW2lzLm5hKGNvcl9tYXRfc3RhdHMkUCldIDwtIDEgI3R1cm4gTkFzIGludG8gMSdzIChpbnNpZ25pZmljYW50KSAtLSBvbmx5IE5BIHZhbHVlcyBhcmUgb24gdGhlIGRpYWdvbmFsICh0ZW1wX2YgY29tcGFyZWQgdG8gdGVtcF9mIGV0YykKeyAjIG9wZW4gcGRmIGdyYXBoaWNzIGRyaXZlcgogIHBkZihmaWxlID0gIkZpZ3VyZXMvWVNJLzA0X0NvcnJlbGF0aW9ucy8wMi1ZU0ktQ29ycmVsYXRpb25zLUNvcnJlbG9ncmFtLVBWYWx1ZXMucGRmIiwKICAgICAgd2lkdGggPSAxMywgaGVpZ2h0ID0gMTApCiAgY29ycnBsb3QoY29yX21hdF9zdGF0cyRyLCBtZXRob2QgPSAibnVtYmVyIiwgdHlwZT0iZnVsbCIsIG9yZGVyPSJvcmlnaW5hbCIsIAogICAgICAgICAgIGRpYWcgPSBUUlVFLCAKICAgICAgICAgICB0bC5jb2wgPSAiYmxhY2siLCB0bC5zcnQgPSA0NSwgbWFyID0gYygwLCAwLCA0LCAwKSwKICAgICAgICAgICBwLm1hdCA9IGNvcl9tYXRfc3RhdHMkUCwgc2lnLmxldmVsID0gMC4wNSwgaW5zaWcgPSAiYmxhbmsiLAogICAgICAgICAgIHRpdGxlID0gIkJpb3NwaGVyZSAyIE9jZWFuIFdhdGVyIFF1YWxpdHkgU2lnbmlmaWNhbnQgQ29ycmVsYXRpb25zIFxuCiAgICAgICAgICAgUC1WYWx1ZSA8IDAuMDUiKQogICMgY2xvc2UgZ3JhcGhpY3MgZHJpdmVyCiAgZGV2Lm9mZigpCn0KCmBgYAo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiWVNJIEZpZ3VyZXM6IENvcnJlbGF0aW9ucyIKQ29sbGFib3JhdG9yczogUmVuZWUgR3JhbWJpaGxlcgpQcm9qZWN0OiBPY2VhbldhdGVyUXVhbGl0eQpJbnN0aXR1dGlvbjogQmlvc3BoZXJlIDIgT2NlYW4Kb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyBJbXBvcnQgTGlicmFyaWVzCmBgYHtyIGltcG9ydCBsaWJyYXJpZXN9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KEhtaXNjKQpsaWJyYXJ5KGNvcnJwbG90KQpsaWJyYXJ5KFBlcmZvcm1hbmNlQW5hbHl0aWNzKQpzb3VyY2UoIkNvZGUvRnVuY3Rpb25zL0NvcnJlbGF0aW9uRnVuY3Rpb24uUiIpCm9wdGlvbnMoc2NpcGVuID0gOTk5KQpgYGAKCiNJbXBvcnQgRGF0YQpgYGB7ciBpbXBvcnQgZGF0YX0KIyB1c2UgMDMtT2NlYW5XYXRlclF1YWxpdHlEYXRhLVFDQ3V0b2ZmLmNzdgpkZiA8LSByZWFkX2NzdigiRGF0YS9DbGVhbi9ZU0kvMDJfUXVhbGl0eUNvbnRyb2wvMDItWVNJLURhdGEtUUNDdXRvZmYuY3N2IikKYGBgCiMgVG90YWwgVGltZSBTZXJpZXMKIyMgRGF0YSBGb3JtYXR0aW5nCmBgYHtyIFRvdGFsOiBkYXRhIGZvcm1hdHRpbmd9CmRmX2NvclRvdGFsIDwtIGRmICU+JQogICMgdGFrZSBvdXQgY29sdW1ucyB0aGF0IHdpbGwgZ2l2ZSBOQSB2YWx1ZXMgaW4gY29ycmVsYXRpb25zIChub3QgZW5vdWdoIG9ic2VydmF0aW9ucykKICBzZWxlY3QoLWRhdGUsIC10aW1lLCAtY2hsb3JvcGh5bGxfdWdMLCAKICAgICAgICAgLXRvdGFsX2FsZ2FlX2NlbGxzTCwgLXRvdGFsX2Rpc3NvbHZlZF9zb2xpZHNfbWdMKSAlPiUKICByZW5hbWUoYENobG9yb3BoeWxsIChSRlUpYCA9IGNobG9yb3BoeWxsX3JmdSwKICAgICAgICAgYENvbmR1Y3Rpdml0eSAowrVTL2NtKWAgPSBjb25kdWN0aXZpdHlfdVNjbSwKICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBkb19sb2NhbF9wZXJjZW50LAogICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gZG9fbWdMLAogICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWAgPSBkb19zYXR1cmF0ZWRfcGVyY2VudCwKICAgICAgICAgYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWAgPSBubGZfY29uZHVjdGl2aXR5X3VTY20sCiAgICAgICAgIGBPeHlnZW4gUmVkdWN0aW9uIFBvdGVudGlhbCAobVYpYCA9IG9ycF9tViwKICAgICAgICAgYHBIIChtVilgID0gcEhfbVYsCiAgICAgICAgIGBTYWxpbml0eSAoUFNVKWAgPSBzYWxpbml0eV9wc3UsCiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IHNwX2NvbmR1Y3Rpdml0eV91U2NtLAogICAgICAgICBgVGVtcGVyYXR1cmUgKMK6QylgID0gdGVtcF9jLAogICAgICAgICBgVGVtcGVyYXR1cmUgKMK6RilgID0gdGVtcF9mLAogICAgICAgICBgVG90YWwgQWxnYWUgKFJGVSlgID0gdG90YWxfYWxnYWVfcmZ1KQoKYGBgCgojIyBHZXQgU2lnbmlmaWNhbnQgU3RhdGlzdGljcwpgYGB7ciBUb3RhbDogc2lnbmlmaWNhbnQgc3RhdHN9CiMgY3JlYXRlIG5lc3RlZCBsaXN0IG9mIG1hdHJpY2VzOiBwLXZhbHVlcywgbiwgciB2YWx1ZXMKY29yX21hdF9zdGF0c1RvdGFsIDwtIHJjb3JyKGFzLm1hdHJpeChkZl9jb3JUb3RhbCkpCgpjb3JfbWF0X3B2YWxzVG90YWwgPC0gY29yX21hdF9zdGF0c1RvdGFsJFAKCiMgZnVsbCBmbGF0dGVuZWQgY29ycmVsYXRpb24gbWF0cml4CmNvcl9tYXRfc3RhdHNfZmxhdFRvdGFsIDwtIGZsYXR0ZW5Db3JyTWF0cml4KGNvcl9tYXRfc3RhdHNUb3RhbCRyLCBjb3JfbWF0X3N0YXRzVG90YWwkUCkgJT4lCiAgbXV0YXRlKGFjcm9zcygzOjQsIH4gcm91bmQoLngsIDIpKSkgCgoKYGBgCgojIyBDb3JyZWxhdGlvbiBQbG90cwpgYGAge3IgVG90YWw6IGNvciBwbG90c30KIyBDb3JyZWxvZ3JhbQp7ICMgb3BlbiBwZGYgZ3JhcGhpY3MgZHJpdmVyCiAgcGRmKGZpbGUgPSAiRmlndXJlcy9ZU0kvMDRfQ29ycmVsYXRpb25zL1RvdGFsVGltZVNlcmllcy9ZU0ktQ29ycmVsYXRpb25zLUNvcnJlbG9ncmFtLVRvdGFsVGltZVNlcmllcy5wZGYiLCAKICAgICAgd2lkdGggPSAxMywgaGVpZ2h0ID0gMTMpCiAgIyBtYWtlIGNvcnJlbGF0aW9uIHBsb3QKICBjb3JycGxvdChjb3JfbWF0X3N0YXRzVG90YWwkciwgbWV0aG9kID0gIm51bWJlciIsIHR5cGUgPSAiZnVsbCIsIGRpYWcgPSBUUlVFLAogICAgICAgICAgIG9yZGVyID0gIm9yaWdpbmFsIiwgCiAgICAgICAgICAgdGwuY29sID0gImJsYWNrIiwgdGwuc3J0ID0gNDUsIG1hciA9IGMoMCwgMCwgNiwgMCksCiAgICAgICAgICAgdGl0bGUgPSAiQmlvc3BoZXJlIDIgT2NlYW4gWVNJIFdhdGVyIFF1YWxpdHkgQ29ycmVsYXRpb25zIFxuCiAgICAgICAgICAgV2hvbGUgVGltZSBTZXJpZXMgQ29tcGFyaXNvbiIpCiAgIyBjbG9zZSBncmFwaGljcyBkcml2ZXIKICBkZXYub2ZmKCkKfQoKIyBDb3JyZWxvZ3JhbSB3aXRoIFNpZ25pZmljYW5jZQpjb3JfbWF0X3N0YXRzVG90YWwkUFtpcy5uYShjb3JfbWF0X3N0YXRzVG90YWwkUCldIDwtIDEgI3R1cm4gTkFzIGludG8gMSdzIChpbnNpZ25pZmljYW50KSAtLSBvbmx5IE5BIHZhbHVlcyBhcmUgb24gdGhlIGRpYWdvbmFsICh0ZW1wX2YgY29tcGFyZWQgdG8gdGVtcF9mIGV0YykKeyAjIG9wZW4gcGRmIGdyYXBoaWNzIGRyaXZlcgogIHBkZihmaWxlID0gIkZpZ3VyZXMvWVNJLzA0X0NvcnJlbGF0aW9ucy9Ub3RhbFRpbWVTZXJpZXMvWVNJLUNvcnJlbGF0aW9ucy1Db3JyZWxvZ3JhbS1TaWduaWZpY2FudC1Ub3RhbFRpbWVTZXJpZXMucGRmIiwKICAgICAgd2lkdGggPSAxMywgaGVpZ2h0ID0gMTMpCiAgY29ycnBsb3QoY29yX21hdF9zdGF0c1RvdGFsJHIsIG1ldGhvZCA9ICJudW1iZXIiLCB0eXBlPSJmdWxsIiwgb3JkZXI9Im9yaWdpbmFsIiwgCiAgICAgICAgICAgZGlhZyA9IFRSVUUsIAogICAgICAgICAgIHRsLmNvbCA9ICJibGFjayIsIHRsLnNydCA9IDQ1LCBtYXIgPSBjKDAsIDAsIDYsIDApLAogICAgICAgICAgIHAubWF0ID0gY29yX21hdF9zdGF0c1RvdGFsJFAsIHNpZy5sZXZlbCA9IDAuMDUsIGluc2lnID0gImJsYW5rIiwKICAgICAgICAgICB0aXRsZSA9ICJCaW9zcGhlcmUgMiBPY2VhbiBXYXRlciBRdWFsaXR5IFNpZ25pZmljYW50IENvcnJlbGF0aW9ucyBcbgogICAgICAgICAgIFdob2xlIFRpbWUgU2VyaWVzIENvbXBhcmlzb24gXG4KICAgICAgICAgICBQLVZhbHVlIDwgMC4wNSIpCiAgIyBjbG9zZSBncmFwaGljcyBkcml2ZXIKICBkZXYub2ZmKCkKfQoKYGBgCiMgU2hvcnRlbmVkIFRpbWUgU2VyaWVzCiMjIERhdGEgRm9ybWF0dGluZwpgYGB7ciBTaG9ydDogZGF0YSBmb3JtYXR0aW5nfQpkZl9jb3JTaG9ydCA8LSBkZiAlPiUKICAjIHJlbW92ZSBkYXRlcyBiZWZvcmUgamFuIDEgMjAxOCB0byBnZXQgc2hvcnRlbmVkIHRpbWUgc2VyaWVzIHRoYXQgd2lsbCBhY3V0ZWx5IGNvbXBhcmUgdmFyaWFibGVzIHRoYXQgc3RhcnRlZCB0byBiZSBtZWFzdXJlZCBsYXRlciBpbiB0aW1lCiAgZmlsdGVyKGRhdGUgPj0gIjIwMTgtMDEtMDEiKSAlPiUKICAjIHRha2Ugb3V0IGNvbHVtbnMgdGhhdCB3aWxsIGdpdmUgTkEgdmFsdWVzIGluIGNvcnJlbGF0aW9ucyAobm90IGVub3VnaCBvYnNlcnZhdGlvbnMpCiAgc2VsZWN0KC1kYXRlLCAtdGltZSwgLWNobG9yb3BoeWxsX3VnTCwgLXRvdGFsX2FsZ2FlX2NlbGxzTCkgJT4lCiAgcmVuYW1lKGBDaGxvcm9waHlsbCAoUkZVKWAgPSBjaGxvcm9waHlsbF9yZnUsCiAgICAgICAgIGBUb3RhbCBEaXNzb2x2ZWQgU29saWRzIChtZy9MKWAgPSB0b3RhbF9kaXNzb2x2ZWRfc29saWRzX21nTCwKICAgICAgICAgYENvbmR1Y3Rpdml0eSAowrVTL2NtKWAgPSBjb25kdWN0aXZpdHlfdVNjbSwKICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBkb19sb2NhbF9wZXJjZW50LAogICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gZG9fbWdMLAogICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWAgPSBkb19zYXR1cmF0ZWRfcGVyY2VudCwKICAgICAgICAgYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWAgPSBubGZfY29uZHVjdGl2aXR5X3VTY20sCiAgICAgICAgIGBPeHlnZW4gUmVkdWN0aW9uIFBvdGVudGlhbCAobVYpYCA9IG9ycF9tViwKICAgICAgICAgYHBIIChtVilgID0gcEhfbVYsCiAgICAgICAgIGBTYWxpbml0eSAoUFNVKWAgPSBzYWxpbml0eV9wc3UsCiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IHNwX2NvbmR1Y3Rpdml0eV91U2NtLAogICAgICAgICBgVGVtcGVyYXR1cmUgKMK6QylgID0gdGVtcF9jLAogICAgICAgICBgVGVtcGVyYXR1cmUgKMK6RilgID0gdGVtcF9mLAogICAgICAgICBgVG90YWwgQWxnYWUgKFJGVSlgID0gdG90YWxfYWxnYWVfcmZ1KQoKYGBgCgojIyBHZXQgU2lnbmlmaWNhbnQgU3RhdGlzdGljcwpgYGB7ciBTaG9ydDogc2lnbmlmaWNhbnQgc3RhdHN9CiMgY3JlYXRlIG5lc3RlZCBsaXN0IG9mIG1hdHJpY2VzOiBwLXZhbHVlcywgbiwgciB2YWx1ZXMKY29yX21hdF9zdGF0c1Nob3J0IDwtIHJjb3JyKGFzLm1hdHJpeChkZl9jb3JTaG9ydCkpCgpjb3JfbWF0X3B2YWxzU2hvcnQgPC0gY29yX21hdF9zdGF0c1Nob3J0JFAKCiMgZnVsbCBmbGF0dGVuZWQgY29ycmVsYXRpb24gbWF0cml4CmNvcl9tYXRfc3RhdHNfZmxhdFNob3J0IDwtIGZsYXR0ZW5Db3JyTWF0cml4KGNvcl9tYXRfc3RhdHNTaG9ydCRyLCBjb3JfbWF0X3N0YXRzU2hvcnQkUCkgJT4lCiAgbXV0YXRlKGFjcm9zcygzOjQsIH4gcm91bmQoLngsIDIpKSkgCgoKYGBgCgojIyBDb3JyZWxhdGlvbiBQbG90cwpgYGAge3IgU2hvcnQ6IGNvciBwbG90c30KIyBDb3JyZWxvZ3JhbQp7ICMgb3BlbiBwZGYgZ3JhcGhpY3MgZHJpdmVyCiAgcGRmKGZpbGUgPSAiRmlndXJlcy9ZU0kvMDRfQ29ycmVsYXRpb25zL1Nob3J0ZW5lZFRpbWVTZXJpZXMvWVNJLUNvcnJlbGF0aW9ucy1Db3JyZWxvZ3JhbS1TaG9ydGVuZWRUaW1lU2VyaWVzLnBkZiIsIAogICAgICB3aWR0aCA9IDEzLCBoZWlnaHQgPSAxMykKICAjIG1ha2UgY29ycmVsYXRpb24gcGxvdAogIGNvcnJwbG90KGNvcl9tYXRfc3RhdHNTaG9ydCRyLCBtZXRob2QgPSAibnVtYmVyIiwgdHlwZSA9ICJmdWxsIiwgZGlhZyA9IFRSVUUsCiAgICAgICAgICAgb3JkZXIgPSAib3JpZ2luYWwiLCAKICAgICAgICAgICB0bC5jb2wgPSAiYmxhY2siLCB0bC5zcnQgPSA0NSwgbWFyID0gYygwLCAwLCA2LCAwKSwKICAgICAgICAgICB0aXRsZSA9ICJCaW9zcGhlcmUgMiBPY2VhbiBZU0kgV2F0ZXIgUXVhbGl0eSBDb3JyZWxhdGlvbnMgXG4KICAgICAgICAgICBTaG9ydGVuZWQgVGltZSBTZXJpZXMgQ29tcGFyaXNvbjogMDEtMDEtMjAxOC1QcmVzZW50IikKICAjIGNsb3NlIGdyYXBoaWNzIGRyaXZlcgogIGRldi5vZmYoKQp9CgojIENvcnJlbG9ncmFtIHdpdGggU2lnbmlmaWNhbmNlCmNvcl9tYXRfc3RhdHNTaG9ydCRQW2lzLm5hKGNvcl9tYXRfc3RhdHNTaG9ydCRQKV0gPC0gMSAjdHVybiBOQXMgaW50byAxJ3MgKGluc2lnbmlmaWNhbnQpIC0tIG9ubHkgTkEgdmFsdWVzIGFyZSBvbiB0aGUgZGlhZ29uYWwgKHRlbXBfZiBjb21wYXJlZCB0byB0ZW1wX2YgZXRjKQp7ICMgb3BlbiBwZGYgZ3JhcGhpY3MgZHJpdmVyCiAgcGRmKGZpbGUgPSAiRmlndXJlcy9ZU0kvMDRfQ29ycmVsYXRpb25zL1Nob3J0ZW5lZFRpbWVTZXJpZXMvWVNJLUNvcnJlbGF0aW9ucy1Db3JyZWxvZ3JhbS1TaWduaWZpY2FudC1TaG9ydGVuZWRUaW1lU2VyaWVzLnBkZiIsCiAgICAgIHdpZHRoID0gMTMsIGhlaWdodCA9IDEzKQogIGNvcnJwbG90KGNvcl9tYXRfc3RhdHNTaG9ydCRyLCBtZXRob2QgPSAibnVtYmVyIiwgdHlwZT0iZnVsbCIsIG9yZGVyPSJvcmlnaW5hbCIsIAogICAgICAgICAgIGRpYWcgPSBUUlVFLCAKICAgICAgICAgICB0bC5jb2wgPSAiYmxhY2siLCB0bC5zcnQgPSA0NSwgbWFyID0gYygwLCAwLCA2LCAwKSwKICAgICAgICAgICBwLm1hdCA9IGNvcl9tYXRfc3RhdHNTaG9ydCRQLCBzaWcubGV2ZWwgPSAwLjA1LCBpbnNpZyA9ICJibGFuayIsCiAgICAgICAgICAgdGl0bGUgPSAiQmlvc3BoZXJlIDIgT2NlYW4gV2F0ZXIgUXVhbGl0eSBTaWduaWZpY2FudCBDb3JyZWxhdGlvbnMgXG4KICAgICAgICAgICBTaG9ydGVuZWQgVGltZSBTZXJpZXMgQ29tcGFyaXNvbjogMDEtMDEtMjAxOC1QcmVzZW50IFxuCiAgICAgICAgICAgUC1WYWx1ZSA8IDAuMDUiKQogICMgY2xvc2UgZ3JhcGhpY3MgZHJpdmVyCiAgZGV2Lm9mZigpCn0KCmBgYAo=</div>
 
 
 

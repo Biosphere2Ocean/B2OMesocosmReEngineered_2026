@@ -1,0 +1,47 @@
+---
+title: "Nutrient and YSI Data Correlations"
+collaborators: Renee Grambihler
+project: OceanWaterQuality
+institution: Biosphere 2 Ocean
+output: html_notebook
+---
+# Correlations
+## Import Libraries
+```{r Import Libraries}
+library(tidyverse)
+library(lubridate)
+library(Hmisc)
+source("Code/Functions/CorrelationFunction.R")
+options(scipen = 999)
+```
+
+```{r plots}
+# Correlogram
+{ # open pdf graphics driver
+  pdf(file = "Figures/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Correlogram.pdf",
+      width = 15, height = 10)
+  # make correlation plot
+  corrplot(cor_mat_stats$r, method = "number", outline = TRUE, type = "full", diag = TRUE,
+           order = "original", 
+           tl.col = "black", tl.srt = 45, mar = c(5, 5, 5, 5),
+           title = "Biosphere 2 Ocean Nutrient and YSI Water Quality Correlations")
+  # close graphics driver
+  dev.off()
+}
+
+# Correlogram with Significance
+cor_mat_stats$P[is.na(cor_mat_stats$P)] <- 1 #turn NAs into 1's (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
+{ # open pdf graphics driver
+  pdf(file = "Figures/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Correlogram-Significant.pdf",
+      width = 13, height = 10)
+  corrplot(cor_mat_stats$r, method = "shade", type="full", order="original",
+           diag = TRUE,
+           tl.col = "black", tl.srt = 45, mar = c(0, 0, 4, 0),
+           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = "p-value",
+           title = "Biosphere 2 Ocean Nutrient and YSI Water Quality Significant Correlations \n
+           P-Values Labeled")
+  # close graphics driver
+  dev.off()
+}
+
+```

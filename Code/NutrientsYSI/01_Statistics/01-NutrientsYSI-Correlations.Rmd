@@ -116,51 +116,35 @@ select(-date)
 
 ## Create Correlation Matrices
 ```{r short: create, format correlation matrices}
-# create nested list of matrices: p-values, n, r values
+# create nested list of correlation matrices: p-values, n, r values
 cor_mat_stats <- rcorr(as.matrix(dfNutrientsYSI))
 
-# full flattened correlation matrix
+# full flattened correlation matrix: table of correlation pairings using matrices created in cor_mat_stats
 cor_mat_stats_flat <- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %>%
   mutate(across(3:4, ~ round(.x, 2))) 
-write_csv(cor_mat_stats_flat, 
-          file = "Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations.csv")
 
-# flattened correlation matrix with only p-values <= 0.05
+# flattened correlation matrix with only p-values <= 0.05: table of correlation pairings created in cor_mat_stats
 cor_mat_stats_flat_sig <- cor_mat_stats_flat %>%
   filter(p_value <= 0.05)
-write_csv(cor_mat_stats_flat_sig, 
-          file = "Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Significant.csv")
   
 ```
 
-```{r plots}
-# Correlogram
-{ # open pdf graphics driver
-  pdf(file = "Figures/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Correlogram.pdf",
-      width = 15, height = 10)
-  # make correlation plot
-  corrplot(cor_mat_stats$r, method = "number", outline = TRUE, type = "full", diag = TRUE,
-           order = "original", 
-           tl.col = "black", tl.srt = 45, mar = c(5, 5, 5, 5),
-           title = "Biosphere 2 Ocean Nutrient and YSI Water Quality Correlations")
-  # close graphics driver
-  dev.off()
-}
+## Write Correlation Data Files
+```{r write files}
+# create csv file of correlation matrix of r values
+write_csv(as.data.frame(cor_mat_stats$r), 
+          file = "Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationMatrix-RValues.csv")
 
-# Correlogram with Significance
-cor_mat_stats$P[is.na(cor_mat_stats$P)] <- 1 #turn NAs into 1's (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
-{ # open pdf graphics driver
-  pdf(file = "Figures/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Correlogram-Significant.pdf",
-      width = 13, height = 10)
-  corrplot(cor_mat_stats$r, method = "shade", type="full", order="original",
-           diag = TRUE,
-           tl.col = "black", tl.srt = 45, mar = c(0, 0, 4, 0),
-           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = "p-value",
-           title = "Biosphere 2 Ocean Nutrient and YSI Water Quality Significant Correlations \n
-           P-Values Labeled")
-  # close graphics driver
-  dev.off()
-}
+# create csv file of correlation matrix of p values
+write_csv(as.data.frame(cor_mat_stats$p), 
+          file = "Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationMatrix-PValues.csv")
 
+# write csv file of correlation table created in cor_mat_stats_flat, which shows all correlation pairings, their r values, and their pvalues 
+write_csv(cor_mat_stats_flat, 
+          file = "Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationTable-Total.csv")
+
+# write csv file of correlation table created in cor_mat_stats_flat_sig, which shows all significant correlation pairings (p-value <= 0.05), their r values, and their pvalues
+write_csv(cor_mat_stats_flat_sig, 
+          file = "Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationTable-Significant.csv")
 ```
 

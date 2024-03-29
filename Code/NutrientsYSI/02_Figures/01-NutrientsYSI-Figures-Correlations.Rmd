@@ -11,37 +11,66 @@ output: html_notebook
 library(tidyverse)
 library(lubridate)
 library(Hmisc)
+library(corrplot)
+library(ggcorrplot)
 source("Code/Functions/CorrelationFunction.R")
 options(scipen = 999)
+```
+## Import Data
+```{r import data}
+# use NutrientsYSI-CorrelationMatrix-Rvalues.csv to import dataframe of correlation matrix made in 01-NutrientsYSI-Correlations.Rmd
+cormat_RValues <- read_csv("Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationMatrix-Rvalues.csv")
+
+# use NutrientsYSI-CorrelationMatrix-Pvalues.csv to import dataframe of correlation matrix made in 01-NutrientsYSI-Correlations.Rmd
+cormat_PValues <-  read_csv("Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationMatrix-Pvalues.csv")
+```
+## Data Formatting
+```{r format data}
+# change row names of dataframes to be the column names
+row_names <- colnames(cormat_PValues)
+rownames(cormat_PValues) <- row_names
+rownames(cormat_RValues) <- row_names
+
+# turn both dataframes into matrices
+cormat_RValues <- as.matrix(cormat_RValues)
+cormat_PValues <- as.matrix(cormat_PValues)
+
+# turn NAs into insignificant values
+cormat_PValues[is.na(cormat_PValues)] <- 1.00 
+cormat_RValues[is.na(cormat_RValues)] <- 0.00
+
 ```
 
 ```{r plots}
 # Correlogram
-{ # open pdf graphics driver
-  pdf(file = "Figures/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Correlogram.pdf",
-      width = 15, height = 10)
-  # make correlation plot
-  corrplot(cor_mat_stats$r, method = "number", outline = TRUE, type = "full", diag = TRUE,
-           order = "original", 
-           tl.col = "black", tl.srt = 45, mar = c(5, 5, 5, 5),
-           title = "Biosphere 2 Ocean Nutrient and YSI Water Quality Correlations")
-  # close graphics driver
-  dev.off()
-}
+corrPlot_total <- ggcorrplot(cormat_RValues, 
+                       outline.color = "white", 
+                       ggtheme = ggplot2::theme_gray(), 
+                       colors = c("#6D9EC1", "white", "#E46726"), 
+                       lab = TRUE,
+                       title = "Biosphere 2 Ocean Nutrient and YSI Water Quality Correlations")
+# Save Plot
+ggsave(filename = "NutrientsYSI-Correlations-Correlogram.pdf", 
+       plot = corrPlot_total,
+       path = "Figures/NutrientsYSI/01_Correlations",
+       width = 15, height = 15)
+
 
 # Correlogram with Significance
-cor_mat_stats$P[is.na(cor_mat_stats$P)] <- 1 #turn NAs into 1's (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
-{ # open pdf graphics driver
-  pdf(file = "Figures/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Correlogram-Significant.pdf",
-      width = 13, height = 10)
-  corrplot(cor_mat_stats$r, method = "shade", type="full", order="original",
-           diag = TRUE,
-           tl.col = "black", tl.srt = 45, mar = c(0, 0, 4, 0),
-           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = "p-value",
-           title = "Biosphere 2 Ocean Nutrient and YSI Water Quality Significant Correlations \n
-           P-Values Labeled")
-  # close graphics driver
-  dev.off()
-}
+corrPlot_signif <- ggcorrplot(cormat_RValues, 
+                              p.mat = cormat_PValues,
+                              outline.color = "white", 
+                              ggtheme = ggplot2::theme_gray(), 
+                              colors = c("#6D9EC1", "white", "#E46726"), 
+                              lab = TRUE,
+                              insig = "blank", 
+                              title = "Biosphere 2 Ocean Nutrient and YSI Water Quality Correlations\n
+                              Significant Correlations Shown (PValue > 0.05)")
+# Save Plot
+ggsave(filename = "NutrientsYSI-Correlations-Correlogram-Significant.pdf", 
+       plot = corrPlot_signif,
+       path = "Figures/NutrientsYSI/01_Correlations",
+       width = 15, height = 15)
+
 
 ```

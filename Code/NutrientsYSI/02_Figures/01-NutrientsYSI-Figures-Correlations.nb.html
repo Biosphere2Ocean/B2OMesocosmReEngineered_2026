@@ -1758,52 +1758,92 @@ display: none;
 <h2>Import Libraries</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbmxpYnJhcnkoSG1pc2MpXG5zb3VyY2UoXCJDb2RlL0Z1bmN0aW9ucy9Db3JyZWxhdGlvbkZ1bmN0aW9uLlJcIilcbm9wdGlvbnMoc2NpcGVuID0gOTk5KVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbmxpYnJhcnkoSG1pc2MpXG5saWJyYXJ5KGNvcnJwbG90KVxubGlicmFyeShnZ2NvcnJwbG90KVxuc291cmNlKFwiQ29kZS9GdW5jdGlvbnMvQ29ycmVsYXRpb25GdW5jdGlvbi5SXCIpXG5vcHRpb25zKHNjaXBlbiA9IDk5OSlcbmBgYCJ9 -->
 <pre class="r"><code>library(tidyverse)
 library(lubridate)
 library(Hmisc)
+library(corrplot)
+library(ggcorrplot)
 source(&quot;Code/Functions/CorrelationFunction.R&quot;)
 options(scipen = 999)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+<div id="import-data" class="section level2">
+<h2>Import Data</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDb3JyZWxvZ3JhbVxueyAjIG9wZW4gcGRmIGdyYXBoaWNzIGRyaXZlclxuICBwZGYoZmlsZSA9IFwiRmlndXJlcy9OdXRyaWVudHNZU0kvMDFfQ29ycmVsYXRpb25zL051dHJpZW50c1lTSS1Db3JyZWxhdGlvbnMtQ29ycmVsb2dyYW0ucGRmXCIsXG4gICAgICB3aWR0aCA9IDE1LCBoZWlnaHQgPSAxMClcbiAgIyBtYWtlIGNvcnJlbGF0aW9uIHBsb3RcbiAgY29ycnBsb3QoY29yX21hdF9zdGF0cyRyLCBtZXRob2QgPSBcIm51bWJlclwiLCBvdXRsaW5lID0gVFJVRSwgdHlwZSA9IFwiZnVsbFwiLCBkaWFnID0gVFJVRSxcbiAgICAgICAgICAgb3JkZXIgPSBcIm9yaWdpbmFsXCIsIFxuICAgICAgICAgICB0bC5jb2wgPSBcImJsYWNrXCIsIHRsLnNydCA9IDQ1LCBtYXIgPSBjKDUsIDUsIDUsIDUpLFxuICAgICAgICAgICB0aXRsZSA9IFwiQmlvc3BoZXJlIDIgT2NlYW4gTnV0cmllbnQgYW5kIFlTSSBXYXRlciBRdWFsaXR5IENvcnJlbGF0aW9uc1wiKVxuICAjIGNsb3NlIGdyYXBoaWNzIGRyaXZlclxuICBkZXYub2ZmKClcbn1cblxuIyBDb3JyZWxvZ3JhbSB3aXRoIFNpZ25pZmljYW5jZVxuY29yX21hdF9zdGF0cyRQW2lzLm5hKGNvcl9tYXRfc3RhdHMkUCldIDwtIDEgI3R1cm4gTkFzIGludG8gMSdzIChpbnNpZ25pZmljYW50KSAtLSBvbmx5IE5BIHZhbHVlcyBhcmUgb24gdGhlIGRpYWdvbmFsICh0ZW1wX2YgY29tcGFyZWQgdG8gdGVtcF9mIGV0YylcbnsgIyBvcGVuIHBkZiBncmFwaGljcyBkcml2ZXJcbiAgcGRmKGZpbGUgPSBcIkZpZ3VyZXMvTnV0cmllbnRzWVNJLzAxX0NvcnJlbGF0aW9ucy9OdXRyaWVudHNZU0ktQ29ycmVsYXRpb25zLUNvcnJlbG9ncmFtLVNpZ25pZmljYW50LnBkZlwiLFxuICAgICAgd2lkdGggPSAxMywgaGVpZ2h0ID0gMTApXG4gIGNvcnJwbG90KGNvcl9tYXRfc3RhdHMkciwgbWV0aG9kID0gXCJzaGFkZVwiLCB0eXBlPVwiZnVsbFwiLCBvcmRlcj1cIm9yaWdpbmFsXCIsXG4gICAgICAgICAgIGRpYWcgPSBUUlVFLFxuICAgICAgICAgICB0bC5jb2wgPSBcImJsYWNrXCIsIHRsLnNydCA9IDQ1LCBtYXIgPSBjKDAsIDAsIDQsIDApLFxuICAgICAgICAgICBwLm1hdCA9IGNvcl9tYXRfc3RhdHMkUCwgc2lnLmxldmVsID0gMC4wNSwgaW5zaWcgPSBcInAtdmFsdWVcIixcbiAgICAgICAgICAgdGl0bGUgPSBcIkJpb3NwaGVyZSAyIE9jZWFuIE51dHJpZW50IGFuZCBZU0kgV2F0ZXIgUXVhbGl0eSBTaWduaWZpY2FudCBDb3JyZWxhdGlvbnMgXFxuXG4gICAgICAgICAgIFAtVmFsdWVzIExhYmVsZWRcIilcbiAgIyBjbG9zZSBncmFwaGljcyBkcml2ZXJcbiAgZGV2Lm9mZigpXG59XG5cbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB1c2UgTnV0cmllbnRzWVNJLUNvcnJlbGF0aW9uTWF0cml4LVJ2YWx1ZXMuY3N2IHRvIGltcG9ydCBkYXRhZnJhbWUgb2YgY29ycmVsYXRpb24gbWF0cml4IG1hZGUgaW4gMDEtTnV0cmllbnRzWVNJLUNvcnJlbGF0aW9ucy5SbWRcbmNvcm1hdF9SVmFsdWVzIDwtIHJlYWRfY3N2KFwiRGF0YS9DbGVhbi9OdXRyaWVudHNZU0kvMDFfQ29ycmVsYXRpb25zL051dHJpZW50c1lTSS1Db3JyZWxhdGlvbk1hdHJpeC1SdmFsdWVzLmNzdlwiKVxuXG4jIHVzZSBOdXRyaWVudHNZU0ktQ29ycmVsYXRpb25NYXRyaXgtUHZhbHVlcy5jc3YgdG8gaW1wb3J0IGRhdGFmcmFtZSBvZiBjb3JyZWxhdGlvbiBtYXRyaXggbWFkZSBpbiAwMS1OdXRyaWVudHNZU0ktQ29ycmVsYXRpb25zLlJtZFxuY29ybWF0X1BWYWx1ZXMgPC0gIHJlYWRfY3N2KFwiRGF0YS9DbGVhbi9OdXRyaWVudHNZU0kvMDFfQ29ycmVsYXRpb25zL051dHJpZW50c1lTSS1Db3JyZWxhdGlvbk1hdHJpeC1QdmFsdWVzLmNzdlwiKVxuYGBgIn0= -->
+<pre class="r"><code># use NutrientsYSI-CorrelationMatrix-Rvalues.csv to import dataframe of correlation matrix made in 01-NutrientsYSI-Correlations.Rmd
+cormat_RValues &lt;- read_csv(&quot;Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationMatrix-Rvalues.csv&quot;)
+
+# use NutrientsYSI-CorrelationMatrix-Pvalues.csv to import dataframe of correlation matrix made in 01-NutrientsYSI-Correlations.Rmd
+cormat_PValues &lt;-  read_csv(&quot;Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationMatrix-Pvalues.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="data-formatting" class="section level2">
+<h2>Data Formatting</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjaGFuZ2Ugcm93IG5hbWVzIG9mIGRhdGFmcmFtZXMgdG8gYmUgdGhlIGNvbHVtbiBuYW1lc1xucm93X25hbWVzIDwtIGNvbG5hbWVzKGNvcm1hdF9QVmFsdWVzKVxucm93bmFtZXMoY29ybWF0X1BWYWx1ZXMpIDwtIHJvd19uYW1lc1xucm93bmFtZXMoY29ybWF0X1JWYWx1ZXMpIDwtIHJvd19uYW1lc1xuXG4jIHR1cm4gYm90aCBkYXRhZnJhbWVzIGludG8gbWF0cmljZXNcbmNvcm1hdF9SVmFsdWVzIDwtIGFzLm1hdHJpeChjb3JtYXRfUlZhbHVlcylcbmNvcm1hdF9QVmFsdWVzIDwtIGFzLm1hdHJpeChjb3JtYXRfUFZhbHVlcylcblxuIyB0dXJuIE5BcyBpbnRvIGluc2lnbmlmaWNhbnQgdmFsdWVzXG5jb3JtYXRfUFZhbHVlc1tpcy5uYShjb3JtYXRfUFZhbHVlcyldIDwtIDEuMDAgXG5jb3JtYXRfUlZhbHVlc1tpcy5uYShjb3JtYXRfUlZhbHVlcyldIDwtIDAuMDBcblxuYGBgIn0= -->
+<pre class="r"><code># change row names of dataframes to be the column names
+row_names &lt;- colnames(cormat_PValues)
+rownames(cormat_PValues) &lt;- row_names
+rownames(cormat_RValues) &lt;- row_names
+
+# turn both dataframes into matrices
+cormat_RValues &lt;- as.matrix(cormat_RValues)
+cormat_PValues &lt;- as.matrix(cormat_PValues)
+
+# turn NAs into insignificant values
+cormat_PValues[is.na(cormat_PValues)] &lt;- 1.00 
+cormat_RValues[is.na(cormat_RValues)] &lt;- 0.00
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDb3JyZWxvZ3JhbVxuY29yclBsb3RfdG90YWwgPC0gZ2djb3JycGxvdChjb3JtYXRfUlZhbHVlcywgXG4gICAgICAgICAgICAgICAgICAgICAgIG91dGxpbmUuY29sb3IgPSBcIndoaXRlXCIsIFxuICAgICAgICAgICAgICAgICAgICAgICBnZ3RoZW1lID0gZ2dwbG90Mjo6dGhlbWVfZ3JheSgpLCBcbiAgICAgICAgICAgICAgICAgICAgICAgY29sb3JzID0gYyhcIiM2RDlFQzFcIiwgXCJ3aGl0ZVwiLCBcIiNFNDY3MjZcIiksIFxuICAgICAgICAgICAgICAgICAgICAgICBsYWIgPSBUUlVFLFxuICAgICAgICAgICAgICAgICAgICAgICB0aXRsZSA9IFwiQmlvc3BoZXJlIDIgT2NlYW4gTnV0cmllbnQgYW5kIFlTSSBXYXRlciBRdWFsaXR5IENvcnJlbGF0aW9uc1wiKVxuIyBTYXZlIFBsb3Rcbmdnc2F2ZShmaWxlbmFtZSA9IFwiTnV0cmllbnRzWVNJLUNvcnJlbGF0aW9ucy1Db3JyZWxvZ3JhbS5wZGZcIiwgXG4gICAgICAgcGxvdCA9IGNvcnJQbG90X3RvdGFsLFxuICAgICAgIHBhdGggPSBcIkZpZ3VyZXMvTnV0cmllbnRzWVNJLzAxX0NvcnJlbGF0aW9uc1wiLFxuICAgICAgIHdpZHRoID0gMTUsIGhlaWdodCA9IDE1KVxuXG5cbiMgQ29ycmVsb2dyYW0gd2l0aCBTaWduaWZpY2FuY2VcbmNvcnJQbG90X3NpZ25pZiA8LSBnZ2NvcnJwbG90KGNvcm1hdF9SVmFsdWVzLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHAubWF0ID0gY29ybWF0X1BWYWx1ZXMsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBvdXRsaW5lLmNvbG9yID0gXCJ3aGl0ZVwiLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdndGhlbWUgPSBnZ3Bsb3QyOjp0aGVtZV9ncmF5KCksIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sb3JzID0gYyhcIiM2RDlFQzFcIiwgXCJ3aGl0ZVwiLCBcIiNFNDY3MjZcIiksIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiID0gVFJVRSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGluc2lnID0gXCJibGFua1wiLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRpdGxlID0gXCJCaW9zcGhlcmUgMiBPY2VhbiBOdXRyaWVudCBhbmQgWVNJIFdhdGVyIFF1YWxpdHkgQ29ycmVsYXRpb25zXFxuXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTaWduaWZpY2FudCBDb3JyZWxhdGlvbnMgU2hvd24gKFBWYWx1ZSA+IDAuMDUpXCIpXG4jIFNhdmUgUGxvdFxuZ2dzYXZlKGZpbGVuYW1lID0gXCJOdXRyaWVudHNZU0ktQ29ycmVsYXRpb25zLUNvcnJlbG9ncmFtLVNpZ25pZmljYW50LnBkZlwiLCBcbiAgICAgICBwbG90ID0gY29yclBsb3Rfc2lnbmlmLFxuICAgICAgIHBhdGggPSBcIkZpZ3VyZXMvTnV0cmllbnRzWVNJLzAxX0NvcnJlbGF0aW9uc1wiLFxuICAgICAgIHdpZHRoID0gMTUsIGhlaWdodCA9IDE1KVxuXG5cbmBgYCJ9 -->
 <pre class="r"><code># Correlogram
-{ # open pdf graphics driver
-  pdf(file = &quot;Figures/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Correlogram.pdf&quot;,
-      width = 15, height = 10)
-  # make correlation plot
-  corrplot(cor_mat_stats$r, method = &quot;number&quot;, outline = TRUE, type = &quot;full&quot;, diag = TRUE,
-           order = &quot;original&quot;, 
-           tl.col = &quot;black&quot;, tl.srt = 45, mar = c(5, 5, 5, 5),
-           title = &quot;Biosphere 2 Ocean Nutrient and YSI Water Quality Correlations&quot;)
-  # close graphics driver
-  dev.off()
-}
+corrPlot_total &lt;- ggcorrplot(cormat_RValues, 
+                       outline.color = &quot;white&quot;, 
+                       ggtheme = ggplot2::theme_gray(), 
+                       colors = c(&quot;#6D9EC1&quot;, &quot;white&quot;, &quot;#E46726&quot;), 
+                       lab = TRUE,
+                       title = &quot;Biosphere 2 Ocean Nutrient and YSI Water Quality Correlations&quot;)
+# Save Plot
+ggsave(filename = &quot;NutrientsYSI-Correlations-Correlogram.pdf&quot;, 
+       plot = corrPlot_total,
+       path = &quot;Figures/NutrientsYSI/01_Correlations&quot;,
+       width = 15, height = 15)
+
 
 # Correlogram with Significance
-cor_mat_stats$P[is.na(cor_mat_stats$P)] &lt;- 1 #turn NAs into 1&#39;s (insignificant) -- only NA values are on the diagonal (temp_f compared to temp_f etc)
-{ # open pdf graphics driver
-  pdf(file = &quot;Figures/NutrientsYSI/01_Correlations/NutrientsYSI-Correlations-Correlogram-Significant.pdf&quot;,
-      width = 13, height = 10)
-  corrplot(cor_mat_stats$r, method = &quot;shade&quot;, type=&quot;full&quot;, order=&quot;original&quot;,
-           diag = TRUE,
-           tl.col = &quot;black&quot;, tl.srt = 45, mar = c(0, 0, 4, 0),
-           p.mat = cor_mat_stats$P, sig.level = 0.05, insig = &quot;p-value&quot;,
-           title = &quot;Biosphere 2 Ocean Nutrient and YSI Water Quality Significant Correlations \n
-           P-Values Labeled&quot;)
-  # close graphics driver
-  dev.off()
-}
+corrPlot_signif &lt;- ggcorrplot(cormat_RValues, 
+                              p.mat = cormat_PValues,
+                              outline.color = &quot;white&quot;, 
+                              ggtheme = ggplot2::theme_gray(), 
+                              colors = c(&quot;#6D9EC1&quot;, &quot;white&quot;, &quot;#E46726&quot;), 
+                              lab = TRUE,
+                              insig = &quot;blank&quot;, 
+                              title = &quot;Biosphere 2 Ocean Nutrient and YSI Water Quality Correlations\n
+                              Significant Correlations Shown (PValue &gt; 0.05)&quot;)
+# Save Plot
+ggsave(filename = &quot;NutrientsYSI-Correlations-Correlogram-Significant.pdf&quot;, 
+       plot = corrPlot_signif,
+       path = &quot;Figures/NutrientsYSI/01_Correlations&quot;,
+       width = 15, height = 15)
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTnV0cmllbnQgYW5kIFlTSSBEYXRhIENvcnJlbGF0aW9ucyIKY29sbGFib3JhdG9yczogUmVuZWUgR3JhbWJpaGxlcgpwcm9qZWN0OiBPY2VhbldhdGVyUXVhbGl0eQppbnN0aXR1dGlvbjogQmlvc3BoZXJlIDIgT2NlYW4Kb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQojIENvcnJlbGF0aW9ucwojIyBJbXBvcnQgTGlicmFyaWVzCmBgYHtyIEltcG9ydCBMaWJyYXJpZXN9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KGx1YnJpZGF0ZSkKbGlicmFyeShIbWlzYykKc291cmNlKCJDb2RlL0Z1bmN0aW9ucy9Db3JyZWxhdGlvbkZ1bmN0aW9uLlIiKQpvcHRpb25zKHNjaXBlbiA9IDk5OSkKYGBgCgpgYGB7ciBwbG90c30KIyBDb3JyZWxvZ3JhbQp7ICMgb3BlbiBwZGYgZ3JhcGhpY3MgZHJpdmVyCiAgcGRmKGZpbGUgPSAiRmlndXJlcy9OdXRyaWVudHNZU0kvMDFfQ29ycmVsYXRpb25zL051dHJpZW50c1lTSS1Db3JyZWxhdGlvbnMtQ29ycmVsb2dyYW0ucGRmIiwKICAgICAgd2lkdGggPSAxNSwgaGVpZ2h0ID0gMTApCiAgIyBtYWtlIGNvcnJlbGF0aW9uIHBsb3QKICBjb3JycGxvdChjb3JfbWF0X3N0YXRzJHIsIG1ldGhvZCA9ICJudW1iZXIiLCBvdXRsaW5lID0gVFJVRSwgdHlwZSA9ICJmdWxsIiwgZGlhZyA9IFRSVUUsCiAgICAgICAgICAgb3JkZXIgPSAib3JpZ2luYWwiLCAKICAgICAgICAgICB0bC5jb2wgPSAiYmxhY2siLCB0bC5zcnQgPSA0NSwgbWFyID0gYyg1LCA1LCA1LCA1KSwKICAgICAgICAgICB0aXRsZSA9ICJCaW9zcGhlcmUgMiBPY2VhbiBOdXRyaWVudCBhbmQgWVNJIFdhdGVyIFF1YWxpdHkgQ29ycmVsYXRpb25zIikKICAjIGNsb3NlIGdyYXBoaWNzIGRyaXZlcgogIGRldi5vZmYoKQp9CgojIENvcnJlbG9ncmFtIHdpdGggU2lnbmlmaWNhbmNlCmNvcl9tYXRfc3RhdHMkUFtpcy5uYShjb3JfbWF0X3N0YXRzJFApXSA8LSAxICN0dXJuIE5BcyBpbnRvIDEncyAoaW5zaWduaWZpY2FudCkgLS0gb25seSBOQSB2YWx1ZXMgYXJlIG9uIHRoZSBkaWFnb25hbCAodGVtcF9mIGNvbXBhcmVkIHRvIHRlbXBfZiBldGMpCnsgIyBvcGVuIHBkZiBncmFwaGljcyBkcml2ZXIKICBwZGYoZmlsZSA9ICJGaWd1cmVzL051dHJpZW50c1lTSS8wMV9Db3JyZWxhdGlvbnMvTnV0cmllbnRzWVNJLUNvcnJlbGF0aW9ucy1Db3JyZWxvZ3JhbS1TaWduaWZpY2FudC5wZGYiLAogICAgICB3aWR0aCA9IDEzLCBoZWlnaHQgPSAxMCkKICBjb3JycGxvdChjb3JfbWF0X3N0YXRzJHIsIG1ldGhvZCA9ICJzaGFkZSIsIHR5cGU9ImZ1bGwiLCBvcmRlcj0ib3JpZ2luYWwiLAogICAgICAgICAgIGRpYWcgPSBUUlVFLAogICAgICAgICAgIHRsLmNvbCA9ICJibGFjayIsIHRsLnNydCA9IDQ1LCBtYXIgPSBjKDAsIDAsIDQsIDApLAogICAgICAgICAgIHAubWF0ID0gY29yX21hdF9zdGF0cyRQLCBzaWcubGV2ZWwgPSAwLjA1LCBpbnNpZyA9ICJwLXZhbHVlIiwKICAgICAgICAgICB0aXRsZSA9ICJCaW9zcGhlcmUgMiBPY2VhbiBOdXRyaWVudCBhbmQgWVNJIFdhdGVyIFF1YWxpdHkgU2lnbmlmaWNhbnQgQ29ycmVsYXRpb25zIFxuCiAgICAgICAgICAgUC1WYWx1ZXMgTGFiZWxlZCIpCiAgIyBjbG9zZSBncmFwaGljcyBkcml2ZXIKICBkZXYub2ZmKCkKfQoKYGBgCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTnV0cmllbnQgYW5kIFlTSSBEYXRhIENvcnJlbGF0aW9ucyIKY29sbGFib3JhdG9yczogUmVuZWUgR3JhbWJpaGxlcgpwcm9qZWN0OiBPY2VhbldhdGVyUXVhbGl0eQppbnN0aXR1dGlvbjogQmlvc3BoZXJlIDIgT2NlYW4Kb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQojIENvcnJlbGF0aW9ucwojIyBJbXBvcnQgTGlicmFyaWVzCmBgYHtyIEltcG9ydCBMaWJyYXJpZXN9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KGx1YnJpZGF0ZSkKbGlicmFyeShIbWlzYykKbGlicmFyeShjb3JycGxvdCkKbGlicmFyeShnZ2NvcnJwbG90KQpzb3VyY2UoIkNvZGUvRnVuY3Rpb25zL0NvcnJlbGF0aW9uRnVuY3Rpb24uUiIpCm9wdGlvbnMoc2NpcGVuID0gOTk5KQpgYGAKIyMgSW1wb3J0IERhdGEKYGBge3IgaW1wb3J0IGRhdGF9CiMgdXNlIE51dHJpZW50c1lTSS1Db3JyZWxhdGlvbk1hdHJpeC1SdmFsdWVzLmNzdiB0byBpbXBvcnQgZGF0YWZyYW1lIG9mIGNvcnJlbGF0aW9uIG1hdHJpeCBtYWRlIGluIDAxLU51dHJpZW50c1lTSS1Db3JyZWxhdGlvbnMuUm1kCmNvcm1hdF9SVmFsdWVzIDwtIHJlYWRfY3N2KCJEYXRhL0NsZWFuL051dHJpZW50c1lTSS8wMV9Db3JyZWxhdGlvbnMvTnV0cmllbnRzWVNJLUNvcnJlbGF0aW9uTWF0cml4LVJ2YWx1ZXMuY3N2IikKCiMgdXNlIE51dHJpZW50c1lTSS1Db3JyZWxhdGlvbk1hdHJpeC1QdmFsdWVzLmNzdiB0byBpbXBvcnQgZGF0YWZyYW1lIG9mIGNvcnJlbGF0aW9uIG1hdHJpeCBtYWRlIGluIDAxLU51dHJpZW50c1lTSS1Db3JyZWxhdGlvbnMuUm1kCmNvcm1hdF9QVmFsdWVzIDwtICByZWFkX2NzdigiRGF0YS9DbGVhbi9OdXRyaWVudHNZU0kvMDFfQ29ycmVsYXRpb25zL051dHJpZW50c1lTSS1Db3JyZWxhdGlvbk1hdHJpeC1QdmFsdWVzLmNzdiIpCmBgYAojIyBEYXRhIEZvcm1hdHRpbmcKYGBge3IgZm9ybWF0IGRhdGF9CiMgY2hhbmdlIHJvdyBuYW1lcyBvZiBkYXRhZnJhbWVzIHRvIGJlIHRoZSBjb2x1bW4gbmFtZXMKcm93X25hbWVzIDwtIGNvbG5hbWVzKGNvcm1hdF9QVmFsdWVzKQpyb3duYW1lcyhjb3JtYXRfUFZhbHVlcykgPC0gcm93X25hbWVzCnJvd25hbWVzKGNvcm1hdF9SVmFsdWVzKSA8LSByb3dfbmFtZXMKCiMgdHVybiBib3RoIGRhdGFmcmFtZXMgaW50byBtYXRyaWNlcwpjb3JtYXRfUlZhbHVlcyA8LSBhcy5tYXRyaXgoY29ybWF0X1JWYWx1ZXMpCmNvcm1hdF9QVmFsdWVzIDwtIGFzLm1hdHJpeChjb3JtYXRfUFZhbHVlcykKCiMgdHVybiBOQXMgaW50byBpbnNpZ25pZmljYW50IHZhbHVlcwpjb3JtYXRfUFZhbHVlc1tpcy5uYShjb3JtYXRfUFZhbHVlcyldIDwtIDEuMDAgCmNvcm1hdF9SVmFsdWVzW2lzLm5hKGNvcm1hdF9SVmFsdWVzKV0gPC0gMC4wMAoKYGBgCgpgYGB7ciBwbG90c30KIyBDb3JyZWxvZ3JhbQpjb3JyUGxvdF90b3RhbCA8LSBnZ2NvcnJwbG90KGNvcm1hdF9SVmFsdWVzLCAKICAgICAgICAgICAgICAgICAgICAgICBvdXRsaW5lLmNvbG9yID0gIndoaXRlIiwgCiAgICAgICAgICAgICAgICAgICAgICAgZ2d0aGVtZSA9IGdncGxvdDI6OnRoZW1lX2dyYXkoKSwgCiAgICAgICAgICAgICAgICAgICAgICAgY29sb3JzID0gYygiIzZEOUVDMSIsICJ3aGl0ZSIsICIjRTQ2NzI2IiksIAogICAgICAgICAgICAgICAgICAgICAgIGxhYiA9IFRSVUUsCiAgICAgICAgICAgICAgICAgICAgICAgdGl0bGUgPSAiQmlvc3BoZXJlIDIgT2NlYW4gTnV0cmllbnQgYW5kIFlTSSBXYXRlciBRdWFsaXR5IENvcnJlbGF0aW9ucyIpCiMgU2F2ZSBQbG90Cmdnc2F2ZShmaWxlbmFtZSA9ICJOdXRyaWVudHNZU0ktQ29ycmVsYXRpb25zLUNvcnJlbG9ncmFtLnBkZiIsIAogICAgICAgcGxvdCA9IGNvcnJQbG90X3RvdGFsLAogICAgICAgcGF0aCA9ICJGaWd1cmVzL051dHJpZW50c1lTSS8wMV9Db3JyZWxhdGlvbnMiLAogICAgICAgd2lkdGggPSAxNSwgaGVpZ2h0ID0gMTUpCgoKIyBDb3JyZWxvZ3JhbSB3aXRoIFNpZ25pZmljYW5jZQpjb3JyUGxvdF9zaWduaWYgPC0gZ2djb3JycGxvdChjb3JtYXRfUlZhbHVlcywgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHAubWF0ID0gY29ybWF0X1BWYWx1ZXMsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG91dGxpbmUuY29sb3IgPSAid2hpdGUiLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2d0aGVtZSA9IGdncGxvdDI6OnRoZW1lX2dyYXkoKSwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbG9ycyA9IGMoIiM2RDlFQzEiLCAid2hpdGUiLCAiI0U0NjcyNiIpLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiID0gVFJVRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW5zaWcgPSAiYmxhbmsiLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGl0bGUgPSAiQmlvc3BoZXJlIDIgT2NlYW4gTnV0cmllbnQgYW5kIFlTSSBXYXRlciBRdWFsaXR5IENvcnJlbGF0aW9uc1xuCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNpZ25pZmljYW50IENvcnJlbGF0aW9ucyBTaG93biAoUFZhbHVlID4gMC4wNSkiKQojIFNhdmUgUGxvdApnZ3NhdmUoZmlsZW5hbWUgPSAiTnV0cmllbnRzWVNJLUNvcnJlbGF0aW9ucy1Db3JyZWxvZ3JhbS1TaWduaWZpY2FudC5wZGYiLCAKICAgICAgIHBsb3QgPSBjb3JyUGxvdF9zaWduaWYsCiAgICAgICBwYXRoID0gIkZpZ3VyZXMvTnV0cmllbnRzWVNJLzAxX0NvcnJlbGF0aW9ucyIsCiAgICAgICB3aWR0aCA9IDE1LCBoZWlnaHQgPSAxNSkKCgpgYGAK</div>
 
 
 

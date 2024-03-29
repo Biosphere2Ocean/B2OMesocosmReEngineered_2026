@@ -11,6 +11,7 @@ output: html_notebook
 library(tidyverse)
 library(lubridate)
 library(Hmisc)
+library(corrplot)
 source("Code/Functions/CorrelationFunction.R")
 options(scipen = 999)
 ```
@@ -136,7 +137,7 @@ write_csv(as.data.frame(cor_mat_stats$r),
           file = "Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationMatrix-RValues.csv")
 
 # create csv file of correlation matrix of p values
-write_csv(as.data.frame(cor_mat_stats$p), 
+write_csv(as.data.frame(cor_mat_stats$P), 
           file = "Data/Clean/NutrientsYSI/01_Correlations/NutrientsYSI-CorrelationMatrix-PValues.csv")
 
 # write csv file of correlation table created in cor_mat_stats_flat, which shows all correlation pairings, their r values, and their pvalues 

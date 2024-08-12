@@ -15,8 +15,8 @@ library(tidyverse)
 library(lubridate)
 
 # Import data -----
-dfRaw <- read_csv(file = "Data/OceanWaterQualityFrame.csv")
-dfClean <- read_csv(file = "Data/QCOceanWaterQualityFrame.csv")
+dfYSI <- read_csv(file = "SourceData/02-YSI-Data-QCCutoff.csv")
+dfHach <- read_csv(file = "SourceData/02-Nutrients-Data-Clean-QC.csv")
 
 # Define variables -----
 #  character vector of variable choices. modified from column names of datasets 
@@ -40,42 +40,25 @@ var_choices <- c("None",
                  "Total Dissolved Solids (mg/L)")
 
 # User Interface -----
-ui <- navbarPage("Biosphere 2 Ocean Systems Water Quality",
+ui <- navbarPage(title = "Biosphere 2 Ocean Systems Water Quality",
                  theme = bs_theme(bootswatch = "minty"),
-                 # tabPanel("Data QC: Before and After",
-                 #          fluidRow(
-                 #            column(12,
-                 #                   wellPanel(
-                 #                     h1("All-Variable Comparison"),
-                 #                     dateRangeInput("dateRange", 
-                 #                                    label = "Select Date Range",
-                 #                                    start = dfRaw$date[1],
-                 #                                    end = tail(dfRaw$date, n=1),
-                 #                                    min = dfRaw$date[1],
-                 #                                    max = tail(dfRaw$date, n=1))))
-                 #          ),
-                 #          fluidRow(
-                 #            column(6,
-                 #                   wellPanel(
-                 #                     plotOutput("rawallvariablePlot",
-                 #                                height = "1400"))),
-                 #            column(6, 
-                 #                   wellPanel(
-                 #                     plotOutput("cleanallvariablePlot",
-                 #                              height = "1400px")))
-                 #          )
-                 # ),
-                          
-                 tabPanel("QC Variable Comparisons",
+                 
+                 # About Page
+                 tabPanel(title = "About",
+                   
+                 ),
+                 
+                 # Overall Trends Page
+                 tabPanel("Overall Trends",
                           fluidRow(
                             # skinnier column with date range input and inputs for 4 plots
                             column(2, wellPanel(
                               dateRangeInput("dateRange", 
                                              label = "Select Date Range",
-                                             start = dfRaw$date[1],
-                                             end = tail(dfRaw$date, n=1),
-                                             min = dfRaw$date[1],
-                                             max = tail(dfRaw$date, n=1)),
+                                             start = dfYSI$date[1],
+                                             end = tail(dfYSI$date, n=1),
+                                             min = dfYSI$date[1],
+                                             max = tail(dfYSI$date, n=1)),
                               hr(),
                               radioButtons("dataset1", label = "Select Dataset", choices = c("Raw Data", "Clean Data")),
                               selectInput("variable1", 
@@ -113,6 +96,36 @@ ui <- navbarPage("Biosphere 2 Ocean Systems Water Quality",
                                    )
                           )
                    
+                 ),
+                 
+                 # Seasonal Trends Page
+                 tabPanel(title = "Seasonal Trends",
+                          
+                 ),
+                 
+                 # Correlations Page
+                 tabPanel(title = "Correlations",
+                          
+                 ),
+                 
+                 # Significant Correlations Page
+                 tabPanel(title = "Significant Correlations",
+                          
+                 ),
+                 
+                 # Correlations Tables Page
+                 tabPanel(title = "Correlations Tables",
+                          
+                 ),
+                 
+                 # Data in Context Page
+                 tabPanel(title = "Data in Context",
+                          
+                 ),
+                 
+                 # B1 Comparisons Page
+                 tabPanel(title = "B1 Comparisons",
+                          
                  )
 )
 
@@ -122,7 +135,7 @@ server <- function(input, output) {
   ## raw data all variable plot
   # output$rawallvariablePlot <- renderPlot({
   #   
-  #   data <- dfRaw
+  #   data <- dfYSI
   #   # change column names of data to input variable options (ie: temp_f becomes Temperature (ºF))
   #   colnames(data)[3:19] <- var_choices[2:18]
   #   
@@ -158,7 +171,7 @@ server <- function(input, output) {
   # 
   # ## clean data all variable plot
   # output$cleanallvariablePlot <- renderPlot({
-  #   data <- dfClean
+  #   data <- dfYSI
   #   # change column names of data to input variable options (ie: temp_f becomes Temperature (ºF))
   #   colnames(data)[3:19] <- var_choices[2:18]
   #   
@@ -200,11 +213,11 @@ server <- function(input, output) {
   #   req(input$dataset1)
   #   if (input$dataset1 == "Raw Data") {
   #     #use raw data csv
-  #     data <- dfRaw
+  #     data <- dfYSI
   #     subt <- "Pre-QC: All Outliers Still Present"
   #   } else if (input$dataset1 == "Clean Data") {
   #     # use qc'd data csv
-  #     data <- dfClean
+  #     data <- dfYSI
   #     subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
   #   }
   # })
@@ -214,11 +227,11 @@ server <- function(input, output) {
     # check which dataset is being viewed
     if (input$dataset1 == "Raw Data") {
       # use raw data csv
-      data <- dfRaw
+      data <- dfYSI
       subt <- "Pre-QC: All Outliers Still Present"
     } else if (input$dataset1 == "Clean Data") {
       # use qc'd data csv
-      data <- dfClean
+      data <- dfYSI
       subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
     }
     
@@ -261,11 +274,11 @@ server <- function(input, output) {
     # check which dataset is being viewed
     if (input$dataset2 == "Raw Data") {
       # use raw data csv
-      data <- dfRaw
+      data <- dfYSI
       subt <- "Pre-QC: All Outliers Still Present"
     } else if (input$dataset2 == "Clean Data") {
       # use qc'd data csv
-      data <- dfClean
+      data <- dfYSI
       subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
     }
     
@@ -308,11 +321,11 @@ server <- function(input, output) {
     # check which dataset is being viewed
     if (input$dataset3 == "Raw Data") {
       # use raw data csv
-      data <- dfRaw
+      data <- dfYSI
       subt <- "Pre-QC: All Outliers Still Present"
     } else if (input$dataset3 == "Clean Data") {
       # use qc'd data csv
-      data <- dfClean
+      data <- dfYSI
       subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
     }
     
@@ -355,11 +368,11 @@ server <- function(input, output) {
     # check which dataset is being viewed
     if (input$dataset4 == "Raw Data") {
       # use raw data csv
-      data <- dfRaw
+      data <- dfYSI
       subt <- "Pre-QC: All Outliers Still Present"
     } else if (input$dataset4 == "Clean Data") {
       # use qc'd data csv
-      data <- dfClean
+      data <- dfYSI
       subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
     }
     

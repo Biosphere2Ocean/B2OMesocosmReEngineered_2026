@@ -1,0 +1,155 @@
+---
+title: "Hach and YSI Data Wrangling"
+collaborators: Renee Grambihler
+project: OceanWaterQuality
+institution: Biosphere 2 Ocean
+output: html_notebook
+---
+## Import Libraries
+```{r Import Libraries}
+library(tidyverse)
+library(lubridate)
+options(scipen = 999)
+```
+
+## Import Data
+```{r import data}
+# use 02-YSI-Data-QCCutoff.csv
+dfYSI <- read_csv("Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
+
+# use 02-Hach-Data-Clean-QC.csv
+dfHach <- read_csv("Data/Clean/Hach/02_QualityControl/02-Hach-Data-Clean-QC.csv")
+
+```
+
+# Data Formatting
+## YSI
+```{r data format: ysi}
+dfYSI_edit <- dfYSI %>%
+  # create year, month, week columns
+  mutate(year = year(date)) %>%
+  mutate(month = month(date)) %>%
+  mutate(week = week(date)) %>%
+  # group by year, month, week to take comparisons of each week within the time series
+  group_by(year, month, week) %>%
+  # take weekly medians to make more comparable to Hach data which is taken weekly
+  mutate(temp_f = median(temp_f, na.rm = TRUE)) %>%
+  mutate(temp_c = median(temp_c, na.rm = TRUE)) %>%
+  mutate(pH_ysi = median(pH, na.rm = TRUE)) %>%
+  mutate(pH_mV = median(pH_mV, na.rm = TRUE)) %>%
+  mutate(salinity_psu = median(salinity_psu, na.rm = TRUE)) %>%
+  mutate(conductivity_uScm = median(conductivity_uScm, na.rm = TRUE)) %>%
+  mutate(nlf_conductivity_uScm = median(nlf_conductivity_uScm, na.rm = TRUE)) %>%
+  mutate(sp_conductivity_uScm = median(sp_conductivity_uScm, na.rm = TRUE)) %>%
+  mutate(do_mgL = median(do_mgL, na.rm = TRUE)) %>%
+  mutate(do_saturated_percent = median(do_saturated_percent, na.rm = TRUE)) %>%
+  mutate(do_local_percent = median(do_local_percent, na.rm = TRUE)) %>%
+  mutate(orp_mV = median(orp_mV, na.rm = TRUE)) %>%
+  mutate(chlorophyll_rfu = median(chlorophyll_rfu, na.rm = TRUE)) %>%
+  mutate(total_algae_rfu = median(total_algae_rfu, na.rm = TRUE)) %>%
+  mutate(total_dissolved_solids_mgL = median(total_dissolved_solids_mgL, na.rm = TRUE))%>%
+  select(-time, -date, -chlorophyll_ugL, -total_algae_cellsL, -pH) %>%
+  distinct() %>%
+  mutate(date = paste(year, month, week, sep = "-")) %>%
+  ungroup() %>%
+  select(-year, -month, -week) %>%
+  relocate(date, .before = temp_f)
+
+```
+
+## Hach
+```{r data format: Hach}
+dfHach_edit <- dfHach %>%
+  # select only data from the ocean
+  filter(Location == "Ocean") %>%
+  # create year, month, week columns
+  mutate(year = year(Date)) %>%
+  mutate(month = month(Date)) %>%
+  mutate(week = week(Date)) %>%
+  # group by year, month, week to take comparisons of each week within the time series
+  group_by(year, month, week) %>%
+  # take weekly medians since some data is taking 2x per week
+  mutate(Turbidity = median(Turbidity, na.rm = TRUE)) %>%
+  mutate(Phosphate = median(Phosphate, na.rm = TRUE)) %>%
+  mutate(`Nitrate MR` = median(`Nitrate MR`, na.rm = TRUE)) %>%
+  mutate(`Nitrate HR` = median(`Nitrate HR`, na.rm = TRUE)) %>%
+  mutate(pH_Hach = median(pH, na.rm = TRUE)) %>%
+  mutate(Alkalinity = median(Alkalinity, na.rm = TRUE)) %>%
+  mutate(Silica = median(Silica, na.rm = TRUE)) %>%
+  mutate(Iron = median(Iron, na.rm = TRUE)) %>%
+  select(-Date, -Location, -pH) %>%
+  distinct() %>%
+  mutate(date = paste(year, month, week, sep = "-")) %>%
+  ungroup() %>%
+  select(-year, -month, -week) %>%
+  relocate(date, .before = Turbidity)
+
+
+```
+
+## Combine Data
+```{r data format: combine data}
+# combine dfHach_edit and dfYSI_edit, with dfYSI_edit being first because it has more observations
+dfHachYSI_interval <- left_join(dfYSI_edit, dfHach_edit) %>%
+  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `pH (Hach)` = pH_Hach,
+         `pH (YSI)` = pH_ysi,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu,
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
+
+# combine dfHach and dfYSI - dfYSI first for above reasons
+dfHach_edit_all <- dfHach %>%
+  select(-Location) %>%
+  rename(pH_Hach = pH)
+
+dfYSI_edit_all <- dfYSI %>%
+  select(-time, -chlorophyll_ugL, -total_algae_cellsL) %>%
+  rename(pH_ysi = pH,
+         Date = date)
+
+dfHachYSI_all <- left_join(dfYSI_edit_all, dfHach_edit_all) %>%
+   rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `pH (Hach)` = pH_Hach,
+         `pH (YSI)` = pH_ysi,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu,
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
+
+
+```
+
+# Write HachYSI Datafile
+```{r write csv file}
+# create csv file of combined YSI and Hach all values
+write_csv(dfHachYSI_all, 
+          file = "Data/Clean/HachYSI/01_DataWrangling/01-HachYSI-Data-Combined-All.csv", 
+          col_names = TRUE)
+
+# create csv file of combined YSI and Hach time interval values
+write_csv(dfHachYSI_interval,
+          file = "Data/Clean/HachYSI/01_DataWrangling/02-HachYSI-Data-Combined-TimeIntervals.csv",
+          col_names = TRUE)
+
+```
+

@@ -1,0 +1,146 @@
+---
+title: "HACH Data Wrangling"
+Collaborators: Renee Grambihler
+Project: "Ocean Water Quality"
+Institution: Biosphere 2 Ocean
+---
+
+# Libraries
+```{r libraries}
+library(tidyverse)
+library(readxl)
+library(lubridate)
+# remove scientific notation
+options(scipen = 999)
+```
+
+# Import Data
+```{r import data}
+# download B20NutrientData excel file from the Box and import it into R with your own filepath in "" below. The Pre-formatted Data (2017-2022) is on one sheet, and the Formatted Data (2022-present) is on a different sheet. 
+
+# Import Pre-Formatted Data sheet from excel file (sheet "Pre-formatted Data")
+PreFormattedData <- read_excel("Data/Raw/RawData_Hach/B2ONutrientData.xlsx",
+                               sheet = "Pre-formatted Data",
+                               col_names = TRUE)
+
+# Import Formatted Data sheet from excel file (sheet "Data")
+FormattedData <- read_excel("Data/Raw/RawData_Hach/B2ONutrientData.xlsx", 
+                            sheet = "Data", 
+                            col_names = TRUE)
+```
+
+# Data Tidying
+## Pre-Formatted Data
+```{r data tidying: Pre-Formatted Data sheet}
+# get rid of (...##) at end of column names
+for (col in 1:ncol(PreFormattedData)){
+    colnames(PreFormattedData)[col] <-  gsub("\\.*[0123456789]", "", colnames(PreFormattedData)[col])
+    }
+
+# separating large dataframe into separate ones for each testing location (Ocean, Mangrove, Raceway 1, and Raceway 2) in order to add a Location column 
+OceanFrame <- PreFormattedData[, c(1:11, 39)]%>%
+  mutate(Location = "Ocean")
+
+MangroveFrame <- PreFormattedData[, c(1, 12:19, 39)] %>%
+  mutate(Location = "Mangroves",
+         Alkalinity = NA, 
+         Silica = NA, 
+         Iron = NA, 
+         Ammonia = NA)
+  
+RacewayFrame1 <- PreFormattedData[, c(1, 20:29, 39)] %>%
+  mutate(Location = "Raceway 1")
+
+RacewayFrame2 <- PreFormattedData[, c(1, 30:39)] %>%
+  mutate(Location = "Raceway 2",
+         ORP = NA)
+
+# combine the dataframes by rows to get longer format data
+PreFormattedDataTidy <- rbind(OceanFrame, MangroveFrame, RacewayFrame1, RacewayFrame2) %>%
+  mutate(Silica = as.numeric(Silica),
+         `Nitrate MR` = as.numeric(`Nitrate MR`),
+         `Nitrate HR` = as.numeric(`Nitrate HR`),
+         pH = as.numeric(pH),
+         Date = format(Date, "%m/%d/%y"), 
+         Notes = NA) %>%
+  relocate(Location, .after = Date)
+
+```
+
+## Formatted Data
+```{r data tidying: Data sheet}
+# changing --- and +++ values to the lowest (---) and highest (+++) value for the range read by each nutrient test (see metadata for full explanation of each range). 
+FormattedDataTidy <- FormattedData %>%
+  mutate(Turbidity = round(Turbidity, digits = 1),
+         Phosphate = ifelse(Phosphate == "---", 0.02, Phosphate),
+         Phosphate = ifelse(Phosphate == "+++", 2.50, Phosphate),
+         Phosphate = as.numeric(Phosphate),
+         Phosphate = round(Phosphate, digits = 2),
+         `Nitrate MR` = ifelse(`Nitrate MR` == "---", 0.2, `Nitrate MR`),
+         `Nitrate MR` = ifelse(`Nitrate MR` == "+++", 5.0, `Nitrate MR`),
+         `Nitrate MR` = as.numeric(`Nitrate MR`),
+         `Nitrate MR` = round(`Nitrate MR`, digits = 2),
+         `Nitrate HR` = ifelse(`Nitrate HR` == "---", 0.3, `Nitrate HR`),
+         `Nitrate HR` = ifelse(`Nitrate HR` == "+++", 30.0, `Nitrate HR`),
+         `Nitrate HR` = as.numeric(`Nitrate HR`),
+         `Nitrate HR` = round(`Nitrate HR`, digits = 2),
+         pH = round(pH, digits = 2),
+         Alkalinity = round(Alkalinity, digits = 1),
+         Silica = ifelse(Silica == "---", 0.01, Silica),
+         Silica = ifelse(Silica == "+++", 1.60, Silica),
+         Silica = round(as.numeric(Silica), digits = 2),
+         Iron = ifelse(Iron == "---", 0.009, Iron),
+         Iron = ifelse(Iron == "+++", 1.400, Iron),
+         Iron = round(Iron, digits = 3),
+         Ammonia = ifelse(Ammonia == "---", 0.01, Ammonia),
+         Ammonia = ifelse(Ammonia == "+++", 0.50, Ammonia),
+         Ammonia = as.numeric(Ammonia),
+         Ammonia = round(Ammonia, digits = 2),
+         Date = format(Date, "%m/%d/%y"),
+         ORP = NA) %>%
+  relocate(ORP, .after = Ammonia) 
+
+```
+
+## Combine Data
+```{r Combine data from Pre-formatted and Data sheets}
+AllData <- rbind(PreFormattedDataTidy, FormattedDataTidy) %>%
+  mutate(Turbidity = round(Turbidity, digits = 1),
+         Phosphate = ifelse(Phosphate == "---", 0.02, Phosphate),
+         Phosphate = ifelse(Phosphate == "+++", 2.50, Phosphate),
+         Phosphate = as.numeric(Phosphate),
+         Phosphate = round(Phosphate, digits = 2),
+         `Nitrate MR` = ifelse(`Nitrate MR` == "---", 0.2, `Nitrate MR`),
+         `Nitrate MR` = ifelse(`Nitrate MR` == "+++", 5.0, `Nitrate MR`),
+         `Nitrate MR` = as.numeric(`Nitrate MR`),
+         `Nitrate MR` = round(`Nitrate MR`, digits = 2),
+         `Nitrate HR` = ifelse(`Nitrate HR` == "---", 0.3, `Nitrate HR`),
+         `Nitrate HR` = ifelse(`Nitrate HR` == "+++", 30.0, `Nitrate HR`),
+         `Nitrate HR` = as.numeric(`Nitrate HR`),
+         `Nitrate HR` = round(`Nitrate HR`, digits = 2),
+         pH = round(pH, digits = 2),
+         Alkalinity = round(Alkalinity, digits = 1),
+         Silica = ifelse(Silica == "---", 0.01, Silica),
+         Silica = ifelse(Silica == "+++", 1.60, Silica),
+         Silica = round(as.numeric(Silica), digits = 2),
+         Iron = ifelse(Iron == "---", 0.009, Iron),
+         Iron = ifelse(Iron == "+++", 1.400, Iron),
+         Iron = round(Iron, digits = 3),
+         Ammonia = ifelse(Ammonia == "---", 0.01, Ammonia),
+         Ammonia = ifelse(Ammonia == "+++", 0.50, Ammonia),
+         Ammonia = as.numeric(Ammonia),
+         Ammonia = round(Ammonia, digits = 2),
+         Date = as.Date(Date, format = "%m/%d/%y")) 
+
+# AllDataPivot <- rbind(PreFormattedDataPivot, FormattedDataPivot) %>%
+#   mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+
+```
+
+## Save Data
+```{r save data}
+write_csv(AllData,
+          file = "Data/Clean/Hach/01_DataWrangling/01-Hach-Data-Clean.csv")
+
+```
+

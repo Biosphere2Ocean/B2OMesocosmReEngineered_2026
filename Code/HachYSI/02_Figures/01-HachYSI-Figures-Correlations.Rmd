@@ -1,0 +1,76 @@
+---
+title: "Hach and YSI Data Correlations"
+collaborators: Renee Grambihler
+project: OceanWaterQuality
+institution: Biosphere 2 Ocean
+output: html_notebook
+---
+# Correlations
+## Import Libraries
+```{r Import Libraries}
+library(tidyverse)
+library(lubridate)
+library(Hmisc)
+library(corrplot)
+library(ggcorrplot)
+source("Code/Functions/CorrelationFunction.R")
+options(scipen = 999)
+```
+## Import Data
+```{r import data}
+# use HachYSI-CorrelationMatrix-Rvalues.csv to import dataframe of correlation matrix made in 01-HachYSI-Correlations.Rmd
+cormat_RValues <- read_csv("Data/Clean/HachYSI/01_Correlations/HachYSI-CorrelationMatrix-Rvalues.csv")
+
+# use HachYSI-CorrelationMatrix-Pvalues.csv to import dataframe of correlation matrix made in 01-HachYSI-Correlations.Rmd
+cormat_PValues <-  read_csv("Data/Clean/HachYSI/01_Correlations/HachYSI-CorrelationMatrix-Pvalues.csv")
+```
+## Data Formatting
+```{r format data}
+# change row names of dataframes to be the column names
+row_names <- colnames(cormat_PValues)
+rownames(cormat_PValues) <- row_names
+rownames(cormat_RValues) <- row_names
+
+# turn both dataframes into matrices
+cormat_RValues <- as.matrix(cormat_RValues)
+cormat_PValues <- as.matrix(cormat_PValues)
+
+# turn NAs into insignificant values
+cormat_PValues[is.na(cormat_PValues)] <- 1.00 
+cormat_RValues[is.na(cormat_RValues)] <- 0.00
+
+```
+
+```{r plots}
+# Correlogram
+corrPlot_total <- ggcorrplot(cormat_RValues, 
+                       outline.color = "white", 
+                       ggtheme = ggplot2::theme_gray(), 
+                       colors = c("#6D9EC1", "white", "#E46726"), 
+                       lab = TRUE,
+                       title = "Biosphere 2 Ocean Hach and YSI Water Quality Correlations")
+# Save Plot
+ggsave(filename = "HachYSI-Correlations-Correlogram.pdf", 
+       plot = corrPlot_total,
+       path = "Figures/HachYSI/01_Correlations",
+       width = 15, height = 15)
+
+
+# Correlogram with Significance
+corrPlot_signif <- ggcorrplot(cormat_RValues, 
+                              p.mat = cormat_PValues,
+                              outline.color = "white", 
+                              ggtheme = ggplot2::theme_gray(), 
+                              colors = c("#6D9EC1", "white", "#E46726"), 
+                              lab = TRUE,
+                              insig = "blank", 
+                              title = "Biosphere 2 Ocean Hach and YSI Water Quality Correlations\n
+                              Significant Correlations Shown (PValue > 0.05)")
+# Save Plot
+ggsave(filename = "HachYSI-Correlations-Correlogram-Significant.pdf", 
+       plot = corrPlot_signif,
+       path = "Figures/HachYSI/01_Correlations",
+       width = 15, height = 15)
+
+
+```

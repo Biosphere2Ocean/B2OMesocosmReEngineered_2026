@@ -1,0 +1,99 @@
+---
+title: "HACH Data Quality Control"
+Collaborators: Renee Grambihler
+Project: "Ocean Water Quality"
+Institution: Biosphere 2 Ocean
+---
+
+# Libraries
+```{r libraries}
+library(tidyverse)
+library(lubridate)
+# remove scientific notation
+options(scipen = 999)
+```
+
+# Import Data
+```{r import data}
+# use B2ONutrientData-Clean.csv
+# drop ORP, Initials, Notes columns
+df <- read_csv("Data/Clean/Hach/01_DataWrangling/01-Hach-Data-Clean.csv") %>%
+  select(-ORP, -Initials, -Notes)
+```
+
+# Quality Control
+For each nutrient in each location, turn values outside 2-sigma from mean into NA
+```{r QC}
+# make empty dataframe to store output from loop
+# creating with just 2 columns for now since "date" and "location" columns will not change
+dfQC <- data.frame(matrix(ncol = ncol(df)))
+colnames(dfQC) <- colnames(df)
+
+# getting list of column names from df, excluding "date" and "location" so we can use it to loop through
+nutrient_list <- colnames(df)
+nutrient_list <- nutrient_list[! nutrient_list %in% c("Date", "Location")]
+# list of locations
+location_list <- c(unique(df$Location))
+
+for (l in location_list) {
+  # filter df by location, l
+  dfLocation <- df %>%
+    filter(Location == l)
+  
+  dfLocationQC <- dfLocation %>%
+    select(Date, Location)
+  
+  for (n in nutrient_list) {
+    # select column from df to use in calculations (represented by n in the loop) and store as nutrient
+    nutrient_col <- dfLocation[[n]]
+    # frame with just date, location, and nutrient columns - all from df
+    dfLocationNutrient <- dfLocation[, c("Date", "Location")]
+    dfLocationNutrient <- cbind(dfLocationNutrient, nutrient_col)
+    
+    # find mean
+    mean_nutrient_value <- mean(nutrient_col, na.rm = TRUE)
+    # find standard deviation
+    sd_nutrient_value <- sd(nutrient_col, na.rm = TRUE)
+    
+    # if standard deviation is < 0 or NA, make sd_nutrient_value 1 so that we don't divide by 0 in next step
+    if (sd_nutrient_value < 0 | is.na(sd_nutrient_value) == TRUE){
+      sd_nutrient_value <- 1
+    }
+    
+    # go through nutrient_col; if value is NA or absolute value of z-score is > 2, make value NA, otherwise, leave alone
+    dfQCLocationNutrient <- dfLocationNutrient %>%
+      mutate(nutrient_col = ifelse(is.na(mean_nutrient_value) == TRUE |
+                                     abs((nutrient_col-mean_nutrient_value)/sd_nutrient_value) > 2,
+                                   NA,
+                                   nutrient_col))
+    
+    # select nutrient_col as nutrient_col_qc (for redundancy)
+    nutrient_col_qc <- dfQCLocationNutrient$nutrient_col
+    
+    # stick new QC'd nutrient column into dfLocationQC
+    dfLocationQC <- dfLocationQC %>%
+      cbind(nutrient_col_qc)
+
+    # set the column name of dfLocationQC that is currently called "nutrient" to be what n currently represents in the loop. this is a really important step!!!!!
+    colnames(dfLocationQC)[colnames(dfLocationQC) == "nutrient_col_qc"] = n
+  }
+  
+  # bind all rows and columns of dfLocationQC to dfQC
+  dfQC <- dfQC %>%
+    rbind(dfLocationQC)
+  
+}
+
+# remove rows where Date is NA; make sure Date values are in yyyy-mm-dd format and not numeric
+dfQC <- dfQC %>%
+  filter(is.na(Date) == FALSE) %>%
+  mutate(Date = as.Date(Date))
+
+```
+
+### Save QC'd Data
+```{r save data}
+write_csv(dfQC,
+          file = "Data/Clean/Hach/02_QualityControl/02-Hach-Data-Clean-QC.csv")
+```
+

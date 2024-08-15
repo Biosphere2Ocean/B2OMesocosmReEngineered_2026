@@ -1,0 +1,205 @@
+---
+title: "HACH Data Figures: Pre Quality Control"
+Collaborators: Renee Grambihler
+Project: "Ocean Water Quality"
+Institution: Biosphere 2 Ocean
+---
+
+# Libraries
+```{r libraries}
+library(tidyverse)
+library(lubridate)
+# remove scientific notation
+options(scipen = 999)
+```
+
+# Import Data
+```{r import data}
+# use 01-Hach-Data-Clean.csv
+df <- read_csv("Data/Clean/Hach/01_DataWrangling/01-Hach-Data-Clean.csv")
+
+```
+
+# Data Formatting
+```{r data formatting}
+# create long format dataframe to put into multi-nutrient plots (faceted)
+dfPivot <- df %>%
+  pivot_longer(cols = Turbidity:Ammonia,
+               names_to = "Nutrients",
+               values_to = "Nutrient Values") %>%
+  select(-ORP, -Initials, -Notes) %>%
+  na.omit()
+  
+```
+
+
+# Pre-Quality Control Data Visualizations by Location
+## All Locations
+```{r All Locations Plot}
+# All Locations Plot
+PreQCAllLocationsPlot <- dfPivot %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`, 
+             color = Location)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "6 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Nutrients for Ocean, Raceways, and Mangrove Mesocosms from 2018-Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+PreQCAllLocationsPlot
+# Save Plot
+ggsave(filename = "AllLocationsPlot-PreQC.pdf", 
+       plot = PreQCAllLocationsPlot,
+       path = "Figures/Hach/01_PreQCPlots",
+       width = 10, height = 7)
+```
+
+## Ocean
+```{r Ocean Plot}
+# Ocean Plot
+PreQCOceanPlot <- dfPivot %>%
+  filter(Location == "Ocean") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "6 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Ocean Nutrients from 2018-Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot
+ggsave(filename = "OceanPlot-PreQC.pdf", plot = PreQCOceanPlot,
+       path = "Figures/Hach/01_PreQCPlots", width = 10, height = 7)
+
+```
+
+## Raceway 1
+```{r Raceway 1 Plot}
+# Raceway 1 Plot
+PreQCRaceway1Plot <- dfPivot %>%
+  filter(Location == "Raceway 1") %>%
+  filter(Date > "2020-04-01") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "6 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Raceway 1 Nutrients 2020-Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot 
+ggsave(filename = "Raceway1Plot-PreQC.pdf", 
+       plot = PreQCRaceway1Plot,
+       path = "Figures/Hach/01_PreQCPlots", width = 10, height = 7)
+```
+
+## Raceway 2
+```{r Raceway 2 Plot}
+# Raceway 2 Plot
+PreQCRaceway2Plot <- dfPivot %>%
+  filter(Location == "Raceway 2") %>%
+  filter(Date > "2020-04-01") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "2 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Raceway 2 Nutrients From 2021 to Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot 
+ggsave(filename = "Raceway2Plot-PreQC.pdf", 
+       plot = PreQCRaceway2Plot,
+       path = "Figures/Hach/01_PreQCPlots", width = 10, height = 7)
+```
+
+## Mangroves
+```{r Mangroves Plot}
+# Mangrove Plot
+PreQCMangrovePlot <- dfPivot %>%
+  filter(Location == "Mangroves") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "6 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Mangrove Nutrients from 2018-Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot
+ggsave(filename = "MangrovePlot-PreQC.pdf", 
+       plot = PreQCMangrovePlot,
+       path = "Figures/Hach/01_PreQCPlots", width = 10, height = 7)
+```
+
+## Raceways 1 and 2
+```{r Raceways 1 and 2 Plot}
+# Raceways 1 and 2 Plot
+PreQCRaceway1Raceway2Plot <- dfPivot %>%
+  filter(Location == "Raceway 1" | Location == "Raceway 2")%>%
+  filter(Date > "2020-04-01") %>%
+  ggplot(aes(x = Date,
+             y = `Nutrient Values`,
+             color = Location)) +
+  geom_line() +
+  facet_wrap(~Nutrients, ncol = 3, scales = "free") +
+  scale_x_date(breaks = waiver(), date_breaks = "6 months",
+               date_labels = "%b %Y") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"))+
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+  theme(strip.background = element_rect(fill = "white"))+
+  labs(title = "Biosphere 2 Raceways 1 and 2 Nutrients From 2020 to Present",
+       subtitle = "Pre-QC: All Outliers Still Present")
+# save plot 
+ggsave(filename = "Raceway1Raceway2Plot-PreQC.pdf", 
+       plot = PreQCRaceway1Raceway2Plot,
+       path = "Figures/Hach/01_PreQCPlots", width = 10, height = 7)
+
+```
+

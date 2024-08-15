@@ -1,0 +1,370 @@
+---
+title: "Hach Figures: Descriptive Statistics"
+Collaborators: Renee Grambihler
+Project: OceanWaterQuality
+Institution: Biosphere 2 Ocean
+output: html_notebook
+---
+
+## Import Libraries
+```{r Libraries}
+library(tidyverse)
+library(lubridate)
+```
+
+# Import Data
+```{r import data}
+# qc data
+df <- read_csv("Data/Clean/Hach/02_QualityControl/01-Hach-Data-Clean-QC.csv")
+
+# whole time series data
+dfWhole <- read_csv("Data/Clean/Hach/03_DescriptiveStatistics/01-Hach-DescriptiveStats-Whole.csv")
+
+# yearly time series data
+dfYear <- read_csv("Data/Clean/Hach/03_DescriptiveStatistics/02-Hach-DescriptiveStats-Yearly.csv")
+
+# monthly time series data
+dfMonth <- read_csv("Data/Clean/Hach/03_DescriptiveStatistics/03-Hach-DescriptiveStats-Monthly.csv")
+
+```
+
+## Data Formatting
+```{r data formatting}
+# character vector of nutrient names as they appear in the dataframes
+nutrient_names <- unique(dfWhole$nutrient)
+
+# character vector of location names as they appear in the dataframes
+location_names <- unique(dfWhole$Location)
+
+# character vector of nutrient names as they should be written on a graph
+nutrient_text <- c("Turbidity (FAU)", "Phosphate (mg/L)", "Nitrate MR (mg/L)", "Nitrate HR (mg/L)",
+                   "pH", "Alkalinity mg/L", "Silica (mg/L)", "Iron (mg/L)", "Ammonia (mg/L)")
+# file name for each plot
+file_names <- c("TurbidityPlot", "PhosphatePlot", "NitrateMRPlot", "NitrateHRPlot", "pHPlot",
+                "AlkalinityPlot", "SilicaPlot", "IronPlot", "AmmoniaPlot")
+
+```
+
+# Line Plots
+## Yearly
+```{r yearly line plots}
+# whole time series #not sure if want to plot this yet bc it's just one value instead of multiple values spanning  time intervals
+
+# plots of mean, median, std, iqr for each year over course of time series
+# list for plots to populate from loop
+plotList <- list()
+
+for (l in 1:length(location_names)) {
+  plotList_location <- list()
+  for (i in 1:length(nutrient_names)) {
+    plotList_location[[i]] <- dfYear %>%
+      filter(Location == location_names[l]) %>%
+      filter(nutrient == nutrient_names[i]) %>%
+      ggplot((aes(x = date))) +
+      geom_ribbon(aes(y = mean,
+                      ymin = mean - std,
+                      ymax = mean + std,
+                      fill = "Standard Deviation"), 
+                  alpha = 0.2,
+                  show.legend = TRUE) +
+      geom_ribbon(aes(y = median,
+                      ymin = Q1,
+                      ymax = Q3,
+                      fill = "Interquartile Range"), 
+                  alpha = 0.2,
+                  show.legend = TRUE) +
+      geom_line(aes(y = mean, color = "Mean"), 
+                show.legend = TRUE) +
+      geom_line(aes(y = median, color = "Median"), 
+                show.legend = TRUE) +
+      scale_x_continuous(n.breaks = length(unique(dfYear$date)))+
+      scale_color_manual(values = c("red", "blue")) +
+      scale_fill_manual(values = c("blue", "red")) +
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))+
+      labs(title = paste("B2", location_names[l], nutrient_text[i], "Yearly Statistics"),
+           x = "Date",
+           y = nutrient_text[i],
+           fill = "",
+           color = "")
+    print(plotList_location[[i]])
+    # Save plot
+    ggsave(plot = plotList_location[[i]],
+           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Year-Line.pdf", sep = "-"),
+           path = paste("Figures/Hach/03-DescriptiveStatisticsPlots/YearlyStatistics/LineGraphs",location_names[l], sep = "/"))
+  }
+  plotList <- c(plotList, plotList_location)
+}
+
+# plot both raceways together
+plotList <- list()
+for (i in 1:length(nutrient_names)) {
+  plotList[[i]] <- dfYear %>%
+    filter(Location == "Raceway 1" | Location == "Raceway 2") %>%
+    filter(nutrient == nutrient_names[i]) %>%
+    ggplot((aes(x = date, 
+                y = mean,
+                color = Location))) +
+    geom_line() +
+    scale_x_continuous(n.breaks = length(unique(dfYear$date)))+
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = "black"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+    theme(strip.background = element_rect(fill = "white"))+
+    labs(title = paste("B2 Coral Raceways 1 and 2", nutrient_text[i], "Yearly Mean"),
+         x = "Date",
+         y = nutrient_text[i])
+  print(plotList[[i]])
+  # Save plot
+  ggsave(plot = plotList[[i]],
+         filename = paste("BothRaceways",file_names[i],"Year-DescriptiveStats.pdf", sep = "-"),
+         path = "Figures/Hach/03-DescriptiveStatisticsPlots/YearlyStatistics/LineGraphs/BothRaceways")
+}
+
+```
+
+## Monthly
+### Seasonal Cycle
+```{r monthly seasonal line plots}
+# plots of mean, median, std, iqr for each month over course of time series
+# list for plots to populate from loop
+plotList <- list()
+for (l in 1:length(location_names)) {
+  plotList_location <- list()
+  for (i in 1:length(nutrient_names)) {
+    plotList_location[[i]] <- dfMonth %>%
+      mutate(date = paste(date, 01, sep = "-"),
+             date = as.Date(date, format = "%Y-%m-%d")) %>%
+      filter(Location == location_names[l]) %>%
+      filter(nutrient == nutrient_names[i]) %>%
+      ggplot(aes(x = as.Date(yday(date), "2021-01-01"),
+                 color = factor(year(date)),
+                 y = mean)) +
+      geom_line() +
+      # geom_ribbon(aes(y = mean,
+      #               ymin = mean - std,
+      #               ymax = mean + std), 
+      #           alpha = 0.2,
+      #           show.legend = TRUE) +
+      # geom_line(aes(y = median, color = "Median"), show.legend = TRUE) +
+      scale_x_date(date_breaks = "months", date_labels = "%b")+
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))+
+      labs(title = paste("B2", location_names[l], nutrient_text[i], "Monthly Median"),
+           x = "Date",
+           y = nutrient_text[i], 
+           color = "Year")
+    print(plotList_location[[i]])
+    # Save plot
+    ggsave(plot = plotList_location[[i]],
+           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Month-Line-Seasonal.pdf", sep = "-"),
+           path = paste("Figures/Hach/03_DescriptiveStatistics/Monthly/01_Line",location_names[l],"Seasonal", sep = "/"))
+  }
+  plotList <- c(plotList, plotList_location)
+}
+
+```
+
+### Time Series
+```{r monthly whole time series line plots}
+# plots of mean, median, std, iqr for each month over course of time series
+# list for plots to populate from loop
+plotList <- list()
+for (l in 1:length(location_names)) {
+  plotList_location <- list()
+  for (i in 1:length(nutrient_names)) {
+    plotList_location[[i]] <- dfMonth %>%
+      mutate(date = paste(date, 01, sep = "-"),
+             date = as.Date(date, format = "%Y-%m-%d")) %>%
+      filter(Location == location_names[l]) %>%
+      filter(nutrient == nutrient_names[i]) %>%
+      ggplot(aes(x = date,
+                 y = median)) +
+      geom_line() +
+      scale_x_date(date_breaks = "years", date_labels = "%Y")+
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))+
+      labs(title = paste("B2", location_names[l], nutrient_text[i], "Monthly Median"),
+           x = "Date",
+           y = nutrient_text[i], 
+           color = "Year")
+    print(plotList_location[[i]])
+    # Save plot
+    ggsave(plot = plotList_location[[i]],
+           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Month-Line-TimeSeries.pdf", sep = "-"),
+           path = paste("Figures/Hach/03_DescriptiveStatistics/Monthly/01_Line",location_names[l],"TimeSeries", sep = "/"))
+  }
+  plotList <- c(plotList, plotList_location)
+}
+
+```
+
+
+# Loess Plots
+## Yearly
+```{r yearly loess plots}
+# whole time series #not sure if want to plot this yet bc it's just one value instead of multiple values spanning  time intervals
+
+# plots of mean, median, std, iqr for each year over course of time series
+# list for plots to populate from loop
+plotList <- list()
+for (l in 1:length(location_names)) {
+  plotList_location <- list()
+  for (i in 1:length(nutrient_names)) {
+    plotList_location[[i]] <- dfYear %>%
+      filter(Location == location_names[l]) %>%
+      filter(nutrient == nutrient_names[i]) %>%
+      ggplot((aes(x = date, 
+                  y = mean))) +
+      geom_smooth() +
+      scale_x_continuous(n.breaks = length(unique(dfYear$date)))+
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))+
+      labs(title = paste("B2", location_names[l], nutrient_text[i], "Yearly Mean"),
+           x = "Date",
+           y = nutrient_text[i],
+           fill = "",
+           color = "")
+    print(plotList_location[[i]])
+    # Save plot
+    ggsave(plot = plotList_location[[i]],
+           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Year-Loess.pdf", sep = "-"),
+           path = paste("Figures/Hach/03-DescriptiveStatisticsPlots/YearlyStatistics/LoessGraphs",location_names[l], sep = "/"))
+  }
+  plotList <- c(plotList, plotList_location)
+}
+
+# plot both raceways together
+plotList <- list()
+for (i in 1:length(nutrient_names)) {
+  plotList[[i]] <- dfYear %>%
+    filter(Location == "Raceway 1" | Location == "Raceway 2") %>%
+    filter(nutrient == nutrient_names[i]) %>%
+    ggplot((aes(x = date, 
+                y = mean,
+                color = Location))) +
+    geom_line() +
+    geom_smooth() +
+    scale_x_continuous(n.breaks = length(unique(dfYear$date)))+
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = "black"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+    theme(strip.background = element_rect(fill = "white"))+
+    labs(title = paste("B2 Coral Raceways 1 and 2", nutrient_text[i], "Yearly Mean"),
+         x = "Date",
+         y = nutrient_text[i])
+  print(plotList[[i]])
+  # Save plot
+  ggsave(plot = plotList[[i]],
+         filename = paste("BothRaceways",file_names[i],"DescriptiveStats-Year-Loess.pdf", sep = "-"),
+         path = "Figures/Hach/03-DescriptiveStatisticsPlots/YearlyStatistics/LoessGraphs/BothRaceways")
+}
+
+```
+
+## Monthly
+```{r monthly Loess plots}
+# plots of mean, median, std, iqr for each month over course of time series
+# list for plots to populate from loop
+plotList <- list()
+for (l in 1:length(location_names)) {
+  plotList_location <- list()
+  for (i in 1:length(nutrient_names)) {
+    plotList_location[[i]] <- dfMonth %>%
+      mutate(date = paste(date, 01, sep = "-"),
+             date = as.Date(date, format = "%Y-%m-%d")) %>%
+      filter(Location == location_names[l]) %>%
+      filter(nutrient == nutrient_names[i]) %>%
+      ggplot(aes(x = as.Date(yday(date), "2021-01-01"),
+                 y = mean,
+                 color = factor(year(date)))) +
+      geom_smooth() +
+      scale_x_date(date_breaks = "months", date_labels = "%b")+
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))+
+      labs(title = paste("B2", location_names[l], nutrient_text[i], "Monthly Mean"), 
+           x = "Date",
+           y = nutrient_text[i], 
+           color = "Year")
+    print(plotList_location[[i]])
+    # Save plot
+    ggsave(plot = plotList_location[[i]],
+           filename = paste(location_names[l],file_names[i],"DescriptiveStats-Month-Loess.pdf", sep = "-"),
+           path = paste("Figures/Hach/03-DescriptiveStatisticsPlots/MonthlyStatistics/LoessGraphs",location_names[l], sep = "/"))
+  }
+  plotList <- c(plotList, plotList_location)
+}
+
+# plot both raceways together -- still need to fix
+plotList <- list()
+for (i in 1:length(nutrient_names)) {
+  plotList[[i]] <- dfMonth %>%
+    mutate(date = paste(date, 01, sep = "-"),
+           date = as.Date(date, format = "%Y-%m-%d")) %>%
+    filter(Location == "Raceway 1" | Location == "Raceway 2") %>%
+    filter(nutrient == nutrient_names[i]) %>%
+    ggplot(aes(x = as.Date(yday(date), "2021-01-01"),
+               y = mean,
+               fill = factor(year(date)), 
+               color = Location)) +
+    geom_smooth() +
+    scale_x_date(date_breaks = "months", date_labels = "%b")+
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = "black"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+    theme(strip.background = element_rect(fill = "white"))+
+    labs(title = paste("B2 Coral Raceways 1 and 2", nutrient_text[i], "Monthly Mean"),
+         x = "Date",
+         y = nutrient_text[i],
+         color = "Location", 
+         fill = "Year")
+  print(plotList[[i]])
+  # Save plot
+  ggsave(plot = plotList[[i]],
+         filename = paste("BothRaceways",file_names[i],"DescriptiveStats-Month-Loess.pdf", sep = "-"),
+         path = "Figures/Hach/03-DescriptiveStatisticsPlots/MonthlyStatistics/LoessGraphs/BothRaceways")
+}
+
+```

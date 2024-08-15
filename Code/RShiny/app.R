@@ -17,117 +17,163 @@ library(lubridate)
 # Import data -----
 dfYSI <- read_csv(file = "SourceData/02-YSI-Data-QCCutoff.csv")
 dfHach <- read_csv(file = "SourceData/02-Nutrients-Data-Clean-QC.csv")
+# dfHach <- read_csv(file = "Data/Clean/Nutrients/02_QualityControl/02-Nutrients-Data-Clean-QC.csv") %>%
+#   filter(Location == "Ocean")
 
 # Define variables -----
 #  character vector of variable choices. modified from column names of datasets 
 var_choices <- c("None",
-                 "Temperature (ºF)",
-                 "Temperature (ºC)",
-                 "pH",
-                 "pH (mV)",
-                 "Salinity (PSU)",
+                 "Ammonia (mg/L)",
+                 "Alkalinity (mg/L CaCO3)", 
+                 "Chlorophyll (RFU)",
                  "Conductivity µS/cm",
-                 "NLF Conductivity (µS/cm)",
-                 "Specific Conductivity (µS/cm)",
                  "Dissolved Oxygen (mg/L)",
-                 "Dissolved Oxygen, Saturated (%)",
                  "Dissolved Oxygen, Local (%)",
-                 "ORP (mV)",
-                 "Chlorophyll (RFU)", 
-                 "Chlorophyll (µg/L)",
+                 "Iron (mg/L)",
+                 "Nitrate, Mid-Range (mg/L)", 
+                 "Nitrate, High-Range (mg/L)",
+                 "Oxygen Reduction Potential (mV)",
+                 "pH",
+                 "Phosphate (mg/L)",
+                 "Salinity (PSU)",
+                 "Silica (mg/L)",
+                 "Temperature (ºC)",
+                 "Temperature (ºF)",
+                 #"pH (mV)",
+                 #"NLF Conductivity (µS/cm)",
+                 #"Specific Conductivity (µS/cm)",
+                 #"Dissolved Oxygen, Saturated (%)",
+                 #"Chlorophyll (µg/L)",
                  "Total Algae (RFU)",
-                 "Total Algae (cells/L)",
-                 "Total Dissolved Solids (mg/L)")
+                 #"Total Algae (cells/L)",
+                 #"Total Dissolved Solids (mg/L)",
+                 "Turbidity (RFU)")
+
+median_period_choices <- c("Weekly", "Monthly", "Yearly")
 
 # User Interface -----
-ui <- navbarPage(title = "Biosphere 2 Ocean Systems Water Quality",
-                 theme = bs_theme(bootswatch = "minty"),
-                 
-                 # About Page
-                 tabPanel(title = "About",
-                   
-                 ),
-                 
-                 # Overall Trends Page
-                 tabPanel("Overall Trends",
-                          fluidRow(
-                            # skinnier column with date range input and inputs for 4 plots
-                            column(2, wellPanel(
-                              dateRangeInput("dateRange", 
-                                             label = "Select Date Range",
-                                             start = dfYSI$date[1],
-                                             end = tail(dfYSI$date, n=1),
-                                             min = dfYSI$date[1],
-                                             max = tail(dfYSI$date, n=1)),
-                              hr(),
-                              radioButtons("dataset1", label = "Select Dataset", choices = c("Raw Data", "Clean Data")),
-                              selectInput("variable1", 
-                                          label = "Select Variable to Plot", 
-                                          choices = var_choices,
-                                          selected = "Temperature (ºF)"),
-                              hr(),
-                              radioButtons("dataset2", label = "Select Dataset", choices = c("Raw Data", "Clean Data")),
-                              selectInput("variable2", 
-                                          label = "Select Variable to Plot", 
-                                          choices = var_choices),
-                              hr(),
-                              radioButtons("dataset3", label = "Select Dataset", choices = c("Raw Data", "Clean Data")),
-                              selectInput("variable3", 
-                                          label = "Select Variable to Plot", 
-                                          choices = var_choices),
-                              hr(),
-                              radioButtons("dataset4", label = "Select Dataset", choices = c("Raw Data", "Clean Data")),
-                              selectInput("variable4", 
-                                          label = "Select Variable to Plot", 
-                                          choices = var_choices)
-                                   )
-                              ),
-                            column(5,
-                                   conditionalPanel("input.variable1 != None",
-                                     plotOutput("plot1", height = "600px")),
-                                   conditionalPanel("input.variable2 != None",
-                                     plotOutput("plot2", height = "600px"))
-                                   ),
-                            column(5,
-                                   conditionalPanel("input.variable3 != None",
-                                     plotOutput("plot3", height = "600px")),
-                                   conditionalPanel("input.variable4 != None",
-                                     plotOutput("plot4", height = "600px"))
-                                   )
-                          )
-                   
-                 ),
-                 
-                 # Seasonal Trends Page
-                 tabPanel(title = "Seasonal Trends",
-                          
-                 ),
-                 
-                 # Correlations Page
-                 tabPanel(title = "Correlations",
-                          
-                 ),
-                 
-                 # Significant Correlations Page
-                 tabPanel(title = "Significant Correlations",
-                          
-                 ),
-                 
-                 # Correlations Tables Page
-                 tabPanel(title = "Correlations Tables",
-                          
-                 ),
-                 
-                 # Data in Context Page
-                 tabPanel(title = "Data in Context",
-                          
-                 ),
-                 
-                 # B1 Comparisons Page
-                 tabPanel(title = "B1 Comparisons",
-                          
-                 )
+ui <- fluidPage(
+  titlePanel(title = div(img(src = "https://biosphere2.org/sites/default/files/Webheader-Biosphere_0_0.png",
+                             width = 250),
+                         "Ocean Systems Water Quality", style = "color: #49595e;")
+             ),
+  navbarPage(title = NULL,
+    # About Page
+    tabPanel(title = "About",
+             
+             ),
+    
+    # Overall Trends Page
+    tabPanel("Overall Trends",
+             fluidRow(
+               # skinnier column with date range input and inputs for 4 plots
+               column(2, 
+                      wellPanel(
+                        dateRangeInput(inputId = "dateRange", 
+                                       label = "Select Date Range",
+                                       start = dfYSI$date[1],
+                                       end = tail(dfYSI$date, n=1),
+                                       min = dfYSI$date[1],
+                                       max = tail(dfYSI$date, n=1)),
+                        hr(),
+                        selectInput(inputId = "variable1", 
+                                    label = "Select Variable to Plot", 
+                                    choices = var_choices,
+                                    selected = "Temperature (ºC)"),
+                        selectInput(inputId = "median1",
+                                    label = "Select moving median period",
+                                    choices = median_period_choices,
+                                    selected = "Monthly"),
+                        checkboxInput(inputId = "loesscheck1",
+                                      label = "Add Loess Curve",
+                                      value = FALSE),
+                        hr(),
+                        selectInput(inputId = "variable2", 
+                                    label = "Select Variable to Plot", 
+                                    choices = var_choices,
+                                    selected = "Salinity (PSU)"),
+                        selectInput(inputId = "median2",
+                                    label = "Select moving median period",
+                                    choices = median_period_choices,
+                                    selected = "Monthly"),
+                        checkboxInput(inputId = "loesscheck2",
+                                      label = "Add Loess Curve",
+                                      value = FALSE),
+                        hr(),
+                        selectInput(inputId = "variable3", 
+                                    label = "Select Variable to Plot", 
+                                    choices = var_choices,
+                                    selected = "Alkalinity (mg/L CaCO3)"),
+                        selectInput(inputId = "median3",
+                                    label = "Select moving median period",
+                                    choices = median_period_choices,
+                                    selected = "Monthly"),
+                        checkboxInput(inputId = "loesscheck3",
+                                      label = "Add Loess Curve",
+                                      value = FALSE),
+                        hr(),
+                        selectInput(inputId = "variable4", 
+                                    label = "Select Variable to Plot", 
+                                    choices = var_choices,
+                                    selected = "pH"),
+                        selectInput(inputId = "median4",
+                                    label = "Select moving median period",
+                                    choices = median_period_choices,
+                                    selected = "Monthly"),
+                        checkboxInput(inputId = "loesscheck4",
+                                      label = "Add Loess Curve",
+                                      value = FALSE)
+                      )
+               ),
+               column(5,
+                      conditionalPanel("input.variable1 != None",
+                                       plotOutput("plot1", height = "600px")),
+                      conditionalPanel("input.variable2 != None",
+                                       plotOutput("plot2", height = "600px"))
+               ),
+               column(5,
+                      conditionalPanel("input.variable3 != None",
+                                       plotOutput("plot3", height = "600px")),
+                      conditionalPanel("input.variable4 != None",
+                                       plotOutput("plot4", height = "600px"))
+               )
+             )
+             
+    ),
+    
+    # Seasonal Trends Page
+    tabPanel(title = "Seasonal Trends",
+             
+             ),
+    
+    # Correlations Page
+    tabPanel(title = "Correlations",
+             
+    ),
+    
+    # Significant Correlations Page
+    tabPanel(title = "Significant Correlations",
+             
+    ),
+    
+    # Correlations Tables Page
+    tabPanel(title = "Correlations Tables",
+             
+    ),
+    
+    # Data in Context Page
+    tabPanel(title = "Data in Context",
+             
+    ),
+    
+    # B1 Comparisons Page
+    tabPanel(title = "B1 Comparisons",
+             
+    )
+  )
 )
+
+  
 
 # Server Logic -----
 server <- function(input, output) {

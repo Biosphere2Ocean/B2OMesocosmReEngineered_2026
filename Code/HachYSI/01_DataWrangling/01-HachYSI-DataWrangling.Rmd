@@ -277,7 +277,15 @@ dfYSIHach_daily <- left_join(dfYSI_daily, dfHach_daily) %>%
          `Temperature (ºC)` = temp_c,
          `Temperature (ºF)` = temp_f,
          `Total Algae (RFU)` = total_algae_rfu,
-         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL,
+         `Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia)
 
 ```
 
@@ -300,7 +308,15 @@ dfYSIHach_weekly <- left_join(dfYSI_weekly, dfHach_weekly) %>%
          `Temperature (ºC)` = temp_c,
          `Temperature (ºF)` = temp_f,
          `Total Algae (RFU)` = total_algae_rfu,
-         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL,
+         `Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia)
 
 ```
 
@@ -323,7 +339,15 @@ dfYSIHach_monthly <- left_join(dfYSI_monthly, dfHach_monthly) %>%
          `Temperature (ºC)` = temp_c,
          `Temperature (ºF)` = temp_f,
          `Total Algae (RFU)` = total_algae_rfu,
-         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL,
+         `Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia)
 
 ```
 
@@ -346,7 +370,42 @@ dfYSIHach_yearly <- left_join(dfYSI_yearly, dfHach_yearly) %>%
          `Temperature (ºC)` = temp_c,
          `Temperature (ºF)` = temp_f,
          `Total Algae (RFU)` = total_algae_rfu,
-         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL,
+         `Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia)
+
+```
+
+### All
+```{r combine all data}
+#daily
+dfYSIHach_daily_all <- dfYSIHach_daily %>%
+  mutate(`Time Interval` = "Daily") %>%
+  relocate(`Time Interval`, .before = Date)
+
+#weekly
+dfYSIHach_weekly_all <- dfYSIHach_weekly %>%
+  mutate(`Time Interval` = "Weekly") %>%
+  relocate(`Time Interval`, .before = Date)
+
+#monthly
+dfYSIHach_monthly_all <- dfYSIHach_monthly %>%
+  mutate(`Time Interval` = "Monthly") %>%
+  relocate(`Time Interval`, .before = Date)
+
+#yearly
+dfYSIHach_yearly_all <- dfYSIHach_yearly %>%
+  mutate(`Time Interval` = "Yearly") %>%
+  relocate(`Time Interval`, .before = Date)
+
+#all
+dfYSIHach_all <- rbind(dfYSIHach_daily_all, dfYSIHach_weekly_all, dfYSIHach_monthly_all, dfYSIHach_yearly_all)
 
 ```
 
@@ -371,6 +430,11 @@ write_csv(dfYSIHach_monthly,
 # create csv file of YSI and Hach yearly values
 write_csv(dfYSIHach_yearly,
           file = "Data/Clean/HachYSI/01_DataWrangling/04-HachYSI-Data-Yearly.csv",
+          col_names = TRUE)
+
+# create csv file of YSI and Hach all values
+write_csv(dfYSIHach_all,
+          file = "Data/Clean/HachYSI/01_DataWrangling/05-HachYSI-Data-All.csv",
           col_names = TRUE)
 
 ```

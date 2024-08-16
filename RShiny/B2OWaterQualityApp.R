@@ -15,10 +15,19 @@ library(tidyverse)
 library(lubridate)
 
 # Import data -----
-# all ("raw") Hach and YSI data points
-dfAll <- read_csv("SourceData/01-HachYSI-Data-Combined-All.csv")
-# Hach and YSI data 
-dfIntervals <- read_csv("SourceData/01-HachYSI-Data-Combined-TimeIntervals.csv")
+# all data are medians of each indicated interval except for the daily hach 
+#  which are "raw" data points since hach is taken once per day (Mon & Fri)
+# daily Hach and YSI data
+dfDaily <- read_csv("SourceData/01-HachYSI-Data-Daily.csv")
+# weekly Hach and YSI data 
+dfWeekly <- read_csv("SourceData/02-HachYSI-Data-Weekly.csv")
+# monthly Hach and YSI data 
+dfMonthly <- read_csv("SourceData/03-HachYSI-Data-Monthly.csv")
+# yearly Hach and YSI data 
+dfYearly <- read_csv("SourceData/04-HachYSI-Data-Yearly.csv")
+# all Hach and YSI data: combo of all above files with "Time Interval" column to 
+  # denote which interval (daily, weekly, etc) the data comes from
+dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv")
 
 # Define variables -----
 #  character vector of variable choices. modified from column names of datasets 
@@ -26,30 +35,28 @@ var_choices <- c("None",
                  "Ammonia (mg/L)",
                  "Alkalinity (mg/L CaCO3)", 
                  "Chlorophyll (RFU)",
-                 "Conductivity µS/cm",
+                 "Conductivity (µS/cm)",
+                 "Conductivity, Non-Linear Function (µS/cm)",
+                 "Conductivity, Specific (µS/cm)",
                  "Dissolved Oxygen (mg/L)",
                  "Dissolved Oxygen, Local (%)",
+                 "Dissolved Oxygen, Saturated (%)",
                  "Iron (mg/L)",
                  "Nitrate, Mid-Range (mg/L)", 
                  "Nitrate, High-Range (mg/L)",
                  "Oxygen Reduction Potential (mV)",
                  "pH",
+                 "pH (mV)",
                  "Phosphate (mg/L)",
                  "Salinity (PSU)",
                  "Silica (mg/L)",
                  "Temperature (ºC)",
                  "Temperature (ºF)",
-                 #"pH (mV)",
-                 #"NLF Conductivity (µS/cm)",
-                 #"Specific Conductivity (µS/cm)",
-                 #"Dissolved Oxygen, Saturated (%)",
-                 #"Chlorophyll (µg/L)",
                  "Total Algae (RFU)",
-                 #"Total Algae (cells/L)",
-                 #"Total Dissolved Solids (mg/L)",
+                 "Total Dissolved Solids (mg/L)",
                  "Turbidity (RFU)")
 
-median_period_choices <- c("Weekly", "Monthly", "Yearly")
+median_period_choices <- c("Daily", "Weekly", "Monthly", "Yearly")
 
 # User Interface -----
 ui <- fluidPage(

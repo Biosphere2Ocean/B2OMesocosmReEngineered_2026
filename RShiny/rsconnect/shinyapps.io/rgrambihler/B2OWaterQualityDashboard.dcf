@@ -1,0 +1,12 @@
+name: B2OWaterQualityDashboard
+title: RShiny
+username: rgrambihler
+account: rgrambihler
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9785294
+bundleId: 8974788
+url: https://rgrambihler.shinyapps.io/B2OWaterQualityDashboard/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

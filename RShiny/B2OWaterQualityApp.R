@@ -18,18 +18,30 @@ library(lubridate)
 # all data are medians of each indicated interval except for the daily hach 
 #  which are "raw" data points since hach is taken once per day (Mon & Fri)
 # daily Hach and YSI data
-dfDaily <- read_csv("SourceData/01-HachYSI-Data-Daily.csv")
+dfDaily <- read_csv("SourceData/01-HachYSI-Data-Daily.csv", col_names = TRUE)
 # weekly Hach and YSI data 
-dfWeekly <- read_csv("SourceData/02-HachYSI-Data-Weekly.csv")
+dfWeekly <- read_csv("SourceData/02-HachYSI-Data-Weekly.csv", col_names = TRUE)
 # monthly Hach and YSI data 
-dfMonthly <- read_csv("SourceData/03-HachYSI-Data-Monthly.csv")
+dfMonthly <- read_csv("SourceData/03-HachYSI-Data-Monthly.csv", col_names = TRUE)
 # yearly Hach and YSI data 
-dfYearly <- read_csv("SourceData/04-HachYSI-Data-Yearly.csv")
+dfYearly <- read_csv("SourceData/04-HachYSI-Data-Yearly.csv", col_names = TRUE)
 # all Hach and YSI data: combo of all above files with "Time Interval" column to 
-  # denote which interval (daily, weekly, etc) the data comes from
-dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv")
+# denote which interval (daily, weekly, etc) the data comes from
+#dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv", col_names = TRUE)
 
 # Define variables -----
+
+# dfAll_pivot <- dfAll %>%
+#   pivot_longer(cols = `Temperature (ºF)`:`Ammonia (mg/L)`, 
+#                names_to = "variables_col",
+#                values_to = "values_col")
+
+# character vector of all day dates in YSI data
+date_range <- dfAll %>%
+  filter(`Time Interval` == "Daily") %>%
+  select(Date) %>%
+  mutate(Date = as.Date(Date))
+
 #  character vector of variable choices. modified from column names of datasets 
 var_choices <- c("None",
                  "Ammonia (mg/L)",
@@ -56,412 +68,265 @@ var_choices <- c("None",
                  "Total Dissolved Solids (mg/L)",
                  "Turbidity (RFU)")
 
+# character vector of UI choices for `Time Interval`
 median_period_choices <- c("Daily", "Weekly", "Monthly", "Yearly")
+
+# dataframe of data to plot as basis/background of plots: these are the daily medians/observations which is the most data available
+dfBaseData <- dfAll %>%
+  filter(`Time Interval` == "Daily") %>%
+  mutate(Date = as.Date(Date))
 
 # User Interface -----
 ui <- fluidPage(
   titlePanel(title = div(img(src = "https://biosphere2.org/sites/default/files/Webheader-Biosphere_0_0.png",
                              width = 250),
                          "Ocean Systems Water Quality", style = "color: #49595e;")
-             ),
+  ),
   navbarPage(title = NULL,
-    # About Page
-    tabPanel(title = "About",
-             
+             # About Page
+             tabPanel(title = "About",
+                      # metadata: where data came from, time period, variables tracked, units, explanations of variables, 
              ),
-    
-    # Overall Trends Page
-    tabPanel("Overall Trends",
-             fluidRow(
-               # skinnier column with date range input and inputs for 4 plots
-               column(2, 
-                      wellPanel(
-                        dateRangeInput(inputId = "dateRange", 
-                                       label = "Select Date Range",
-                                       start = dfYSI$date[1],
-                                       end = tail(dfYSI$date, n=1),
-                                       min = dfYSI$date[1],
-                                       max = tail(dfYSI$date, n=1)),
-                        hr(),
-                        selectInput(inputId = "variable1", 
-                                    label = "Select Variable to Plot", 
-                                    choices = var_choices,
-                                    selected = "Temperature (ºC)"),
-                        selectInput(inputId = "median1",
-                                    label = "Select moving median period",
-                                    choices = median_period_choices,
-                                    selected = "Monthly"),
-                        checkboxInput(inputId = "loesscheck1",
-                                      label = "Add Loess Curve",
-                                      value = FALSE),
-                        hr(),
-                        selectInput(inputId = "variable2", 
-                                    label = "Select Variable to Plot", 
-                                    choices = var_choices,
-                                    selected = "Salinity (PSU)"),
-                        selectInput(inputId = "median2",
-                                    label = "Select moving median period",
-                                    choices = median_period_choices,
-                                    selected = "Monthly"),
-                        checkboxInput(inputId = "loesscheck2",
-                                      label = "Add Loess Curve",
-                                      value = FALSE),
-                        hr(),
-                        selectInput(inputId = "variable3", 
-                                    label = "Select Variable to Plot", 
-                                    choices = var_choices,
-                                    selected = "Alkalinity (mg/L CaCO3)"),
-                        selectInput(inputId = "median3",
-                                    label = "Select moving median period",
-                                    choices = median_period_choices,
-                                    selected = "Monthly"),
-                        checkboxInput(inputId = "loesscheck3",
-                                      label = "Add Loess Curve",
-                                      value = FALSE),
-                        hr(),
-                        selectInput(inputId = "variable4", 
-                                    label = "Select Variable to Plot", 
-                                    choices = var_choices,
-                                    selected = "pH"),
-                        selectInput(inputId = "median4",
-                                    label = "Select moving median period",
-                                    choices = median_period_choices,
-                                    selected = "Monthly"),
-                        checkboxInput(inputId = "loesscheck4",
-                                      label = "Add Loess Curve",
-                                      value = FALSE)
+             
+             # Overall Trends Page
+             tabPanel("Overall Trends",
+                      sidebarLayout(
+                        # column: fixed width, date range input and inputs for 4 plots
+                        sidebarPanel(
+                          # input date range
+                          dateRangeInput(inputId = "OverallDateRange", 
+                                         label = "Select Date Range",
+                                         start = date_range$Date[1],
+                                         end = tail(date_range$Date, n=1),
+                                         min = date_range$Date[1],
+                                         max = tail(date_range$Date, n=1)),
+                          hr(),
+                          # plot 1 input
+                          selectInput(inputId = "OverallVariable1", 
+                                      label = "Select Variable to Plot", 
+                                      choices = var_choices,
+                                      selected = "Temperature (ºC)"),
+                          selectInput(inputId = "OverallMedian1",
+                                      label = "Select moving median period",
+                                      choices = median_period_choices,
+                                      selected = "Daily"),
+                          checkboxInput(inputId = "OverallLoessCheck1",
+                                        label = "Add Loess Curve",
+                                        value = FALSE),
+                          hr(),
+                          # plot 2 input
+                          selectInput(inputId = "OverallVariable2", 
+                                      label = "Select Variable to Plot", 
+                                      choices = var_choices,
+                                      selected = "None"),
+                          selectInput(inputId = "OverallMedian2",
+                                      label = "Select moving median period",
+                                      choices = median_period_choices,
+                                      selected = "Daily"),
+                          checkboxInput(inputId = "OverallLoessCheck2",
+                                        label = "Add Loess Curve",
+                                        value = FALSE),
+                          hr(),
+                          # plot 3 input
+                          selectInput(inputId = "OverallVariable3", 
+                                      label = "Select Variable to Plot", 
+                                      choices = var_choices,
+                                      selected = "None"),
+                          selectInput(inputId = "OverallMedian3",
+                                      label = "Select moving median period",
+                                      choices = median_period_choices,
+                                      selected = "Daily"),
+                          checkboxInput(inputId = "OverallLoessCheck3",
+                                        label = "Add Loess Curve",
+                                        value = FALSE),
+                          hr(),
+                          # plot 4 input
+                          selectInput(inputId = "OverallVariable4", 
+                                      label = "Select Variable to Plot", 
+                                      choices = var_choices,
+                                      selected = "None"),
+                          selectInput(inputId = "OverallMedian4",
+                                      label = "Select moving median period",
+                                      choices = median_period_choices,
+                                      selected = "Daily"),
+                          checkboxInput(inputId = "OverallLoessCheck4",
+                                        label = "Add Loess Curve",
+                                        value = FALSE)
+                        ),
+                        mainPanel(
+                          # column that will fill remainder of page
+                          fillCol(
+                            fillRow(conditionalPanel("input.OverallVariable1 != None",
+                                                     plotOutput("OverallTrendsPlot1"),
+                                                     textOutput("testText"))),
+                            fillRow(conditionalPanel("input.OverallVariable2 != None",
+                                                     plotOutput("OverallTrendsPlot2")))
+                          ),
+                          # column that will pop up on end of previous column 
+                          fillCol(
+                            fillRow(conditionalPanel("input.OverallVariable3 != None",
+                                                     plotOutput("OverallTrendsPlot3"))),
+                            fillRow(conditionalPanel("input.OverallVariable4 != None",
+                                                     plotOutput("OverallTrendsPlot4")))
+                          )
+                        )
                       )
-               ),
-               column(5,
-                      conditionalPanel("input.variable1 != None",
-                                       plotOutput("plot1", height = "600px")),
-                      conditionalPanel("input.variable2 != None",
-                                       plotOutput("plot2", height = "600px"))
-               ),
-               column(5,
-                      conditionalPanel("input.variable3 != None",
-                                       plotOutput("plot3", height = "600px")),
-                      conditionalPanel("input.variable4 != None",
-                                       plotOutput("plot4", height = "600px"))
-               )
-             )
-             
-    ),
-    
-    # Seasonal Trends Page
-    tabPanel(title = "Seasonal Trends",
-             
              ),
-    
-    # Correlations Page
-    tabPanel(title = "Correlations",
              
-    ),
-    
-    # Significant Correlations Page
-    tabPanel(title = "Significant Correlations",
+             # Seasonal Trends Page
+             tabPanel(title = "Seasonal Trends",
+                      
+             ),
              
-    ),
-    
-    # Correlations Tables Page
-    tabPanel(title = "Correlations Tables",
+             # Correlations Page
+             tabPanel(title = "Correlations",
+                      
+             ),
              
-    ),
-    
-    # Data in Context Page
-    tabPanel(title = "Data in Context",
+             # Significant Correlations Page
+             tabPanel(title = "Significant Correlations",
+                      
+             ),
              
-    ),
-    
-    # B1 Comparisons Page
-    tabPanel(title = "B1 Comparisons",
+             # Correlations Tables Page
+             tabPanel(title = "Correlations Tables",
+                      
+             ),
              
-    )
+             # Data in Context Page
+             tabPanel(title = "Data in Context",
+                      
+             ),
+             
+             # B1 Comparisons Page
+             tabPanel(title = "B1 Comparisons",
+                      
+             )
   )
 )
 
-  
+
+
 
 # Server Logic -----
 server <- function(input, output) {
-  # tab 1
-  ## raw data all variable plot
-  # output$rawallvariablePlot <- renderPlot({
-  #   
-  #   data <- dfYSI
-  #   # change column names of data to input variable options (ie: temp_f becomes Temperature (ºF))
-  #   colnames(data)[3:19] <- var_choices[2:18]
-  #   
-  #   # make data long format
-  #   dataPivot <- data %>%
-  #     pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
-  #                  names_to = "variable",
-  #                  values_to = "variable_value") %>%
-  #     mutate(date = as.Date(date, format = "%Y/%m/%d"))
-  #   
-  #   # line graph of every variable - facet wrapped 
-  #   dataPivot %>%
-  #     ggplot(aes(x = date, 
-  #                y = variable_value)) +
-  #     geom_line() +
-  #     facet_wrap(~variable, ncol = 3, scales = "free")+
-  #     scale_x_date(breaks = waiver(), date_breaks = "1 year", date_labels = "%b %Y") +
-  #     theme_bw() + 
-  #     theme(panel.grid.major = element_blank(), 
-  #           panel.grid.minor = element_blank(), 
-  #           panel.background = element_blank(), 
-  #           axis.line = element_line(colour = "black"))+
-  #     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  #     theme(strip.background = element_rect(fill = "white"))+
-  #     theme(axis.text = element_text(size = 18),
-  #           axis.title = element_text(size = 25), 
-  #           plot.title = element_text(size = 35),
-  #           strip.text.x = element_text(size = 20))+
-  #     labs(title = "Pre-QC: All Outliers Still Present")+
-  #     xlab("Date")+
-  #     ylab("Variable Value")
-  # })
-  # 
-  # ## clean data all variable plot
-  # output$cleanallvariablePlot <- renderPlot({
-  #   data <- dfYSI
-  #   # change column names of data to input variable options (ie: temp_f becomes Temperature (ºF))
-  #   colnames(data)[3:19] <- var_choices[2:18]
-  #   
-  #   # make data long format
-  #   dataPivot <- data %>%
-  #     pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
-  #                  names_to = "variable",
-  #                  values_to = "variable_value") %>%
-  #     mutate(date = as.Date(date, format = "%Y/%m/%d"))
-  #   
-  #   # line graph of every variable - facet wrapped 
-  #   dataPivot %>%
-  #     ggplot(aes(x = date, 
-  #                y = variable_value)) +
-  #     geom_line() +
-  #     facet_wrap(~variable, ncol = 3, scales = "free")+
-  #     scale_x_date(breaks = waiver(), date_breaks = "1 year", date_labels = "%b %Y") +
-  #     theme_bw() + 
-  #     theme(panel.grid.major = element_blank(), 
-  #           panel.grid.minor = element_blank(), 
-  #           panel.background = element_blank(), 
-  #           axis.line = element_line(colour = "black"))+
-  #     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  #     theme(strip.background = element_rect(fill = "white"))+
-  #     theme(axis.text = element_text(size = 18),
-  #           axis.title = element_text(size = 25), 
-  #           plot.title = element_text(size = 35),
-  #           strip.text.x = element_text(size = 20))+
-  #     labs(title = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")+
-  #     xlab("Date")+
-  #     ylab("Variable Value")
-  # })
-
+  # About
   
-  
-  # tab 2
-  # create reactive variable to hold dataset choice
-  # df_choice <- reactive({
-  #   req(input$dataset1)
-  #   if (input$dataset1 == "Raw Data") {
-  #     #use raw data csv
-  #     data <- dfYSI
-  #     subt <- "Pre-QC: All Outliers Still Present"
-  #   } else if (input$dataset1 == "Clean Data") {
-  #     # use qc'd data csv
-  #     data <- dfYSI
-  #     subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
-  #   }
-  # })
-  
-  ## plot 1
-  output$plot1 <- renderPlot({
-    # check which dataset is being viewed
-    if (input$dataset1 == "Raw Data") {
-      # use raw data csv
-      data <- dfYSI
-      subt <- "Pre-QC: All Outliers Still Present"
-    } else if (input$dataset1 == "Clean Data") {
-      # use qc'd data csv
-      data <- dfYSI
-      subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
-    }
+  # Overall Trends
+  ## Plot 1
+  output$OverallTrendsPlot1 <- renderPlot({
     
-    if (input$variable1 == "None") {
-      x <- 1
-    } else {
-      colnames(data)[3:19] <- var_choices[2:18]
-      data <- data[, c("date", input$variable1)]
-      colnames(data) <- c("date", "input_var")
+    # # check which dataset is being viewed
+    # if (input$dataset3 == "Raw Data") {
+    #   # use raw data csv
+    #   data <- dfYSI
+    #   subt <- "Pre-QC: All Outliers Still Present"
+    # } else if (input$dataset3 == "Clean Data") {
+    #   # use qc'd data csv
+    #   data <- dfYSI
+    #   subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
+    # }
+    # 
+    # if (input$variable3 == "None") {
+    #   x <- 1
+    # } else {
+    #   colnames(data)[3:19] <- var_choices[2:18]
+    #   data <- data[, c("date", input$variable3)]
+    #   colnames(data) <- c("date", "input_var")
       
       # line graph of input variable
-      data %>%
-        filter(date >= input$dateRange[1] & date <= input$dateRange[2]) %>%
-        ggplot(aes(x = date,
-                   y = input_var)) +
+    
+      # dfAll_otp1 <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
+      # colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
+      
+      dfAll %>%
+        filter(Date >= input$OveralldateRange[1] & Date <= input$OveralldateRange[2]) %>%
+        filter(`Time Interval` == input$OverallMedian1) %>%
+        mutate(Date = as.Date(Date)) %>%
+        ggplot(aes(x = Date, 
+                   y = input$OverallVariable1))+
         geom_line()+
-        scale_x_date(breaks = waiver(), date_breaks = "6 months", date_labels = "%b %Y") +
-        theme_bw() +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
+        # geom_smooth() +
+        # scale_x_date(date_breaks = "1 year",
+        #              date_labels = "%b %Y") +
+        #scale_x_continuous(breaks = NULL)+
+        theme_bw() + 
+        theme(panel.grid.major = element_blank(), 
+              panel.grid.minor = element_blank(), 
+              panel.background = element_blank(), 
               axis.line = element_line(colour = "black"))+
         theme(axis.text.x = element_text(angle = 45, hjust = 1),
               plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-        theme(strip.background = element_rect(fill = "white"))+
-        theme(axis.text = element_text(size = 20),
-              axis.title = element_text(size = 25),
-              plot.title = element_text(size = 35),
-              plot.subtitle = element_text(size = 30),
-              strip.text.x = element_text(size = 25))+
-        labs(title = paste("Biosphere 2 Ocean", input$variable1),
-             subtitle = subt)+
-        xlab("Date")+
-        ylab(input$variable1)
-    }
+        theme(strip.background = element_rect(fill = "white"))
   })
   
-  ## plot 2
-  output$plot2 <- renderPlot({
-    # check which dataset is being viewed
-    if (input$dataset2 == "Raw Data") {
-      # use raw data csv
-      data <- dfYSI
-      subt <- "Pre-QC: All Outliers Still Present"
-    } else if (input$dataset2 == "Clean Data") {
-      # use qc'd data csv
-      data <- dfYSI
-      subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
-    }
-    
-    if (input$variable2 == "None") {
-      x <- 1
-    } else {
-      colnames(data)[3:19] <- var_choices[2:18]
-      data <- data[, c("date", input$variable2)]
-      colnames(data) <- c("date", "input_var")
-      
-      # line graph of input variable
-      data %>%
-        filter(date >= input$dateRange[1] & date <= input$dateRange[2]) %>%
-        ggplot(aes(x = date,
-                   y = input_var)) +
-        geom_line()+
-        scale_x_date(breaks = waiver(), date_breaks = "6 months", date_labels = "%b %Y") +
-        theme_bw() +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              axis.line = element_line(colour = "black"))+
-        theme(axis.text.x = element_text(angle = 45, hjust = 1),
-              plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-        theme(strip.background = element_rect(fill = "white"))+
-        theme(axis.text = element_text(size = 20),
-              axis.title = element_text(size = 25),
-              plot.title = element_text(size = 35),
-              plot.subtitle = element_text(size = 30),
-              strip.text.x = element_text(size = 25))+
-        labs(title = paste("Biosphere 2 Ocean", input$variable2),
-             subtitle = subt)+
-        xlab("Date")+
-        ylab(input$variable2)
-    }
+  ## Plot 2
+  output$OverallTrendsPlot2 <- renderPlot({
+    dfAll %>%
+      filter(Date >= input$OveralldateRange[1] & Date <= input$OveralldateRange[2]) %>%
+      filter(`Time Interval` == input$OverallMedian2) %>%
+      mutate(Date = as.Date(Date)) %>%
+      ggplot(aes_string(x = "Date", 
+                        y = input$OverallVariable2)) +
+      geom_line()+
+      # geom_smooth() +
+      # scale_x_date(date_breaks = "1 year",
+      #              date_labels = "%b %Y") +
+      theme_bw() + 
+      theme(panel.grid.major = element_blank(), 
+            panel.grid.minor = element_blank(), 
+            panel.background = element_blank(), 
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))
   })
   
-  # plot 3
-  output$plot3 <- renderPlot({
-    # check which dataset is being viewed
-    if (input$dataset3 == "Raw Data") {
-      # use raw data csv
-      data <- dfYSI
-      subt <- "Pre-QC: All Outliers Still Present"
-    } else if (input$dataset3 == "Clean Data") {
-      # use qc'd data csv
-      data <- dfYSI
-      subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
-    }
-    
-    if (input$variable3 == "None") {
-      x <- 1
-    } else {
-      colnames(data)[3:19] <- var_choices[2:18]
-      data <- data[, c("date", input$variable3)]
-      colnames(data) <- c("date", "input_var")
-      
-      # line graph of input variable
-      data %>%
-        filter(date >= input$dateRange[1] & date <= input$dateRange[2]) %>%
-        ggplot(aes(x = date,
-                   y = input_var)) +
-        geom_line()+
-        scale_x_date(breaks = waiver(), date_breaks = "6 months", date_labels = "%b %Y") +
-        theme_bw() +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              axis.line = element_line(colour = "black"))+
-        theme(axis.text.x = element_text(angle = 45, hjust = 1),
-              plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-        theme(strip.background = element_rect(fill = "white"))+
-        theme(axis.text = element_text(size = 20),
-              axis.title = element_text(size = 25),
-              plot.title = element_text(size = 35),
-              plot.subtitle = element_text(size = 30),
-              strip.text.x = element_text(size = 25))+
-        labs(title = paste("Biosphere 2 Ocean", input$variable3),
-             subtitle = subt)+
-        xlab("Date")+
-        ylab(input$variable3)
-    }
+  ## Plot 3
+  output$OverallTrendsPlot3 <- renderPlot({
+    dfAll %>%
+      filter(Date >= input$OveralldateRange[1] & Date <= input$OveralldateRange[2]) %>%
+      filter(`Time Interval` == input$OverallMedian3) %>%
+      select(Date, input$OverallVariable3) %>%
+      ggplot(aes_string(x = "Date", 
+                        y = input$OverallVariable3)) +
+      geom_line()+
+      # geom_smooth() +
+      # scale_x_date(date_breaks = "1 year",
+      #              date_labels = "%b %Y") +
+      theme_bw() + 
+      theme(panel.grid.major = element_blank(), 
+            panel.grid.minor = element_blank(), 
+            panel.background = element_blank(), 
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))
   })
   
-  # plot 4
-  output$plot4 <- renderPlot({
-    # check which dataset is being viewed
-    if (input$dataset4 == "Raw Data") {
-      # use raw data csv
-      data <- dfYSI
-      subt <- "Pre-QC: All Outliers Still Present"
-    } else if (input$dataset4 == "Clean Data") {
-      # use qc'd data csv
-      data <- dfYSI
-      subt <- "Post-QC: Data Outside 2-Sigma from Mean has been Removed"
-    }
-    
-    if (input$variable4 == "None") {
-      x <- 1
-    } else {
-      colnames(data)[3:19] <- var_choices[2:18]
-      data <- data[, c("date", input$variable4)]
-      colnames(data) <- c("date", "input_var")
-      
-      # line graph of input variable
-      data %>%
-        filter(date >= input$dateRange[1] & date <= input$dateRange[2]) %>%
-        ggplot(aes(x = date,
-                   y = input_var)) +
-        geom_line()+
-        scale_x_date(breaks = waiver(), date_breaks = "6 months", date_labels = "%b %Y") +
-        theme_bw() +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              panel.background = element_blank(),
-              axis.line = element_line(colour = "black"))+
-        theme(axis.text.x = element_text(angle = 45, hjust = 1),
-              plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-        theme(strip.background = element_rect(fill = "white"))+
-        theme(axis.text = element_text(size = 20),
-              axis.title = element_text(size = 25),
-              plot.title = element_text(size = 35),
-              plot.subtitle = element_text(size = 30),
-              strip.text.x = element_text(size = 25))+
-        labs(title = paste("Biosphere 2 Ocean", input$variable4),
-             subtitle = subt)+
-        xlab("Date")+
-        ylab(input$variable4)
-    }
+  ## Plot 4
+  output$OverallTrendsPlot4 <- renderPlot({
+    dfAll %>%
+      filter(Date >= input$OveralldateRange[1] & Date <= input$OveralldateRange[2]) %>%
+      filter(`Time Interval` == input$OverallMedian4) %>%
+      mutate(Date = as.Date(Date)) %>%
+      ggplot(aes_string(x = "Date", 
+                        y = input$OverallVariable4)) +
+      geom_line()+
+      # geom_smooth() +
+      # scale_x_date(date_breaks = "1 year",
+      #              date_labels = "%b %Y") +
+      theme_bw() + 
+      theme(panel.grid.major = element_blank(), 
+            panel.grid.minor = element_blank(), 
+            panel.background = element_blank(), 
+            axis.line = element_line(colour = "black"))+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+      theme(strip.background = element_rect(fill = "white"))
   })
+  
+  
 }
 
 

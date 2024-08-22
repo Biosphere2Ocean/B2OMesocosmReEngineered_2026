@@ -54,10 +54,11 @@ dfYSI_daily <- dfYSI %>%
   # take out columns we won't be using (pH has been renamed pH_YSI)
   select(-time, -date, -chlorophyll_ugL, -total_algae_cellsL, -pH) %>%
   distinct() %>%
-  mutate(Date = paste(year, month, day, sep = "-")) %>%
+  mutate(Date = paste(year, month, day, sep = "-"),
+         Date = as.Date(Date)) %>%
   ungroup() %>%
   select(-year, -month, -day) %>%
-  relocate(Date, .before = temp_f)
+  relocate(Date, .before = temp_f) 
 
 ```
 
@@ -65,11 +66,9 @@ dfYSI_daily <- dfYSI %>%
 ```{r data format: ysi weekly medians}
 dfYSI_weekly <- dfYSI %>%
   # create year, month, week columns
-  mutate(year = year(date)) %>%
-  mutate(month = month(date)) %>%
-  mutate(week = week(date)) %>%
+  mutate(date_week = ceiling_date(as.Date(date), "week")-1) %>%
   # group by year, month, week
-  group_by(year, month, week) %>%
+  group_by(date_week) %>%
   # take weekly medians 
   mutate(temp_f = median(temp_f, na.rm = TRUE)) %>%
   mutate(temp_c = median(temp_c, na.rm = TRUE)) %>%
@@ -89,21 +88,19 @@ dfYSI_weekly <- dfYSI %>%
   # take out columns we won't be using (pH has been renamed pH_YSI)
   select(-time, -date, -chlorophyll_ugL, -total_algae_cellsL, -pH) %>%
   distinct() %>%
-  mutate(Date = paste(year, month, week, sep = "-")) %>%
   ungroup() %>%
-  select(-year, -month, -week) %>%
-  relocate(Date, .before = temp_f)
+  rename(Date = date_week) %>%
+  relocate(Date, .before = temp_f) 
 
 ```
 
 ### Monthly Medians
 ```{r data format: ysi monthly medians}
 dfYSI_monthly <- dfYSI %>%
-  # create year, month columns
-  mutate(year = year(date)) %>%
-  mutate(month = month(date)) %>%
-  # group by year, month
-  group_by(year, month) %>%
+  # create date_month column with date of last day of each month of each year
+  mutate(date_month = ceiling_date(as.Date(date), "month")-1) %>%
+  # group by date_month
+  group_by(date_month) %>%
   # take monthly medians 
   mutate(temp_f = median(temp_f, na.rm = TRUE)) %>%
   mutate(temp_c = median(temp_c, na.rm = TRUE)) %>%
@@ -123,20 +120,19 @@ dfYSI_monthly <- dfYSI %>%
   # take out columns we won't be using (pH has been renamed pH_YSI)
   select(-time, -date, -chlorophyll_ugL, -total_algae_cellsL, -pH) %>%
   distinct() %>%
-  mutate(Date = paste(year, month, sep = "-")) %>%
   ungroup() %>%
-  select(-year, -month) %>%
-  relocate(Date, .before = temp_f)
+  rename(Date = date_month) %>%
+  relocate(Date, .before = temp_f) 
 
 ```
 
 ### Yearly Medians
 ```{r data format: ysi yearly medians}
 dfYSI_yearly <- dfYSI %>%
-  # create year, month columns
-  mutate(year = year(date)) %>%
+  # create date_year column with date of last day of each year
+  mutate(date_year = ceiling_date(as.Date(date), "year")-1) %>%
   # group by year
-  group_by(year) %>%
+  group_by(date_year) %>%
   # take yearly medians 
   mutate(temp_f = median(temp_f, na.rm = TRUE)) %>%
   mutate(temp_c = median(temp_c, na.rm = TRUE)) %>%
@@ -156,129 +152,21 @@ dfYSI_yearly <- dfYSI %>%
   # take out columns we won't be using (pH has been renamed pH_YSI)
   select(-time, -date, -chlorophyll_ugL, -total_algae_cellsL, -pH) %>%
   distinct() %>%
-  mutate(Date = paste(year, sep = "-")) %>%
   ungroup() %>%
-  select(-year) %>%
-  relocate(Date, .before = temp_f)
-
-```
-
-### YSI Dataframes Formatting
-```{r dfysi formatting}
-dfYSI_daily <- dfYSI_daily %>%
-  mutate(`Turbidity (RFU)` = NA,
-         `Phosphate (mg/L)` = NA,
-         `Nitrate, Mid-Range (mg/L)` = NA,
-         `Nitrate, High-Range (mg/L)` = NA,
-         `pH (Hach)` = NA,
-         `Alkalinity (mg/L CaCO3)` = NA,
-         `Silica (mg/L)` = NA,
-         `Iron (mg/L)` = NA,
-         `Ammonia (mg/L)` = NA) %>%
-  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
-         `Conductivity (µS/cm)` = conductivity_uScm,
-         `Dissolved Oxygen, Local (%)` = do_local_percent,
-         `Dissolved Oxygen (mg/L)` = do_mgL,
-         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
-         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
-         `Oxygen Reduction Potential (mV)` = orp_mV,
-         `pH (mV)` = pH_mV,
-         `pH (YSI)` = pH_ysi,
-         `Salinity (PSU)` = salinity_psu,
-         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
-         `Temperature (ºC)` = temp_c,
-         `Temperature (ºF)` = temp_f,
-         `Total Algae (RFU)` = total_algae_rfu,
-         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
-
-dfYSI_weekly <- dfYSI_weekly %>%
-  mutate(`Turbidity (RFU)` = NA,
-         `Phosphate (mg/L)` = NA,
-         `Nitrate, Mid-Range (mg/L)` = NA,
-         `Nitrate, High-Range (mg/L)` = NA,
-         `pH (Hach)` = NA,
-         `Alkalinity (mg/L CaCO3)` = NA,
-         `Silica (mg/L)` = NA,
-         `Iron (mg/L)` = NA,
-         `Ammonia (mg/L)` = NA) %>%
-  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
-         `Conductivity (µS/cm)` = conductivity_uScm,
-         `Dissolved Oxygen, Local (%)` = do_local_percent,
-         `Dissolved Oxygen (mg/L)` = do_mgL,
-         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
-         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
-         `Oxygen Reduction Potential (mV)` = orp_mV,
-         `pH (mV)` = pH_mV,
-         `pH (YSI)` = pH_ysi,
-         `Salinity (PSU)` = salinity_psu,
-         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
-         `Temperature (ºC)` = temp_c,
-         `Temperature (ºF)` = temp_f,
-         `Total Algae (RFU)` = total_algae_rfu,
-         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
-
-dfYSI_monthly <- dfYSI_monthly %>%
-  mutate(`Turbidity (RFU)` = NA,
-         `Phosphate (mg/L)` = NA,
-         `Nitrate, Mid-Range (mg/L)` = NA,
-         `Nitrate, High-Range (mg/L)` = NA,
-         `pH (Hach)` = NA,
-         `Alkalinity (mg/L CaCO3)` = NA,
-         `Silica (mg/L)` = NA,
-         `Iron (mg/L)` = NA,
-         `Ammonia (mg/L)` = NA) %>%
-  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
-         `Conductivity (µS/cm)` = conductivity_uScm,
-         `Dissolved Oxygen, Local (%)` = do_local_percent,
-         `Dissolved Oxygen (mg/L)` = do_mgL,
-         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
-         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
-         `Oxygen Reduction Potential (mV)` = orp_mV,
-         `pH (mV)` = pH_mV,
-         `pH (YSI)` = pH_ysi,
-         `Salinity (PSU)` = salinity_psu,
-         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
-         `Temperature (ºC)` = temp_c,
-         `Temperature (ºF)` = temp_f,
-         `Total Algae (RFU)` = total_algae_rfu,
-         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
-
-dfYSI_yearly <- dfYSI_yearly %>%
-  mutate(`Turbidity (RFU)` = NA,
-         `Phosphate (mg/L)` = NA,
-         `Nitrate, Mid-Range (mg/L)` = NA,
-         `Nitrate, High-Range (mg/L)` = NA,
-         `pH (Hach)` = NA,
-         `Alkalinity (mg/L CaCO3)` = NA,
-         `Silica (mg/L)` = NA,
-         `Iron (mg/L)` = NA,
-         `Ammonia (mg/L)` = NA) %>%
-  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
-         `Conductivity (µS/cm)` = conductivity_uScm,
-         `Dissolved Oxygen, Local (%)` = do_local_percent,
-         `Dissolved Oxygen (mg/L)` = do_mgL,
-         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
-         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
-         `Oxygen Reduction Potential (mV)` = orp_mV,
-         `pH (mV)` = pH_mV,
-         `pH (YSI)` = pH_ysi,
-         `Salinity (PSU)` = salinity_psu,
-         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
-         `Temperature (ºC)` = temp_c,
-         `Temperature (ºF)` = temp_f,
-         `Total Algae (RFU)` = total_algae_rfu,
-         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)
+  rename(Date = date_year) %>%
+  relocate(Date, .before = temp_f) 
 
 ```
 
 
 ## Hach
+### Daily
 ```{r data format: Hach daily values}
 dfHach_daily <- dfHach %>%
   filter(Location == "Ocean") %>%
   select(-Location) %>%
   rename(pH_Hach = pH) %>%
-  mutate(Date = as.character(Date))
+  mutate(Date = as.Date(Date))
 
 ```
 
@@ -287,11 +175,9 @@ dfHach_daily <- dfHach %>%
 ```{r data format: Hach weekly medians}
 dfHach_weekly <- dfHach_daily %>%
   # create year, month, week columns
-  mutate(year = year(Date)) %>%
-  mutate(month = month(Date)) %>%
-  mutate(week = week(Date)) %>%
+  mutate(date_week = ceiling_date(as.Date(Date), "week")-1) %>%
   # group by year, month, week to take comparisons of each week within the time series
-  group_by(year, month, week) %>%
+  group_by(date_week) %>%
   # take weekly medians since some data is taking 2x per week
   mutate(Turbidity = median(Turbidity, na.rm = TRUE)) %>%
   mutate(Phosphate = median(Phosphate, na.rm = TRUE)) %>%
@@ -304,22 +190,19 @@ dfHach_weekly <- dfHach_daily %>%
   mutate(Ammonia = median(Ammonia, na.rm = TRUE)) %>%
   select(-Date) %>%
   distinct() %>%
-  mutate(Date = paste(year, month, week, sep = "-")) %>%
   ungroup() %>%
-  select(-year, -month, -week) %>%
-  relocate(Date, .before = Turbidity)
-
+  rename(Date = date_week) %>%
+  relocate(Date, .before = Turbidity) 
 
 ```
 
 ### Monthly Medians
 ```{r data format: Hach monthly medians}
 dfHach_monthly <- dfHach_daily %>%
-  # create year, month columns
-  mutate(year = year(Date)) %>%
-  mutate(month = month(Date)) %>%
+  # create column with date of last day of each month of each year
+  mutate(date_month = ceiling_date(as.Date(Date), "month")-1) %>%
   # group by year, month to take comparisons of each month within the time series
-  group_by(year, month) %>%
+  group_by(date_month) %>%
   # take monthly medians
   mutate(Turbidity = median(Turbidity, na.rm = TRUE)) %>%
   mutate(Phosphate = median(Phosphate, na.rm = TRUE)) %>%
@@ -332,11 +215,9 @@ dfHach_monthly <- dfHach_daily %>%
   mutate(Ammonia = median(Ammonia, na.rm = TRUE)) %>%
   select(-Date) %>%
   distinct() %>%
-  mutate(Date = paste(year, month, sep = "-")) %>%
   ungroup() %>%
-  select(-year, -month) %>%
-  relocate(Date, .before = Turbidity)
-
+  rename(Date = date_month) %>%
+  relocate(Date, .before = Turbidity) 
 
 ```
 
@@ -344,9 +225,9 @@ dfHach_monthly <- dfHach_daily %>%
 ```{r data format: Hach yearly medians}
 dfHach_yearly <- dfHach_daily %>%
   # create year column
-  mutate(year = year(Date)) %>%
+  mutate(date_year = ceiling_date(as.Date(Date), "year")-1) %>%
   # group by year to take comparisons of each year within the time series
-  group_by(year) %>%
+  group_by(date_year) %>%
   # take yearly medians
   mutate(Turbidity = median(Turbidity, na.rm = TRUE)) %>%
   mutate(Phosphate = median(Phosphate, na.rm = TRUE)) %>%
@@ -359,165 +240,146 @@ dfHach_yearly <- dfHach_daily %>%
   mutate(Ammonia = median(Ammonia, na.rm = TRUE)) %>%
   select(-Date) %>%
   distinct() %>%
-  mutate(Date = paste(year, sep = "-")) %>%
   ungroup() %>%
-  select(-year) %>%
-  relocate(Date, .before = Turbidity)
+  rename(Date = date_year) %>%
+  relocate(Date, .before = Turbidity) 
 
 
 ```
 
-### Hach Dataframes Formatting
-```{r hach format dataframes}
-dfHach_daily <- dfHach_daily %>%
-   rename(`Turbidity (RFU)` = Turbidity,
-         `Phosphate (mg/L)` = Phosphate,
-         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
-         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
-         `pH (Hach)` = pH_Hach,
-         `Alkalinity (mg/L CaCO3)` = Alkalinity,
-         `Silica (mg/L)` = Silica,
-         `Iron (mg/L)` = Iron,
-         `Ammonia (mg/L)` = Ammonia) %>%
-  mutate(`Chlorophyll (RFU)` = NA,
-         `Conductivity (µS/cm)` = NA,
-         `Dissolved Oxygen, Local (%)` = NA,
-         `Dissolved Oxygen (mg/L)` = NA,
-         `Dissolved Oxygen, Saturated (%)` = NA,
-         `Conductivity, Non-Linear Function (µS/cm)` = NA,
-         `Oxygen Reduction Potential (mV)` = NA,
-         `pH (mV)` = NA,
-         `pH (YSI)` = NA,
-         `Salinity (PSU)` = NA,
-         `Conductivity, Specific (µS/cm)` = NA,
-         `Temperature (ºC)` = NA,
-         `Temperature (ºF)` = NA,
-         `Total Algae (RFU)` = NA,
-         `Total Dissolved Solids (mg/L)` = NA)
 
-dfHach_weekly <- dfHach_weekly %>%
-   rename(`Turbidity (RFU)` = Turbidity,
-         `Phosphate (mg/L)` = Phosphate,
-         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
-         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
-         `pH (Hach)` = pH_Hach,
-         `Alkalinity (mg/L CaCO3)` = Alkalinity,
-         `Silica (mg/L)` = Silica,
-         `Iron (mg/L)` = Iron,
-         `Ammonia (mg/L)` = Ammonia) %>%
-  mutate(`Chlorophyll (RFU)` = NA,
-         `Conductivity (µS/cm)` = NA,
-         `Dissolved Oxygen, Local (%)` = NA,
-         `Dissolved Oxygen (mg/L)` = NA,
-         `Dissolved Oxygen, Saturated (%)` = NA,
-         `Conductivity, Non-Linear Function (µS/cm)` = NA,
-         `Oxygen Reduction Potential (mV)` = NA,
-         `pH (mV)` = NA,
-         `pH (YSI)` = NA,
-         `Salinity (PSU)` = NA,
-         `Conductivity, Specific (µS/cm)` = NA,
-         `Temperature (ºC)` = NA,
-         `Temperature (ºF)` = NA,
-         `Total Algae (RFU)` = NA,
-         `Total Dissolved Solids (mg/L)` = NA)
-
-dfHach_monthly <- dfHach_monthly %>%
-   rename(`Turbidity (RFU)` = Turbidity,
-         `Phosphate (mg/L)` = Phosphate,
-         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
-         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
-         `pH (Hach)` = pH_Hach,
-         `Alkalinity (mg/L CaCO3)` = Alkalinity,
-         `Silica (mg/L)` = Silica,
-         `Iron (mg/L)` = Iron,
-         `Ammonia (mg/L)` = Ammonia) %>%
-  mutate(`Chlorophyll (RFU)` = NA,
-         `Conductivity (µS/cm)` = NA,
-         `Dissolved Oxygen, Local (%)` = NA,
-         `Dissolved Oxygen (mg/L)` = NA,
-         `Dissolved Oxygen, Saturated (%)` = NA,
-         `Conductivity, Non-Linear Function (µS/cm)` = NA,
-         `Oxygen Reduction Potential (mV)` = NA,
-         `pH (mV)` = NA,
-         `pH (YSI)` = NA,
-         `Salinity (PSU)` = NA,
-         `Conductivity, Specific (µS/cm)` = NA,
-         `Temperature (ºC)` = NA,
-         `Temperature (ºF)` = NA,
-         `Total Algae (RFU)` = NA,
-         `Total Dissolved Solids (mg/L)` = NA)
-
-
-dfHach_yearly <- dfHach_yearly %>%
-   rename(`Turbidity (RFU)` = Turbidity,
-         `Phosphate (mg/L)` = Phosphate,
-         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
-         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
-         `pH (Hach)` = pH_Hach,
-         `Alkalinity (mg/L CaCO3)` = Alkalinity,
-         `Silica (mg/L)` = Silica,
-         `Iron (mg/L)` = Iron,
-         `Ammonia (mg/L)` = Ammonia) %>%
-  mutate(`Chlorophyll (RFU)` = NA,
-         `Conductivity (µS/cm)` = NA,
-         `Dissolved Oxygen, Local (%)` = NA,
-         `Dissolved Oxygen (mg/L)` = NA,
-         `Dissolved Oxygen, Saturated (%)` = NA,
-         `Conductivity, Non-Linear Function (µS/cm)` = NA,
-         `Oxygen Reduction Potential (mV)` = NA,
-         `pH (mV)` = NA,
-         `pH (YSI)` = NA,
-         `Salinity (PSU)` = NA,
-         `Conductivity, Specific (µS/cm)` = NA,
-         `Temperature (ºC)` = NA,
-         `Temperature (ºF)` = NA,
-         `Total Algae (RFU)` = NA,
-         `Total Dissolved Solids (mg/L)` = NA)
-
-```
-
-
-## Combine Data
+## Combine Data and Reformat
 ```{r data format: combine data}
 # combine dfYSI_daily and dfHach_daily, with dfYSI_daily being first because it has more observations
-dfYSIHach_daily <- rbind(dfYSI_daily, dfHach_daily) 
-
-# combine dfYSI_weekly and dfHach_weekly, with dfYSI_weekly being first because it has more observations
-dfYSIHach_weekly <- rbind(dfYSI_weekly, dfHach_weekly) 
-
-# combine dfYSI_monthly and dfHach_monthly, with dfYSI_monthly being first because it has more observations
-dfYSIHach_monthly <- rbind(dfYSI_monthly, dfHach_monthly)
-
-# combine dfYSI_yearly and dfHach_yearly, with dfYSI_yearly being first because it has more observations
-dfYSIHach_yearly <- rbind(dfYSI_yearly, dfHach_yearly)
-
-```
-
-
-### All
-```{r combine all data}
-#daily
-dfYSIHach_daily_all <- dfYSIHach_daily %>%
+dfYSIHach_daily <- left_join(dfYSI_daily, dfHach_daily, by = join_by(Date)) %>%
+   # rename Hach columns into something plottable
+   rename(`Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `pH (Hach)` = pH_Hach,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia) %>%
+  # rename YSI columns into something plottable
+  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `pH (YSI)` = pH_ysi,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu,
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)%>%
+  # Add Time Interval column to designate these values as Daily
   mutate(`Time Interval` = "Daily") %>%
   relocate(`Time Interval`, .before = Date)
 
-#weekly
-dfYSIHach_weekly_all <- dfYSIHach_weekly %>%
+# combine dfYSI_weekly and dfHach_weekly, with dfYSI_weekly being first because it has more observations
+dfYSIHach_weekly <- left_join(dfYSI_weekly, dfHach_weekly, by = join_by(Date))  %>%
+   # rename Hach columns into something plottable
+   rename(`Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `pH (Hach)` = pH_Hach,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia) %>%
+  # rename YSI columns into something plottable
+  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `pH (YSI)` = pH_ysi,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu,
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)%>%
+   # Add Time Interval column to designate these values as Weekly
   mutate(`Time Interval` = "Weekly") %>%
   relocate(`Time Interval`, .before = Date)
 
-#monthly
-dfYSIHach_monthly_all <- dfYSIHach_monthly %>%
-  mutate(`Time Interval` = "Monthly") %>%
-  relocate(`Time Interval`, .before = Date)
-
-#yearly
-dfYSIHach_yearly_all <- dfYSIHach_yearly %>%
+# combine dfYSI_yearly and dfHach_yearly, with dfYSI_yearly being first because it has more observations
+dfYSIHach_yearly <- left_join(dfYSI_yearly, dfHach_yearly, by = join_by(Date))  %>%
+   # rename Hach columns into something plottable
+   rename(`Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `pH (Hach)` = pH_Hach,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia) %>%
+  # rename YSI columns into something plottable
+  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `pH (YSI)` = pH_ysi,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu,
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)%>%
+   # Add Time Interval column to designate these values as Yearly
   mutate(`Time Interval` = "Yearly") %>%
   relocate(`Time Interval`, .before = Date)
 
-#all
-dfYSIHach_all <- rbind(dfYSIHach_daily_all, dfYSIHach_weekly_all, dfYSIHach_monthly_all, dfYSIHach_yearly_all)
+# combine dfYSI_monthly and dfHach_monthly, with dfYSI_monthly being first because it has more observations
+dfYSIHach_monthly <- left_join(dfYSI_monthly, dfHach_monthly, by = join_by(Date))  %>%
+   # rename Hach columns into something plottable
+   rename(`Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `pH (Hach)` = pH_Hach,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia) %>%
+  # rename YSI columns into something plottable
+  rename(`Chlorophyll (RFU)` = chlorophyll_rfu,
+         `Conductivity (µS/cm)` = conductivity_uScm,
+         `Dissolved Oxygen, Local (%)` = do_local_percent,
+         `Dissolved Oxygen (mg/L)` = do_mgL,
+         `Dissolved Oxygen, Saturated (%)` = do_saturated_percent,
+         `Conductivity, Non-Linear Function (µS/cm)` = nlf_conductivity_uScm,
+         `Oxygen Reduction Potential (mV)` = orp_mV,
+         `pH (mV)` = pH_mV,
+         `pH (YSI)` = pH_ysi,
+         `Salinity (PSU)` = salinity_psu,
+         `Conductivity, Specific (µS/cm)` = sp_conductivity_uScm,
+         `Temperature (ºC)` = temp_c,
+         `Temperature (ºF)` = temp_f,
+         `Total Algae (RFU)` = total_algae_rfu,
+         `Total Dissolved Solids (mg/L)` = total_dissolved_solids_mgL)%>%
+   # Add Time Interval column to designate these values as Monthly
+  mutate(`Time Interval` = "Monthly") %>%
+  relocate(`Time Interval`, .before = Date)
+
+# Combine all data into one dataframe
+dfYSIHach_all <- rbind(dfYSIHach_daily, dfYSIHach_weekly, dfYSIHach_monthly, dfYSIHach_yearly)
 
 ```
 

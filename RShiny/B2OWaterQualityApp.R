@@ -21,7 +21,7 @@ library(lubridate)
 dfDaily <- read_csv("SourceData/01-HachYSI-Data-Daily.csv", col_names = TRUE) %>%
   rename(pH = `pH (YSI)`)
 # weekly Hach and YSI data 
-dfWeekly <- read_csv("SourceData/02-HachYSI-Data-Weekly.csv", col_names = TRUE) %>%
+dfWeekly <- read_csv("RShiny/SourceData/02-HachYSI-Data-Weekly.csv", col_names = TRUE) %>%
   rename(pH = `pH (YSI)`)
 # monthly Hach and YSI data 
 dfMonthly <- read_csv("SourceData/03-HachYSI-Data-Monthly.csv", col_names = TRUE) %>%
@@ -102,7 +102,7 @@ ui <- fluidPage(
                         sidebarPanel(
                           # input date range
                           
-                          # CHECK BOX GROUP MIGHT FIX UI ISSUE
+                          # CHECK BOX GROUP MIGHT FIX UI ISSUE?
                           
                           dateRangeInput(inputId = "OverallDateRange", 
                                          label = "Select Date Range",
@@ -112,6 +112,7 @@ ui <- fluidPage(
                                          max = tail(date_range$Date, n=1)),
                           hr(),
                           # plot 1 input
+                          p(h4("Top Left Plot")),
                           selectInput(inputId = "OverallVariable1", 
                                       label = "Select Variable to Plot", 
                                       choices = var_choices,
@@ -125,6 +126,7 @@ ui <- fluidPage(
                                         value = FALSE),
                           hr(),
                           # plot 2 input
+                          p(h4("Bottom Left Plot")),
                           selectInput(inputId = "OverallVariable2", 
                                       label = "Select Variable to Plot", 
                                       choices = var_choices,
@@ -138,6 +140,7 @@ ui <- fluidPage(
                                         value = FALSE),
                           hr(),
                           # plot 3 input
+                          p(h4("Top Right Plot")),
                           selectInput(inputId = "OverallVariable3", 
                                       label = "Select Variable to Plot", 
                                       choices = var_choices,
@@ -151,6 +154,7 @@ ui <- fluidPage(
                                         value = FALSE),
                           hr(),
                           # plot 4 input
+                          p(h4("Bottom Right Plot")),
                           selectInput(inputId = "OverallVariable4", 
                                       label = "Select Variable to Plot", 
                                       choices = var_choices,
@@ -164,19 +168,24 @@ ui <- fluidPage(
                                         value = FALSE)
                         ),
                         mainPanel(
-                          #works
-                          # column(6,
-                          #        conditionalPanel("input.OverallVariable1 != None",
-                          #                         plotOutput("OverallTrendsPlot1", height = "600px")),
-                          #        conditionalPanel("input.OverallVariable2 != None",
-                          #                         plotOutput("OverallTrendsPlot2", height = "600px"))
-                          # ),
-                          # column(6,
-                          #        conditionalPanel("input.OverallVariable3 != None",
-                          #                         plotOutput("OverallTrendsPlot3", height = "600px")),
-                          #        conditionalPanel("input.OverallVariable4 != None",
-                          #                         plotOutput("OverallTrendsPlot4", height = "600px"))
-                          # )
+                          # textOutput("helpText"),
+                          #works. will use for now
+                          column(6,
+                                 conditionalPanel(
+                                   "input.OverallVariable1 != None",
+                                   plotOutput("OverallTrendsPlot1")),
+                                 conditionalPanel(
+                                   "input.OverallVariable2 != None",
+                                   plotOutput("OverallTrendsPlot2"))
+                          ),
+                          column(6,
+                                 conditionalPanel(
+                                   "input.OverallVariable3 != None",
+                                   plotOutput("OverallTrendsPlot3")),
+                                 conditionalPanel(
+                                   "input.OverallVariable4 != None",
+                                   plotOutput("OverallTrendsPlot4"))
+                          )
                           
                           #works
                           # fluidRow(
@@ -186,18 +195,7 @@ ui <- fluidPage(
                           #                    plotOutput("OverallTrendsPlot2"))
                           # )
                           
-                          fluidRow(
-                            conditionalPanel(
-                              "input.OverallVariable1 != None",
-                              plotOutput("OverallTrendsPlot1")
-                            ),
-                            conditionalPanel(
-                              "input.OverallVariable2 != None",
-                              plotOutput("OverallTrendsPlot2")
-                            )
-                          )
-                        
-                        
+                          #does not work
                           # fluidRow(
                           #   plotOutput("OverallTrendsPlot1"),
                           #   plotOutput("OverallTrendsPlot2"),
@@ -226,6 +224,7 @@ ui <- fluidPage(
                           #                  
                           # )
                           
+                          #Does not work
                           # fluidRow(
                           #     plotOutput("OverallTrendsPlot1"),
                           #     plotOutput("OverallTrendsPlot2"),
@@ -244,19 +243,6 @@ ui <- fluidPage(
                           #              plotOutput("OverallTrendsPlot4"))
                           #     )
                           #   )
-                          # )
-                          
-                          # column(5,
-                          #        conditionalPanel("input.variable1 != None",
-                          #                         plotOutput("plot1", height = "600px")),
-                          #        conditionalPanel("input.variable2 != None",
-                          #                         plotOutput("plot2", height = "600px"))
-                          # ),
-                          # column(5,
-                          #        conditionalPanel("input.variable3 != None",
-                          #                         plotOutput("plot3", height = "600px")),
-                          #        conditionalPanel("input.variable4 != None",
-                          #                         plotOutput("plot4", height = "600px"))
                           # )
                           
                         )
@@ -303,24 +289,53 @@ server <- function(input, output) {
   # About
   
   # Overall Trends
-  ## Plot 1
+  # output$helpText <- renderText({
+  #   paste(input$OverallDateRange[1], input$OverallDateRange[2])
+  #   paste(class(input$OverallDateRange[1]), class(input$OverallDateRange[2]))
+  # })
+  
   output$OverallTrendsPlot1 <- renderPlot({
-    # line graph of input variable
+  ## Plot 1
+    # scale_x_date() options
+    # default 
+    datebreaks <- "1 year"
+    datelabels <- "%Y"
     
-    dfAll_otp1 <- dfBaseData[, c("Time Interval", "Date", input$OverallVariable1)]
-    colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
+    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+      datebreaks <- "1 month"
+      datelabels <- "%b %Y"
+    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+      datebreaks <- "4 months"
+      datelabels <- "%b %Y"
+    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+      datebreaks <- "6 months"
+      datelabels <- "%b %Y"
+    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+      datebreaks <- "1 year"
+      datelabels <- "%Y"
+    }
     
-    dfAll_otp1 %>%
+    # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+    dfAll_otp1 <- dfAll %>%
+      filter(`Time Interval` == "Daily")
+    
+    dfAll_otp1 <- dfAll_otp1[, c("Date", input$OverallVariable1)]
+    colnames(dfAll_otp1) <- c("Date", "input_var")
+    
+    otp1 <- dfAll_otp1 %>%
       filter(between(Date,input$OverallDateRange[1], input$OverallDateRange[2])) %>%
       filter(`Time Interval` == input$OverallMedian1) %>%
       mutate(Date = as.Date(Date)) %>%
       ggplot(aes(x = Date, 
                  y = input_var))+
-      geom_line()+
+      geom_line(color = "gray",
+                alpha = 0.5,
+                linewidth = 2)+
       # geom_smooth() +
-      # scale_x_date(date_breaks = "1 year",
-      #              date_labels = "%b %Y") +
-      #scale_x_continuous(breaks = NULL)+
+      scale_x_date(date_breaks = datebreaks,
+                   date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
@@ -328,12 +343,72 @@ server <- function(input, output) {
             axis.line = element_line(colour = "black"))+
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-      theme(strip.background = element_rect(fill = "white"))
-    # }
+      theme(strip.background = element_rect(fill = "white")) +
+      ylab(input$OverallVariable1)
+    
+    if (input$OverallMedian1 == "Weekly") {
+      # grab weekly data from dfAll
+      dfMedianData <- dfAll %>%
+        filter(`Time Interval` == "Weekly")
+      # put input variable into format ggplot can read easily
+      dfMedianData <- dfMedianData[, c("Date", input$OverallVariable1)]
+      colnames(dfMedianData) <- c("Date", "input_var")
+      # add median data line plot on top of otp1 plot
+      otp1 <- otp1 +
+        geom_line(data = dfMedianData,
+                  aes(x = Date,
+                      y = input_var))
+    } else if (input$OverallMedian1 == "Monthly") {
+      # grab monthly data from dfAll
+      dfMedianData <- dfAll %>%
+        filter(`Time Interval` == "Monthly")
+      # put input variable into format ggplot can read easily
+      dfMedianData <- dfMedianData[, c("Date", input$OverallVariable1)]
+      colnames(dfMedianData) <- c("Date", "input_var")
+      # add median data line plot on top of otp1 plot
+      otp1 <- otp1 +
+        geom_line(data = dfMedianData,
+                  aes(x = Date,
+                      y = input_var))
+    } else if (input$OverallMedian1 == "Yearly") {
+      # grab monthly data from dfAll
+      dfMedianData <- dfAll %>%
+        filter(`Time Interval` == "Yearly")
+      # put input variable into format ggplot can read easily
+      dfMedianData <- dfMedianData[, c("Date", input$OverallVariable1)]
+      colnames(dfMedianData) <- c("Date", "input_var")
+      # add median data line plot on top of otp1 plot
+      otp1 <- otp1 +
+        geom_line(data = dfMedianData,
+                  aes(x = Date,
+                      y = input_var))
+    } 
+    
+    otp1
+    
   })
   
   ## Plot 2
   output$OverallTrendsPlot2 <- renderPlot({
+    # scale_x_date() options
+    # default 
+    datebreaks <- "1 year"
+    datelabels <- "%Y"
+    
+    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+      datebreaks <- "1 month"
+      datelabels <- "%b %Y"
+    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+      datebreaks <- "4 months"
+      datelabels <- "%b %Y"
+    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+      datebreaks <- "6 months"
+      datelabels <- "%b %Y"
+    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+      datebreaks <- "1 year"
+      datelabels <- "%Y"
+    }
+    
     dfAll_otp2 <- dfBaseData[, c("Time Interval", "Date", input$OverallVariable2)]
     colnames(dfAll_otp2) <- c("Time Interval", "Date", "input_var")
     
@@ -345,9 +420,8 @@ server <- function(input, output) {
                  y = input_var))+
       geom_line()+
       # geom_smooth() +
-      # scale_x_date(date_breaks = "1 year",
-      #              date_labels = "%b %Y") +
-      #scale_x_continuous(breaks = NULL)+
+      scale_x_date(date_breaks = datebreaks,
+                   date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
@@ -355,11 +429,31 @@ server <- function(input, output) {
             axis.line = element_line(colour = "black"))+
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-      theme(strip.background = element_rect(fill = "white"))
+      theme(strip.background = element_rect(fill = "white"))+
+      ylab(input$OverallVariable2)
   })
   
   ## Plot 3
   output$OverallTrendsPlot3 <- renderPlot({
+    # scale_x_date() options
+    # default 
+    datebreaks <- "1 year"
+    datelabels <- "%Y"
+    
+    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+      datebreaks <- "1 month"
+      datelabels <- "%b %Y"
+    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+      datebreaks <- "4 months"
+      datelabels <- "%b %Y"
+    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+      datebreaks <- "6 months"
+      datelabels <- "%b %Y"
+    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+      datebreaks <- "1 year"
+      datelabels <- "%Y"
+    }
+    
     dfAll_otp3 <- dfBaseData[, c("Time Interval", "Date", input$OverallVariable3)]
     colnames(dfAll_otp3) <- c("Time Interval", "Date", "input_var")
     
@@ -371,9 +465,8 @@ server <- function(input, output) {
                  y = input_var))+
       geom_line()+
       # geom_smooth() +
-      # scale_x_date(date_breaks = "1 year",
-      #              date_labels = "%b %Y") +
-      #scale_x_continuous(breaks = NULL)+
+      scale_x_date(date_breaks = datelabels,
+                   date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
@@ -381,11 +474,31 @@ server <- function(input, output) {
             axis.line = element_line(colour = "black"))+
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-      theme(strip.background = element_rect(fill = "white"))
+      theme(strip.background = element_rect(fill = "white"))+
+      ylab(input$OverallVariable3)
   })
   
   ## Plot 4
   output$OverallTrendsPlot4 <- renderPlot({
+    # scale_x_date() options
+    # default 
+    datebreaks <- "1 year"
+    datelabels <- "%Y"
+    
+    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+      datebreaks <- "1 month"
+      datelabels <- "%b %Y"
+    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+      datebreaks <- "4 months"
+      datelabels <- "%b %Y"
+    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+      datebreaks <- "6 months"
+      datelabels <- "%b %Y"
+    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+      datebreaks <- "1 year"
+      datelabels <- "%Y"
+    }
+    
     dfAll_otp4 <- dfBaseData[, c("Time Interval", "Date", input$OverallVariable4)]
     colnames(dfAll_otp4) <- c("Time Interval", "Date", "input_var")
     
@@ -397,9 +510,8 @@ server <- function(input, output) {
                  y = input_var))+
       geom_line()+
       # geom_smooth() +
-      # scale_x_date(date_breaks = "1 year",
-      #              date_labels = "%b %Y") +
-      #scale_x_continuous(breaks = NULL)+
+      scale_x_date(date_breaks = datelabels,
+                   date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
@@ -407,7 +519,8 @@ server <- function(input, output) {
             axis.line = element_line(colour = "black"))+
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-      theme(strip.background = element_rect(fill = "white"))
+      theme(strip.background = element_rect(fill = "white"))+
+      ylab(input$OverallVariable4)
   })
   
   

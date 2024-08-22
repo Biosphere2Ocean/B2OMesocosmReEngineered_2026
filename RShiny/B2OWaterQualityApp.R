@@ -17,30 +17,12 @@ library(lubridate)
 # Import data -----
 # all data are medians of each indicated interval except for the daily hach 
 #  which are "raw" data points since hach is taken once per day (Mon & Fri)
-# daily Hach and YSI data
-dfDaily <- read_csv("SourceData/01-HachYSI-Data-Daily.csv", col_names = TRUE) %>%
-  rename(pH = `pH (YSI)`)
-# weekly Hach and YSI data 
-dfWeekly <- read_csv("RShiny/SourceData/02-HachYSI-Data-Weekly.csv", col_names = TRUE) %>%
-  rename(pH = `pH (YSI)`)
-# monthly Hach and YSI data 
-dfMonthly <- read_csv("SourceData/03-HachYSI-Data-Monthly.csv", col_names = TRUE) %>%
-  rename(pH = `pH (YSI)`)
-# yearly Hach and YSI data 
-dfYearly <- read_csv("SourceData/04-HachYSI-Data-Yearly.csv", col_names = TRUE) %>%
-  rename(pH = `pH (YSI)`)
 # all Hach and YSI data: combo of all above files with "Time Interval" column to 
 # denote which interval (daily, weekly, etc) the data comes from
 dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv", col_names = TRUE) %>%
   rename(pH = `pH (YSI)`)
 
 # Define variables -----
-
-# dfAll_pivot <- dfAll %>%
-#   pivot_longer(cols = `Temperature (ºF)`:`Ammonia (mg/L)`, 
-#                names_to = "variables_col",
-#                values_to = "values_col")
-
 # character vector of all day dates in YSI data
 date_range <- dfAll %>%
   filter(`Time Interval` == "Daily") %>%
@@ -75,11 +57,6 @@ var_choices <- c("None",
 
 # character vector of UI choices for `Time Interval`
 median_period_choices <- c("Daily", "Weekly", "Monthly", "Yearly")
-
-# dataframe of data to plot as basis/background of plots: these are the daily medians/observations which is the most data available
-dfBaseData <- dfAll %>%
-  filter(`Time Interval` == "Daily") %>%
-  mutate(Date = as.Date(Date))
 
 # User Interface -----
 ui <- fluidPage(
@@ -318,22 +295,20 @@ server <- function(input, output) {
     }
     
     # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-    dfAll_otp1 <- dfAll %>%
-      filter(`Time Interval` == "Daily")
-    
-    dfAll_otp1 <- dfAll_otp1[, c("Date", input$OverallVariable1)]
-    colnames(dfAll_otp1) <- c("Date", "input_var")
+    dfAll_otp1 <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
+    colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
     
     otp1 <- dfAll_otp1 %>%
-      filter(between(Date,input$OverallDateRange[1], input$OverallDateRange[2])) %>%
-      filter(`Time Interval` == input$OverallMedian1) %>%
-      mutate(Date = as.Date(Date)) %>%
+      filter(`Time Interval` == "Daily") %>%
+      filter(Date >= input$OverallDateRange[1] & Date <= input$OverallDateRange[2]) %>%
       ggplot(aes(x = Date, 
                  y = input_var))+
       geom_line(color = "gray",
-                alpha = 0.5,
-                linewidth = 2)+
-      # geom_smooth() +
+                alpha = 0.75,
+                linewidth = 2) +
+      geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1, ],
+                aes(x = Date,
+                    y = input_var)) +
       scale_x_date(date_breaks = datebreaks,
                    date_labels = datelabels) +
       theme_bw() + 
@@ -346,45 +321,14 @@ server <- function(input, output) {
       theme(strip.background = element_rect(fill = "white")) +
       ylab(input$OverallVariable1)
     
-    if (input$OverallMedian1 == "Weekly") {
-      # grab weekly data from dfAll
-      dfMedianData <- dfAll %>%
-        filter(`Time Interval` == "Weekly")
-      # put input variable into format ggplot can read easily
-      dfMedianData <- dfMedianData[, c("Date", input$OverallVariable1)]
-      colnames(dfMedianData) <- c("Date", "input_var")
-      # add median data line plot on top of otp1 plot
-      otp1 <- otp1 +
-        geom_line(data = dfMedianData,
-                  aes(x = Date,
-                      y = input_var))
-    } else if (input$OverallMedian1 == "Monthly") {
-      # grab monthly data from dfAll
-      dfMedianData <- dfAll %>%
-        filter(`Time Interval` == "Monthly")
-      # put input variable into format ggplot can read easily
-      dfMedianData <- dfMedianData[, c("Date", input$OverallVariable1)]
-      colnames(dfMedianData) <- c("Date", "input_var")
-      # add median data line plot on top of otp1 plot
-      otp1 <- otp1 +
-        geom_line(data = dfMedianData,
-                  aes(x = Date,
-                      y = input_var))
-    } else if (input$OverallMedian1 == "Yearly") {
-      # grab monthly data from dfAll
-      dfMedianData <- dfAll %>%
-        filter(`Time Interval` == "Yearly")
-      # put input variable into format ggplot can read easily
-      dfMedianData <- dfMedianData[, c("Date", input$OverallVariable1)]
-      colnames(dfMedianData) <- c("Date", "input_var")
-      # add median data line plot on top of otp1 plot
-      otp1 <- otp1 +
-        geom_line(data = dfMedianData,
-                  aes(x = Date,
-                      y = input_var))
-    } 
-    
-    otp1
+    if (input$OverallLoessCheck1 == TRUE) {
+      otp1 <- otp1 + geom_smooth(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1, ],
+                                 aes(x = Date,
+                                     y = input_var))
+      otp1
+    } else {
+      otp1
+    }
     
   })
   
@@ -409,17 +353,21 @@ server <- function(input, output) {
       datelabels <- "%Y"
     }
     
-    dfAll_otp2 <- dfBaseData[, c("Time Interval", "Date", input$OverallVariable2)]
+    # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+    dfAll_otp2 <- dfAll[, c("Time Interval", "Date", input$OverallVariable2)]
     colnames(dfAll_otp2) <- c("Time Interval", "Date", "input_var")
     
-    dfAll_otp2 %>%
-      filter(between(Date,input$OverallDateRange[1], input$OverallDateRange[2])) %>%
-      filter(`Time Interval` == input$OverallMedian2) %>%
-      mutate(Date = as.Date(Date)) %>%
+    otp2 <- dfAll_otp2 %>%
+      filter(`Time Interval` == "Daily") %>%
+      filter(Date >= input$OverallDateRange[1] & Date <= input$OverallDateRange[2]) %>%
       ggplot(aes(x = Date, 
                  y = input_var))+
-      geom_line()+
-      # geom_smooth() +
+      geom_line(color = "gray",
+                alpha = 0.75,
+                linewidth = 2) +
+      geom_line(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2, ],
+                aes(x = Date,
+                    y = input_var)) +
       scale_x_date(date_breaks = datebreaks,
                    date_labels = datelabels) +
       theme_bw() + 
@@ -429,8 +377,17 @@ server <- function(input, output) {
             axis.line = element_line(colour = "black"))+
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-      theme(strip.background = element_rect(fill = "white"))+
+      theme(strip.background = element_rect(fill = "white")) +
       ylab(input$OverallVariable2)
+    
+    if (input$OverallLoessCheck2 == TRUE) {
+      otp2 <- otp2 + geom_smooth(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2, ],
+                                 aes(x = Date,
+                                     y = input_var))
+      otp2
+    } else {
+      otp2
+    }
   })
   
   ## Plot 3
@@ -454,18 +411,22 @@ server <- function(input, output) {
       datelabels <- "%Y"
     }
     
-    dfAll_otp3 <- dfBaseData[, c("Time Interval", "Date", input$OverallVariable3)]
+    # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+    dfAll_otp3 <- dfAll[, c("Time Interval", "Date", input$OverallVariable3)]
     colnames(dfAll_otp3) <- c("Time Interval", "Date", "input_var")
     
-    dfAll_otp3 %>%
-      filter(between(Date,input$OverallDateRange[1], input$OverallDateRange[2])) %>%
-      filter(`Time Interval` == input$OverallMedian3) %>%
-      mutate(Date = as.Date(Date)) %>%
+    otp3 <- dfAll_otp3 %>%
+      filter(`Time Interval` == "Daily") %>%
+      filter(Date >= input$OverallDateRange[1] & Date <= input$OverallDateRange[2]) %>%
       ggplot(aes(x = Date, 
                  y = input_var))+
-      geom_line()+
-      # geom_smooth() +
-      scale_x_date(date_breaks = datelabels,
+      geom_line(color = "gray",
+                alpha = 0.75,
+                linewidth = 2) +
+      geom_line(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3, ],
+                aes(x = Date,
+                    y = input_var)) +
+      scale_x_date(date_breaks = datebreaks,
                    date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
@@ -474,8 +435,17 @@ server <- function(input, output) {
             axis.line = element_line(colour = "black"))+
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-      theme(strip.background = element_rect(fill = "white"))+
+      theme(strip.background = element_rect(fill = "white")) +
       ylab(input$OverallVariable3)
+    
+    if (input$OverallLoessCheck3 == TRUE) {
+      otp3 <- otp3 + geom_smooth(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3, ],
+                                 aes(x = Date,
+                                     y = input_var))
+      otp3
+    } else {
+      otp3
+    }
   })
   
   ## Plot 4
@@ -499,18 +469,22 @@ server <- function(input, output) {
       datelabels <- "%Y"
     }
     
-    dfAll_otp4 <- dfBaseData[, c("Time Interval", "Date", input$OverallVariable4)]
+    # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+    dfAll_otp4 <- dfAll[, c("Time Interval", "Date", input$OverallVariable4)]
     colnames(dfAll_otp4) <- c("Time Interval", "Date", "input_var")
     
-    dfAll_otp4 %>%
-      filter(between(Date,input$OverallDateRange[1], input$OverallDateRange[2])) %>%
-      filter(`Time Interval` == input$OverallMedian4) %>%
-      mutate(Date = as.Date(Date)) %>%
+    otp4 <- dfAll_otp4 %>%
+      filter(`Time Interval` == "Daily") %>%
+      filter(Date >= input$OverallDateRange[1] & Date <= input$OverallDateRange[2]) %>%
       ggplot(aes(x = Date, 
                  y = input_var))+
-      geom_line()+
-      # geom_smooth() +
-      scale_x_date(date_breaks = datelabels,
+      geom_line(color = "gray",
+                alpha = 0.75,
+                linewidth = 2) +
+      geom_line(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4, ],
+                aes(x = Date,
+                    y = input_var)) +
+      scale_x_date(date_breaks = datebreaks,
                    date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
@@ -519,8 +493,17 @@ server <- function(input, output) {
             axis.line = element_line(colour = "black"))+
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-      theme(strip.background = element_rect(fill = "white"))+
+      theme(strip.background = element_rect(fill = "white")) +
       ylab(input$OverallVariable4)
+    
+    if (input$OverallLoessCheck4 == TRUE) {
+      otp4 <- otp4 + geom_smooth(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4, ],
+                                 aes(x = Date,
+                                     y = input_var))
+      otp4
+    } else {
+      otp4
+    }
   })
   
   

@@ -9,20 +9,15 @@ dfAll <- read_csv("RShiny/SourceData/05-HachYSI-Data-All.csv", col_names = TRUE)
 
 ```{r plotting}
 # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-dfAll_otp1 <- dfAll %>%
-  filter(`Time Interval` == "Daily")
 
-otp1 <- dfAll_otp1 %>%
-  filter(`Time Interval` == input$OverallMedian1) %>%
-  mutate(Date = as.Date(Date)) %>%
+otp1 <- dfAll %>%
+  filter(`Time Interval` == "Daily") %>%
   ggplot(aes(x = Date, 
-             y = input_var))+
+             y = `Salinity (PSU)`))+
   geom_line(color = "gray",
-            alpha = 0.5,
+            alpha = 0.75,
             linewidth = 2)+
   # geom_smooth() +
-  scale_x_date(date_breaks = datebreaks,
-               date_labels = datelabels) +
   theme_bw() + 
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(), 
@@ -30,21 +25,27 @@ otp1 <- dfAll_otp1 %>%
         axis.line = element_line(colour = "black"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white")) +
-  ylab(input$OverallVariable1)
+  theme(strip.background = element_rect(fill = "white")) 
 
-if (input$OverallMedian1 == "Weekly") {
-  # grab weekly data from dfAll
-  dfMedianData <- dfAll %>%
-    filter(`Time Interval` == "Weekly")
-  # put input variable into format ggplot can read easily
-  dfMedianData <- dfMedianData[, c("Date", input$OverallVariable1)]
-  colnames(dfMedianData) <- c("Date", "input_var")
-  # add median data line plot on top of otp1 plot
-  otp1 <- otp1 +
-    geom_line(data = dfMedianData,
-              aes(x = Date,
-                  y = input_var))
-  ```
-  
-  
+otp1
+
+otp2 <- otp1 +
+  geom_line(data = dfAll[dfAll$`Time Interval` == "Monthly", ],
+               aes(x = Date,
+                   y = `Salinity (PSU)`))
+
+otp2
+
+# if (input$OverallMedian1 == "Weekly") {
+#   # grab weekly data from dfAll
+#   dfMedianData <- dfAll %>%
+#     filter(`Time Interval` == "Weekly")
+#   # put input variable into format ggplot can read easily
+#   dfMedianData <- dfMedianData[, c("Date", input$OverallVariable1)]
+#   colnames(dfMedianData) <- c("Date", "input_var")
+#   # add median data line plot on top of otp1 plot
+#   otp1 <- otp1 +
+#     geom_line(data = dfMedianData,
+#               aes(x = Date,
+#                   y = input_var))
+```

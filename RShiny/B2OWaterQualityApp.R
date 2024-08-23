@@ -26,8 +26,7 @@ dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv", col_names = TRUE) %>%
 # character vector of all day dates in YSI data
 date_range <- dfAll %>%
   filter(`Time Interval` == "Daily") %>%
-  select(Date) %>%
-  mutate(Date = as.Date(Date))
+  select(Date)
 
 #  character vector of variable choices. modified from column names of datasets 
 var_choices <- c("None",
@@ -95,7 +94,7 @@ ui <- fluidPage(
                                       choices = var_choices,
                                       selected = "Temperature (ºC)"),
                           selectInput(inputId = "OverallMedian1",
-                                      label = "Select moving median period",
+                                      label = "Select Median Interval",
                                       choices = median_period_choices,
                                       selected = "Daily"),
                           checkboxInput(inputId = "OverallLoessCheck1",
@@ -103,13 +102,13 @@ ui <- fluidPage(
                                         value = FALSE),
                           hr(),
                           # plot 2 input
-                          p(h4("Bottom Left Plot")),
+                          p(h4("Top Right Plot")),
                           selectInput(inputId = "OverallVariable2", 
                                       label = "Select Variable to Plot", 
                                       choices = var_choices,
-                                      selected = "None"),
+                                      selected = "Salinity (PSU)"),
                           selectInput(inputId = "OverallMedian2",
-                                      label = "Select moving median period",
+                                      label = "Select Median Interval",
                                       choices = median_period_choices,
                                       selected = "Daily"),
                           checkboxInput(inputId = "OverallLoessCheck2",
@@ -117,13 +116,13 @@ ui <- fluidPage(
                                         value = FALSE),
                           hr(),
                           # plot 3 input
-                          p(h4("Top Right Plot")),
+                          p(h4("Bottom Left Plot")),
                           selectInput(inputId = "OverallVariable3", 
                                       label = "Select Variable to Plot", 
                                       choices = var_choices,
-                                      selected = "None"),
+                                      selected = "pH"),
                           selectInput(inputId = "OverallMedian3",
-                                      label = "Select moving median period",
+                                      label = "Select Median Interval",
                                       choices = median_period_choices,
                                       selected = "Daily"),
                           checkboxInput(inputId = "OverallLoessCheck3",
@@ -135,9 +134,9 @@ ui <- fluidPage(
                           selectInput(inputId = "OverallVariable4", 
                                       label = "Select Variable to Plot", 
                                       choices = var_choices,
-                                      selected = "None"),
+                                      selected = "Nitrate, Mid-Range (mg/L)"),
                           selectInput(inputId = "OverallMedian4",
-                                      label = "Select moving median period",
+                                      label = "Select Median Interval",
                                       choices = median_period_choices,
                                       selected = "Daily"),
                           checkboxInput(inputId = "OverallLoessCheck4",
@@ -153,12 +152,12 @@ ui <- fluidPage(
                                    plotOutput("OverallTrendsPlot1")),
                                  conditionalPanel(
                                    "input.OverallVariable2 != None",
-                                   plotOutput("OverallTrendsPlot2"))
+                                   plotOutput("OverallTrendsPlot3"))
                           ),
                           column(6,
                                  conditionalPanel(
                                    "input.OverallVariable3 != None",
-                                   plotOutput("OverallTrendsPlot3")),
+                                   plotOutput("OverallTrendsPlot2")),
                                  conditionalPanel(
                                    "input.OverallVariable4 != None",
                                    plotOutput("OverallTrendsPlot4"))
@@ -278,7 +277,10 @@ server <- function(input, output) {
     datebreaks <- "1 year"
     datelabels <- "%Y"
     
-    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+      datebreaks <- "2 weeks"
+      datelabels <- "%b %d %Y"
+    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
       datebreaks <- "1 month"
       datelabels <- "%b %Y"
     } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
@@ -298,33 +300,36 @@ server <- function(input, output) {
     dfAll_otp1 <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
     colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
     
-    otp1 <- dfAll_otp1 %>%
-      filter(`Time Interval` == "Daily") %>%
-      filter(Date >= input$OverallDateRange[1] & Date <= input$OverallDateRange[2]) %>%
-      ggplot(aes(x = Date, 
-                 y = input_var))+
-      geom_line(color = "gray",
-                alpha = 0.75,
-                linewidth = 2) +
-      geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1, ],
+    otp1 <- ggplot(data = dfAll_otp1[dfAll_otp1$`Time Interval` == "Daily" & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
+                   aes(x = Date, 
+                       y = input_var))+
+      geom_point(color = "lightgray",
+                alpha = 0.4,
+                size = 6) +
+      geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp1$input_var), ],
                 aes(x = Date,
-                    y = input_var)) +
+                    y = input_var), 
+                size = 0.75) +
       scale_x_date(date_breaks = datebreaks,
                    date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
-            panel.background = element_blank(), 
-            axis.line = element_line(colour = "black"))+
-      theme(axis.text.x = element_text(angle = 45, hjust = 1),
-            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+            panel.background = element_blank())+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+            axis.text.y = element_text(size = 16), 
+            axis.title.x = element_text(size = 18),
+            axis.title.y = element_blank(),
+            plot.title = element_text(size = 20))+
       theme(strip.background = element_rect(fill = "white")) +
-      ylab(input$OverallVariable1)
+      ylab(input$OverallVariable1) +
+      ggtitle(input$OverallVariable1)
     
     if (input$OverallLoessCheck1 == TRUE) {
-      otp1 <- otp1 + geom_smooth(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1, ],
+      otp1 <- otp1 + geom_smooth(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
                                  aes(x = Date,
-                                     y = input_var))
+                                     y = input_var),
+                                 linewidth = 3)
       otp1
     } else {
       otp1
@@ -339,13 +344,18 @@ server <- function(input, output) {
     datebreaks <- "1 year"
     datelabels <- "%Y"
     
-    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+      datebreaks <- "2 weeks"
+      datelabels <- "%b %d %Y"
+    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
       datebreaks <- "1 month"
       datelabels <- "%b %Y"
-    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
       datebreaks <- "4 months"
       datelabels <- "%b %Y"
-    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
       datebreaks <- "6 months"
       datelabels <- "%b %Y"
     } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
@@ -357,33 +367,36 @@ server <- function(input, output) {
     dfAll_otp2 <- dfAll[, c("Time Interval", "Date", input$OverallVariable2)]
     colnames(dfAll_otp2) <- c("Time Interval", "Date", "input_var")
     
-    otp2 <- dfAll_otp2 %>%
-      filter(`Time Interval` == "Daily") %>%
-      filter(Date >= input$OverallDateRange[1] & Date <= input$OverallDateRange[2]) %>%
-      ggplot(aes(x = Date, 
-                 y = input_var))+
-      geom_line(color = "gray",
-                alpha = 0.75,
-                linewidth = 2) +
-      geom_line(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2, ],
+    otp2 <- ggplot(data = dfAll_otp2[dfAll_otp2$`Time Interval` == "Daily" & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2], ],
+                   aes(x = Date, 
+                       y = input_var))+
+      geom_point(color = "lightgray",
+                 alpha = 0.4,
+                 size = 6) +
+      geom_line(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2 & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp2$input_var), ],
                 aes(x = Date,
-                    y = input_var)) +
+                    y = input_var), 
+                size = 0.75) +
       scale_x_date(date_breaks = datebreaks,
                    date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
-            panel.background = element_blank(), 
-            axis.line = element_line(colour = "black"))+
-      theme(axis.text.x = element_text(angle = 45, hjust = 1),
-            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+            panel.background = element_blank())+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+            axis.text.y = element_text(size = 16), 
+            axis.title.x = element_text(size = 18),
+            axis.title.y = element_blank(),
+            plot.title = element_text(size = 20))+
       theme(strip.background = element_rect(fill = "white")) +
-      ylab(input$OverallVariable2)
+      ylab(input$OverallVariable2) +
+      ggtitle(input$OverallVariable2)
     
     if (input$OverallLoessCheck2 == TRUE) {
-      otp2 <- otp2 + geom_smooth(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2, ],
+      otp2 <- otp2 + geom_smooth(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2 & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2], ],
                                  aes(x = Date,
-                                     y = input_var))
+                                     y = input_var),
+                                 linewidth = 3)
       otp2
     } else {
       otp2
@@ -397,13 +410,18 @@ server <- function(input, output) {
     datebreaks <- "1 year"
     datelabels <- "%Y"
     
-    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+      datebreaks <- "2 weeks"
+      datelabels <- "%b %d %Y"
+    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
       datebreaks <- "1 month"
       datelabels <- "%b %Y"
-    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
       datebreaks <- "4 months"
       datelabels <- "%b %Y"
-    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
       datebreaks <- "6 months"
       datelabels <- "%b %Y"
     } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
@@ -415,33 +433,36 @@ server <- function(input, output) {
     dfAll_otp3 <- dfAll[, c("Time Interval", "Date", input$OverallVariable3)]
     colnames(dfAll_otp3) <- c("Time Interval", "Date", "input_var")
     
-    otp3 <- dfAll_otp3 %>%
-      filter(`Time Interval` == "Daily") %>%
-      filter(Date >= input$OverallDateRange[1] & Date <= input$OverallDateRange[2]) %>%
-      ggplot(aes(x = Date, 
-                 y = input_var))+
-      geom_line(color = "gray",
-                alpha = 0.75,
-                linewidth = 2) +
-      geom_line(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3, ],
+    otp3 <- ggplot(data = dfAll_otp3[dfAll_otp3$`Time Interval` == "Daily" & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2], ],
+                   aes(x = Date, 
+                       y = input_var))+
+      geom_point(color = "lightgray",
+                 alpha = 0.4,
+                 size = 6) +
+      geom_line(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3 & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2]  & !is.na(dfAll_otp3$input_var), ],
                 aes(x = Date,
-                    y = input_var)) +
+                    y = input_var), 
+                size = 0.75) +
       scale_x_date(date_breaks = datebreaks,
                    date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
-            panel.background = element_blank(), 
-            axis.line = element_line(colour = "black"))+
-      theme(axis.text.x = element_text(angle = 45, hjust = 1),
-            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+            panel.background = element_blank())+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+            axis.text.y = element_text(size = 16), 
+            axis.title.x = element_text(size = 18),
+            axis.title.y = element_blank(),
+            plot.title = element_text(size = 20))+
       theme(strip.background = element_rect(fill = "white")) +
-      ylab(input$OverallVariable3)
+      ylab(input$OverallVariable3) +
+      ggtitle(input$OverallVariable3)
     
     if (input$OverallLoessCheck3 == TRUE) {
-      otp3 <- otp3 + geom_smooth(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3, ],
+      otp3 <- otp3 + geom_smooth(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3 & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2], ],
                                  aes(x = Date,
-                                     y = input_var))
+                                     y = input_var),
+                                 linewidth = 3)
       otp3
     } else {
       otp3
@@ -455,13 +476,18 @@ server <- function(input, output) {
     datebreaks <- "1 year"
     datelabels <- "%Y"
     
-    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+      datebreaks <- "2 weeks"
+      datelabels <- "%b %d %Y"
+    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
       datebreaks <- "1 month"
       datelabels <- "%b %Y"
-    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
       datebreaks <- "4 months"
       datelabels <- "%b %Y"
-    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
       datebreaks <- "6 months"
       datelabels <- "%b %Y"
     } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
@@ -473,33 +499,36 @@ server <- function(input, output) {
     dfAll_otp4 <- dfAll[, c("Time Interval", "Date", input$OverallVariable4)]
     colnames(dfAll_otp4) <- c("Time Interval", "Date", "input_var")
     
-    otp4 <- dfAll_otp4 %>%
-      filter(`Time Interval` == "Daily") %>%
-      filter(Date >= input$OverallDateRange[1] & Date <= input$OverallDateRange[2]) %>%
-      ggplot(aes(x = Date, 
-                 y = input_var))+
-      geom_line(color = "gray",
-                alpha = 0.75,
-                linewidth = 2) +
-      geom_line(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4, ],
+    otp4 <- ggplot(data = dfAll_otp4[dfAll_otp4$`Time Interval` == "Daily" & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2], ],
+                   aes(x = Date, 
+                       y = input_var))+
+      geom_point(color = "lightgray",
+                 alpha = 0.4,
+                 size = 6) +
+      geom_line(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4 & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2]& !is.na(dfAll_otp4$input_var), ],
                 aes(x = Date,
-                    y = input_var)) +
+                    y = input_var), 
+                size = 0.75) +
       scale_x_date(date_breaks = datebreaks,
                    date_labels = datelabels) +
       theme_bw() + 
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
-            panel.background = element_blank(), 
-            axis.line = element_line(colour = "black"))+
-      theme(axis.text.x = element_text(angle = 45, hjust = 1),
-            plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
+            panel.background = element_blank())+
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+            axis.text.y = element_text(size = 16), 
+            axis.title.x = element_text(size = 18),
+            axis.title.y = element_blank(),
+            plot.title = element_text(size = 20))+
       theme(strip.background = element_rect(fill = "white")) +
-      ylab(input$OverallVariable4)
+      ylab(input$OverallVariable4) +
+      ggtitle(input$OverallVariable4)
     
     if (input$OverallLoessCheck4 == TRUE) {
-      otp4 <- otp4 + geom_smooth(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4, ],
+      otp4 <- otp4 + geom_smooth(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4 & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2], ],
                                  aes(x = Date,
-                                     y = input_var))
+                                     y = input_var),
+                                 linewidth = 3)
       otp4
     } else {
       otp4

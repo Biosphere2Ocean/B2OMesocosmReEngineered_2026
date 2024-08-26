@@ -73,142 +73,143 @@ ui <- fluidPage(
               ##### Time Series Page #####
               nav_panel("Time Series",
                         navset_card_tab(
-                          # shared sidebar
-                          sidebar = sidebar(
-                            # sidebar arguments
-                            position = "left",
-                            open = "always",
-                            width = 350,
-                            padding = 50,
-                            # sidebar contents in accordion style
-                            accordion(
-                              # start with top left panel open
-                              open = "Top Left Plot",
-                              # date range input
-                              # always seen
-                              dateRangeInput(inputId = "OverallDateRange", 
-                                             label = "Select Date Range",
-                                             start = date_range$Date[1],
-                                             end = tail(date_range$Date, n=1),
-                                             min = date_range$Date[1],
-                                             max = tail(date_range$Date, n=1)),
-                              # Overall Plot 1 Input
-                              accordion_panel(
-                                "Top Left Plot",
-                                selectInput(inputId = "OverallVariable1", 
-                                            label = "Select Variable to Plot", 
-                                            choices = var_choices,
-                                            selected = "Temperature (ºC)"),
-                                selectInput(inputId = "OverallMedian1",
-                                            label = "Select Median Interval",
-                                            choices = median_period_choices,
-                                            selected = "Daily"),
-                                checkboxInput(inputId = "OverallLoessCheck1",
-                                              label = "Add Loess Curve",
-                                              value = FALSE),
-                              ),
-                              # Overall Plot 2 Input
-                              accordion_panel(
-                                "Bottom Left Plot",
-                                selectInput(inputId = "OverallVariable2", 
-                                            label = "Select Variable to Plot", 
-                                            choices = var_choices,
-                                            selected = "None"),
-                                selectInput(inputId = "OverallMedian2",
-                                            label = "Select Median Interval",
-                                            choices = median_period_choices,
-                                            selected = "Daily"),
-                                checkboxInput(inputId = "OverallLoessCheck2",
-                                              label = "Add Loess Curve",
-                                              value = FALSE),
-                              ),
-                              # Overall Plot 3 Input
-                              accordion_panel(
-                                "Top Right Plot",
-                                selectInput(inputId = "OverallVariable3", 
-                                            label = "Select Variable to Plot", 
-                                            choices = var_choices,
-                                            selected = "None"),
-                                selectInput(inputId = "OverallMedian3",
-                                            label = "Select Median Interval",
-                                            choices = median_period_choices,
-                                            selected = "Daily"),
-                                checkboxInput(inputId = "OverallLoessCheck3",
-                                              label = "Add Loess Curve",
-                                              value = FALSE),
-                              ), 
-                              # Overall Plot 4 Input
-                              accordion_panel(
-                                "Bottom Right Plot",
-                                selectInput(inputId = "OverallVariable4", 
-                                            label = "Select Variable to Plot", 
-                                            choices = var_choices,
-                                            selected = "None"),
-                                selectInput(inputId = "OverallMedian4",
-                                            label = "Select Median Interval",
-                                            choices = median_period_choices,
-                                            selected = "Daily"),
-                                checkboxInput(inputId = "OverallLoessCheck4",
-                                              label = "Add Loess Curve",
-                                              value = FALSE)
-                              )
-                            )
-                          ),
-                          #nav_spacer(),
                           # Overall Trends Tab
                           nav_panel("Overall Trends",
-                                    # main panel: top row
-                                    layout_column_wrap(
-                                      width = 1/2,
-                                      conditionalPanel("input.OverallVariable1 != None",
-                                                       plotOutput("OverallTrendsPlot1")
+                                    layout_sidebar(
+                                      # sidebar
+                                      sidebar = sidebar(
+                                        # sidebar arguments
+                                        position = "left",
+                                        open = "always",
+                                        width = 350,
+                                        padding = 50,
+                                        # sidebar contents in accordion style
+                                        accordion(
+                                          # start with top left panel open
+                                          open = "Top Left Plot",
+                                          # date range input
+                                          # always seen
+                                          dateRangeInput(inputId = "OverallDateRange", 
+                                                         label = "Select Date Range",
+                                                         start = date_range$Date[1],
+                                                         end = tail(date_range$Date, n=1),
+                                                         min = date_range$Date[1],
+                                                         max = tail(date_range$Date, n=1)),
+                                          # Overall Plot 1 Input
+                                          accordion_panel(
+                                            "Top Left Plot",
+                                            selectInput(inputId = "OverallVariable1", 
+                                                        label = "Select Variable to Plot", 
+                                                        choices = var_choices,
+                                                        selected = "Temperature (ºC)"),
+                                            selectInput(inputId = "OverallMedian1",
+                                                        label = "Select Median Interval",
+                                                        choices = median_period_choices,
+                                                        selected = "Daily"),
+                                            checkboxInput(inputId = "OverallLoessCheck1",
+                                                          label = "Add Loess Curve",
+                                                          value = FALSE),
+                                          ),
+                                          # Overall Plot 2 Input
+                                          accordion_panel(
+                                            "Bottom Left Plot",
+                                            selectInput(inputId = "OverallVariable2", 
+                                                        label = "Select Variable to Plot", 
+                                                        choices = var_choices,
+                                                        selected = "None"),
+                                            selectInput(inputId = "OverallMedian2",
+                                                        label = "Select Median Interval",
+                                                        choices = median_period_choices,
+                                                        selected = "Daily"),
+                                            checkboxInput(inputId = "OverallLoessCheck2",
+                                                          label = "Add Loess Curve",
+                                                          value = FALSE),
+                                          ),
+                                          # Overall Plot 3 Input
+                                          accordion_panel(
+                                            "Top Right Plot",
+                                            selectInput(inputId = "OverallVariable3", 
+                                                        label = "Select Variable to Plot", 
+                                                        choices = var_choices,
+                                                        selected = "None"),
+                                            selectInput(inputId = "OverallMedian3",
+                                                        label = "Select Median Interval",
+                                                        choices = median_period_choices,
+                                                        selected = "Daily"),
+                                            checkboxInput(inputId = "OverallLoessCheck3",
+                                                          label = "Add Loess Curve",
+                                                          value = FALSE),
+                                          ), 
+                                          # Overall Plot 4 Input
+                                          accordion_panel(
+                                            "Bottom Right Plot",
+                                            selectInput(inputId = "OverallVariable4", 
+                                                        label = "Select Variable to Plot", 
+                                                        choices = var_choices,
+                                                        selected = "None"),
+                                            selectInput(inputId = "OverallMedian4",
+                                                        label = "Select Median Interval",
+                                                        choices = median_period_choices,
+                                                        selected = "Daily"),
+                                            checkboxInput(inputId = "OverallLoessCheck4",
+                                                          label = "Add Loess Curve",
+                                                          value = FALSE)
+                                          )
+                                        )
                                       ),
-                                      conditionalPanel("input.OverallVariable3 != None",
-                                                       plotOutput("OverallTrendsPlot3")
-                                      )
-                                    ),
-                                    # main panel: bottom row
-                                    layout_column_wrap(
-                                      width = 1/2,
-                                      conditionalPanel("input.OverallVariable2 != None",
-                                                       plotOutput("OverallTrendsPlot2")
+                                      # main panel: top row
+                                      layout_column_wrap(
+                                        width = 1/2,
+                                        conditionalPanel("input.OverallVariable1 != None",
+                                                         plotOutput("OverallTrendsPlot1")
+                                        ),
+                                        conditionalPanel("input.OverallVariable3 != None",
+                                                         plotOutput("OverallTrendsPlot3")
+                                        )
                                       ),
-                                      conditionalPanel("input.OverallVariable4 != None",
-                                                       plotOutput("OverallTrendsPlot4")
+                                      # main panel: bottom row
+                                      layout_column_wrap(
+                                        width = 1/2,
+                                        conditionalPanel("input.OverallVariable2 != None",
+                                                         plotOutput("OverallTrendsPlot2")
+                                        ),
+                                        conditionalPanel("input.OverallVariable4 != None",
+                                                         plotOutput("OverallTrendsPlot4")
+                                        )
                                       )
                                     )
                                     
                           ),
                           # Seasonal Trends Tab
                           nav_panel("Seasonal Trends",
-                                    # # main panel: top row
-                                    # layout_column_wrap(
-                                    #   width = 1/2,
-                                    #   card(
-                                    #     conditionalPanel(
-                                    #       "input.OverallVariable1 != None",
-                                    #       plotOutput("OverallTrendsPlot1")
-                                    #     ),
-                                    #     conditionalPanel(
-                                    #       "input.OverallVariable3 != None",
-                                    #       plotOutput("OverallTrendsPlot3")
-                                    #     )
-                                    #   )
-                                    # ),
-                                    # # main panel: bottom row
-                                    # layout_column_wrap(
-                                    #   width = 1/2,
-                                    #   card(
-                                    #     conditionalPanel(
-                                    #       "input.OverallVariable2 != None",
-                                    #       plotOutput("OverallTrendsPlot2")
-                                    #     ),
-                                    #     conditionalPanel(
-                                    #       "input.OverallVariable4 != None",
-                                    #       plotOutput("OverallTrendsPlot4")
-                                    #     )
-                                    #   )
-                                    # )
+                                    # main panel: top row
+                                    layout_column_wrap(
+                                      width = 1/2,
+                                      card(
+                                        conditionalPanel(
+                                          "input.OverallVariable1 != None",
+                                          plotOutput("SeasonalTrendsPlot1")
+                                        ),
+                                        conditionalPanel(
+                                          "input.OverallVariable3 != None",
+                                          plotOutput("SeasonalTrendsPlot3")
+                                        )
+                                      )
+                                    ),
+                                    # main panel: bottom row
+                                    layout_column_wrap(
+                                      width = 1/2,
+                                      card(
+                                        conditionalPanel(
+                                          "input.OverallVariable2 != None",
+                                          plotOutput("SeasonalTrendsPlot2")
+                                        ),
+                                        conditionalPanel(
+                                          "input.OverallVariable4 != None",
+                                          plotOutput("SeasonalTrendsPlot4")
+                                        )
+                                      )
+                                    )
                           )
                         )
               ),
@@ -245,279 +246,351 @@ ui <- fluidPage(
 
 # Server Logic -----
 server <- function(input, output) {
-  # About
+  ##### About #####
   
-  # Overall Trends
-  # output$helpText <- renderText({
-  #   paste(input$OverallDateRange[1], input$OverallDateRange[2])
-  #   paste(class(input$OverallDateRange[1]), class(input$OverallDateRange[2]))
-  # })
-  
-  output$OverallTrendsPlot1 <- renderPlot({
-    ## Plot 1
-    # scale_x_date() options
-    # default 
-    datebreaks <- "1 year"
-    datelabels <- "%Y"
-    
-    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-      datebreaks <- "2 weeks"
-      datelabels <- "%b %d %Y"
-    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-      datebreaks <- "1 month"
-      datelabels <- "%b %Y"
-    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-      datebreaks <- "4 months"
-      datelabels <- "%b %Y"
-    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-      datebreaks <- "6 months"
-      datelabels <- "%b %Y"
-    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-      datebreaks <- "1 year"
-      datelabels <- "%Y"
-    }
-    
-    # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-    dfAll_otp1 <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
-    colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
-    
-    otp1 <- ggplot(data = dfAll_otp1[dfAll_otp1$`Time Interval` == "Daily" & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
-                   aes(x = Date, 
-                       y = input_var))+
-      geom_point(color = "lightgray",
-                 alpha = 0.4,
-                 size = 6) +
-      geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp1$input_var), ],
-                aes(x = Date,
-                    y = input_var), 
-                size = 0.75) +
-      scale_x_date(date_breaks = datebreaks,
-                   date_labels = datelabels) +
-      theme_bw() + 
-      theme(panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank(), 
-            panel.background = element_blank())+
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
-            axis.text.y = element_text(size = 16), 
-            axis.title.x = element_text(size = 18),
-            axis.title.y = element_blank(),
-            plot.title = element_text(size = 20))+
-      theme(strip.background = element_rect(fill = "white")) +
-      ylab(input$OverallVariable1) +
-      ggtitle(input$OverallVariable1)
-    
-    if (input$OverallLoessCheck1 == TRUE) {
-      otp1 <- otp1 + geom_smooth(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
-                                 aes(x = Date,
-                                     y = input_var),
-                                 linewidth = 3)
-      otp1
-    } else {
-      otp1
-    }
-    
-  })
-  
-  ## Plot 2
-  output$OverallTrendsPlot2 <- renderPlot({
-    # scale_x_date() options
-    # default 
-    datebreaks <- "1 year"
-    datelabels <- "%Y"
-    
-    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-      datebreaks <- "2 weeks"
-      datelabels <- "%b %d %Y"
-    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-      datebreaks <- "1 month"
-      datelabels <- "%b %Y"
-    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-      datebreaks <- "4 months"
-      datelabels <- "%b %Y"
-    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-      datebreaks <- "6 months"
-      datelabels <- "%b %Y"
-    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-      datebreaks <- "1 year"
-      datelabels <- "%Y"
-    }
-    
-    # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-    dfAll_otp2 <- dfAll[, c("Time Interval", "Date", input$OverallVariable2)]
-    colnames(dfAll_otp2) <- c("Time Interval", "Date", "input_var")
-    
-    otp2 <- ggplot(data = dfAll_otp2[dfAll_otp2$`Time Interval` == "Daily" & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2], ],
-                   aes(x = Date, 
-                       y = input_var))+
-      geom_point(color = "lightgray",
-                 alpha = 0.4,
-                 size = 6) +
-      geom_line(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2 & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp2$input_var), ],
-                aes(x = Date,
-                    y = input_var), 
-                size = 0.75) +
-      scale_x_date(date_breaks = datebreaks,
-                   date_labels = datelabels) +
-      theme_bw() + 
-      theme(panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank(), 
-            panel.background = element_blank())+
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
-            axis.text.y = element_text(size = 16), 
-            axis.title.x = element_text(size = 18),
-            axis.title.y = element_blank(),
-            plot.title = element_text(size = 20))+
-      theme(strip.background = element_rect(fill = "white")) +
-      ylab(input$OverallVariable2) +
-      ggtitle(input$OverallVariable2)
-    
-    if (input$OverallLoessCheck2 == TRUE) {
-      otp2 <- otp2 + geom_smooth(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2 & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2], ],
-                                 aes(x = Date,
-                                     y = input_var),
-                                 linewidth = 3)
-      otp2
-    } else {
-      otp2
-    }
-  })
-  
-  ## Plot 3
-  output$OverallTrendsPlot3 <- renderPlot({
-    # scale_x_date() options
-    # default 
-    datebreaks <- "1 year"
-    datelabels <- "%Y"
-    
-    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-      datebreaks <- "2 weeks"
-      datelabels <- "%b %d %Y"
-    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-      datebreaks <- "1 month"
-      datelabels <- "%b %Y"
-    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-      datebreaks <- "4 months"
-      datelabels <- "%b %Y"
-    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-      datebreaks <- "6 months"
-      datelabels <- "%b %Y"
-    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-      datebreaks <- "1 year"
-      datelabels <- "%Y"
-    }
-    
-    # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-    dfAll_otp3 <- dfAll[, c("Time Interval", "Date", input$OverallVariable3)]
-    colnames(dfAll_otp3) <- c("Time Interval", "Date", "input_var")
-    
-    otp3 <- ggplot(data = dfAll_otp3[dfAll_otp3$`Time Interval` == "Daily" & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2], ],
-                   aes(x = Date, 
-                       y = input_var))+
-      geom_point(color = "lightgray",
-                 alpha = 0.4,
-                 size = 6) +
-      geom_line(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3 & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2]  & !is.na(dfAll_otp3$input_var), ],
-                aes(x = Date,
-                    y = input_var), 
-                size = 0.75) +
-      scale_x_date(date_breaks = datebreaks,
-                   date_labels = datelabels) +
-      theme_bw() + 
-      theme(panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank(), 
-            panel.background = element_blank())+
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
-            axis.text.y = element_text(size = 16), 
-            axis.title.x = element_text(size = 18),
-            axis.title.y = element_blank(),
-            plot.title = element_text(size = 20))+
-      theme(strip.background = element_rect(fill = "white")) +
-      ylab(input$OverallVariable3) +
-      ggtitle(input$OverallVariable3)
-    
-    if (input$OverallLoessCheck3 == TRUE) {
-      otp3 <- otp3 + geom_smooth(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3 & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2], ],
-                                 aes(x = Date,
-                                     y = input_var),
-                                 linewidth = 3)
-      otp3
-    } else {
-      otp3
-    }
-  })
-  
-  ## Plot 4
-  output$OverallTrendsPlot4 <- renderPlot({
-    # scale_x_date() options
-    # default 
-    datebreaks <- "1 year"
-    datelabels <- "%Y"
-    
-    if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-      datebreaks <- "2 weeks"
-      datelabels <- "%b %d %Y"
-    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-      datebreaks <- "1 month"
-      datelabels <- "%b %Y"
-    } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-      datebreaks <- "4 months"
-      datelabels <- "%b %Y"
-    } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-               & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-      datebreaks <- "6 months"
-      datelabels <- "%b %Y"
-    } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-      datebreaks <- "1 year"
-      datelabels <- "%Y"
-    }
-    
-    # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-    dfAll_otp4 <- dfAll[, c("Time Interval", "Date", input$OverallVariable4)]
-    colnames(dfAll_otp4) <- c("Time Interval", "Date", "input_var")
-    
-    otp4 <- ggplot(data = dfAll_otp4[dfAll_otp4$`Time Interval` == "Daily" & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2], ],
-                   aes(x = Date, 
-                       y = input_var))+
-      geom_point(color = "lightgray",
-                 alpha = 0.4,
-                 size = 6) +
-      geom_line(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4 & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2]& !is.na(dfAll_otp4$input_var), ],
-                aes(x = Date,
-                    y = input_var), 
-                size = 0.75) +
-      scale_x_date(date_breaks = datebreaks,
-                   date_labels = datelabels) +
-      theme_bw() + 
-      theme(panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank(), 
-            panel.background = element_blank())+
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
-            axis.text.y = element_text(size = 16), 
-            axis.title.x = element_text(size = 18),
-            axis.title.y = element_blank(),
-            plot.title = element_text(size = 20))+
-      theme(strip.background = element_rect(fill = "white")) +
-      ylab(input$OverallVariable4) +
-      ggtitle(input$OverallVariable4)
-    
-    if (input$OverallLoessCheck4 == TRUE) {
-      otp4 <- otp4 + geom_smooth(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4 & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2], ],
-                                 aes(x = Date,
-                                     y = input_var),
-                                 linewidth = 3)
-      otp4
-    } else {
-      otp4
-    }
-  })
-  
+  ##### Time Series #####
+    ##### Overall Trends #####
+      # Plot 1
+      output$OverallTrendsPlot1 <- renderPlot({
+        ## Plot 1
+        # scale_x_date() options
+        # default 
+        datebreaks <- "1 year"
+        datelabels <- "%Y"
+        
+        if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+          datebreaks <- "2 weeks"
+          datelabels <- "%b %d %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+          datebreaks <- "1 month"
+          datelabels <- "%b %Y"
+        } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+          datebreaks <- "4 months"
+          datelabels <- "%b %Y"
+        } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+          datebreaks <- "6 months"
+          datelabels <- "%b %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+          datebreaks <- "1 year"
+          datelabels <- "%Y"
+        }
+        
+        # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+        dfAll_otp1 <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
+        colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
+        
+        otp1 <- ggplot(data = dfAll_otp1[dfAll_otp1$`Time Interval` == "Daily" & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
+                       aes(x = Date, 
+                           y = input_var))+
+          geom_point(color = "lightgray",
+                     alpha = 0.4,
+                     size = 6) +
+          geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp1$input_var), ],
+                    aes(x = Date,
+                        y = input_var), 
+                    size = 0.75) +
+          scale_x_date(date_breaks = datebreaks,
+                       date_labels = datelabels) +
+          theme_bw() + 
+          theme(panel.grid.major = element_blank(), 
+                panel.grid.minor = element_blank(), 
+                panel.background = element_blank())+
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+                axis.text.y = element_text(size = 16), 
+                axis.title.x = element_text(size = 18),
+                axis.title.y = element_blank(),
+                plot.title = element_text(size = 20))+
+          theme(strip.background = element_rect(fill = "white")) +
+          ylab(input$OverallVariable1) +
+          ggtitle(input$OverallVariable1)
+        
+        if (input$OverallLoessCheck1 == TRUE) {
+          otp1 <- otp1 + geom_smooth(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
+                                     aes(x = Date,
+                                         y = input_var),
+                                     linewidth = 3)
+          otp1
+        } else {
+          otp1
+        }
+        
+      })
+      # Plot 2
+      output$OverallTrendsPlot2 <- renderPlot({
+        # scale_x_date() options
+        # default 
+        datebreaks <- "1 year"
+        datelabels <- "%Y"
+        
+        if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+          datebreaks <- "2 weeks"
+          datelabels <- "%b %d %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+          datebreaks <- "1 month"
+          datelabels <- "%b %Y"
+        } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+          datebreaks <- "4 months"
+          datelabels <- "%b %Y"
+        } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+          datebreaks <- "6 months"
+          datelabels <- "%b %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+          datebreaks <- "1 year"
+          datelabels <- "%Y"
+        }
+        
+        # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+        dfAll_otp2 <- dfAll[, c("Time Interval", "Date", input$OverallVariable2)]
+        colnames(dfAll_otp2) <- c("Time Interval", "Date", "input_var")
+        
+        otp2 <- ggplot(data = dfAll_otp2[dfAll_otp2$`Time Interval` == "Daily" & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2], ],
+                       aes(x = Date, 
+                           y = input_var))+
+          geom_point(color = "lightgray",
+                     alpha = 0.4,
+                     size = 6) +
+          geom_line(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2 & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp2$input_var), ],
+                    aes(x = Date,
+                        y = input_var), 
+                    size = 0.75) +
+          scale_x_date(date_breaks = datebreaks,
+                       date_labels = datelabels) +
+          theme_bw() + 
+          theme(panel.grid.major = element_blank(), 
+                panel.grid.minor = element_blank(), 
+                panel.background = element_blank())+
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+                axis.text.y = element_text(size = 16), 
+                axis.title.x = element_text(size = 18),
+                axis.title.y = element_blank(),
+                plot.title = element_text(size = 20))+
+          theme(strip.background = element_rect(fill = "white")) +
+          ylab(input$OverallVariable2) +
+          ggtitle(input$OverallVariable2)
+        
+        if (input$OverallLoessCheck2 == TRUE) {
+          otp2 <- otp2 + geom_smooth(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2 & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2], ],
+                                     aes(x = Date,
+                                         y = input_var),
+                                     linewidth = 3)
+          otp2
+        } else {
+          otp2
+        }
+      })
+      # Plot 3
+      output$OverallTrendsPlot3 <- renderPlot({
+        # scale_x_date() options
+        # default 
+        datebreaks <- "1 year"
+        datelabels <- "%Y"
+        
+        if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+          datebreaks <- "2 weeks"
+          datelabels <- "%b %d %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+          datebreaks <- "1 month"
+          datelabels <- "%b %Y"
+        } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+          datebreaks <- "4 months"
+          datelabels <- "%b %Y"
+        } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+          datebreaks <- "6 months"
+          datelabels <- "%b %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+          datebreaks <- "1 year"
+          datelabels <- "%Y"
+        }
+        
+        # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+        dfAll_otp3 <- dfAll[, c("Time Interval", "Date", input$OverallVariable3)]
+        colnames(dfAll_otp3) <- c("Time Interval", "Date", "input_var")
+        
+        otp3 <- ggplot(data = dfAll_otp3[dfAll_otp3$`Time Interval` == "Daily" & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2], ],
+                       aes(x = Date, 
+                           y = input_var))+
+          geom_point(color = "lightgray",
+                     alpha = 0.4,
+                     size = 6) +
+          geom_line(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3 & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2]  & !is.na(dfAll_otp3$input_var), ],
+                    aes(x = Date,
+                        y = input_var), 
+                    size = 0.75) +
+          scale_x_date(date_breaks = datebreaks,
+                       date_labels = datelabels) +
+          theme_bw() + 
+          theme(panel.grid.major = element_blank(), 
+                panel.grid.minor = element_blank(), 
+                panel.background = element_blank())+
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+                axis.text.y = element_text(size = 16), 
+                axis.title.x = element_text(size = 18),
+                axis.title.y = element_blank(),
+                plot.title = element_text(size = 20))+
+          theme(strip.background = element_rect(fill = "white")) +
+          ylab(input$OverallVariable3) +
+          ggtitle(input$OverallVariable3)
+        
+        if (input$OverallLoessCheck3 == TRUE) {
+          otp3 <- otp3 + geom_smooth(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3 & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2], ],
+                                     aes(x = Date,
+                                         y = input_var),
+                                     linewidth = 3)
+          otp3
+        } else {
+          otp3
+        }
+      })
+      # Plot 4
+      output$OverallTrendsPlot4 <- renderPlot({
+        # scale_x_date() options
+        # default 
+        datebreaks <- "1 year"
+        datelabels <- "%Y"
+        
+        if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+          datebreaks <- "2 weeks"
+          datelabels <- "%b %d %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+          datebreaks <- "1 month"
+          datelabels <- "%b %Y"
+        } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+          datebreaks <- "4 months"
+          datelabels <- "%b %Y"
+        } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+          datebreaks <- "6 months"
+          datelabels <- "%b %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+          datebreaks <- "1 year"
+          datelabels <- "%Y"
+        }
+        
+        # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+        dfAll_otp4 <- dfAll[, c("Time Interval", "Date", input$OverallVariable4)]
+        colnames(dfAll_otp4) <- c("Time Interval", "Date", "input_var")
+        
+        otp4 <- ggplot(data = dfAll_otp4[dfAll_otp4$`Time Interval` == "Daily" & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2], ],
+                       aes(x = Date, 
+                           y = input_var))+
+          geom_point(color = "lightgray",
+                     alpha = 0.4,
+                     size = 6) +
+          geom_line(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4 & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2]& !is.na(dfAll_otp4$input_var), ],
+                    aes(x = Date,
+                        y = input_var), 
+                    size = 0.75) +
+          scale_x_date(date_breaks = datebreaks,
+                       date_labels = datelabels) +
+          theme_bw() + 
+          theme(panel.grid.major = element_blank(), 
+                panel.grid.minor = element_blank(), 
+                panel.background = element_blank())+
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+                axis.text.y = element_text(size = 16), 
+                axis.title.x = element_text(size = 18),
+                axis.title.y = element_blank(),
+                plot.title = element_text(size = 20))+
+          theme(strip.background = element_rect(fill = "white")) +
+          ylab(input$OverallVariable4) +
+          ggtitle(input$OverallVariable4)
+        
+        if (input$OverallLoessCheck4 == TRUE) {
+          otp4 <- otp4 + geom_smooth(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4 & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2], ],
+                                     aes(x = Date,
+                                         y = input_var),
+                                     linewidth = 3)
+          otp4
+        } else {
+          otp4
+        }
+      })
+    ##### Seasonal Trends #####
+      # Plot 1
+      output$SeasonalTrendsPlot1 <- renderPlot({
+        # scale_x_date() options
+        # default 
+        datebreaks <- "1 year"
+        datelabels <- "%Y"
+        
+        if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
+          datebreaks <- "2 weeks"
+          datelabels <- "%b %d %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
+          datebreaks <- "1 month"
+          datelabels <- "%b %Y"
+        } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
+          datebreaks <- "4 months"
+          datelabels <- "%b %Y"
+        } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
+                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
+          datebreaks <- "6 months"
+          datelabels <- "%b %Y"
+        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
+          datebreaks <- "1 year"
+          datelabels <- "%Y"
+        }
+        
+        # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+        dfAll_otp1 <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
+        colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
+        
+        otp1 <- ggplot(data = dfAll_otp1[dfAll_otp1$`Time Interval` == "Daily" & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
+                       aes(x = Date, 
+                           y = input_var))+
+          geom_point(color = "lightgray",
+                     alpha = 0.4,
+                     size = 6) +
+          geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp1$input_var), ],
+                    aes(x = Date,
+                        y = input_var), 
+                    size = 0.75) +
+          scale_x_date(date_breaks = datebreaks,
+                       date_labels = datelabels) +
+          theme_bw() + 
+          theme(panel.grid.major = element_blank(), 
+                panel.grid.minor = element_blank(), 
+                panel.background = element_blank())+
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+                axis.text.y = element_text(size = 16), 
+                axis.title.x = element_text(size = 18),
+                axis.title.y = element_blank(),
+                plot.title = element_text(size = 20))+
+          theme(strip.background = element_rect(fill = "white")) +
+          ylab(input$OverallVariable1) +
+          ggtitle(input$OverallVariable1)
+        
+        if (input$OverallLoessCheck1 == TRUE) {
+          otp1 <- otp1 + geom_smooth(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
+                                     aes(x = Date,
+                                         y = input_var),
+                                     linewidth = 3)
+          otp1
+        } else {
+          otp1
+        }
+        
+      })
+      # Plot 2
+      output$SeasonalTrendsPlot2 <- renderPlot({
+        
+      })
+      # Plot 3
+      output$SeasonalTrendsPlot3 <- renderPlot({
+        
+      })
+      # Plot 4
+      output$SeasonalTrendsPlot4 <- renderPlot({
+        
+      })
   
 }
 

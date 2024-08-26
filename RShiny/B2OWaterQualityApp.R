@@ -63,22 +63,23 @@ ui <- fluidPage(
                              width = 250),
                          "Ocean Systems Water Quality", style = "color: #49595e;")
   ),
-  navbarPage(title = NULL,
-             ##### About Page #####
-             tabPanel(title = "About",
-                      # metadata: where data came from, time period, variables tracked, units, explanations of variables, 
-             ),
-             
-             ##### Overall Trends Page #####
-             tabPanel("Overall Trends",
-                      page_fillable(
-                        layout_sidebar(
-                          # sidebar
+  page_navbar(title = NULL,
+              inverse = FALSE,
+              ##### About Page #####
+              nav_panel(title = "About",
+                        # metadata: where data came from, time period, variables tracked, units, explanations of variables, 
+              ),
+              
+              ##### Time Series Page #####
+              nav_panel("Time Series",
+                        navset_card_tab(
+                          # shared sidebar
                           sidebar = sidebar(
                             # sidebar arguments
                             position = "left",
                             open = "always",
                             width = 350,
+                            padding = 50,
                             # sidebar contents in accordion style
                             accordion(
                               # start with top left panel open
@@ -108,7 +109,7 @@ ui <- fluidPage(
                               ),
                               # Overall Plot 2 Input
                               accordion_panel(
-                                "Bottom Right Plot",
+                                "Bottom Left Plot",
                                 selectInput(inputId = "OverallVariable2", 
                                             label = "Select Variable to Plot", 
                                             choices = var_choices,
@@ -153,57 +154,89 @@ ui <- fluidPage(
                               )
                             )
                           ),
-                          # main panel: top row
-                          layout_column_wrap(1/2,
-                                             conditionalPanel(
-                                               "input.OverallVariable1 != None",
-                                               plotOutput("OverallTrendsPlot1")),
-                                             conditionalPanel(
-                                               "input.OverallVariable3 != None",
-                                               plotOutput("OverallTrendsPlot3"))
+                          #nav_spacer(),
+                          # Overall Trends Tab
+                          nav_panel("Overall Trends",
+                                    # main panel: top row
+                                    layout_column_wrap(
+                                      width = 1/2,
+                                      conditionalPanel("input.OverallVariable1 != None",
+                                                       plotOutput("OverallTrendsPlot1")
+                                      ),
+                                      conditionalPanel("input.OverallVariable3 != None",
+                                                       plotOutput("OverallTrendsPlot3")
+                                      )
+                                    ),
+                                    # main panel: bottom row
+                                    layout_column_wrap(
+                                      width = 1/2,
+                                      conditionalPanel("input.OverallVariable2 != None",
+                                                       plotOutput("OverallTrendsPlot2")
+                                      ),
+                                      conditionalPanel("input.OverallVariable4 != None",
+                                                       plotOutput("OverallTrendsPlot4")
+                                      )
+                                    )
+                                    
                           ),
-                          # main panel: bottom row
-                          layout_column_wrap(1/2,
-                                             conditionalPanel(
-                                               "input.OverallVariable2 != None",
-                                               plotOutput("OverallTrendsPlot2")),
-                                             conditionalPanel(
-                                               "input.OverallVariable4 != None",
-                                               plotOutput("OverallTrendsPlot4"))
+                          # Seasonal Trends Tab
+                          nav_panel("Seasonal Trends",
+                                    # # main panel: top row
+                                    # layout_column_wrap(
+                                    #   width = 1/2,
+                                    #   card(
+                                    #     conditionalPanel(
+                                    #       "input.OverallVariable1 != None",
+                                    #       plotOutput("OverallTrendsPlot1")
+                                    #     ),
+                                    #     conditionalPanel(
+                                    #       "input.OverallVariable3 != None",
+                                    #       plotOutput("OverallTrendsPlot3")
+                                    #     )
+                                    #   )
+                                    # ),
+                                    # # main panel: bottom row
+                                    # layout_column_wrap(
+                                    #   width = 1/2,
+                                    #   card(
+                                    #     conditionalPanel(
+                                    #       "input.OverallVariable2 != None",
+                                    #       plotOutput("OverallTrendsPlot2")
+                                    #     ),
+                                    #     conditionalPanel(
+                                    #       "input.OverallVariable4 != None",
+                                    #       plotOutput("OverallTrendsPlot4")
+                                    #     )
+                                    #   )
+                                    # )
                           )
                         )
-                      )
-             ),
-             
-             ##### Seasonal Trends Page #####
-             tabPanel(title = "Seasonal Trends",
-                      
-             ),
-             
-             ##### Correlations Page #####
-             tabPanel(title = "Correlations",
-                      
-             ),
-             
-             ##### Significant Correlations Page #####
-             tabPanel(title = "Significant Correlations",
-                      
-             ),
-             
-             ##### Correlations Tables Page #####
-             tabPanel(title = "Correlations Tables",
-                      
-             ),
-             
-             ##### Data in Context Page #####
-             tabPanel(title = "Data in Context",
-                      
-             ),
-             
-             ##### B1 Comparisons Page #####
-             tabPanel(title = "B1 Comparisons",
-                      
-             )
+              ),
+              
+              ##### Correlations Page #####
+              nav_panel(title = "Correlations",
+                        
+              ),
+              
+              ##### Significant Correlations Page #####
+              nav_panel(title = "Significant Correlations",
+                        
+              ),
+              
+              ##### Correlations Tables Page #####
+              nav_panel(title = "Correlations Tables",
+                        
+              ),
+              
+              ##### Data in Context Page #####
+              nav_panel(title = "Data in Context",
+                        
+              ),
+              
+              ##### B1 Comparisons Page #####
+              nav_panel(title = "B1 Comparisons",
+                        
+              )
   )
 )
 

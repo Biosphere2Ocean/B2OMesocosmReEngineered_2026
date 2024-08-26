@@ -64,193 +64,143 @@ ui <- fluidPage(
                          "Ocean Systems Water Quality", style = "color: #49595e;")
   ),
   navbarPage(title = NULL,
-             # About Page
+             ##### About Page #####
              tabPanel(title = "About",
                       # metadata: where data came from, time period, variables tracked, units, explanations of variables, 
              ),
              
-             # Overall Trends Page
+             ##### Overall Trends Page #####
              tabPanel("Overall Trends",
-                      sidebarLayout(
-                        position = "left",
-                        fluid = TRUE,
-                        # column: fixed width, date range input and inputs for 4 plots
-                        sidebarPanel(
-                          # input date range
-                          
-                          # CHECK BOX GROUP MIGHT FIX UI ISSUE?
-                          
-                          dateRangeInput(inputId = "OverallDateRange", 
-                                         label = "Select Date Range",
-                                         start = date_range$Date[1],
-                                         end = tail(date_range$Date, n=1),
-                                         min = date_range$Date[1],
-                                         max = tail(date_range$Date, n=1)),
-                          hr(),
-                          # plot 1 input
-                          p(h4("Top Left Plot")),
-                          selectInput(inputId = "OverallVariable1", 
-                                      label = "Select Variable to Plot", 
-                                      choices = var_choices,
-                                      selected = "Temperature (ºC)"),
-                          selectInput(inputId = "OverallMedian1",
-                                      label = "Select Median Interval",
-                                      choices = median_period_choices,
-                                      selected = "Daily"),
-                          checkboxInput(inputId = "OverallLoessCheck1",
-                                        label = "Add Loess Curve",
-                                        value = FALSE),
-                          hr(),
-                          # plot 2 input
-                          p(h4("Top Right Plot")),
-                          selectInput(inputId = "OverallVariable2", 
-                                      label = "Select Variable to Plot", 
-                                      choices = var_choices,
-                                      selected = "Salinity (PSU)"),
-                          selectInput(inputId = "OverallMedian2",
-                                      label = "Select Median Interval",
-                                      choices = median_period_choices,
-                                      selected = "Daily"),
-                          checkboxInput(inputId = "OverallLoessCheck2",
-                                        label = "Add Loess Curve",
-                                        value = FALSE),
-                          hr(),
-                          # plot 3 input
-                          p(h4("Bottom Left Plot")),
-                          selectInput(inputId = "OverallVariable3", 
-                                      label = "Select Variable to Plot", 
-                                      choices = var_choices,
-                                      selected = "pH"),
-                          selectInput(inputId = "OverallMedian3",
-                                      label = "Select Median Interval",
-                                      choices = median_period_choices,
-                                      selected = "Daily"),
-                          checkboxInput(inputId = "OverallLoessCheck3",
-                                        label = "Add Loess Curve",
-                                        value = FALSE),
-                          hr(),
-                          # plot 4 input
-                          p(h4("Bottom Right Plot")),
-                          selectInput(inputId = "OverallVariable4", 
-                                      label = "Select Variable to Plot", 
-                                      choices = var_choices,
-                                      selected = "Nitrate, Mid-Range (mg/L)"),
-                          selectInput(inputId = "OverallMedian4",
-                                      label = "Select Median Interval",
-                                      choices = median_period_choices,
-                                      selected = "Daily"),
-                          checkboxInput(inputId = "OverallLoessCheck4",
-                                        label = "Add Loess Curve",
-                                        value = FALSE)
-                        ),
-                        mainPanel(
-                          # textOutput("helpText"),
-                          #works. will use for now
-                          column(6,
-                                 conditionalPanel(
-                                   "input.OverallVariable1 != None",
-                                   plotOutput("OverallTrendsPlot1")),
-                                 conditionalPanel(
-                                   "input.OverallVariable2 != None",
-                                   plotOutput("OverallTrendsPlot3"))
+                      page_fillable(
+                        layout_sidebar(
+                          # sidebar
+                          sidebar = sidebar(
+                            # sidebar arguments
+                            position = "left",
+                            open = "always",
+                            width = 350,
+                            # sidebar contents in accordion style
+                            accordion(
+                              # start with top left panel open
+                              open = "Top Left Plot",
+                              # date range input
+                              # always seen
+                              dateRangeInput(inputId = "OverallDateRange", 
+                                             label = "Select Date Range",
+                                             start = date_range$Date[1],
+                                             end = tail(date_range$Date, n=1),
+                                             min = date_range$Date[1],
+                                             max = tail(date_range$Date, n=1)),
+                              # Overall Plot 1 Input
+                              accordion_panel(
+                                "Top Left Plot",
+                                selectInput(inputId = "OverallVariable1", 
+                                            label = "Select Variable to Plot", 
+                                            choices = var_choices,
+                                            selected = "Temperature (ºC)"),
+                                selectInput(inputId = "OverallMedian1",
+                                            label = "Select Median Interval",
+                                            choices = median_period_choices,
+                                            selected = "Daily"),
+                                checkboxInput(inputId = "OverallLoessCheck1",
+                                              label = "Add Loess Curve",
+                                              value = FALSE),
+                              ),
+                              # Overall Plot 2 Input
+                              accordion_panel(
+                                "Bottom Right Plot",
+                                selectInput(inputId = "OverallVariable2", 
+                                            label = "Select Variable to Plot", 
+                                            choices = var_choices,
+                                            selected = "None"),
+                                selectInput(inputId = "OverallMedian2",
+                                            label = "Select Median Interval",
+                                            choices = median_period_choices,
+                                            selected = "Daily"),
+                                checkboxInput(inputId = "OverallLoessCheck2",
+                                              label = "Add Loess Curve",
+                                              value = FALSE),
+                              ),
+                              # Overall Plot 3 Input
+                              accordion_panel(
+                                "Top Right Plot",
+                                selectInput(inputId = "OverallVariable3", 
+                                            label = "Select Variable to Plot", 
+                                            choices = var_choices,
+                                            selected = "None"),
+                                selectInput(inputId = "OverallMedian3",
+                                            label = "Select Median Interval",
+                                            choices = median_period_choices,
+                                            selected = "Daily"),
+                                checkboxInput(inputId = "OverallLoessCheck3",
+                                              label = "Add Loess Curve",
+                                              value = FALSE),
+                              ), 
+                              # Overall Plot 4 Input
+                              accordion_panel(
+                                "Bottom Right Plot",
+                                selectInput(inputId = "OverallVariable4", 
+                                            label = "Select Variable to Plot", 
+                                            choices = var_choices,
+                                            selected = "None"),
+                                selectInput(inputId = "OverallMedian4",
+                                            label = "Select Median Interval",
+                                            choices = median_period_choices,
+                                            selected = "Daily"),
+                                checkboxInput(inputId = "OverallLoessCheck4",
+                                              label = "Add Loess Curve",
+                                              value = FALSE)
+                              )
+                            )
                           ),
-                          column(6,
-                                 conditionalPanel(
-                                   "input.OverallVariable3 != None",
-                                   plotOutput("OverallTrendsPlot2")),
-                                 conditionalPanel(
-                                   "input.OverallVariable4 != None",
-                                   plotOutput("OverallTrendsPlot4"))
+                          # main panel: top row
+                          layout_column_wrap(1/2,
+                                             conditionalPanel(
+                                               "input.OverallVariable1 != None",
+                                               plotOutput("OverallTrendsPlot1")),
+                                             conditionalPanel(
+                                               "input.OverallVariable3 != None",
+                                               plotOutput("OverallTrendsPlot3"))
+                          ),
+                          # main panel: bottom row
+                          layout_column_wrap(1/2,
+                                             conditionalPanel(
+                                               "input.OverallVariable2 != None",
+                                               plotOutput("OverallTrendsPlot2")),
+                                             conditionalPanel(
+                                               "input.OverallVariable4 != None",
+                                               plotOutput("OverallTrendsPlot4"))
                           )
-                          
-                          #works
-                          # fluidRow(
-                          #   conditionalPanel("input.OverallVariable1 != None",
-                          #                    plotOutput("OverallTrendsPlot1")),
-                          #   conditionalPanel("input.OverallVariable2 != None",
-                          #                    plotOutput("OverallTrendsPlot2"))
-                          # )
-                          
-                          #does not work
-                          # fluidRow(
-                          #   plotOutput("OverallTrendsPlot1"),
-                          #   plotOutput("OverallTrendsPlot2"),
-                          #   plotOutput("OverallTrendsPlot3"),
-                          #   plotOutput("OverallTrendsPlot4")
-                          # )
-                          # conditionalPanel(condition = "input.OverallVariable3 == 'None'",
-                          #                  fluidRow(
-                          #                    plotOutput("OverallTrendsPlot1"),
-                          #                    plotOutput("OverallTrendsPlot2")
-                          #                  )
-                          # ),
-                          # conditionalPanel(condition = "input.OverallVariable3 != 'None'",
-                          #                  fluidRow(
-                          #                    column(6,
-                          #                           plotOutput("OverallTrendsPlot1")),
-                          #                    column(6,
-                          #                           plotOutput("OverallTrendsPlot3"))
-                          #                  ),
-                          #                  fluidRow(
-                          #                    column(6,
-                          #                           plotOutput("OverallTrendsPlot2")),
-                          #                    column(6,
-                          #                           plotOutput("OverallTrendsPlot4"))
-                          #                  )
-                          #                  
-                          # )
-                          
-                          #Does not work
-                          # fluidRow(
-                          #     plotOutput("OverallTrendsPlot1"),
-                          #     plotOutput("OverallTrendsPlot2"),
-                          #   conditionalPanel(
-                          #     condition = "input.OverallVariable3 =! None",
-                          #     fluidRow(
-                          #       column(6,
-                          #              plotOutput("OverallTrendsPlot1")),
-                          #       column(6,
-                          #              plotOutput("OverallTrendsPlot3"))
-                          #     ),
-                          #     fluidRow(
-                          #       column(6,
-                          #              plotOutput("OverallTrendsPlot2")),
-                          #       column(6,
-                          #              plotOutput("OverallTrendsPlot4"))
-                          #     )
-                          #   )
-                          # )
-                          
                         )
                       )
              ),
              
-             # Seasonal Trends Page
+             ##### Seasonal Trends Page #####
              tabPanel(title = "Seasonal Trends",
                       
              ),
              
-             # Correlations Page
+             ##### Correlations Page #####
              tabPanel(title = "Correlations",
                       
              ),
              
-             # Significant Correlations Page
+             ##### Significant Correlations Page #####
              tabPanel(title = "Significant Correlations",
                       
              ),
              
-             # Correlations Tables Page
+             ##### Correlations Tables Page #####
              tabPanel(title = "Correlations Tables",
                       
              ),
              
-             # Data in Context Page
+             ##### Data in Context Page #####
              tabPanel(title = "Data in Context",
                       
              ),
              
-             # B1 Comparisons Page
+             ##### B1 Comparisons Page #####
              tabPanel(title = "B1 Comparisons",
                       
              )
@@ -271,7 +221,7 @@ server <- function(input, output) {
   # })
   
   output$OverallTrendsPlot1 <- renderPlot({
-  ## Plot 1
+    ## Plot 1
     # scale_x_date() options
     # default 
     datebreaks <- "1 year"
@@ -304,8 +254,8 @@ server <- function(input, output) {
                    aes(x = Date, 
                        y = input_var))+
       geom_point(color = "lightgray",
-                alpha = 0.4,
-                size = 6) +
+                 alpha = 0.4,
+                 size = 6) +
       geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp1$input_var), ],
                 aes(x = Date,
                     y = input_var), 

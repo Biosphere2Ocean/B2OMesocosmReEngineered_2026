@@ -24,9 +24,15 @@ dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv", col_names = TRUE) %>%
 
 # Define variables -----
 # character vector of all day dates in YSI data
-date_range <- dfAll %>%
+date_range_overall <- dfAll %>%
   filter(`Time Interval` == "Daily") %>%
   select(Date)
+
+date_range_seasonal <- dfAll %>%
+  filter(`Time Interval` == "Yearly") %>%
+  select(Date) %>%
+  mutate(Date = substring(Date, 1,4))
+date_range_seasonal <- as.vector(date_range_seasonal$Date)
 
 #  character vector of variable choices. modified from column names of datasets 
 var_choices <- c("None",
@@ -91,10 +97,11 @@ ui <- fluidPage(
                                           # always seen
                                           dateRangeInput(inputId = "OverallDateRange", 
                                                          label = "Select Date Range",
-                                                         start = date_range$Date[1],
-                                                         end = tail(date_range$Date, n=1),
-                                                         min = date_range$Date[1],
-                                                         max = tail(date_range$Date, n=1)),
+                                                         start = date_range_overall$Date[1],
+                                                         end = tail(date_range_overall$Date, n=1),
+                                                         min = date_range_overall$Date[1],
+                                                         max = tail(date_range_overall$Date, n=1)
+                                          ),
                                           # Overall Plot 1 Input
                                           accordion_panel(
                                             "Top Left Plot",
@@ -108,7 +115,7 @@ ui <- fluidPage(
                                                         selected = "Daily"),
                                             checkboxInput(inputId = "OverallLoessCheck1",
                                                           label = "Add Loess Curve",
-                                                          value = FALSE),
+                                                          value = FALSE)
                                           ),
                                           # Overall Plot 2 Input
                                           accordion_panel(
@@ -123,7 +130,7 @@ ui <- fluidPage(
                                                         selected = "Daily"),
                                             checkboxInput(inputId = "OverallLoessCheck2",
                                                           label = "Add Loess Curve",
-                                                          value = FALSE),
+                                                          value = FALSE)
                                           ),
                                           # Overall Plot 3 Input
                                           accordion_panel(
@@ -138,7 +145,7 @@ ui <- fluidPage(
                                                         selected = "Daily"),
                                             checkboxInput(inputId = "OverallLoessCheck3",
                                                           label = "Add Loess Curve",
-                                                          value = FALSE),
+                                                          value = FALSE)
                                           ), 
                                           # Overall Plot 4 Input
                                           accordion_panel(
@@ -182,34 +189,119 @@ ui <- fluidPage(
                           ),
                           # Seasonal Trends Tab
                           nav_panel("Seasonal Trends",
-                                    # main panel: top row
-                                    layout_column_wrap(
-                                      width = 1/2,
-                                      card(
-                                        conditionalPanel(
-                                          "input.OverallVariable1 != None",
-                                          plotOutput("SeasonalTrendsPlot1")
-                                        ),
-                                        conditionalPanel(
-                                          "input.OverallVariable3 != None",
-                                          plotOutput("SeasonalTrendsPlot3")
+                                    layout_sidebar(
+                                      # sidebar
+                                      sidebar = sidebar(
+                                        # sidebar arguments
+                                        position = "left",
+                                        open = "always",
+                                        width = 350,
+                                        padding = 50,
+                                        # sidebar contents in accordion style
+                                        accordion(
+                                          # start with top left panel open
+                                          open = "Top Left Plot",
+                                          # date range input
+                                          # always seen
+                                          checkboxGroupInput(
+                                            inputId = "SeasonalDateRange",
+                                            label = "Select Years to Plot",
+                                            choices = date_range_seasonal,
+                                            selected = date_range_seasonal
+                                          ),
+                                          # Seasonal Plot 1 Input
+                                          accordion_panel(
+                                            "Top Left Plot",
+                                            selectInput(inputId = "SeasonalVariable1", 
+                                                        label = "Select Variable to Plot", 
+                                                        choices = var_choices,
+                                                        selected = "Temperature (ºC)"),
+                                            selectInput(inputId = "SeasonalMedian1",
+                                                        label = "Select Median Interval",
+                                                        choices = median_period_choices,
+                                                        selected = "Daily"),
+                                            radioButtons(inputId = "SeasonalineLoess1",
+                                                         label = "Choose Plot Type",
+                                                         choices = c("Line Plot",
+                                                                     "Loess Plot"),
+                                                         selected = "Loess Plot")
+                                          ),
+                                          # Seasonal Plot 2 Input
+                                          accordion_panel(
+                                            "Bottom Left Plot",
+                                            selectInput(inputId = "SeasonalVariable2", 
+                                                        label = "Select Variable to Plot", 
+                                                        choices = var_choices,
+                                                        selected = "None"),
+                                            selectInput(inputId = "SeasonalMedian2",
+                                                        label = "Select Median Interval",
+                                                        choices = median_period_choices,
+                                                        selected = "Daily"),
+                                            radioButtons(inputId = "SeasonalineLoess2",
+                                                         label = "Choose Plot Type",
+                                                         choices = c("Line Plot",
+                                                                     "Loess Plot"),
+                                                         selected = "Loess Plot")
+                                          ),
+                                          # Seasonal Plot 3 Input
+                                          accordion_panel(
+                                            "Top Right Plot",
+                                            selectInput(inputId = "SeasonalVariable3", 
+                                                        label = "Select Variable to Plot", 
+                                                        choices = var_choices,
+                                                        selected = "None"),
+                                            selectInput(inputId = "SeasonalMedian3",
+                                                        label = "Select Median Interval",
+                                                        choices = median_period_choices,
+                                                        selected = "Daily"),
+                                            radioButtons(inputId = "SeasonalineLoess3",
+                                                         label = "Choose Plot Type",
+                                                         choices = c("Line Plot",
+                                                                     "Loess Plot"),
+                                                         selected = "Loess Plot")
+                                          ), 
+                                          # Seasonal Plot 4 Input
+                                          accordion_panel(
+                                            "Bottom Right Plot",
+                                            selectInput(inputId = "SeasonalVariable4", 
+                                                        label = "Select Variable to Plot", 
+                                                        choices = var_choices,
+                                                        selected = "None"),
+                                            selectInput(inputId = "SeasonalMedian4",
+                                                        label = "Select Median Interval",
+                                                        choices = median_period_choices,
+                                                        selected = "Daily"),
+                                            radioButtons(inputId = "SeasonalineLoess4",
+                                                         label = "Choose Plot Type",
+                                                         choices = c("Line Plot",
+                                                                     "Loess Plot"),
+                                                         selected = "Loess Plot")
+                                          )
                                         )
-                                      )
-                                    ),
-                                    # main panel: bottom row
-                                    layout_column_wrap(
-                                      width = 1/2,
-                                      card(
-                                        conditionalPanel(
-                                          "input.OverallVariable2 != None",
-                                          plotOutput("SeasonalTrendsPlot2")
+                                      ),
+                                      # main panel: top row
+                                      layout_column_wrap(
+                                        width = 1/2,
+                                        #verbatimTextOutput("SeasonalTextHelp"),
+                                        conditionalPanel("input.SeasonalVariable1 != None",
+                                                         plotOutput("SeasonalTrendsPlot1")
                                         ),
-                                        conditionalPanel(
-                                          "input.OverallVariable4 != None",
-                                          plotOutput("SeasonalTrendsPlot4")
+                                        conditionalPanel("input.SeasonalVariable3 != None",
+                                                         plotOutput("SeasonalTrendsPlot3")
+                                        )
+                                      ),
+                                      # main panel: bottom row
+                                      layout_column_wrap(
+                                        width = 1/2,
+                                        conditionalPanel("input.SeasonalVariable2 != None",
+                                                         plotOutput("SeasonalTrendsPlot2")
+                                        ),
+                                        conditionalPanel("input.SeasonalVariable4 != None",
+                                                         plotOutput("SeasonalTrendsPlot4")
                                         )
                                       )
                                     )
+                                    
                           )
                         )
               ),
@@ -513,82 +605,197 @@ server <- function(input, output) {
         }
       })
     ##### Seasonal Trends #####
+      #output$SeasonalTextHelp <- renderPrint({class(tail(input$SeasonalDateRange, n=1))})
       # Plot 1
       output$SeasonalTrendsPlot1 <- renderPlot({
-        # scale_x_date() options
-        # default 
-        datebreaks <- "1 year"
-        datelabels <- "%Y"
+        # put dates into usable formats
+        dates_vector <- input$SeasonalDateRange
+        dfDates <- data.frame(Dates = dates_vector) %>%
+          mutate(Dates = ifelse(Dates == "2011", 
+                                as.Date(paste(Dates,"01-01",sep = "-")),
+                                as.Date(paste(Dates,"12-31", sep = "-"))))
         
-        if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-          datebreaks <- "2 weeks"
-          datelabels <- "%b %d %Y"
-        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-          datebreaks <- "1 month"
-          datelabels <- "%b %Y"
-        } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-          datebreaks <- "4 months"
-          datelabels <- "%b %Y"
-        } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
-                   & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-          datebreaks <- "6 months"
-          datelabels <- "%b %Y"
-        } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-          datebreaks <- "1 year"
-          datelabels <- "%Y"
-        }
+        # select geom_line() or geom_smooth()
+        geometry <- geom_smooth()
+        if (input$SeasonalineLoess1 == "Line Plot") {
+          geometry <- geom_line()
+        } 
         
         # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-        dfAll_otp1 <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
-        colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
-        
-        otp1 <- ggplot(data = dfAll_otp1[dfAll_otp1$`Time Interval` == "Daily" & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
-                       aes(x = Date, 
-                           y = input_var))+
-          geom_point(color = "lightgray",
-                     alpha = 0.4,
-                     size = 6) +
-          geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp1$input_var), ],
-                    aes(x = Date,
-                        y = input_var), 
-                    size = 0.75) +
-          scale_x_date(date_breaks = datebreaks,
-                       date_labels = datelabels) +
-          theme_bw() + 
-          theme(panel.grid.major = element_blank(), 
-                panel.grid.minor = element_blank(), 
+        dfAll_stp1 <- dfAll %>%
+          mutate(year = year(Date)) %>%
+          filter(year %in% dates_vector)
+        dfAll_stp1 <- dfAll_stp1[, c("Time Interval", "Date", input$SeasonalVariable1)]
+        colnames(dfAll_stp1) <- c("Time Interval", "Date", "input_var")
+
+        # loess
+        stp1 <- ggplot(data = dfAll_stp1[dfAll_stp1$`Time Interval` == input$SeasonalMedian1 & dfAll_stp1$Date >= dfDates$Dates[1] & dfAll_stp1$Date <= tail(dfDates$Dates, n=1), ],
+          aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
+                           color = factor(year(Date)), #plot data from each year separately as its own color
+                           y = input_var)) + #use nutrient values as y axis data
+          geometry +
+          scale_x_date(date_breaks = "months", 
+                       date_labels = "%B") +
+          # theme code is for making background of plot nice
+          theme_bw() +
+          theme(panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
                 panel.background = element_blank())+
           theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
-                axis.text.y = element_text(size = 16), 
+                axis.text.y = element_text(size = 16),
                 axis.title.x = element_text(size = 18),
                 axis.title.y = element_blank(),
                 plot.title = element_text(size = 20))+
           theme(strip.background = element_rect(fill = "white")) +
-          ylab(input$OverallVariable1) +
-          ggtitle(input$OverallVariable1)
-        
-        if (input$OverallLoessCheck1 == TRUE) {
-          otp1 <- otp1 + geom_smooth(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
-                                     aes(x = Date,
-                                         y = input_var),
-                                     linewidth = 3)
-          otp1
-        } else {
-          otp1
-        }
+          labs(title = input$SeasonalVariable1, 
+               x = "Date", 
+               y = input$SeasonalVariable1,
+               color = "Year")
+        stp1
         
       })
       # Plot 2
       output$SeasonalTrendsPlot2 <- renderPlot({
+        # put dates into usable formats
+        dates_vector <- input$SeasonalDateRange
+        dfDates <- data.frame(Dates = dates_vector) %>%
+          mutate(Dates = ifelse(Dates == "2011", 
+                                as.Date(paste(Dates,"01-01",sep = "-")),
+                                as.Date(paste(Dates,"12-31", sep = "-"))))
+        
+        # select geom_line() or geom_smooth()
+        geometry <- geom_smooth()
+        if (input$SeasonalineLoess2 == "Line Plot") {
+          geometry <- geom_line()
+        } 
+        
+        # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+        dfAll_stp2 <- dfAll %>%
+          mutate(year = year(Date)) %>%
+          filter(year %in% dates_vector)
+        dfAll_stp2 <- dfAll_stp2[, c("Time Interval", "Date", input$SeasonalVariable2)]
+        colnames(dfAll_stp2) <- c("Time Interval", "Date", "input_var")
+        
+        # loess
+        stp2 <- ggplot(data = dfAll_stp2[dfAll_stp2$`Time Interval` == input$SeasonalMedian2 & dfAll_stp2$Date >= dfDates$Dates[1] & dfAll_stp2$Date <= tail(dfDates$Dates, n=1), ],
+                       aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
+                           color = factor(year(Date)), #plot data from each year separately as its own color
+                           y = input_var)) + #use nutrient values as y axis data
+          geometry +
+          scale_x_date(date_breaks = "months", 
+                       date_labels = "%B") +
+          # theme code is for making background of plot nice
+          theme_bw() +
+          theme(panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                panel.background = element_blank())+
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+                axis.text.y = element_text(size = 16),
+                axis.title.x = element_text(size = 18),
+                axis.title.y = element_blank(),
+                plot.title = element_text(size = 20))+
+          theme(strip.background = element_rect(fill = "white")) +
+          labs(title = input$SeasonalVariable2, 
+               x = "Date", 
+               y = input$SeasonalVariable2,
+               color = "Year")
+        stp2
         
       })
       # Plot 3
       output$SeasonalTrendsPlot3 <- renderPlot({
+        # put dates into usable formats
+        dates_vector <- input$SeasonalDateRange
+        dfDates <- data.frame(Dates = dates_vector) %>%
+          mutate(Dates = ifelse(Dates == "2011", 
+                                as.Date(paste(Dates,"01-01",sep = "-")),
+                                as.Date(paste(Dates,"12-31", sep = "-"))))
+        
+        # select geom_line() or geom_smooth()
+        geometry <- geom_smooth()
+        if (input$SeasonalineLoess3 == "Line Plot") {
+          geometry <- geom_line()
+        } 
+        
+        # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+        dfAll_stp3 <- dfAll %>%
+          mutate(year = year(Date)) %>%
+          filter(year %in% dates_vector)
+        dfAll_stp3 <- dfAll_stp3[, c("Time Interval", "Date", input$SeasonalVariable3)]
+        colnames(dfAll_stp3) <- c("Time Interval", "Date", "input_var")
+        
+        # loess
+        stp3 <- ggplot(data = dfAll_stp3[dfAll_stp3$`Time Interval` == input$SeasonalMedian3 & dfAll_stp3$Date >= dfDates$Dates[1] & dfAll_stp3$Date <= tail(dfDates$Dates, n=1), ],
+                       aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
+                           color = factor(year(Date)), #plot data from each year separately as its own color
+                           y = input_var)) + #use nutrient values as y axis data
+          geometry +
+          scale_x_date(date_breaks = "months", 
+                       date_labels = "%B") +
+          # theme code is for making background of plot nice
+          theme_bw() +
+          theme(panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                panel.background = element_blank())+
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+                axis.text.y = element_text(size = 16),
+                axis.title.x = element_text(size = 18),
+                axis.title.y = element_blank(),
+                plot.title = element_text(size = 20))+
+          theme(strip.background = element_rect(fill = "white")) +
+          labs(title = input$SeasonalVariable3, 
+               x = "Date", 
+               y = input$SeasonalVariable3,
+               color = "Year")
+        stp3
         
       })
       # Plot 4
       output$SeasonalTrendsPlot4 <- renderPlot({
+        # put dates into usable formats
+        dates_vector <- input$SeasonalDateRange
+        dfDates <- data.frame(Dates = dates_vector) %>%
+          mutate(Dates = ifelse(Dates == "2011", 
+                                as.Date(paste(Dates,"01-01",sep = "-")),
+                                as.Date(paste(Dates,"12-31", sep = "-"))))
+        
+        # select geom_line() or geom_smooth()
+        geometry <- geom_smooth()
+        if (input$SeasonalineLoess4 == "Line Plot") {
+          geometry <- geom_line()
+        } 
+        
+        # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
+        dfAll_stp4 <- dfAll %>%
+          mutate(year = year(Date)) %>%
+          filter(year %in% dates_vector)
+        dfAll_stp4 <- dfAll_stp4[, c("Time Interval", "Date", input$SeasonalVariable4)]
+        colnames(dfAll_stp4) <- c("Time Interval", "Date", "input_var")
+        
+        # loess
+        stp4 <- ggplot(data = dfAll_stp4[dfAll_stp4$`Time Interval` == input$SeasonalMedian4 & dfAll_stp4$Date >= dfDates$Dates[1] & dfAll_stp4$Date <= tail(dfDates$Dates, n=1), ],
+                       aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
+                           color = factor(year(Date)), #plot data from each year separately as its own color
+                           y = input_var)) + #use nutrient values as y axis data
+          geometry +
+          scale_x_date(date_breaks = "months", 
+                       date_labels = "%B") +
+          # theme code is for making background of plot nice
+          theme_bw() +
+          theme(panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                panel.background = element_blank())+
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 16),
+                axis.text.y = element_text(size = 16),
+                axis.title.x = element_text(size = 18),
+                axis.title.y = element_blank(),
+                plot.title = element_text(size = 20))+
+          theme(strip.background = element_rect(fill = "white")) +
+          labs(title = input$SeasonalVariable4, 
+               x = "Date", 
+               y = input$SeasonalVariable4,
+               color = "Year")
+        stp4
         
       })
   

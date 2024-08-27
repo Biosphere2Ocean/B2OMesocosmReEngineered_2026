@@ -79,7 +79,7 @@ ui <- fluidPage(
               ##### Time Series Page #####
               nav_panel("Time Series",
                         navset_card_tab(
-                          # Overall Trends Tab
+                          ##### Overall Trends Tab #####
                           nav_panel("Overall Trends",
                                     layout_sidebar(
                                       # sidebar
@@ -187,7 +187,7 @@ ui <- fluidPage(
                                     )
                                     
                           ),
-                          # Seasonal Trends Tab
+                          ##### Seasonal Trends Tab #####
                           nav_panel("Seasonal Trends",
                                     layout_sidebar(
                                       # sidebar
@@ -218,7 +218,7 @@ ui <- fluidPage(
                                                         selected = "Temperature (ºC)"),
                                             selectInput(inputId = "SeasonalMedian1",
                                                         label = "Select Median Interval",
-                                                        choices = median_period_choices,
+                                                        choices = median_period_choices[median_period_choices != "Yearly"],
                                                         selected = "Daily"),
                                             radioButtons(inputId = "SeasonalineLoess1",
                                                          label = "Choose Plot Type",
@@ -235,7 +235,7 @@ ui <- fluidPage(
                                                         selected = "None"),
                                             selectInput(inputId = "SeasonalMedian2",
                                                         label = "Select Median Interval",
-                                                        choices = median_period_choices,
+                                                        choices = median_period_choices[median_period_choices != "Yearly"],
                                                         selected = "Daily"),
                                             radioButtons(inputId = "SeasonalineLoess2",
                                                          label = "Choose Plot Type",
@@ -252,7 +252,7 @@ ui <- fluidPage(
                                                         selected = "None"),
                                             selectInput(inputId = "SeasonalMedian3",
                                                         label = "Select Median Interval",
-                                                        choices = median_period_choices,
+                                                        choices = median_period_choices[median_period_choices != "Yearly"],
                                                         selected = "Daily"),
                                             radioButtons(inputId = "SeasonalineLoess3",
                                                          label = "Choose Plot Type",
@@ -269,7 +269,7 @@ ui <- fluidPage(
                                                         selected = "None"),
                                             selectInput(inputId = "SeasonalMedian4",
                                                         label = "Select Median Interval",
-                                                        choices = median_period_choices,
+                                                        choices = median_period_choices[median_period_choices != "Yearly"],
                                                         selected = "Daily"),
                                             radioButtons(inputId = "SeasonalineLoess4",
                                                          label = "Choose Plot Type",
@@ -282,7 +282,6 @@ ui <- fluidPage(
                                       # main panel: top row
                                       layout_column_wrap(
                                         width = 1/2,
-                                        #verbatimTextOutput("SeasonalTextHelp"),
                                         conditionalPanel("input.SeasonalVariable1 != None",
                                                          plotOutput("SeasonalTrendsPlot1")
                                         ),
@@ -308,17 +307,16 @@ ui <- fluidPage(
               
               ##### Correlations Page #####
               nav_panel(title = "Correlations",
-                        
-              ),
-              
-              ##### Significant Correlations Page #####
-              nav_panel(title = "Significant Correlations",
-                        
-              ),
-              
-              ##### Correlations Tables Page #####
-              nav_panel(title = "Correlations Tables",
-                        
+                        navset_card_tab(
+                          ##### Matrices Tab #####
+                          nav_panel("Matrices",
+                            
+                          ),
+                          ##### Tables Tab #####
+                          nav_panel("Tables",
+                            
+                          )
+                        )
               ),
               
               ##### Data in Context Page #####
@@ -347,25 +345,24 @@ server <- function(input, output) {
         ## Plot 1
         # scale_x_date() options
         # default 
-        datebreaks <- "1 year"
+        datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
         datelabels <- "%Y"
-        
         if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-          datebreaks <- "2 weeks"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "2 week"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %d %Y"
         } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-          datebreaks <- "1 month"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
                    & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-          datebreaks <- "4 months"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "4 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
                    & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-          datebreaks <- "6 months"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "6 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-          datebreaks <- "1 year"
+          datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
           datelabels <- "%Y"
         }
         
@@ -383,7 +380,7 @@ server <- function(input, output) {
                     aes(x = Date,
                         y = input_var), 
                     size = 0.75) +
-          scale_x_date(date_breaks = datebreaks,
+          scale_x_date(breaks = datebreaks,
                        date_labels = datelabels) +
           theme_bw() + 
           theme(panel.grid.major = element_blank(), 
@@ -413,25 +410,24 @@ server <- function(input, output) {
       output$OverallTrendsPlot2 <- renderPlot({
         # scale_x_date() options
         # default 
-        datebreaks <- "1 year"
+        datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
         datelabels <- "%Y"
-        
         if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-          datebreaks <- "2 weeks"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "2 week"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %d %Y"
         } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-          datebreaks <- "1 month"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
                    & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-          datebreaks <- "4 months"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "4 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
                    & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-          datebreaks <- "6 months"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "6 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-          datebreaks <- "1 year"
+          datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
           datelabels <- "%Y"
         }
         
@@ -478,25 +474,24 @@ server <- function(input, output) {
       output$OverallTrendsPlot3 <- renderPlot({
         # scale_x_date() options
         # default 
-        datebreaks <- "1 year"
+        datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
         datelabels <- "%Y"
-        
         if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-          datebreaks <- "2 weeks"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "2 week"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %d %Y"
         } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-          datebreaks <- "1 month"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
                    & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-          datebreaks <- "4 months"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "4 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
                    & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-          datebreaks <- "6 months"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "6 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-          datebreaks <- "1 year"
+          datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
           datelabels <- "%Y"
         }
         
@@ -543,25 +538,24 @@ server <- function(input, output) {
       output$OverallTrendsPlot4 <- renderPlot({
         # scale_x_date() options
         # default 
-        datebreaks <- "1 year"
+        datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
         datelabels <- "%Y"
-        
         if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 182) {
-          datebreaks <- "2 weeks"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "2 week"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %d %Y"
         } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 365) {
-          datebreaks <- "1 month"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
                    & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 2*365) {
-          datebreaks <- "4 months"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "4 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (2*365 < as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) 
                    & as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) <= 5*365) {
-          datebreaks <- "6 months"
+          datebreaks <- append(seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "6 month"), as.Date(input$OverallDateRange[2]))
           datelabels <- "%b %Y"
         } else if (as.numeric(difftime(input$OverallDateRange[2], input$OverallDateRange[1])) > 5*365) {
-          datebreaks <- "1 year"
+          datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
           datelabels <- "%Y"
         }
         
@@ -605,15 +599,14 @@ server <- function(input, output) {
         }
       })
     ##### Seasonal Trends #####
-      #output$SeasonalTextHelp <- renderPrint({class(tail(input$SeasonalDateRange, n=1))})
       # Plot 1
       output$SeasonalTrendsPlot1 <- renderPlot({
         # put dates into usable formats
         dates_vector <- input$SeasonalDateRange
-        dfDates <- data.frame(Dates = dates_vector) %>%
-          mutate(Dates = ifelse(Dates == "2011", 
-                                as.Date(paste(Dates,"01-01",sep = "-")),
-                                as.Date(paste(Dates,"12-31", sep = "-"))))
+        dfDates <- data.frame(Date = dates_vector) %>%
+          mutate(Date = paste(Date,"01-01",sep = "-"),
+                 Date = as.Date(Date))
+        dfDates <- rbind(dfDates, tail(dfAll[dfAll$`Time Interval` == "Daily", "Date"], n=1))
         
         # select geom_line() or geom_smooth()
         geometry <- geom_smooth()
@@ -629,7 +622,7 @@ server <- function(input, output) {
         colnames(dfAll_stp1) <- c("Time Interval", "Date", "input_var")
 
         # loess
-        stp1 <- ggplot(data = dfAll_stp1[dfAll_stp1$`Time Interval` == input$SeasonalMedian1 & dfAll_stp1$Date >= dfDates$Dates[1] & dfAll_stp1$Date <= tail(dfDates$Dates, n=1), ],
+        stp1 <- ggplot(data = dfAll_stp1[dfAll_stp1$`Time Interval` == input$SeasonalMedian1 & dfAll_stp1$Date >= dfDates$Date[1] & dfAll_stp1$Date <= tail(dfDates$Date, n=1), ],
           aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
                            color = factor(year(Date)), #plot data from each year separately as its own color
                            y = input_var)) + #use nutrient values as y axis data
@@ -658,10 +651,10 @@ server <- function(input, output) {
       output$SeasonalTrendsPlot2 <- renderPlot({
         # put dates into usable formats
         dates_vector <- input$SeasonalDateRange
-        dfDates <- data.frame(Dates = dates_vector) %>%
-          mutate(Dates = ifelse(Dates == "2011", 
-                                as.Date(paste(Dates,"01-01",sep = "-")),
-                                as.Date(paste(Dates,"12-31", sep = "-"))))
+        dfDates <- data.frame(Date = dates_vector) %>%
+          mutate(Date = paste(Date,"01-01",sep = "-"),
+                 Date = as.Date(Date))
+        dfDates <- rbind(dfDates, tail(dfAll[dfAll$`Time Interval` == "Daily", "Date"], n=1))
         
         # select geom_line() or geom_smooth()
         geometry <- geom_smooth()
@@ -677,7 +670,7 @@ server <- function(input, output) {
         colnames(dfAll_stp2) <- c("Time Interval", "Date", "input_var")
         
         # loess
-        stp2 <- ggplot(data = dfAll_stp2[dfAll_stp2$`Time Interval` == input$SeasonalMedian2 & dfAll_stp2$Date >= dfDates$Dates[1] & dfAll_stp2$Date <= tail(dfDates$Dates, n=1), ],
+        stp2 <- ggplot(data = dfAll_stp2[dfAll_stp2$`Time Interval` == input$SeasonalMedian2 & dfAll_stp2$Date >= dfDates$Date[1] & dfAll_stp2$Date <= tail(dfDates$Date, n=1), ],
                        aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
                            color = factor(year(Date)), #plot data from each year separately as its own color
                            y = input_var)) + #use nutrient values as y axis data
@@ -706,10 +699,10 @@ server <- function(input, output) {
       output$SeasonalTrendsPlot3 <- renderPlot({
         # put dates into usable formats
         dates_vector <- input$SeasonalDateRange
-        dfDates <- data.frame(Dates = dates_vector) %>%
-          mutate(Dates = ifelse(Dates == "2011", 
-                                as.Date(paste(Dates,"01-01",sep = "-")),
-                                as.Date(paste(Dates,"12-31", sep = "-"))))
+        dfDates <- data.frame(Date = dates_vector) %>%
+          mutate(Date = paste(Date,"01-01",sep = "-"),
+                 Date = as.Date(Date))
+        dfDates <- rbind(dfDates, tail(dfAll[dfAll$`Time Interval` == "Daily", "Date"], n=1))
         
         # select geom_line() or geom_smooth()
         geometry <- geom_smooth()
@@ -725,7 +718,7 @@ server <- function(input, output) {
         colnames(dfAll_stp3) <- c("Time Interval", "Date", "input_var")
         
         # loess
-        stp3 <- ggplot(data = dfAll_stp3[dfAll_stp3$`Time Interval` == input$SeasonalMedian3 & dfAll_stp3$Date >= dfDates$Dates[1] & dfAll_stp3$Date <= tail(dfDates$Dates, n=1), ],
+        stp3 <- ggplot(data = dfAll_stp3[dfAll_stp3$`Time Interval` == input$SeasonalMedian3 & dfAll_stp3$Date >= dfDates$Date[1] & dfAll_stp3$Date <= tail(dfDates$Date, n=1), ],
                        aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
                            color = factor(year(Date)), #plot data from each year separately as its own color
                            y = input_var)) + #use nutrient values as y axis data
@@ -754,10 +747,10 @@ server <- function(input, output) {
       output$SeasonalTrendsPlot4 <- renderPlot({
         # put dates into usable formats
         dates_vector <- input$SeasonalDateRange
-        dfDates <- data.frame(Dates = dates_vector) %>%
-          mutate(Dates = ifelse(Dates == "2011", 
-                                as.Date(paste(Dates,"01-01",sep = "-")),
-                                as.Date(paste(Dates,"12-31", sep = "-"))))
+        dfDates <- data.frame(Date = dates_vector) %>%
+          mutate(Date = paste(Date,"01-01",sep = "-"),
+                 Date = as.Date(Date))
+        dfDates <- rbind(dfDates, tail(dfAll[dfAll$`Time Interval` == "Daily", "Date"], n=1))
         
         # select geom_line() or geom_smooth()
         geometry <- geom_smooth()
@@ -773,7 +766,7 @@ server <- function(input, output) {
         colnames(dfAll_stp4) <- c("Time Interval", "Date", "input_var")
         
         # loess
-        stp4 <- ggplot(data = dfAll_stp4[dfAll_stp4$`Time Interval` == input$SeasonalMedian4 & dfAll_stp4$Date >= dfDates$Dates[1] & dfAll_stp4$Date <= tail(dfDates$Dates, n=1), ],
+        stp4 <- ggplot(data = dfAll_stp4[dfAll_stp4$`Time Interval` == input$SeasonalMedian4 & dfAll_stp4$Date >= dfDates$Date[1] & dfAll_stp4$Date <= tail(dfDates$Date, n=1), ],
                        aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
                            color = factor(year(Date)), #plot data from each year separately as its own color
                            y = input_var)) + #use nutrient values as y axis data

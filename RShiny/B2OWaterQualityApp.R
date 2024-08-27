@@ -310,7 +310,10 @@ ui <- fluidPage(
                         navset_card_tab(
                           ##### Matrices Tab #####
                           nav_panel("Matrices",
-                            
+                            # groupCheckBoxes(choices = c("All Correlations", 
+                            #                              "Significant Correlations")),
+                            # fillRow(conditionalPanel(corrPlotAll), 
+                            #         conditionalPanel(corrPlotSig))
                           ),
                           ##### Tables Tab #####
                           nav_panel("Tables",
@@ -321,7 +324,7 @@ ui <- fluidPage(
               
               ##### Data in Context Page #####
               nav_panel(title = "Data in Context",
-                        
+                       # B2O Historical Events to explain data oddities 
               ),
               
               ##### B1 Comparisons Page #####

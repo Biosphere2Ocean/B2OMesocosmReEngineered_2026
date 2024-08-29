@@ -13,6 +13,10 @@ library(shinythemes)
 library(bslib)
 library(tidyverse)
 library(lubridate)
+library(Hmisc)
+library(corrplot)
+library(ggcorrplot)
+source("Dependencies/CorrelationFunction.R")
 
 # Import data -----
 # all data are medians of each indicated interval except for the daily hach 
@@ -20,9 +24,30 @@ library(lubridate)
 # all Hach and YSI data: combo of all above files with "Time Interval" column to 
 # denote which interval (daily, weekly, etc) the data comes from
 dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv", col_names = TRUE) %>%
-  rename(pH = `pH (YSI)`)
+  rename(pH = `pH (YSI)`) %>%
+  select(-`pH (Hach)`)
 
-# Define variables -----
+# Data Wrangling -----
+## Correlations
+# create nested list of correlation matrices: p-values, n, r values
+cor_mat_stats <- dfAll %>%
+  filter(`Time Interval` == "Daily") %>%
+  # mutate(`Temperature (ºF)` = ifelse(Date >= "2019-11-01", NA, `Temperature (ºF)`), 
+  #        `Temperature (ºC)` = ifelse(Date >= "2019-11-01", NA, `Temperature (ºC)`)) %>%
+  select(-`Time Interval`, -Date, -`pH (mV)`, -`Conductivity, Non-Linear Function (µS/cm)`,
+         -`Conductivity, Specific (µS/cm)`, -`Dissolved Oxygen, Saturated (%)`) 
+cor_mat_stats <- rcorr(as.matrix(cor_mat_stats))
+
+# full flattened correlation matrix: table of correlation pairings using matrices created in cor_mat_stats
+cor_mat_stats_flat <- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %>%
+  mutate(across(3:4, ~ round(.x, 4)))
+
+# flattened correlation matrix with only p-values <= 0.05: table of correlation pairings created in cor_mat_stats
+cor_mat_stats_flat_sig <- cor_mat_stats_flat %>%
+  filter(p_value <= 0.05)
+
+
+# Define UI variables -----
 # character vector of all day dates in YSI data
 date_range_overall <- dfAll %>%
   filter(`Time Interval` == "Daily") %>%
@@ -310,16 +335,39 @@ ui <- fluidPage(
                         navset_card_tab(
                           ##### Matrices Tab #####
                           nav_panel("Matrices",
-                            # groupCheckBoxes(choices = c("All Correlations", 
-                            #                              "Significant Correlations")),
-                            # fillRow(conditionalPanel(corrPlotAll), 
-                            #         conditionalPanel(corrPlotSig))
-                          ),
-                          ##### Tables Tab #####
-                          nav_panel("Tables",
-                            
+                                    layout_sidebar(
+                                      sidebar = sidebar(
+                                        checkboxGroupInput(
+                                          inputId = "CorrMatrixCheck",
+                                          label = "",
+                                          choices = c("All Correlations","Significant Correlations"),
+                                          selected = "All Correlations"
+                                        )
+                                      ),
+                                        conditionalPanel(
+                                          "input.CorrMatrixCheck.includes('All Correlations')",
+                                          plotOutput("CorrPlotAll")
+                                          ),
+                                        conditionalPanel(
+                                          "input.CorrMatrixCheck.includes('Significant Correlations')",
+                                          plotOutput("CorrPlotSig")
+                                          )
+                                    )
                           )
                         )
+                          ##### Tables Tab #####
+                          # nav_panel("Tables",
+                          #          page_fillable(
+                          #            fillRow(
+                          #              conditionalPanel(
+                          #                "input.CorrMatrixCheck.includes('All Correlations')",
+                          #                tableOutput("CorrTableAll")),
+                          #              conditionalPanel(
+                          #                "input.CorrMatrixCheck.includes('Significant Correlations')",
+                          #                tableOutput("CorrTableSig"))
+                          #            )
+                          #          )
+                          # )
               ),
               
               ##### Data in Context Page #####
@@ -345,7 +393,6 @@ server <- function(input, output) {
     ##### Overall Trends #####
       # Plot 1
       output$OverallTrendsPlot1 <- renderPlot({
-        ## Plot 1
         # scale_x_date() options
         # default 
         datebreaks <- seq(as.Date(input$OverallDateRange[1]), as.Date(input$OverallDateRange[2]), by = "1 year")
@@ -370,16 +417,16 @@ server <- function(input, output) {
         }
         
         # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-        dfAll_otp1 <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
-        colnames(dfAll_otp1) <- c("Time Interval", "Date", "input_var")
+        dfAll_otp <- dfAll[, c("Time Interval", "Date", input$OverallVariable1)]
+        colnames(dfAll_otp) <- c("Time Interval", "Date", "input_var")
         
-        otp1 <- ggplot(data = dfAll_otp1[dfAll_otp1$`Time Interval` == "Daily" & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
+        otp <- ggplot(data = dfAll_otp[dfAll_otp$`Time Interval` == "Daily" & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2], ],
                        aes(x = Date, 
                            y = input_var))+
           geom_point(color = "lightgray",
                      alpha = 0.4,
                      size = 6) +
-          geom_line(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp1$input_var), ],
+          geom_line(data = dfAll_otp[dfAll_otp$`Time Interval` == input$OverallMedian1 & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp$input_var), ],
                     aes(x = Date,
                         y = input_var), 
                     size = 0.75) +
@@ -399,13 +446,13 @@ server <- function(input, output) {
           ggtitle(input$OverallVariable1)
         
         if (input$OverallLoessCheck1 == TRUE) {
-          otp1 <- otp1 + geom_smooth(data = dfAll_otp1[dfAll_otp1$`Time Interval` == input$OverallMedian1 & dfAll_otp1$Date >= input$OverallDateRange[1] & dfAll_otp1$Date <= input$OverallDateRange[2], ],
+          otp <- otp + geom_smooth(data = dfAll_otp[dfAll_otp$`Time Interval` == input$OverallMedian1 & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2], ],
                                      aes(x = Date,
                                          y = input_var),
                                      linewidth = 3)
-          otp1
+          otp
         } else {
-          otp1
+          otp
         }
         
       })
@@ -435,20 +482,20 @@ server <- function(input, output) {
         }
         
         # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-        dfAll_otp2 <- dfAll[, c("Time Interval", "Date", input$OverallVariable2)]
-        colnames(dfAll_otp2) <- c("Time Interval", "Date", "input_var")
+        dfAll_otp <- dfAll[, c("Time Interval", "Date", input$OverallVariable2)]
+        colnames(dfAll_otp) <- c("Time Interval", "Date", "input_var")
         
-        otp2 <- ggplot(data = dfAll_otp2[dfAll_otp2$`Time Interval` == "Daily" & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2], ],
-                       aes(x = Date, 
-                           y = input_var))+
+        otp <- ggplot(data = dfAll_otp[dfAll_otp$`Time Interval` == "Daily" & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2], ],
+                      aes(x = Date, 
+                          y = input_var))+
           geom_point(color = "lightgray",
                      alpha = 0.4,
                      size = 6) +
-          geom_line(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2 & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp2$input_var), ],
+          geom_line(data = dfAll_otp[dfAll_otp$`Time Interval` == input$OverallMedian2 & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp$input_var), ],
                     aes(x = Date,
                         y = input_var), 
                     size = 0.75) +
-          scale_x_date(date_breaks = datebreaks,
+          scale_x_date(breaks = datebreaks,
                        date_labels = datelabels) +
           theme_bw() + 
           theme(panel.grid.major = element_blank(), 
@@ -464,14 +511,15 @@ server <- function(input, output) {
           ggtitle(input$OverallVariable2)
         
         if (input$OverallLoessCheck2 == TRUE) {
-          otp2 <- otp2 + geom_smooth(data = dfAll_otp2[dfAll_otp2$`Time Interval` == input$OverallMedian2 & dfAll_otp2$Date >= input$OverallDateRange[1] & dfAll_otp2$Date <= input$OverallDateRange[2], ],
-                                     aes(x = Date,
-                                         y = input_var),
-                                     linewidth = 3)
-          otp2
+          otp <- otp + geom_smooth(data = dfAll_otp[dfAll_otp$`Time Interval` == input$OverallMedian2 & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2], ],
+                                   aes(x = Date,
+                                       y = input_var),
+                                   linewidth = 3)
+          otp
         } else {
-          otp2
+          otp
         }
+        
       })
       # Plot 3
       output$OverallTrendsPlot3 <- renderPlot({
@@ -499,20 +547,20 @@ server <- function(input, output) {
         }
         
         # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-        dfAll_otp3 <- dfAll[, c("Time Interval", "Date", input$OverallVariable3)]
-        colnames(dfAll_otp3) <- c("Time Interval", "Date", "input_var")
+        dfAll_otp <- dfAll[, c("Time Interval", "Date", input$OverallVariable3)]
+        colnames(dfAll_otp) <- c("Time Interval", "Date", "input_var")
         
-        otp3 <- ggplot(data = dfAll_otp3[dfAll_otp3$`Time Interval` == "Daily" & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2], ],
-                       aes(x = Date, 
-                           y = input_var))+
+        otp <- ggplot(data = dfAll_otp[dfAll_otp$`Time Interval` == "Daily" & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2], ],
+                      aes(x = Date, 
+                          y = input_var))+
           geom_point(color = "lightgray",
                      alpha = 0.4,
                      size = 6) +
-          geom_line(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3 & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2]  & !is.na(dfAll_otp3$input_var), ],
+          geom_line(data = dfAll_otp[dfAll_otp$`Time Interval` == input$OverallMedian3 & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp$input_var), ],
                     aes(x = Date,
                         y = input_var), 
                     size = 0.75) +
-          scale_x_date(date_breaks = datebreaks,
+          scale_x_date(breaks = datebreaks,
                        date_labels = datelabels) +
           theme_bw() + 
           theme(panel.grid.major = element_blank(), 
@@ -528,14 +576,15 @@ server <- function(input, output) {
           ggtitle(input$OverallVariable3)
         
         if (input$OverallLoessCheck3 == TRUE) {
-          otp3 <- otp3 + geom_smooth(data = dfAll_otp3[dfAll_otp3$`Time Interval` == input$OverallMedian3 & dfAll_otp3$Date >= input$OverallDateRange[1] & dfAll_otp3$Date <= input$OverallDateRange[2], ],
-                                     aes(x = Date,
-                                         y = input_var),
-                                     linewidth = 3)
-          otp3
+          otp <- otp + geom_smooth(data = dfAll_otp[dfAll_otp$`Time Interval` == input$OverallMedian3 & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2], ],
+                                   aes(x = Date,
+                                       y = input_var),
+                                   linewidth = 3)
+          otp
         } else {
-          otp3
+          otp
         }
+        
       })
       # Plot 4
       output$OverallTrendsPlot4 <- renderPlot({
@@ -563,20 +612,20 @@ server <- function(input, output) {
         }
         
         # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-        dfAll_otp4 <- dfAll[, c("Time Interval", "Date", input$OverallVariable4)]
-        colnames(dfAll_otp4) <- c("Time Interval", "Date", "input_var")
+        dfAll_otp <- dfAll[, c("Time Interval", "Date", input$OverallVariable4)]
+        colnames(dfAll_otp) <- c("Time Interval", "Date", "input_var")
         
-        otp4 <- ggplot(data = dfAll_otp4[dfAll_otp4$`Time Interval` == "Daily" & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2], ],
-                       aes(x = Date, 
-                           y = input_var))+
+        otp <- ggplot(data = dfAll_otp[dfAll_otp$`Time Interval` == "Daily" & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2], ],
+                      aes(x = Date, 
+                          y = input_var))+
           geom_point(color = "lightgray",
                      alpha = 0.4,
                      size = 6) +
-          geom_line(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4 & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2]& !is.na(dfAll_otp4$input_var), ],
+          geom_line(data = dfAll_otp[dfAll_otp$`Time Interval` == input$OverallMedian4 & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2] & !is.na(dfAll_otp$input_var), ],
                     aes(x = Date,
                         y = input_var), 
                     size = 0.75) +
-          scale_x_date(date_breaks = datebreaks,
+          scale_x_date(breaks = datebreaks,
                        date_labels = datelabels) +
           theme_bw() + 
           theme(panel.grid.major = element_blank(), 
@@ -592,14 +641,15 @@ server <- function(input, output) {
           ggtitle(input$OverallVariable4)
         
         if (input$OverallLoessCheck4 == TRUE) {
-          otp4 <- otp4 + geom_smooth(data = dfAll_otp4[dfAll_otp4$`Time Interval` == input$OverallMedian4 & dfAll_otp4$Date >= input$OverallDateRange[1] & dfAll_otp4$Date <= input$OverallDateRange[2], ],
-                                     aes(x = Date,
-                                         y = input_var),
-                                     linewidth = 3)
-          otp4
+          otp <- otp + geom_smooth(data = dfAll_otp[dfAll_otp$`Time Interval` == input$OverallMedian4 & dfAll_otp$Date >= input$OverallDateRange[1] & dfAll_otp$Date <= input$OverallDateRange[2], ],
+                                   aes(x = Date,
+                                       y = input_var),
+                                   linewidth = 3)
+          otp
         } else {
-          otp4
+          otp
         }
+        
       })
     ##### Seasonal Trends #####
       # Plot 1
@@ -795,6 +845,69 @@ server <- function(input, output) {
         
       })
   
+  
+  ##### Correlations #####
+      ##### Matrices #####
+        # All Correlations Plot
+        output$CorrPlotAll <- renderPlot({
+          # correlations R values
+          cormat_RValues <- as.data.frame(cor_mat_stats$r)
+          # correlations P values
+          cormat_PValues <-  as.data.frame(cor_mat_stats$P)
+
+          # change row names of dataframes to be the column names
+          row_names <- colnames(cormat_PValues)
+          rownames(cormat_PValues) <- row_names
+          rownames(cormat_RValues) <- row_names
+
+          # turn both dataframes into matrices
+          cormat_RValues <- as.matrix(cormat_RValues)
+          cormat_PValues <- as.matrix(cormat_PValues)
+
+          # turn NAs into insignificant values
+          cormat_PValues[is.na(cormat_PValues)] <- 1.00
+          cormat_RValues[is.na(cormat_RValues)] <- 0.00
+
+          # Correlogram
+          ggcorrplot(cormat_RValues,
+                     outline.color = "white",
+                     ggtheme = ggplot2::theme_gray(),
+                     colors = c("#6D9EC1", "white", "#E46726"),
+                     lab = TRUE,
+                     title = "All Correlations")
+          
+        })
+
+        # Significant Correlations Plot
+        output$CorrPlotSig <- renderPlot({
+          # correlations R values
+          cormat_RValues <- as.data.frame(cor_mat_stats$r)
+          # correlations P values
+          cormat_PValues <-  as.data.frame(cor_mat_stats$P)
+          
+          # change row names of dataframes to be the column names
+          row_names <- colnames(cormat_PValues)
+          rownames(cormat_PValues) <- row_names
+          rownames(cormat_RValues) <- row_names
+          
+          # turn both dataframes into matrices
+          cormat_RValues <- as.matrix(cormat_RValues)
+          cormat_PValues <- as.matrix(cormat_PValues)
+          
+          # turn NAs into insignificant values
+          cormat_PValues[is.na(cormat_PValues)] <- 1.00
+          cormat_RValues[is.na(cormat_RValues)] <- 0.00
+
+          # Correlogram with Significance
+          ggcorrplot(cormat_RValues,
+                     p.mat = cormat_PValues,
+                     outline.color = "white",
+                     ggtheme = ggplot2::theme_gray(),
+                     colors = c("#6D9EC1", "white", "#E46726"),
+                     lab = TRUE,
+                     insig = "blank",
+                     title = "Significant Correlations (PValue < 0.05)")
+        })
 }
 
 

@@ -7,7 +7,7 @@ output: html_notebook
 ---
 # Data Quality Control
 
-> Please Note:  If you have access to the file QCOceanWaterQualityFrame.csv, then you do not need to run this notebook in order to proceed with downstream data analyses. If you would like to see how the data was quality controlled, then continue.
+> Please Note:  If you have access to the file 02-YSI-Data-QCCutoff.csv, then you do not need to run this notebook in order to proceed with downstream data analyses. If you would like to see how the data was quality controlled, then continue.
 
 
 ## Import Libraries
@@ -25,7 +25,9 @@ This uses csv file created in OceanDataWrangling.Rmd. You do not need to re-run 
 ```{r Import Data}
 # if you get an error when running line below, make sure to set R Markdown to run chunks in project directory: Tools > Global Options > R Markdown (in side panel) > "Evaluate chunks in directory:" drop down menu select Project
 
-df <- read_csv("Data/CleanData/CleanData_YSI/01_DataWrangling/01-OceanWaterQualityData.csv")
+df <- read_csv("Data/Clean/YSI/01_DataWrangling/02-YSI-Data-Clean-All.csv") %>%
+  mutate(`Chlorophyll (RFU)` = as.double(`Chlorophyll (RFU)`),
+         `Total Algae (RFU)` = as.double(`Total Algae (RFU)`))
 
 ```
 ## Plot Pre-QC Data
@@ -33,15 +35,15 @@ Make a quick plot of all variables using raw data (pre quality control) to see r
 ```{r Visualize Data Before QC Performed}
 # format data as long instead of wide so it is easier to facet in ggplot 
 dfPivot <- df %>%
-  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
                names_to = "variable",
                values_to = "variable_value")%>%
-  mutate(date = as.Date(date, format = "%Y/%m/%d"))
+  mutate(Date = as.Date(Date))
 
 # this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
 AllVariablePlotPreQC <- dfPivot %>%
   #filter(variable == "pH") %>%
-  ggplot(aes(x = date, 
+  ggplot(aes(x = Date, 
              y = variable_value)) +
   geom_line() +
   # can comment out below line if filtering by one variable
@@ -76,32 +78,32 @@ dfQC <- data.frame(matrix(ncol = 2, nrow = nrow(df)))
 colnames(dfQC) <- c("date", "time")
 # filling in date and time columns with same values from df
 dfQC <- dfQC %>%
-  mutate(date = df$date,
-         time = df$time)
+  mutate(Date = df$Date,
+         Time = df$Time)
 # getting list of column names from df, excluding "date" and "time" so we can use it to loop through
 var_names <- colnames(df)
-var_names <- var_names[! var_names %in% c("date", "time")]
+var_names <- var_names[! var_names %in% c("Date", "Time")]
 
 # loopin time
 for (v in var_names) {
   # select column from df to use in calculations (represented by v in the loop) and store as var
   var <- df[[v]]
   # frame with just date, time, and var columns - all from df
-  dfVar <- df[, c("date", "time")]
+  dfVar <- df[, c("Date", "Time")]
   dfVar <- cbind(dfVar, var)
   
   dfVar <- dfVar %>%
     # mutate date column so it's just year and month - this will allow us to do summary statistics by month
-    mutate(date = format(as.Date(date), "%Y-%m"),
+    mutate(Date = format(as.Date(Date), "%Y-%m"),
            stat = NA) %>%
-    group_by(date) %>%
+    group_by(Date) %>%
     # make columns for monthly standard deviation, mean, and median absolute deviation (mad) 
     mutate(sd_monthly = sd(as.numeric(var), na.rm = TRUE),
            mean_monthly = mean(as.numeric(var), na.rm = TRUE),
            mad_monthly = mad(as.numeric(var), na.rm = TRUE))
   
   # create vector of unique dates from dfVar. Will give just the unique year/month combos
-  unique_dates <- unique(dfVar$date)
+  unique_dates <- unique(dfVar$Date)
 
   # test to see if the data for each month are normal
   # if normal: use mean
@@ -109,7 +111,7 @@ for (v in var_names) {
   for (d in unique_dates) {
     # filter dfVar by month and use only unique values
     dfVarNormal <- dfVar %>%
-      filter(date == d) %>%
+      filter(Date == d) %>%
       unique()
     
     # run shapiro test on var values if there are more than 3 unique values. 
@@ -178,7 +180,7 @@ for (v in var_names) {
 Save QC'd data from above chunk to csv called 02-OceanWaterQualityData-QC. The next steps take the QC process further by implementing cutoff values. 
 ```{r Save QC Data}
 write_csv(dfQC, 
-          file = "Data/CleanData/CleanData_YSI/02_QualityControl/02-OceanWaterQualityData-QC.csv", 
+          file = "Data/Clean/YSI/02_QualityControl/01-YSI-Data-QC.csv", 
           col_names = TRUE)
 ```
 
@@ -190,15 +192,15 @@ write_csv(dfQC,
 
 # pivot dfQC to long format from wide so that facet wrapping is easier
 dfQCPivot <- dfQC %>%
-  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
                names_to = "variable",
                values_to = "variable_value")%>%
-  mutate(date = as.Date(date, format = "%Y/%m/%d"))
+  mutate(Date = as.Date(Date, format = "%Y/%m/%d"))
 
 # again, this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
 AllVariablePlotPostQC <- dfQCPivot %>%
   ##filter(variable == "pH") %>%
-  ggplot(aes(x = date, 
+  ggplot(aes(x = Date, 
              y = variable_value)) +
   geom_line() +
   # comment the below line if using the filter line
@@ -232,16 +234,16 @@ Based on the above plot, the variables pH, salinity_psu, and temp_c still have s
 - temp_c < 20 or > 28
 ```{r Implement Cutoffs}
 # read in QCOceanWaterQualityData.csv that was created in a previous chunk if it is not already in your environment
-# dfQC <- read_csv("Data/CleanData/CleanData_YSI/02_QualityControl/02-OceanWaterQualityData-QC.csv")
+# dfQC <- read_csv("Data/Clean/YSI/02_QualityControl/01-YSI-Data-QC.csv")
 
 # implement calibration cutoff values
 dfQCCutoff <- dfQC %>%
-  mutate(date = as.Date(date, format = "%m/%d/%Y")) %>%
+  mutate(Date = as.Date(Date, format = "%m/%d/%Y")) %>%
   mutate(pH = ifelse(pH < 7.5, NA, pH)) %>%
-  mutate(salinity_psu = ifelse(salinity_psu < 21, NA, salinity_psu)) %>%
-  mutate(salinity_psu = ifelse(date > "2020/01/01" & salinity_psu < 31, NA, salinity_psu)) %>%
-  mutate(salinity_psu = ifelse(date < "2013/01/01" & salinity_psu < 24, NA, salinity_psu)) %>%
-  mutate(temp_c = ifelse(temp_c < 20 | temp_c > 28, NA, temp_c))
+  mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 21, NA, `Salinity (PSU)`)) %>%
+  mutate(`Salinity (PSU)` = ifelse(Date > "2020/01/01" & `Salinity (PSU)` < 31, NA, `Salinity (PSU)`)) %>%
+  mutate(`Salinity (PSU)` = ifelse(Date < "2013/01/01" & `Salinity (PSU)` < 24, NA, `Salinity (PSU)`)) %>%
+  mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 20 | `Temperature (ºC)` > 28, NA, `Temperature (ºC)`))
 
 ```
 
@@ -251,15 +253,15 @@ Visualize final QC'd data to see if there are anymore changes to make.
 ```{r Visualize Post-QC, Post-Cutoff Data}
 # pivot dfQCCutoff to long format from wide so that facet wrapping is easier
 dfQCCutoffPivot <- dfQCCutoff %>%
-  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
                names_to = "variable",
                values_to = "variable_value")%>%
-  mutate(date = as.Date(date, format = "%Y/%m/%d"))
+  mutate(Date = as.Date(Date, format = "%Y/%m/%d"))
 
 # again, this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
 AllVariablePlotPostQCCutoff <- dfQCCutoffPivot %>%
   #filter(variable == "pH") %>%
-  ggplot(aes(x = date, 
+  ggplot(aes(x = Date, 
              y = variable_value)) +
   geom_line() +
   # comment below line if using filter line
@@ -287,7 +289,7 @@ AllVariablePlotPostQCCutoff
 Everything looks good, so we can write the final QC'd data to a csv file.
 ```{r Write Post-QC csv}
 write_csv(dfQCCutoff, 
-          file = "Data/CleanData/CleanData_YSI/02_QualityControl/03-OceanWaterQualityData-QCCutoff.csv", 
+          file = "Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv", 
           col_names = TRUE)  
 
 ```

@@ -1,0 +1,12 @@
+name: Biosphere2WaterQuality
+title: Biosphere2WaterQuality
+username: rgrambihler
+account: rgrambihler
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 12630922
+bundleId: 9070793
+url: https://rgrambihler.shinyapps.io/Biosphere2WaterQuality/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

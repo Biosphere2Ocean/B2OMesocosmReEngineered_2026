@@ -25,29 +25,22 @@ dfCutoff <- read_csv("Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv"
 ```{r data formatting}
 # pivot df longer for easier all-variable plotting
 dfPivot <- df %>%
-  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
                names_to = "variable",
-               values_to = "variable_value")%>%
-  mutate(date = as.Date(date, format = "%Y/%m/%d"))
+               values_to = "variable_value")
 
 # pivot dfCut longer for easier all-variable plotting
 dfCutPivot <- dfCutoff %>%
-  pivot_longer(cols = temp_f:total_dissolved_solids_mgL,
+  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
                names_to = "variable",
-               values_to = "variable_value")%>%
-  mutate(date = as.Date(date, format = "%Y/%m/%d"))
+               values_to = "variable_value")
 
 # character vector of variable names as they appear in the dataframes
 variable_names <- unique(dfPivot$variable)
 
 # character vector of variable names as they should be written on a graph
-variable_text <- c("Temperature (ºF)", "Temperature (ºC)", "pH", "pH (mV)",
-                   "Salinity (PSU)", "Conductivity (µS/cm)", 
-                   "NLF Conductivity (µS/cm)", "Specific Conductivity (µS/cm)",
-                   "Dissolved Oxygen (mg/L)", "Dissolved Oxygen, Saturated (%)",
-                   "Dissolved Oxygen, Local (%)", "ORP (mV)", "Chlorophyll (RFU)",
-                   "Chlorophyll (µg/L)", "Total Algae (RFU)", "Total Algae (cells/L)",
-                   "Total Dissolved Solids (mg/L)")
+variable_text <- colnames(df)
+variable_text <- variable_text[! variable_text %in% c("Date", "Time")]
 
 
 # character vector of file names for plots
@@ -128,22 +121,22 @@ plotList_postqc <- list()
 for (i in 1:length(variable_names)) {
   plotList_postqc[[i]] <- dfCutPivot %>%
     filter(variable == variable_names[i]) %>%
-    filter(ifelse(variable == "nlf_conductivity_uScm" |
-                    variable == "pH_mV" |
-                    variable == "sp_conductivity_uScm" |
-                    variable == "do_mgL" |
-                    variable == "do_local_percent" |
-                    variable == "chlorophyll_rfu" |
-                    variable == "total_dissolved_solids_mgL", 
-                  date >= "2021-01-01",
-                  date == date)) %>%
-    filter(ifelse(variable == "do_saturated_percent" |
-                    variable == "chlorophyll_ugL" |
-                    variable == "total_algae_rfu" |
-                    variable == "total_algae_cellsL", 
-                  date >= "2018-01-01", 
-                  date == date)) %>%
-    ggplot(aes(x = date, 
+    filter(ifelse(variable == "Conductivity, Non-Linear Function (µS/cm)" |
+                    variable == "pH (mV)" |
+                    variable == "Conductivity, Specific (µS/cm)" |
+                    variable == "Dissolved Oxygen (mg/L)" |
+                    variable == "Dissolved Oxygen, Local (%)" |
+                    variable == "Chlorophyll (RFU)" |
+                    variable == "Total Dissolved Solids (mg/L)", 
+                  Date >= "2021-01-01",
+                  Date == Date)) %>%
+    filter(ifelse(variable == "Dissolved Oxygen, Saturated (%)" |
+                    variable == "Chlorophyll (µg/L)" |
+                    variable == "Total Algae (RFU)" |
+                    variable == "Total Algae (cells/L)", 
+                  Date >= "2018-01-01", 
+                  Date == Date)) %>%
+    ggplot(aes(x = Date, 
                y = variable_value)) +
     geom_line() +
     scale_x_date(date_breaks = "1 year",
@@ -156,8 +149,9 @@ for (i in 1:length(variable_names)) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
     theme(strip.background = element_rect(fill = "white"))+
-    labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
-         subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+    labs(#title = paste("B2O", variable_text[i], "from 2011-2023"),
+         title = variable_text[i],
+         #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
          x = "Date",
          y = variable_text[i])
   
@@ -165,8 +159,10 @@ for (i in 1:length(variable_names)) {
   
   # Save plot
   ggsave(plot = plotList_postqc[[i]],
-         filename = paste(file_names[i],"-PostQC-Line-TimeSeries.pdf", sep = ""),
-         path = "Figures/YSI/02_PostQC/LineGraphs/TimeSeries")
+         #filename = paste(file_names[i],"-PostQC-Line-TimeSeries.pdf", sep = ""),
+         #path = "Figures/YSI/02_PostQC/LineGraphs/TimeSeries")
+         filename = paste(file_names[i],"-B2SymposiumPoster-Line-TimeSeries.pdf", sep = ""),
+         path = "Figures/YSI/05_B2SymposiumPoster/LineGraphs/TimeSeries")
 }
 
 ```
@@ -179,23 +175,23 @@ plotList_postqc <- list()
 for (i in 1:length(variable_names)) {
   plotList_postqc[[i]] <- dfCutPivot %>%
     filter(variable == variable_names[i]) %>%
-    filter(ifelse(variable == "nlf_conductivity_uScm" |
-                    variable == "pH_mV" |
-                    variable == "sp_conductivity_uScm" |
-                    variable == "do_mgL" |
-                    variable == "do_local_percent" |
-                    variable == "chlorophyll_rfu" |
-                    variable == "total_dissolved_solids_mgL", 
-                  date >= "2021-01-01",
-                  date == date)) %>%
-    filter(ifelse(variable == "do_saturated_percent" |
-                    variable == "chlorophyll_ugL" |
-                    variable == "total_algae_rfu" |
-                    variable == "total_algae_cellsL", 
-                  date >= "2018-01-01", 
-                  date == date)) %>%
-    ggplot(aes(x = as.Date(yday(date), "2021-01-01"), #use each day of the year as the x axis data
-               color = factor(year(date)), #plot data from each year separately as its own color
+    filter(ifelse(variable == "Conductivity, Non-Linear Function (µS/cm)" |
+                    variable == "pH (mV)" |
+                    variable == "Conductivity, Specific (µS/cm)" |
+                    variable == "Dissolved Oxygen (mg/L)" |
+                    variable == "Dissolved Oxygen, Local (%)" |
+                    variable == "Chlorophyll (RFU)" |
+                    variable == "Total Dissolved Solids (mg/L)", 
+                  Date >= "2021-01-01",
+                  Date == Date)) %>%
+    filter(ifelse(variable == "Dissolved Oxygen, Saturated (%)" |
+                    variable == "Chlorophyll (µg/L)" |
+                    variable == "Total Algae (RFU)" |
+                    variable == "Total Algae (cells/L)", 
+                  Date >= "2018-01-01", 
+                  Date == Date)) %>%
+    ggplot(aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
+               color = factor(year(Date)), #plot data from each year separately as its own color
                y = variable_value)) + #use variable values as y axis data
     geom_line() +
     scale_x_date(date_breaks = "months", date_labels = "%b") +
@@ -207,17 +203,21 @@ for (i in 1:length(variable_names)) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
     theme(strip.background = element_rect(fill = "white"))+
-    labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
-         subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+    labs(#title = paste("B2O", variable_text[i], "from 2011-2023"),
+         #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+         title = variable_text[i],
          x = "Date",
-         y = variable_text[i])
+         y = variable_text[i],
+         color = "Year")
   
   print(plotList_postqc[[i]])
   
   # Save plot
   ggsave(plot = plotList_postqc[[i]],
-         filename = paste(file_names[i],"-PostQC-Line-Seasonal.pdf", sep = ""),
-         path = "Figures/YSI/02_PostQC/LineGraphs/Seasonal")
+         # filename = paste(file_names[i],"-PostQC-Line-Seasonal.pdf", sep = ""),
+         # path = "Figures/YSI/02_PostQC/LineGraphs/Seasonal")
+         filename = paste(file_names[i],"-B2SymposiumPoster-Line-Seasonal.pdf", sep = ""),
+         path = "Figures/YSI/05_B2SymposiumPoster/LineGraphs/Seasonal")
 }
 
 ```
@@ -232,22 +232,22 @@ plotList_postqc <- list()
 for (i in 1:length(variable_names)) {
   plotList_postqc[[i]] <- dfCutPivot %>%
     filter(variable == variable_names[i]) %>%
-    filter(ifelse(variable == "nlf_conductivity_uScm" |
-                    variable == "pH_mV" |
-                    variable == "sp_conductivity_uScm" |
-                    variable == "do_mgL" |
-                    variable == "do_local_percent" |
-                    variable == "chlorophyll_rfu" |
-                    variable == "total_dissolved_solids_mgL", 
-                  date >= "2021-01-01",
-                  date == date)) %>%
-    filter(ifelse(variable == "do_saturated_percent" |
-                    variable == "chlorophyll_ugL" |
-                    variable == "total_algae_rfu" |
-                    variable == "total_algae_cellsL", 
-                  date >= "2018-01-01", 
-                  date == date)) %>%
-    ggplot(aes(x = date, 
+    filter(ifelse(variable == "Conductivity, Non-Linear Function (µS/cm)" |
+                    variable == "pH (mV)" |
+                    variable == "Conductivity, Specific (µS/cm)" |
+                    variable == "Dissolved Oxygen (mg/L)" |
+                    variable == "Dissolved Oxygen, Local (%)" |
+                    variable == "Chlorophyll (RFU)" |
+                    variable == "Total Dissolved Solids (mg/L)", 
+                  Date >= "2021-01-01",
+                  Date == Date)) %>%
+    filter(ifelse(variable == "Dissolved Oxygen, Saturated (%)" |
+                    variable == "Chlorophyll (µg/L)" |
+                    variable == "Total Algae (RFU)" |
+                    variable == "Total Algae (cells/L)", 
+                  Date >= "2018-01-01", 
+                  Date == Date)) %>%
+    ggplot(aes(x = Date, 
                y = variable_value)) +
     geom_line() +
     geom_smooth() +
@@ -261,17 +261,21 @@ for (i in 1:length(variable_names)) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
     theme(strip.background = element_rect(fill = "white"))+
-    labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
-         subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
-         x = "Date",
+    labs(#title = paste("B2O", variable_text[i], "from 2011-2023"),
+         #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed",
+      title = variable_text[i],   
+      x = "Date",
          y = variable_text[i])
   
   print(plotList_postqc[[i]])
   
   # Save plot
   ggsave(plot = plotList_postqc[[i]],
-         filename = paste(file_names[i],"-PostQC-Loess-TimeSeries.pdf", sep = ""),
-         path = "Figures/YSI/02_PostQC/LoessGraphs/TimeSeries")
+         # filename = paste(file_names[i],"-PostQC-Loess-TimeSeries.pdf", sep = ""),
+         # path = "Figures/YSI/02_PostQC/LoessGraphs/TimeSeries")
+         filename = paste(file_names[i],"-B2SymposiumPoster-Loess-TimeSeries.pdf", sep = ""),
+         path = "Figures/YSI/05_B2SymposiumPoster/LoessGraphs/TimeSeries")
+         
 }
 ```
 ##### Seasonal
@@ -283,23 +287,23 @@ plotList_postqc <- list()
 for (i in 1:length(variable_names)) {
   plotList_postqc[[i]] <- dfCutPivot %>%
     filter(variable == variable_names[i]) %>%
-    filter(ifelse(variable == "nlf_conductivity_uScm" |
-                    variable == "pH_mV" |
-                    variable == "sp_conductivity_uScm" |
-                    variable == "do_mgL" |
-                    variable == "do_local_percent" |
-                    variable == "chlorophyll_rfu" |
-                    variable == "total_dissolved_solids_mgL", 
-                  date >= "2021-01-01",
-                  date == date)) %>%
-    filter(ifelse(variable == "do_saturated_percent" |
-                    variable == "chlorophyll_ugL" |
-                    variable == "total_algae_rfu" |
-                    variable == "total_algae_cellsL", 
-                  date >= "2018-01-01", 
-                  date == date)) %>%
-    ggplot(aes(x = as.Date(yday(date), "2021-01-01"), #use each day of the year as the x axis data
-               color = factor(year(date)), #plot data from each year separately as its own color
+    filter(ifelse(variable == "Conductivity, Non-Linear Function (µS/cm)" |
+                    variable == "pH (mV)" |
+                    variable == "Conductivity, Specific (µS/cm)" |
+                    variable == "Dissolved Oxygen (mg/L)" |
+                    variable == "Dissolved Oxygen, Local (%)" |
+                    variable == "Chlorophyll (RFU)" |
+                    variable == "Total Dissolved Solids (mg/L)", 
+                  Date >= "2021-01-01",
+                  Date == Date)) %>%
+    filter(ifelse(variable == "Dissolved Oxygen, Saturated (%)" |
+                    variable == "Chlorophyll (µg/L)" |
+                    variable == "Total Algae (RFU)" |
+                    variable == "Total Algae (cells/L)", 
+                  Date >= "2018-01-01", 
+                  Date == Date)) %>%
+    ggplot(aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
+               color = factor(year(Date)), #plot data from each year separately as its own color
                y = variable_value)) + #use variable values as y axis data
     geom_smooth() +
     scale_x_date(date_breaks = "months", date_labels = "%b") +
@@ -311,17 +315,21 @@ for (i in 1:length(variable_names)) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
     theme(strip.background = element_rect(fill = "white"))+
-    labs(title = paste("B2O", variable_text[i], "from 2011-2023"),
-         subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
-         x = "Date",
-         y = variable_text[i])
+    labs(#title = paste("B2O", variable_text[i], "from 2011-2023"),
+         #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+      title = variable_text[i],      
+      x = "Date",
+         y = variable_text[i],
+      color = "Year") 
   
   print(plotList_postqc[[i]])
   
   # Save plot
   ggsave(plot = plotList_postqc[[i]],
-         filename = paste(file_names[i],"-PostQC-Loess-Seasonal.pdf", sep = ""),
-         path = "Figures/YSI/02_PostQC/LoessGraphs/Seasonal")
+         # filename = paste(file_names[i],"-PostQC-Loess-Seasonal.pdf", sep = ""),
+         # path = "Figures/YSI/02_PostQC/LoessGraphs/Seasonal")
+         filename = paste(file_names[i],"-B2SymposiumPoster-Loess-Seasonal.pdf", sep = ""),
+         path = "Figures/YSI/05_B2SymposiumPoster/LoessGraphs/Seasonal")
 }
 
 ```

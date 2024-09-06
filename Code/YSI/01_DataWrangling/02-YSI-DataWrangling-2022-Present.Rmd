@@ -250,7 +250,6 @@ dfOceanWaterQuality <- rbind(dfHistorical,
   separate(datetime, into = c("Date", "Time"), sep = " ") %>%
   # make sure all columns are proper data type
   mutate(Date = ymd(Date),
-         Time = hms(Time),
          `Temperature (ºF)` = as.double(`Temperature (ºF)`),
          `Temperature (ºC)` = as.double(`Temperature (ºC)`),
          pH = as.double(pH),

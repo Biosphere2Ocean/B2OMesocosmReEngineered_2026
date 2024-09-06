@@ -25,9 +25,9 @@ This uses csv file created in OceanDataWrangling.Rmd. You do not need to re-run 
 ```{r Import Data}
 # if you get an error when running line below, make sure to set R Markdown to run chunks in project directory: Tools > Global Options > R Markdown (in side panel) > "Evaluate chunks in directory:" drop down menu select Project
 
-df <- read_csv("Data/Clean/YSI/01_DataWrangling/02-YSI-Data-Clean-All.csv") %>%
-  mutate(`Chlorophyll (RFU)` = as.double(`Chlorophyll (RFU)`),
-         `Total Algae (RFU)` = as.double(`Total Algae (RFU)`))
+df <- read_csv("Data/Clean/YSI/01_DataWrangling/02-YSI-Data-Clean-All.csv") 
+
+head(df)
 
 ```
 ## Plot Pre-QC Data
@@ -37,8 +37,7 @@ Make a quick plot of all variables using raw data (pre quality control) to see r
 dfPivot <- df %>%
   pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
                names_to = "variable",
-               values_to = "variable_value")%>%
-  mutate(Date = as.Date(Date))
+               values_to = "variable_value")
 
 # this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
 AllVariablePlotPreQC <- dfPivot %>%
@@ -75,7 +74,7 @@ At some point, this will be localized within a .R file called QCFunction.R, but 
 # make empty dataframe to store output from loop
 # creating with just 2 columns for now since "date" and "time" columns will not change
 dfQC <- data.frame(matrix(ncol = 2, nrow = nrow(df)))
-colnames(dfQC) <- c("date", "time")
+colnames(dfQC) <- c("Date", "Time")
 # filling in date and time columns with same values from df
 dfQC <- dfQC %>%
   mutate(Date = df$Date,
@@ -94,7 +93,7 @@ for (v in var_names) {
   
   dfVar <- dfVar %>%
     # mutate date column so it's just year and month - this will allow us to do summary statistics by month
-    mutate(Date = format(as.Date(Date), "%Y-%m"),
+    mutate(Date = paste(year(Date), month(Date), sep = "-"),
            stat = NA) %>%
     group_by(Date) %>%
     # make columns for monthly standard deviation, mean, and median absolute deviation (mad) 
@@ -125,7 +124,7 @@ for (v in var_names) {
     
     # if shapiro_value is not significant (data is normal), then make stat values where date == d be equal to "mean", otherwise, set them equal to "median"
     dfVar <- dfVar %>%
-      mutate(stat = ifelse(date == d & shapiro_value >= 0.05,
+      mutate(stat = ifelse(Date== d & shapiro_value >= 0.05,
                            "mean",
                            "median"))
   }
@@ -188,7 +187,7 @@ write_csv(dfQC,
 ### Visualize QC Data Before Cutoffs Implemented
 ```{r Post-QC, Pre-Cutoffs Visualization}
 # dfQC should still be in your environment if you did all of the above chunks already. If you are starting from this step, uncomment the below line: 
-# dfQC <- read_csv("Data/CleanData/CleanDataYSI/02_QualityControl/02-OceanWaterQualityData-QC.csv")
+# dfQC <- read_csv("Data/Clean/YSI/02_QualityControl/01-YSI-Data-QC.csv")
 
 # pivot dfQC to long format from wide so that facet wrapping is easier
 dfQCPivot <- dfQC %>%

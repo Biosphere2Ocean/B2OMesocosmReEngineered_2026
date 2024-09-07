@@ -26,8 +26,8 @@ options(scipen = 999)
 # all Hach and YSI data: combo of all above files with "Time Interval" column to 
 # denote which interval (daily, weekly, etc) the data comes from
 dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv", col_names = TRUE) %>%
-  rename(pH = `pH (YSI)`) %>%
-  select(-`pH (Hach)`)
+  select(-`pH_Hach`) %>%
+  rename(pH = `pH (YSI)`)
 
 # Data Wrangling -----
 ## Correlations

@@ -18,13 +18,15 @@ options(scipen = 999)
 # use 02-Hach-Data-Clean-QC.csv
 df <- read_csv("Data/Clean/Hach/02_QualityControl/02-Hach-Data-Clean-QC.csv")
 
+colnames(df)
+
 ```
 
 # Data Formatting
 ```{r data formatting}
 # make long format data frame for plots showing all nutrients at a location (faceted)
 dfPivot <- df %>%
-   pivot_longer(cols = Turbidity:Ammonia,
+   pivot_longer(cols = `Turbidity (RFU)`:`Ammonia (mg/L)`,
                names_to = "Nutrients",
                values_to = "Nutrient Values") %>%
   na.omit()
@@ -79,11 +81,13 @@ PostQCOceanPlot <- dfPivot %>%
   theme(axis.text.x = element_text(angle = 35, hjust = 1),
         plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
   theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "Biosphere 2 Ocean Nutrients from 2019-Present",
-       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
+  labs(title = "Biosphere 2 Ocean Nutrients from 2019-Present")
+       #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed")
 # save plot
-ggsave(filename = "OceanPlot-PostQC.pdf", plot = PostQCOceanPlot,
-       path = "Figures/Hach/02_PostQC/Ocean", width = 10, height = 7)
+# ggsave(filename = "OceanPlot-PostQC.pdf", plot = PostQCOceanPlot,
+#        path = "Figures/Hach/02_PostQC/Ocean", width = 10, height = 7)
+ggsave(filename = "Hach-OceanPlotFacet.pdf", plot = PostQCOceanPlot,
+       path = "Figures/B2SymposiumPoster/Hach", width = 10, height = 7)
 ```
 ### Raceway 1
 ```{r All Nutrients: Raceway 1 Plot}
@@ -205,8 +209,7 @@ nutrient_names <- unique(dfPivot$Nutrients)
 # name of each location
 location_names <- unique(dfPivot$Location)
 # text to use in each plot title for each nutrient
-nutrient_text <- c("Nitrate MR (mg/L)", "Nitrate HR (mg/L)", "Turbidity (FAU)", "Phosphate (mg/L)",
-                   "pH", "Silica (mg/L)", "Alkalinity mg/L", "Iron (mg/L)", "Ammonia (mg/L)")
+nutrient_text <- unique(dfPivot$Nutrients)
 # file name for each plot
 file_names <- c("NitrateMRPlot", "NitrateHRPlot", "TurbidityPlot", "PhosphatePlot", "pHPlot",
                 "SilicaPlot", "AlkalinityPlot", "IronPlot", "AmmoniaPlot")
@@ -249,16 +252,19 @@ for (l in 1:length(location_names)) {
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
       theme(strip.background = element_rect(fill = "white"))+
       labs(title = paste("Biosphere 2", location_names[l], nutrient_text[i], "from 2018-2023"),
-       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
        x = "Date",
        y = nutrient_text[i])
     print(plotList_location[[i]]) #makes quick to look at in RStudio
     # Save plot
     ggsave(plot = plotList_location[[i]],
-           filename = paste(location_names[l],file_names[i],"PostQC-Line-TimeSeries.pdf", 
-                            sep = "-"),
-           path = paste("Figures/Hach/02_PostQC",location_names[l],"LineGraphs/TimeSeries", 
-                        sep = "/"))
+           # filename = paste(location_names[l],file_names[i],"PostQC-Line-TimeSeries.pdf", 
+           #                  sep = "-"),
+           # path = paste("Figures/Hach/02_PostQC",location_names[l],"LineGraphs/TimeSeries", 
+           #              sep = "/"))
+           filename = paste(location_names[l],file_names[i],"Line-TimeSeries.pdf", 
+                             sep = "-"),
+           path = "Figures/B2SymposiumPoster/Hach/LineGraphs/TimeSeries")
   }
   # add plotList_location to plotList
   plotList <- c(plotList, plotList_location)
@@ -297,18 +303,21 @@ for (l in 1:length(location_names)) {
       theme(axis.text.x = element_text(angle = 45, hjust = 1),
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
       theme(strip.background = element_rect(fill = "white"))+
-      labs(title = paste("Biosphere 2", location_names[l], nutrient_text[i], "from 2018-2023"),
-           subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+      labs(title = paste("Biosphere 2", location_names[l], nutrient_text[i], "from 2018-2024"),
+           #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
            x = "Date",
            y = nutrient_text[i],
            color = "Year")
     print(plotList_location[[i]]) #makes quick to look at in RStudio
     # Save plot
     ggsave(plot = plotList_location[[i]],
-           filename = paste(location_names[l],file_names[i],"PostQC-Line-Seasonal.pdf", 
-                            sep = "-"),
-           path = paste("Figures/Hach/02_PostQC",location_names[l],"LineGraphs/Seasonal", 
-                        sep = "/"))
+           # filename = paste(location_names[l],file_names[i],"PostQC-Line-Seasonal.pdf", 
+           #                  sep = "-"),
+           # path = paste("Figures/Hach/02_PostQC",location_names[l],"LineGraphs/Seasonal", 
+           #              sep = "/"))
+           filename = paste(location_names[l],file_names[i],"Line-Seasonal.pdf", 
+                             sep = "-"),
+           path = "Figures/B2SymposiumPoster/Hach/LineGraphs/Seasonal")
   }
   # add plotList_location to plotList
   plotList <- c(plotList, plotList_location)
@@ -353,16 +362,19 @@ for (l in 1:length(location_names)) {
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
       theme(strip.background = element_rect(fill = "white"))+
       labs(title = paste("Biosphere 2", location_names[l], nutrient_text[i], "from 2018-2023"),
-       subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+       #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
        x = "Date",
        y = nutrient_text[i])
     print(plotList_location[[i]]) #makes quick to look at in RStudio
     # Save plot
     ggsave(plot = plotList_location[[i]],
-           filename = paste(location_names[l],file_names[i],"PostQC-Loess-TimeSeries.pdf", 
-                            sep = "-"),
-           path = paste("Figures/Hach/02_PostQC",location_names[l],"LoessGraphs/TimeSeries", 
-                        sep = "/"))
+           # filename = paste(location_names[l],file_names[i],"PostQC-Loess-TimeSeries.pdf", 
+           #                  sep = "-"),
+           # path = paste("Figures/Hach/02_PostQC",location_names[l],"LoessGraphs/TimeSeries", 
+           #              sep = "/"))
+           filename = paste(location_names[l],file_names[i],"Loess-TimeSeries.pdf", 
+                             sep = "-"),
+           path = "Figures/B2SymposiumPoster/Hach/LoessGraphs/TimeSeries")
   }
   # add plotList_location to plotList
   plotList <- c(plotList, plotList_location)
@@ -402,17 +414,20 @@ for (l in 1:length(location_names)) {
             plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
       theme(strip.background = element_rect(fill = "white"))+
       labs(title = paste("Biosphere 2", location_names[l], nutrient_text[i], "from 2018-2023"),
-           subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
+           #subtitle = "Post-QC: Data Outside 2-Sigma from Mean has been Removed", 
            x = "Date",
            y = nutrient_text[i],
            color = "Year")
     print(plotList_location[[i]]) #makes quick to look at in RStudio
     # Save plot
     ggsave(plot = plotList_location[[i]],
-           filename = paste(location_names[l],file_names[i],"PostQC-Loess-Seasonal.pdf", 
-                            sep = "-"),
-           path = paste("Figures/Hach/02_PostQC",location_names[l],"LoessGraphs/Seasonal", 
-                        sep = "/"))
+           # filename = paste(location_names[l],file_names[i],"PostQC-Loess-Seasonal.pdf", 
+           #                  sep = "-"),
+           # path = paste("Figures/Hach/02_PostQC",location_names[l],"LoessGraphs/Seasonal", 
+           #              sep = "/"))
+           filename = paste(location_names[l],file_names[i],"Loess-Seasonal.pdf", 
+                             sep = "-"),
+           path = "Figures/B2SymposiumPoster/Hach/LoessGraphs/Seasonal")
   }
   # add plotList_location to plotList
   plotList <- c(plotList, plotList_location)

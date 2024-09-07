@@ -98,7 +98,8 @@ FormattedDataTidy <- FormattedData %>%
          Ammonia = round(Ammonia, digits = 2),
          Date = format(Date, "%m/%d/%y"),
          ORP = NA) %>%
-  relocate(ORP, .after = Ammonia) 
+  relocate(ORP, .after = Ammonia) %>%
+  select(-`...14`)
 
 ```
 
@@ -130,10 +131,15 @@ AllData <- rbind(PreFormattedDataTidy, FormattedDataTidy) %>%
          Ammonia = ifelse(Ammonia == "+++", 0.50, Ammonia),
          Ammonia = as.numeric(Ammonia),
          Ammonia = round(Ammonia, digits = 2),
-         Date = as.Date(Date, format = "%m/%d/%y")) 
-
-# AllDataPivot <- rbind(PreFormattedDataPivot, FormattedDataPivot) %>%
-#   mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+         Date = as.Date(Date, format = "%m/%d/%y")) %>%
+  rename(`Turbidity (RFU)` = Turbidity,
+         `Phosphate (mg/L)` = Phosphate,
+         `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
+         `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
+         `Alkalinity (mg/L CaCO3)` = Alkalinity,
+         `Silica (mg/L)` = Silica,
+         `Iron (mg/L)` = Iron,
+         `Ammonia (mg/L)` = Ammonia)
 
 ```
 

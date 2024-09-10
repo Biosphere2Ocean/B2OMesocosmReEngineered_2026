@@ -110,7 +110,7 @@ ui <- fluidPage(
               inverse = FALSE,
               ##### About Page #####
               nav_panel(title = "About",
-                        # metadata: where data came from, time period, variables tracked, units, explanations of variables, 
+                        # metadata: where data came from, time period, variables tracked, units, explanations of variables, DATA IN CONTEXT PAGE
               ),
               
               ##### Time Series Page #####
@@ -204,20 +204,20 @@ ui <- fluidPage(
                                       # main panel: top row
                                       layout_column_wrap(
                                         width = 1/2,
-                                        conditionalPanel("input.OverallVariable1 != None",
+                                        conditionalPanel("input.OverallVariable1 !== 'None'",
                                                          plotOutput("OverallTrendsPlot1")
                                         ),
-                                        conditionalPanel("input.OverallVariable3 != None",
+                                        conditionalPanel("input.OverallVariable3 !== 'None'",
                                                          plotOutput("OverallTrendsPlot3")
                                         )
                                       ),
                                       # main panel: bottom row
                                       layout_column_wrap(
                                         width = 1/2,
-                                        conditionalPanel("input.OverallVariable2 != None",
+                                        conditionalPanel("input.OverallVariable2 !== 'None'",
                                                          plotOutput("OverallTrendsPlot2")
                                         ),
-                                        conditionalPanel("input.OverallVariable4 != None",
+                                        conditionalPanel("input.OverallVariable4 !== 'None'",
                                                          plotOutput("OverallTrendsPlot4")
                                         )
                                       )
@@ -319,20 +319,20 @@ ui <- fluidPage(
                                       # main panel: top row
                                       layout_column_wrap(
                                         width = 1/2,
-                                        conditionalPanel("input.SeasonalVariable1 != None",
+                                        conditionalPanel("input.SeasonalVariable1 !== 'None'",
                                                          plotOutput("SeasonalTrendsPlot1")
                                         ),
-                                        conditionalPanel("input.SeasonalVariable3 != None",
+                                        conditionalPanel("input.SeasonalVariable3 !== 'None'",
                                                          plotOutput("SeasonalTrendsPlot3")
                                         )
                                       ),
                                       # main panel: bottom row
                                       layout_column_wrap(
                                         width = 1/2,
-                                        conditionalPanel("input.SeasonalVariable2 != None",
+                                        conditionalPanel("input.SeasonalVariable2 !== 'None'",
                                                          plotOutput("SeasonalTrendsPlot2")
                                         ),
-                                        conditionalPanel("input.SeasonalVariable4 != None",
+                                        conditionalPanel("input.SeasonalVariable4 !== 'None'",
                                                          plotOutput("SeasonalTrendsPlot4")
                                         )
                                       )
@@ -382,11 +382,6 @@ ui <- fluidPage(
                                     )
                           )
                         )
-              ),
-              
-              ##### Data in Context Page #####
-              nav_panel(title = "Data in Context",
-                        # B2O Historical Events to explain data oddities 
               ),
               
               ##### B1 Comparisons Page #####
@@ -676,20 +671,20 @@ server <- function(input, output) {
       dfDates <- rbind(dfDates, tail(dfAll[dfAll$`Time Interval` == "Daily", "Date"], n=1))
       
       # select geom_line() or geom_smooth()
-      geometry <- geom_smooth()
+      geometry <- geom_smooth(se = F)
       if (input$SeasonalineLoess1 == "Line Plot") {
         geometry <- geom_line()
-      } 
+      }
       
       # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-      dfAll_stp1 <- dfAll %>%
+      dfAll_stp <- dfAll %>%
         mutate(year = year(Date)) %>%
         filter(year %in% dates_vector)
-      dfAll_stp1 <- dfAll_stp1[, c("Time Interval", "Date", input$SeasonalVariable1)]
-      colnames(dfAll_stp1) <- c("Time Interval", "Date", "input_var")
-      
-      # loess
-      stp1 <- ggplot(data = dfAll_stp1[dfAll_stp1$`Time Interval` == input$SeasonalMedian1 & dfAll_stp1$Date >= dfDates$Date[1] & dfAll_stp1$Date <= tail(dfDates$Date, n=1), ],
+      dfAll_stp <- dfAll_stp[, c("Time Interval", "Date", input$SeasonalVariable1)]
+      colnames(dfAll_stp) <- c("Time Interval", "Date", "input_var")
+      dfAll_stp <- na.omit(dfAll_stp)
+
+      stp <- ggplot(data = dfAll_stp[dfAll_stp$`Time Interval` == input$SeasonalMedian1 & dfAll_stp$Date >= dfDates$Date[1] & dfAll_stp$Date <= tail(dfDates$Date, n=1), ],
                      aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
                          color = factor(year(Date)), #plot data from each year separately as its own color
                          y = input_var)) + #use nutrient values as y axis data
@@ -711,7 +706,7 @@ server <- function(input, output) {
              x = "Date", 
              y = input$SeasonalVariable1,
              color = "Year")
-      stp1
+      stp
       
     })
     # Plot 2
@@ -724,20 +719,20 @@ server <- function(input, output) {
       dfDates <- rbind(dfDates, tail(dfAll[dfAll$`Time Interval` == "Daily", "Date"], n=1))
       
       # select geom_line() or geom_smooth()
-      geometry <- geom_smooth()
+      geometry <- geom_smooth(se = F)
       if (input$SeasonalineLoess2 == "Line Plot") {
         geometry <- geom_line()
       } 
       
       # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-      dfAll_stp2 <- dfAll %>%
+      dfAll_stp <- dfAll %>%
         mutate(year = year(Date)) %>%
         filter(year %in% dates_vector)
-      dfAll_stp2 <- dfAll_stp2[, c("Time Interval", "Date", input$SeasonalVariable2)]
-      colnames(dfAll_stp2) <- c("Time Interval", "Date", "input_var")
+      dfAll_stp <- dfAll_stp[, c("Time Interval", "Date", input$SeasonalVariable2)]
+      colnames(dfAll_stp) <- c("Time Interval", "Date", "input_var")
+      dfAll_stp <- na.omit(dfAll_stp)
       
-      # loess
-      stp2 <- ggplot(data = dfAll_stp2[dfAll_stp2$`Time Interval` == input$SeasonalMedian2 & dfAll_stp2$Date >= dfDates$Date[1] & dfAll_stp2$Date <= tail(dfDates$Date, n=1), ],
+      stp <- ggplot(data = dfAll_stp[dfAll_stp$`Time Interval` == input$SeasonalMedian2 & dfAll_stp$Date >= dfDates$Date[1] & dfAll_stp$Date <= tail(dfDates$Date, n=1), ],
                      aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
                          color = factor(year(Date)), #plot data from each year separately as its own color
                          y = input_var)) + #use nutrient values as y axis data
@@ -759,7 +754,7 @@ server <- function(input, output) {
              x = "Date", 
              y = input$SeasonalVariable2,
              color = "Year")
-      stp2
+      stp
       
     })
     # Plot 3
@@ -772,20 +767,21 @@ server <- function(input, output) {
       dfDates <- rbind(dfDates, tail(dfAll[dfAll$`Time Interval` == "Daily", "Date"], n=1))
       
       # select geom_line() or geom_smooth()
-      geometry <- geom_smooth()
+      geometry <- geom_smooth(se = F)
       if (input$SeasonalineLoess3 == "Line Plot") {
         geometry <- geom_line()
       } 
       
       # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-      dfAll_stp3 <- dfAll %>%
+      dfAll_stp <- dfAll %>%
         mutate(year = year(Date)) %>%
         filter(year %in% dates_vector)
-      dfAll_stp3 <- dfAll_stp3[, c("Time Interval", "Date", input$SeasonalVariable3)]
-      colnames(dfAll_stp3) <- c("Time Interval", "Date", "input_var")
+      dfAll_stp <- dfAll_stp[, c("Time Interval", "Date", input$SeasonalVariable3)]
+      colnames(dfAll_stp) <- c("Time Interval", "Date", "input_var")
+      dfAll_stp <- na.omit(dfAll_stp)
       
-      # loess
-      stp3 <- ggplot(data = dfAll_stp3[dfAll_stp3$`Time Interval` == input$SeasonalMedian3 & dfAll_stp3$Date >= dfDates$Date[1] & dfAll_stp3$Date <= tail(dfDates$Date, n=1), ],
+      
+      stp <- ggplot(data = dfAll_stp[dfAll_stp$`Time Interval` == input$SeasonalMedian3 & dfAll_stp$Date >= dfDates$Date[1] & dfAll_stp$Date <= tail(dfDates$Date, n=1), ],
                      aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
                          color = factor(year(Date)), #plot data from each year separately as its own color
                          y = input_var)) + #use nutrient values as y axis data
@@ -807,7 +803,7 @@ server <- function(input, output) {
              x = "Date", 
              y = input$SeasonalVariable3,
              color = "Year")
-      stp3
+      stp
       
     })
     # Plot 4
@@ -820,20 +816,21 @@ server <- function(input, output) {
       dfDates <- rbind(dfDates, tail(dfAll[dfAll$`Time Interval` == "Daily", "Date"], n=1))
       
       # select geom_line() or geom_smooth()
-      geometry <- geom_smooth()
+      geometry <- geom_smooth(se = F)
       if (input$SeasonalineLoess4 == "Line Plot") {
         geometry <- geom_line()
       } 
       
       # use dfAll with daily median data to plot base plot; put input variable into format ggplot can read easily
-      dfAll_stp4 <- dfAll %>%
+      dfAll_stp <- dfAll %>%
         mutate(year = year(Date)) %>%
         filter(year %in% dates_vector)
-      dfAll_stp4 <- dfAll_stp4[, c("Time Interval", "Date", input$SeasonalVariable4)]
-      colnames(dfAll_stp4) <- c("Time Interval", "Date", "input_var")
+      dfAll_stp <- dfAll_stp[, c("Time Interval", "Date", input$SeasonalVariable4)]
+      colnames(dfAll_stp) <- c("Time Interval", "Date", "input_var")
+      dfAll_stp <- na.omit(dfAll_stp)
       
-      # loess
-      stp4 <- ggplot(data = dfAll_stp4[dfAll_stp4$`Time Interval` == input$SeasonalMedian4 & dfAll_stp4$Date >= dfDates$Date[1] & dfAll_stp4$Date <= tail(dfDates$Date, n=1), ],
+      
+      stp <- ggplot(data = dfAll_stp[dfAll_stp$`Time Interval` == input$SeasonalMedian4 & dfAll_stp$Date >= dfDates$Date[1] & dfAll_stp$Date <= tail(dfDates$Date, n=1), ],
                      aes(x = as.Date(yday(Date), "2021-01-01"), #use each day of the year as the x axis data
                          color = factor(year(Date)), #plot data from each year separately as its own color
                          y = input_var)) + #use nutrient values as y axis data
@@ -855,7 +852,7 @@ server <- function(input, output) {
              x = "Date", 
              y = input$SeasonalVariable4,
              color = "Year")
-      stp4
+      stp
       
     })
     
@@ -891,9 +888,9 @@ server <- function(input, output) {
                    title = "All Correlations",
                    lab = TRUE,
                    lab_size = 5,
-                   tl.cex = 18) +
-          theme(plot.title = element_text(size = 20), 
-                plot.margin = unit(c(-3,0,0,0), "inches"))
+                   tl.cex = 18,
+                   legend.title = "Correlation Strength") +
+          theme(plot.title = element_text(size = 20))
         
       } else if (input$CorrMatrixButton == "Significant Correlations") {
         # Correlogram with Significance
@@ -906,9 +903,9 @@ server <- function(input, output) {
                    lab = TRUE,
                    insig = "blank",
                    lab_size = 5,
-                   tl.cex = 18)+
-          theme(plot.title = element_text(size = 20), 
-                plot.margin = unit(c(-3,0,0,0), "inches"))
+                   tl.cex = 18,
+                   legend.title = "Correlation Strength")+
+          theme(plot.title = element_text(size = 20))
       }
       
     })

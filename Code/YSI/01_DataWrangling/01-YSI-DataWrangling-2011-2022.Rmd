@@ -22,7 +22,7 @@ Code here adds columns with NAs to some files that are present with actual data 
 
 ```{r import-SCADA-files-from-2011-2021}
 # file path to folder containing old scada database 2011-2021 ocean water quality files
-path <- "Data/Raw/RawData_YSI/SCADA/SCADA_2011_2021"
+path <- "Data/Raw/YSI/SCADA/SCADA_2011_2021"
 
 # data from 7/22/11 - 8/4/14
 ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"),
@@ -129,7 +129,7 @@ These files are found in the SCADA_2019_2022 folder. They originate from the old
 ### Old YSI Sonde (10/21/19-5/26/21)
 ```{r import-files-old-db-ysi}
 # file path to folder containing old scada database 10/21/19-2/23/22 ocean water quality files
-path <- "Data/Raw/RawData_YSI/SCADA/SCADA_2019_2022"
+path <- "Data/Raw/YSI/SCADA/SCADA_2019_2022"
 
 # total algae phycoerythrin in cells/L 
 ysi_total_algae <- read_csv(here(path,

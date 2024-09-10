@@ -19,12 +19,12 @@ options(scipen = 999)
 # download B20NutrientData excel file from the Box and import it into R with your own filepath in "" below. The Pre-formatted Data (2017-2022) is on one sheet, and the Formatted Data (2022-present) is on a different sheet. 
 
 # Import Pre-Formatted Data sheet from excel file (sheet "Pre-formatted Data")
-PreFormattedData <- read_excel("Data/Raw/RawData_Hach/B2ONutrientData.xlsx",
+PreFormattedData <- read_excel("Data/Raw/Hach/B2ONutrientData.xlsx",
                                sheet = "Pre-formatted Data",
                                col_names = TRUE)
 
 # Import Formatted Data sheet from excel file (sheet "Data")
-FormattedData <- read_excel("Data/Raw/RawData_Hach/B2ONutrientData.xlsx", 
+FormattedData <- read_excel("Data/Raw/Hach/B2ONutrientData.xlsx", 
                             sheet = "Data", 
                             col_names = TRUE)
 ```

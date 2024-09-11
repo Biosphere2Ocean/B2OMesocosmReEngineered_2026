@@ -17,6 +17,10 @@ library(lubridate)
 library(Hmisc)
 library(corrplot)
 library(ggcorrplot)
+library(leaflet)
+library(tmap)
+library(mapview)
+library(sf)
 source("Dependencies/CorrelationFunction.R")
 options(scipen = 999)
 
@@ -28,6 +32,11 @@ options(scipen = 999)
 dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv", col_names = TRUE) %>%
   select(-`pH_Hach`) %>%
   rename(pH = `pH (YSI)`)
+
+# World Oceans Data for B1 Comparisons
+dfWOD <- read_csv("RShiny/SourceData/02-Clean-WorldOceanData-Final.csv") %>%
+  # filter out data before B2 data exists
+  filter(Date >= "2011-01-01")
 
 # Data Wrangling -----
 ## Correlations

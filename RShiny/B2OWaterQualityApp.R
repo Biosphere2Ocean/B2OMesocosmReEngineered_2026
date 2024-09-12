@@ -18,9 +18,7 @@ library(Hmisc)
 library(corrplot)
 library(ggcorrplot)
 library(leaflet)
-library(tmap)
-library(mapview)
-library(sf)
+library(scales)
 source("Dependencies/CorrelationFunction.R")
 options(scipen = 999)
 
@@ -34,9 +32,12 @@ dfAll <- read_csv("SourceData/05-HachYSI-Data-All.csv", col_names = TRUE) %>%
   rename(pH = `pH (YSI)`)
 
 # World Oceans Data for B1 Comparisons
-dfWOD <- read_csv("RShiny/SourceData/02-Clean-WorldOceanData-Final.csv") %>%
+dfWOD <- read_csv("SourceData/02-Clean-WorldOceanData-Final.csv")%>%
+  # add singular Iron datapoint that refuses to load even though it's on the csv :(
+  mutate(`Iron (mg/L)` = ifelse(`Silicate (mg/L)` == "0.21", "0.024", `Iron (mg/L)`))%>%
   # filter out data before B2 data exists
   filter(Date >= "2011-01-01")
+
 
 # Data Wrangling -----
 ## Correlations
@@ -46,15 +47,12 @@ cor_mat_stats <- dfAll %>%
   select(-`Time Interval`, -Date, -`pH (mV)`, -`Conductivity, Non-Linear Function (µS/cm)`,
          -`Conductivity, Specific (µS/cm)`, -`Dissolved Oxygen, Saturated (%)`) 
 cor_mat_stats <- rcorr(as.matrix(cor_mat_stats))
-
 # full flattened correlation matrix: table of correlation pairings using matrices created in cor_mat_stats
 cor_mat_stats_flat <- flattenCorrMatrix(cor_mat_stats$r, cor_mat_stats$P) %>%
   mutate(across(3:4, ~ round(.x, 4)))
-
 # flattened correlation matrix with only p-values <= 0.05: table of correlation pairings created in cor_mat_stats
 cor_mat_stats_flat_sig <- cor_mat_stats_flat %>%
   filter(p_value <= 0.05)
-
 corrTable <- cor_mat_stats_flat %>%
   rename(`Variable 1` = row,
          `Variable 2` = column, 
@@ -66,6 +64,41 @@ corrTable <- cor_mat_stats_flat %>%
          `P-Value` = ifelse(is.na(`P-Value`) == TRUE,
                             "Not enough data",
                             `P-Value`))
+## B1 Comparisons
+dfAll_map <- dfAll %>%
+  filter(`Time Interval` == "Yearly") %>%
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, `Phosphate (mg/L)`,
+         `Silica (mg/L)`, `Nitrate, Mid-Range (mg/L)`, pH, `Alkalinity (mg/L CaCO3)`,
+         `Iron (mg/L)`) %>%
+  rename(`Silicate (mg/L)` = `Silica (mg/L)`,
+         `Alkalinity (mg/L)` = `Alkalinity (mg/L CaCO3)`,
+         `Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`) %>%
+  add_column(Ocean = "Biosphere 2", .after = "Date") %>%
+  add_column(Region = "Arizona", .after = "Ocean") %>%
+  add_column(Location = "Biosphere 2", .after = "Region") %>%
+  mutate(Latitude = 32.57864107499588,
+         Longitude = -110.85128223373218) %>%
+  mutate(Year = year(Date)) %>%
+  relocate(Year, .after = Date) %>%
+  select(-Date)
+dfWOD_map <- dfWOD %>%
+  select(-`Chlorophyll (µg/L)`, -`Dissolved Organic Carbon (µmol/kg)`, -`Depth (m)`) %>%
+  mutate(Year = year(Date)) %>%
+  select(-Date) %>%
+  group_by(Year, Location) %>%
+  mutate(`Temperature (ºC)` = median(`Temperature (ºC)`, na.rm = TRUE),
+         `Salinity (PSU)` = median(`Salinity (PSU)`, na.rm = TRUE),
+         `Phosphate (mg/L)` = median(`Phosphate (mg/L)`, na.rm = TRUE),
+         `Silicate (mg/L)` = median(`Silicate (mg/L)`, na.rm = TRUE),
+         `Nitrate (mg/L)` = median(`Nitrate (mg/L)`, na.rm = TRUE),
+         `pH` = median(`pH`, na.rm = TRUE),
+         `Alkalinity (mg/L)` = median(`Alkalinity (mg/L)`, na.rm = TRUE),
+         `Iron (mg/L)` = median(`Iron (mg/L)`, na.rm = TRUE)) %>%
+  relocate(Year, .before = Ocean) %>%
+  unique() %>%
+  mutate(`Iron (mg/L)` = as.double(`Iron (mg/L)`))
+dfMap <- rbind(dfWOD_map, dfAll_map) %>%
+  mutate_if(is.numeric, signif)
 
 
 # Define UI variables -----
@@ -395,7 +428,22 @@ ui <- fluidPage(
               
               ##### B1 Comparisons Page #####
               nav_panel(title = "B1 Comparisons",
-                        
+                        layout_column_wrap(
+                          width = 1,
+                          heights_equal = "row",
+                          leafletOutput("MapB1Comps"),
+                          tags$style(HTML(".radio-inline {margin-right: 42px;}")),
+                          radioButtons(
+                            inputId = "MapButtons",
+                            label = "Filter Data By:",
+                            choices = c("None",
+                                        "Ocean, 2011-Present",
+                                        "Ocean, 2018-Present"),
+                            selected = "None",
+                            inline = TRUE
+                          ),
+                          DTOutput("TableB1Comps")
+                        )
               )
   )
 )
@@ -866,6 +914,7 @@ server <- function(input, output) {
     })
     
     
+  
   ##### Correlations #####
     ##### Matrices #####
     # Correlations Plots
@@ -922,14 +971,105 @@ server <- function(input, output) {
     # Data Table
     output$CorrTable <- renderDT(
       if (input$CorrTableButton == "All Correlations") {
-        corrTable
+        datatable(corrTable,
+                  fillContainer = getOption("DT.fillContainer", TRUE))
       } else {
-        corrTable %>%
+        corrTable_filter <- corrTable %>%
           filter(`P-Value` <= 0.05)
+        datatable(corrTable_filter,
+                  fillContainer = getOption("DT.fillContainer", TRUE))
       },
       filter = list(position = "top")
     )
   
+  
+  ##### B1 Comparisons #####
+    ##### Map #####
+    output$MapB1Comps <- renderLeaflet({
+      
+      # dfMap_pivot <- dfMap %>%
+      #   select(-Ocean) %>%
+      #   pivot_longer(cols = `Temperature (ºC)`:`Iron (mg/L)`,
+      #                names_to = "Variables",
+      #                values_to = "Values") %>%
+      #   na.omit()
+      # 
+      # pal <- colorFactor("viridis", levels = unique(dfMap_pivot$Variables))
+      
+      dfMap_loc <- dfMap %>%
+        select(-Year) %>%
+        group_by(Location, Latitude, Longitude) %>%
+        summarise(across(4:11, ~median(.x, na.rm = TRUE)))
+      
+      labelText <- paste0(dfMap_loc$Location,
+                          "<hr>",
+                          "Temperature (ºC): ", as.character(dfMap_loc$`Temperature (ºC)`),
+                          "<br>",
+                          "Salinity (PSU): ", as.character(dfMap_loc$`Salinity (PSU)`),
+                          "<br>",
+                          "Phosphate (mg/L): ", as.character(dfMap_loc$`Phosphate (mg/L)`),
+                          "<br>",
+                          "Silicate (mg/L): ", as.character(dfMap_loc$`Silicate (mg/L)`),
+                          "<br>",
+                          "Nitrate (mg/L): ", as.character(dfMap_loc$`Nitrate (mg/L)`),
+                          "<br>",
+                          "pH: ", as.character(dfMap_loc$pH),
+                          "<br>",
+                          "Alkalinity (mg/L): ", as.character(dfMap_loc$`Alkalinity (mg/L)`),
+                          "<br>",
+                          "Iron (mg/L): ", as.character(dfMap_loc$`Iron (mg/L)`))
+      
+      leaflet(data = dfMap_loc) %>%
+        addTiles() %>%
+        addCircleMarkers(lng = ~Longitude,
+                         lat = ~Latitude,
+                         label = lapply(labelText,
+                                        htmltools::HTML))
+        # addLegend(data = dfMap_pivot,
+        #           position = "bottomright",
+        #           pal = pal,
+        #           values = ~Variables,
+        #           title = "Legend")
+        
+    })
+    ##### Data Table #####
+    output$TableB1Comps <- renderDT({
+      # original dataframe
+      dfMap_all <- dfMap %>%
+        select(-Latitude, -Longitude, -Region) 
+      
+      # medians of each ocean by year
+      dfMap_ocean <- dfMap_all %>%
+        group_by(Year, Ocean) %>%
+        summarise_if(is.numeric, median, na.rm = TRUE)
+      
+      dfMap_recent <- dfMap_all %>%
+        filter(Year >= "2018") %>%
+        group_by(Year, Ocean) %>%
+        summarise_if(is.numeric, median, na.rm = TRUE)
+      
+      if (input$MapButtons == "None") {
+        datatable(dfMap_all,
+                  rownames = FALSE,
+                  height = '1000px',
+                  fillContainer = getOption("DT.fillContainer", TRUE),
+                  options = list(autoWidth = TRUE))
+      } else if (input$MapButtons == "Ocean, 2011-Present") {
+        datatable(dfMap_ocean,
+                  rownames = FALSE,
+                  height = '1000px',
+                  fillContainer = getOption("DT.fillContainer", TRUE),
+                  options = list(autoWidth = TRUE))
+      } else if (input$MapButtons == "Ocean, 2018-Present") {
+        datatable(dfMap_recent,
+                  rownames = FALSE,
+                  height = '1000px',
+                  fillContainer = getOption("DT.fillContainer", TRUE),
+                  options = list(autoWidth = TRUE))
+      }
+        
+    })
+    
 }
 
 

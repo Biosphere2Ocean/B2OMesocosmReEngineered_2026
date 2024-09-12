@@ -66,7 +66,10 @@ for (i in locations) {
           Longitude = ifelse(Location == i, dfCoords[dfCoords$Region == i, 3], Longitude))
 }
 
-  
+dfWOD_final <- dfWOD_final %>%
+  mutate(`Iron (mg/L)` = as.numeric(`Iron (mg/L)`),
+         Latitude = as.numeric(Latitude),
+         Longitude = as.numeric(Longitude))
 
 ```
 

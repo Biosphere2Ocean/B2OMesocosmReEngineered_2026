@@ -98,7 +98,7 @@ dfWOD_map <- dfWOD %>%
   unique() %>%
   mutate(`Iron (mg/L)` = as.double(`Iron (mg/L)`))
 dfMap <- rbind(dfWOD_map, dfAll_map) %>%
-  mutate_if(is.numeric, signif)
+  mutate(across(where(is.numeric), ~round(.x, digits = 5)))
 
 
 # Define UI variables -----
@@ -142,17 +142,29 @@ var_choices <- c("None",
 # character vector of UI choices for `Time Interval`
 median_period_choices <- c("Daily", "Weekly", "Monthly", "Yearly")
 
+#tags$style(HTML(".radio-inline {margin-right: 42px;}"))
+
 # User Interface -----
-ui <- fluidPage(
-  titlePanel(title = div(img(src = "https://biosphere2.org/sites/default/files/Webheader-Biosphere_0_0.png",
-                             width = 250),
-                         "Ocean Systems Water Quality", style = "color: #49595e;")
-  ),
+ui <- page_fillable(
+  # title panel
+  titlePanel(title = div(imageOutput("B2Header", inline = TRUE), 
+                         "Ocean Water Quality", 
+                         style = "color: #49595e;"),
+             windowTitle = "Biosphere2OceanWaterQuality"),
+  # page with navigation bar at top to click to other pages (panels)
   page_navbar(title = NULL,
               inverse = FALSE,
               ##### About Page #####
               nav_panel(title = "About",
-                        # metadata: where data came from, time period, variables tracked, units, explanations of variables, DATA IN CONTEXT PAGE
+                        layout_column_wrap(
+                          width = 1/2,
+                          gap = "50px",
+                          div(imageOutput(outputId = "B2OImage"),
+                              tags$figcaption("Biosphere 2 Ocean: 700,000-gallon Experimental Mesocosm",
+                                              style = "color: #C0C0C0;")
+                              ),
+                          textOutput("AboutText")
+                        )
               ),
               
               ##### Time Series Page #####
@@ -431,7 +443,8 @@ ui <- fluidPage(
                         layout_column_wrap(
                           width = 1,
                           heights_equal = "row",
-                          leafletOutput("MapB1Comps"),
+                          leafletOutput("MapB1Comps",
+                                        height = 300),
                           tags$style(HTML(".radio-inline {margin-right: 42px;}")),
                           radioButtons(
                             inputId = "MapButtons",
@@ -442,19 +455,31 @@ ui <- fluidPage(
                             selected = "None",
                             inline = TRUE
                           ),
-                          DTOutput("TableB1Comps")
+                          DTOutput("TableB1Comps",
+                                   height = 1000, 
+                                   fill = FALSE)
                         )
               )
   )
 )
 
-
-
-
 # Server Logic -----
 server <- function(input, output) {
+  ##### Website Header #####
+  # header image
+    output$B2Header <- renderImage({
+      list(src = "SourceImages/Webheader-Biosphere_0_0.png",
+           style = 'height: 50%; width: 25%')
+    }, deleteFile = FALSE)
   ##### About #####
-  
+    # b2o image
+    output$B2OImage <- renderImage({
+      list(src = "SourceImages/B2O-image.png", style='width: 600px; height: 400px')
+    }, deleteFile = FALSE)
+    # body text
+    output$AboutText <- renderText({
+      "text here"
+    })
   ##### Time Series #####
     ##### Overall Trends #####
     # Plot 1
@@ -986,17 +1011,9 @@ server <- function(input, output) {
   ##### B1 Comparisons #####
     ##### Map #####
     output$MapB1Comps <- renderLeaflet({
-      
-      # dfMap_pivot <- dfMap %>%
-      #   select(-Ocean) %>%
-      #   pivot_longer(cols = `Temperature (ºC)`:`Iron (mg/L)`,
-      #                names_to = "Variables",
-      #                values_to = "Values") %>%
-      #   na.omit()
-      # 
-      # pal <- colorFactor("viridis", levels = unique(dfMap_pivot$Variables))
-      
+     
       dfMap_loc <- dfMap %>%
+        filter(Year <= 2011 | Year >= 2018) %>%
         select(-Year) %>%
         group_by(Location, Latitude, Longitude) %>%
         summarise(across(4:11, ~median(.x, na.rm = TRUE)))
@@ -1025,12 +1042,7 @@ server <- function(input, output) {
                          lat = ~Latitude,
                          label = lapply(labelText,
                                         htmltools::HTML))
-        # addLegend(data = dfMap_pivot,
-        #           position = "bottomright",
-        #           pal = pal,
-        #           values = ~Variables,
-        #           title = "Legend")
-        
+      
     })
     ##### Data Table #####
     output$TableB1Comps <- renderDT({
@@ -1051,19 +1063,16 @@ server <- function(input, output) {
       if (input$MapButtons == "None") {
         datatable(dfMap_all,
                   rownames = FALSE,
-                  height = '1000px',
                   fillContainer = getOption("DT.fillContainer", TRUE),
                   options = list(autoWidth = TRUE))
       } else if (input$MapButtons == "Ocean, 2011-Present") {
         datatable(dfMap_ocean,
                   rownames = FALSE,
-                  height = '1000px',
                   fillContainer = getOption("DT.fillContainer", TRUE),
                   options = list(autoWidth = TRUE))
       } else if (input$MapButtons == "Ocean, 2018-Present") {
         datatable(dfMap_recent,
                   rownames = FALSE,
-                  height = '1000px',
                   fillContainer = getOption("DT.fillContainer", TRUE),
                   options = list(autoWidth = TRUE))
       }

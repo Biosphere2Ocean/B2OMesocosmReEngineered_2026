@@ -156,11 +156,11 @@ ui <- page_fillable(
                         fluidPage(
                           fluidRow(
                             column(
-                              width = 7,
+                              width = 5,
                               imageOutput("B2OImage")
                             ),
                             column(
-                              width = 5,
+                              width = 7,
                               p("The visualizations presented on this site are made from water quality parameter data collected from a combination of sources over the course of the Biosphere 2 Ocean (B2O) project."),
                               br(),
                               p("For questions about this site and/or the data used here, please contact Renee Grambihler: grambihler@arizona.edu")
@@ -469,41 +469,40 @@ ui <- page_fillable(
                         navset_card_tab(
                           ##### Matrices Tab #####
                           nav_panel("Matrices",
-                                    layout_sidebar(
-                                      sidebar = sidebar(
+                                      layout_column_wrap(
+                                        width = 1,
+                                        heights_equal = "row",
+                                        height = "2000px",
+                                        tags$style(HTML(".radio-inline {margin-right: 30px;}")),
                                         radioButtons(
                                           inputId = "CorrMatrixButton",
+                                          inline = TRUE,
                                           label = "Choose Matrix Data",
                                           choices = c("All Correlations","Significant Correlations"),
                                           selected = "All Correlations"
-                                        )
-                                      ),
-                                      layout_column_wrap(
-                                        width = 1,
+                                        ),
                                         plotOutput("CorrPlot",
                                                    height = "1000px")
                                       )
-                                    )
-                          ),
+                                    ),
                           ##### Tables Tab #####
                           nav_panel("Tables",
-                                    layout_sidebar(
-                                      sidebar = sidebar(
+                                     layout_column_wrap(
+                                        width = 1,
+                                        height = "1000px",
+                                        heights_equal = "row",
+                                        tags$style(HTML(".radio-inline {margin-right: 30px;}")),
                                         radioButtons(
                                           inputId = "CorrTableButton",
+                                          inline = TRUE,
                                           label = "Choose Table Data",
                                           choices = c("All Correlations","Significant Correlations"),
                                           selected = "All Correlations"
-                                        )
-                                      ),
-                                      layout_column_wrap(
-                                        width = 1,
-                                        height = "1000px",
+                                        ),
                                         DTOutput("CorrTable")
                                       )
                                     )
                           )
-                        )
               ),
               
               ##### B1 Comparisons Page #####
@@ -537,12 +536,12 @@ server <- function(input, output) {
   # header image
     output$B2Header <- renderImage({
       list(src = "SourceImages/Webheader-Biosphere_0_0.png",
-           style = 'height: 25%; width: 200px')
+           style = 'height: 25%; width: 25%')
     }, deleteFile = FALSE)
   ##### About #####
     # b2o image
     output$B2OImage <- renderImage({
-      list(src = "SourceImages/B2O-image.png", style='width: 600px; height: 350px')
+      list(src = "SourceImages/B2O-image.png", style='width: 100%; height: 350px')
     }, deleteFile = FALSE)
   ##### Time Series #####
     ##### Overall Trends #####
@@ -1054,19 +1053,19 @@ server <- function(input, output) {
                    legend.title = "Correlation Strength")+
           theme(plot.title = element_text(size = 20))
       }
-      
-    })
+    }, height = 1000)
+    
     ##### Tables #####
     # Data Table
     output$CorrTable <- renderDT(
       if (input$CorrTableButton == "All Correlations") {
         datatable(corrTable,
-                  fillContainer = getOption("DT.fillContainer", TRUE))
+                  height = 1000)
       } else {
         corrTable_filter <- corrTable %>%
           filter(`P-Value` <= 0.05)
         datatable(corrTable_filter,
-                  fillContainer = getOption("DT.fillContainer", TRUE))
+                  height = 1000)
       },
       filter = list(position = "top")
     )

@@ -143,11 +143,12 @@ median_period_choices <- c("Daily", "Weekly", "Monthly", "Yearly")
 
 # User Interface -----
 ui <- page_fillable(
-  # title panel
+  ##### title panel #####
   titlePanel(title = div(imageOutput("B2Header", inline = TRUE), 
                          "Ocean Water Quality Dashboard", 
                          style = "color: #49595e;"),
              windowTitle = "Biosphere2OceanWaterQuality"),
+  ##### Main Navbar Page #####
   # page with navigation bar at top to click to other pages (panels)
   page_navbar(title = NULL,
               inverse = FALSE,
@@ -170,55 +171,55 @@ ui <- page_fillable(
                          open = FALSE,
                          accordion_panel(
                            "Metadata",
-                           h6("Variable Meanings and Units"),
-                           p("Ammonia (mg/L): amount of Ammonia (NH3) in range 0.01-0.50 measured in mg/L"),
-                           p("Alkalinity (mg/L CaCO3): amount of Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L"), 
-                           p("Chlorophyll (RFU): amount of Chlorophyll measured in Relative Fluorescence Units"),
-                           p("Conductivity (µS/cm): measures Electrical Conductance in micro-Semens/cm; salinity measurements are calculated from this value"),
-                           p("Dissolved Oxygen (mg/L): amount of Oxygen dissolved in seawater measured in mg/L"),
-                           p("Dissolved Oxygen, Local (%): amount of Oxygen dissolved in seawater measured by percent"),
-                           p("Iron (mg/L): amount of Iron in range 0.009-1.400 measured in mg/L"),
-                           p("Nitrate, Mid-Range (mg/L): amount of Nitrate (NO3-) from 0.2-5.0 measured in mg/L"), 
-                           p("Nitrate, High-Range (mg/L): amount of Nitrate (NO3-) from 0.3-30.0 measured in mg/L"),
-                           p("Oxygen Reduction Potential (mV): measures ability of water to gain or lose electrons measured in miliVolts; used as indication of amount of oxygen in the water"),
-                           p("pH: pH"),
-                           p("Phosphate (mg/L): amount of Phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L"),
-                           p("Salinity (PSU): amount of salt measured in Practical Salinity Units; equivalent to PPT"),
-                           p("Silica (mg/L): amount of Silica (SiO2) in range 0.01-1.60 measured in mg/L"),
-                           p("Temperature (ºC): temperature measured in Celcius"),
-                           p("Temperature (ºF): temperature measured in Fahrenheit"),
-                           p("Total Algae (RFU): amount of Phycoerytherin algae measured in Relative Fluorescence Units"),
-                           p("Total Dissolved Solids (mg/L): amount of solids dissolved in the water measured in mg/L"),
-                           p("Turbidity (FAU): measures water transparency in the range 21-1000 Formazine Attenuation Units")
+                           h4("Variable Meanings and Units"),
+                           p(strong("Ammonia (mg/L)"), ": amount of Ammonia (NH3) in range 0.01-0.50 measured in mg/L"),
+                           p(strong("Alkalinity (mg/L CaCO3)"), ": amount of Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L"), 
+                           p(strong("Chlorophyll (RFU)"), ": amount of Chlorophyll measured in Relative Fluorescence Units"),
+                           p(strong("Conductivity (µS/cm)"), ": measures Electrical Conductance in micro-Semens/cm; salinity measurements are calculated from this value"),
+                           p(strong("Dissolved Oxygen (mg/L)"), ": amount of Oxygen dissolved in seawater measured in mg/L"),
+                           p(strong("Dissolved Oxygen, Local (%)"), ": amount of Oxygen dissolved in seawater measured by percent"),
+                           p(strong("Iron (mg/L)"), ": amount of Iron in range 0.009-1.400 measured in mg/L"),
+                           p(strong("Nitrate, Mid-Range (mg/L)"), ": amount of Nitrate (NO3-) from 0.2-5.0 measured in mg/L"), 
+                           p(strong("Nitrate, High-Range (mg/L)"), ": amount of Nitrate (NO3-) from 0.3-30.0 measured in mg/L"),
+                           p(strong("Oxygen Reduction Potential (mV)"), ": measures ability of water to gain or lose electrons measured in miliVolts; used as indication of amount of oxygen in the water"),
+                           p(strong("pH"), ": pH"),
+                           p(strong("Phosphate (mg/L)"), ": amount of Phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L"),
+                           p(strong("Salinity (PSU)"), ": amount of salt measured in Practical Salinity Units; equivalent to PPT"),
+                           p(strong("Silica (mg/L)"), ": amount of Silica (SiO2) in range 0.01-1.60 measured in mg/L"),
+                           p(strong("Temperature (ºC)"), ": temperature measured in Celcius"),
+                           p(strong("Temperature (ºF)"), ": temperature measured in Fahrenheit"),
+                           p(strong("Total Algae (RFU)"), ": amount of Phycoerytherin algae measured in Relative Fluorescence Units"),
+                           p(strong("Total Dissolved Solids (mg/L)"), ": amount of solids dissolved in the water measured in mg/L"),
+                           p(strong("Turbidity (FAU)"), ": measures water transparency in the range 21-1000 Formazine Attenuation Units")
                          ),
                          accordion_panel(
                            "Data Sources",
-                           h6("Biosphere 2 Ocean"),
+                           h4("Biosphere 2 Ocean"),
                            p("Data starts in 2011 with Temperature (ºC), Salinity (ppt), Conductivity (mS/cm), Oxygen Reduction Potential (mV) (abbreviated as ORP), and pH."),
                            p("In 2014, a YSI 6600 V2 multiparameter sonde was installed in the B2O and set to record Temperature (ºF and ºC), pH, Salinity (ppt), Conductivity (mS/cm), ORP (mV), Phycoerythrin (RFU), Chlorophyll (µg/L), and Dissolved Oxygen (%)."),
                            p("In 2018, the ocean team started collecting weekly nutrient samples of Turbidity (FAU), Phosphate (mg/L), Nitrate (mg/L), Alkalinity (mg/L), Silicate (mg/L), and Iron (mg/L). This is done via colorimetry and digital titration (Hach brand)."),
                            p("In 2021, a new YSI EXO3 sonde was installed in the B2O and set to record Temperature (ºF and ºC), pH, Salinity (PSU), Conductivity (µS/cm), Dissolved Oxygen (mg/L and %), ORP (mV), Chlorophyll (RFU), Total Algae (RFU), and Total Dissolved Solids (RFU) at 15-minute intervals."),
-                           h6("Biosphere 1 Oceans"),
+                           h4("Biosphere 1 Oceans"),
                            p("Data from Biosphere 1 oceans (Atlantic, Pacific, etc) were downloaded and compiled from NOAA databases (see References for citation).")
                          ),
                          accordion_panel(
                            "Quality Control",
-                           h6("Overall"),
+                           h4("Overall"),
                            p("Data was run through a function that identifies outlier data points beyond 2 standard deviations from the monthly mean or median for each variable. The use of mean or median was decided by running a Shapiro-Wilk Test for Normality on the data for each month. Normal data was compared to the mean. Non-normal data was compared to the median. Outliers beyond 2 standard deviations were turned into NA values."),
-                           h6("For this website"),
+                           h4("For this website"),
                            p("Data used in this website is from the overall quality control process. However, to increase the usefulness of visualizations, medians of the data were taken on daily, weekly, monthly, and yearly intervals. The smallest unit of data presented here is a median of data taken in a 24-hour period. Median was used because the original quality control revealed that most of the data tends to be non-normal, though the size of this dataset does usually give the same mean and median value for at least monthly and yearly intervals.")
                          ),
                          accordion_panel(
                            "Historical Context",
                            p("While most of the data follows the same seasonal trends that are exhibited by B1 oceans, there are some discrepancies that can be explained through the history of the B2O."),
-                           h6("1996-2013:"),
+                           h4("1996-2013:"),
                            p("The B2O was largely un-cared for and unmonitored until 2013. The Biosphere 2 facility was acquired by the University of Arizona in July 2011, which is where our dataset starts, but its validity from 2011-2013 cannot be 100% confirmed."),
-                           h6("2013-2018:"),
+                           h4("2013-2018:"),
                            p("Dr. Rafe Sagarin became employed as the Ocean Program Director and decided to model the B2O after the Sea of Cortez due to its proximity, meaning that seasonal cycles would be similar in both systems. This allowed for a detailed education program about the Sea of Cortez and its importance for the weather patterns of Tucson."),
                            p("In 2014, Dr. Sagarin introduced a YSI 6600 V2 Multiparameter Sonde to the B2O, which increased the number of parameters and the validity of the data recorded."),
                            p("In 2015, Dr. Julia Cole succeeded Dr. Sagarin as Ocean Research Director. With a background in coral research (specifically in using coral skeletons to reconstruct past climate conditions), Dr. Cole decided the new purpose of the B2O would be to replicate conditions found in tropical oceans and use the system as an experimental mesocosm for testing the validity of radical solutions for coral reef restoration both in current and future projected climactic conditions."),
                            p("The increase in salinity seen from 2015-2018 is due to staff mixing artificial saltwater and adding it to the system to better replicate the conditions seen on coral reefs in tropical oceans worldwide."),
-                           h6("2018-Present:"),
+                           h4("2018-Present:"),
                            p("In 2018, Dr. Cole left her position as Ocean Research Director and was succeeded by fellow coral paleogeologist, Dr. Diane Thompson, who still currently holds this position. Dr. Thompson has continued the purpose of the B2O as an experimental mesocosm dedicated to testing solutions for coral reef restoration that are not yet currently able to be deployed in B1 Oceans."),
                            p("During this time, Dr. Thompson has overseen the installation of a temperature regulator that can change the temperature of all 700,000-gallons of water by 2ºC in 24 hours. This is the reason why the temperature data flattens out in 2019. She also installed a new YSI EXO3 Multiparameter Sonde to replace the old one."),
                            p("From 2018-2020, the B2O team pulled out 1000s of pounds of algae from the reef, which can be seen throughout the data."),
@@ -246,7 +247,7 @@ ui <- page_fillable(
                                         # sidebar arguments
                                         position = "left",
                                         open = "always",
-                                        width = 350,
+                                        width = 375,
                                         padding = 50,
                                         # sidebar contents in accordion style
                                         accordion(
@@ -323,19 +324,17 @@ ui <- page_fillable(
                                           )
                                         )
                                       ),
-                                      # main panel: top row
+                                      # main panel
                                       layout_column_wrap(
                                         width = 1/2,
+                                        heights_equal = "row",
+                                        min_height = "800px",
                                         conditionalPanel("input.OverallVariable1 !== 'None'",
                                                          plotOutput("OverallTrendsPlot1")
                                         ),
                                         conditionalPanel("input.OverallVariable3 !== 'None'",
-                                                         plotOutput("OverallTrendsPlot3")
-                                        )
-                                      ),
-                                      # main panel: bottom row
-                                      layout_column_wrap(
-                                        width = 1/2,
+                                                         plotOutput("OverallTrendsPlot3"),
+                                        ),
                                         conditionalPanel("input.OverallVariable2 !== 'None'",
                                                          plotOutput("OverallTrendsPlot2")
                                         ),
@@ -343,8 +342,8 @@ ui <- page_fillable(
                                                          plotOutput("OverallTrendsPlot4")
                                         )
                                       )
+                                      
                                     )
-                                    
                           ),
                           ##### Seasonal Trends Tab #####
                           nav_panel("Seasonal Trends",
@@ -438,19 +437,17 @@ ui <- page_fillable(
                                           )
                                         )
                                       ),
-                                      # main panel: top row
+                                      # main panel
                                       layout_column_wrap(
                                         width = 1/2,
+                                        heights_equal = "row",
+                                        min_height = "800px",
                                         conditionalPanel("input.SeasonalVariable1 !== 'None'",
                                                          plotOutput("SeasonalTrendsPlot1")
                                         ),
                                         conditionalPanel("input.SeasonalVariable3 !== 'None'",
                                                          plotOutput("SeasonalTrendsPlot3")
-                                        )
-                                      ),
-                                      # main panel: bottom row
-                                      layout_column_wrap(
-                                        width = 1/2,
+                                        ),
                                         conditionalPanel("input.SeasonalVariable2 !== 'None'",
                                                          plotOutput("SeasonalTrendsPlot2")
                                         ),
@@ -459,9 +456,8 @@ ui <- page_fillable(
                                         )
                                       )
                                     )
-                                    
                           )
-                        )
+              )
               ),
               
               ##### Correlations Page #####

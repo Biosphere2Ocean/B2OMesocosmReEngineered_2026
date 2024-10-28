@@ -339,6 +339,7 @@ OceanDataFrame_2011_2021 <- rbind(ocean_data_2011_2014,
   # join total_algae_rfu column on end
   left_join(ocean_data_2016_2018[,c(1,8)], by = join_by(datetime))%>%
   left_join(ocean_data_2018_2021[,c(1,8)], by = join_by(datetime))%>%
+  left_join(ocean_data_2018_2021[,c(1,10)], by = join_by(datetime)) %>%
   # turn units into uS/cm instead of mS/cm
   mutate(`Conductivity (µS/cm)` = `Conductivity (µS/cm)`*1000)
 
@@ -393,8 +394,8 @@ YsiAllFrameEdit <- YsiAllFrame %>%
 Combine dataframes, keep unique rows, and move columns around so that similar variables are grouped together
 ```{r data-wrangling-combine-data}
 
-OceanWaterQualityFrame <- rbind(OceanDataFrame_2011_2021, YsiAllFrameEdit[, 1:10]) %>%
-  left_join(YsiAllFrameEdit[,c(1,11:18)], by = join_by(datetime)) %>%
+OceanWaterQualityFrame <- rbind(OceanDataFrame_2011_2021, YsiAllFrameEdit[, 1:11]) %>%
+  left_join(YsiAllFrameEdit[,c(1,12:18)], by = join_by(datetime)) %>%
   unique() %>%
   relocate(`pH (mV)`, .after = pH) %>%
   relocate(`Conductivity, Non-Linear Function (µS/cm)`, 

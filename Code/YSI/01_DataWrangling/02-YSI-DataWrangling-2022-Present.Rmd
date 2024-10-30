@@ -27,7 +27,7 @@ dfHistorical <- read_csv("Data/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011
 These files are pulled from the B2 SCADA Database (https://data.b2.arizona.edu/Bio2Controls/OCDataAgreement.jsp). Each file will download with a numeric identifier at the end of the file name. Delete this before running the files through this code. I might figure out how to get around that via code one day, but not today.
 ```{r import-SCADA-files-from-1/22/22-present}
 # file path to folder containing new scada database 1/22/22-present ocean water quality files
-path <- "Data/Raw/RawData_YSI/SCADA/SCADA_2022_Present"
+path <- "Data/Raw/YSI/SCADA/SCADA_2022_Present"
 
 # chlorophyll in RFU from 1/22/22-present from current YSI EXO3 Sonde
 exo_chlorophyll <- read_csv(here(path,
@@ -148,7 +148,7 @@ exo_temp_f <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv"),
 ## DSSPro Backup
 This file is from the YSI DSSPro instrument. The EXO3 was sent in for maintenance from 11/17/2023 - 1/10/2024, so it was not recording the to the database. The YSI DSSPro was used to record data while the EXO3 was away. Unfortunately, not all of the same variables were recorded, but this will be fixed if the EXO3 ever needs to go back.
 ```{r import-dsspro-file}
-dfDSSPro <- read_csv("Data/Raw/RawData_YSI/Sondes/prodssbackup-231117-240112.csv",
+dfDSSPro <- read_csv("Data/Raw/YSI/Sondes/prodssbackup-231117-240112.csv",
                      # files downloaded from the YSI instruments are encoded as UTF-16, but most code languages only read UTF-8. Make sure to keep the below line in to fix that.
                      locale=locale(encoding="UTF-16"),
                      # first line says sep=, so that excel reads in the csv file like an excel file so make sure to skip that. can only see this line when viewing with a text editor
@@ -171,6 +171,13 @@ dfDSSPro <- read_csv("Data/Raw/RawData_YSI/Sondes/prodssbackup-231117-240112.csv
 
 # Data Wrangling
 Goal here is to make all files look the same so they can be combined later
+## Historical File
+```{r data-wrangling-historical}
+dfHistorical <- dfHistorical %>%
+  relocate(`pH (mV)`, .after = pH)
+  
+```
+
 ## New Database Files
 Combine all files from new database and make the resulting dataframe look like dfHistorical. Chop this dataframe in half so that we can sandwich in the DSSPro dataframe.
 ```{r data-wrangling-new-database}
@@ -181,17 +188,17 @@ dfNewDB <- exo_temp_f %>%
   left_join(exo_ph_mv, by = join_by(datetime)) %>%
   left_join(exo_salinity, by = join_by(datetime)) %>%
   left_join(exo_conductivity, by = join_by(datetime)) %>%
+  left_join(exo_orp, by = join_by(datetime)) %>%
+  left_join(exo_total_algae, by = join_by(datetime)) %>%
+  mutate(`Chlorophyll (µg/L)` = NA) %>%
+  mutate(`Total Algae (cells/L)` = NA) %>%
+  left_join(exo_do_saturated, by = join_by(datetime)) %>%
+  left_join(exo_do, by = join_by(datetime)) %>%
+  left_join(exo_do_local, by = join_by(datetime)) %>%
   left_join(exo_nlf_conductivity, by = join_by(datetime)) %>%
   left_join(exo_sp_conductivity, by = join_by(datetime)) %>%
-  left_join(exo_do, by = join_by(datetime)) %>%
-  left_join(exo_do_saturated, by = join_by(datetime)) %>%
-  left_join(exo_do_local, by = join_by(datetime)) %>%
-  left_join(exo_orp, by = join_by(datetime)) %>%
-  left_join(exo_chlorophyll, by = join_by(datetime)) %>%
-  mutate(`Chlorophyll (µg/L)` = NA) %>%
-  left_join(exo_total_algae, by = join_by(datetime)) %>%
-  mutate(`Total Algae (cells/L)` = NA) %>%
   left_join(exo_total_dissolved_solids, by = join_by(datetime)) %>%
+  left_join(exo_chlorophyll, by = join_by(datetime)) %>%
   mutate(datetime = ymd_hms(datetime))
 
 # df of data recorded before EXO3 got sent to be fixed
@@ -223,11 +230,16 @@ dfDSSProEdit <- dfDSSPro %>%
   relocate(`pH (mV)`, .after = pH) %>%
   relocate(`Salinity (PSU)`, .after = `pH (mV)`) %>%
   relocate(`Conductivity (µS/cm)`, .after = `Salinity (PSU)`) %>%
-  relocate(`Conductivity, Non-Linear Function (µS/cm)`, .after = `Conductivity (µS/cm)`) %>%
+  relocate(`Oxygen Reduction Potential (mV)`, .after = `Conductivity (µS/cm)`) %>%
+  relocate(`Total Algae (RFU)`, .after = `Oxygen Reduction Potential (mV)`) %>%
+  relocate(`Chlorophyll (µg/L)`, .after = `Total Algae (RFU)`) %>%
+  relocate(`Total Algae (cells/L)`, .after = `Chlorophyll (µg/L)`) %>%
+  relocate(`Dissolved Oxygen, Saturated (%)`, .after = `Total Algae (cells/L)`) %>%
+  relocate(`Dissolved Oxygen (mg/L)`, .after = `Dissolved Oxygen, Saturated (%)`) %>%
+  relocate(`Dissolved Oxygen, Local (%)`, .after = `Dissolved Oxygen (mg/L)`) %>%
+  relocate(`Conductivity, Non-Linear Function (µS/cm)`, .after = `Dissolved Oxygen, Local (%)`) %>%
   relocate(`Conductivity, Specific (µS/cm)`, .after = `Conductivity, Non-Linear Function (µS/cm)`) %>%
-  relocate(`Dissolved Oxygen (mg/L)`, .after = `Conductivity, Specific (µS/cm)`) %>%
-  relocate(`Dissolved Oxygen, Saturated (%)`, .after = `Dissolved Oxygen (mg/L)`) %>%
-  relocate(`Chlorophyll (µg/L)`, .after = `Chlorophyll (RFU)`) %>%
+  relocate(`Chlorophyll (RFU)`, .after = `Conductivity, Specific (µS/cm)`) %>%
   # mess with datetime column to make it into "POSIXct" "POSIXt" class so that we can filter
   separate(datetime, into = c("date", "time"), sep = " ") %>%
   mutate(date = as.Date(date, format = "%m/%d/%y")) %>%

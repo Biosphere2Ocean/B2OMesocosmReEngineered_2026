@@ -10,6 +10,7 @@ output: html_notebook
 library(tidyverse)
 library(lubridate)
 library(here)
+library(readxl)
 # turns off scientific notation
 options(scipen = 999)
 ```
@@ -32,94 +33,125 @@ ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"
                                                "Temperature (ºC)",
                                                "pH",
                                                "Salinity (PSU)",
-                                               "Conductivity (µS/cm)",
+                                               "Conductivity (mS/cm)",
                                                "Oxygen Reduction Potential (mV)")) %>%
-  # add a column called chlorophyll_ugl after `Oxygen Reduction Potential (mV)` and fill it with NA values
-  add_column(`Chlorophyll (µg/L)` = NA,
-             .after = 7)%>%
+  # add a columns with NA values to match names and places of columns we will have eventually with addition of other datafiles
+  add_column(`Total Algae (RFU)` = NA, .after = 7) %>%
+  add_column(`Chlorophyll (µg/L)` = NA, .after = 8) %>%
+  add_column(`Total Algae (cells/L)` = NA, .after = 9) %>%
+  add_column(`Dissolved Oxygen, Saturated (%)` = NA, .after = 10) %>%
+  # change datetime format and data type
+  mutate(datetime = gsub("/", "-", datetime))%>%
+  mutate(datetime = as_datetime(datetime)) %>%
   # get rid of probable data entry errors: salinity < 1, temp < 10, pH < 0, conductivity < 2, orp < 0
   mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 1, NA, `Salinity (PSU)`))%>%
   mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 10, NA, `Temperature (ºC)`)) %>%
   mutate(pH = ifelse(pH < 0, NA, pH)) %>%
-  mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 2, NA, `Conductivity (µS/cm)`))%>%
+  mutate(`Conductivity (mS/cm)` = ifelse(`Conductivity (mS/cm)` < 2, NA, `Conductivity (mS/cm)`))%>%
   mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))
 
-# data from 10/3/14 - 5/8/18
-ocean_data_2014_2018 <- read_csv(here(path, "Ocean_FTP_Data.csv"), 
+# data from 8/4/2014 - 10/3/2014
+ocean_data_2014 <- read_csv(here(path, "Ocean_FTP_Data_Acq.csv"), 
                                  skip = 1,
                                  col_names = c("datetime",
                                                "Temperature (ºF)",
                                                "Temperature (ºC)",
                                                "pH",
                                                "Salinity (PSU)",
-                                               "Conductivity (µS/cm)",
+                                               "Conductivity (mS/cm)",
                                                "Oxygen Reduction Potential (mV)")) %>%
-  # add a column called chlorophyll_ugl after `Oxygen Reduction Potential (mV)` and fill it with NA values
-  add_column(`Chlorophyll (µg/L)` = NA,
-             .after = 7)%>%
-  # change datetime format to match previous files
+  # add a columns with NA values to match names and places of columns we will have eventually with addition of other datafiles
+  add_column(`Total Algae (RFU)` = NA, .after = 7) %>%
+  add_column(`Chlorophyll (µg/L)` = NA, .after = 8) %>%
+  add_column(`Total Algae (cells/L)` = NA, .after = 9) %>%
+  add_column(`Dissolved Oxygen, Saturated (%)` = NA, .after = 10) %>%
+  # change datetime format and data type
   mutate(datetime = format(as.POSIXct(datetime, format = "%m/%d/%y %H:%M"), "%Y/%m/%d %H:%M:%S"))%>%
-  # data in this file is from YSI not in use after 5/8/18 at 8:00am. just use data before that date
-  filter(datetime <= "2018/05/08 08:00:00")%>%
+  mutate(datetime = gsub("/", "-", datetime))%>%
+  # want data to fill in from end of last file to beginning of next file since the next file has more variables even though the dates overlap
+  filter(datetime > "2014-08-04 09:30:00" & datetime < "2014-10-03 09:00:00")%>%
   # get rid of probable data entry errors: salinity < 1, temp < 10F and 1C, pH < 3, conductivity < 2, orp < 0
   mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 1, NA, `Salinity (PSU)`))%>%
   mutate(`Temperature (ºF)` = ifelse(`Temperature (ºF)` < 10, NA, `Temperature (ºF)`))%>%
   mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 1, NA, `Temperature (ºC)`))%>%
   mutate(pH = ifelse(pH < 3, NA, pH))%>%
-  mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 2, NA, `Conductivity (µS/cm)`))%>%
+  mutate(`Conductivity (mS/cm)` = ifelse(`Conductivity (mS/cm)` < 2, NA, `Conductivity (mS/cm)`))%>%
   mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))
 
-# data from 5/8/18 - 6/12/18
-ocean_data_2016_2018 <- read_csv(here(path, "Ocean_FTP_Data_Extended.csv"), 
+
+# data from 10/3/14 - 12/6/2016
+ocean_data_2014_2016 <- read_csv(here(path, "Ocean_FTP_Data.csv"), 
                                  skip = 1,
                                  col_names = c("datetime",
                                                "Temperature (ºF)",
                                                "Temperature (ºC)",
                                                "pH",
                                                "Salinity (PSU)",
-                                               "Conductivity (µS/cm)",
-                                               "Oxygen Reduction Potential (mV)",
-                                               "Total Algae (RFU)",
-                                               "Chlorophyll (µg/L)",
-                                               "ro_flow_gpm")) %>%
-  # don't need RO Flow Rate into Ocean. This is also only file with this data
-  select(-ro_flow_gpm) %>%
-  # use data after 5/8/18 at 8:00am to keep from overlapping with previous file
-  filter(datetime >= "2018/05/08 08:00:00") %>%
-  # get rid of probable data entry errors: salinity < 1, temp < 10, pH < 0, conductivity < 2, orp < 0
+                                               "Conductivity (mS/cm)",
+                                               "Oxygen Reduction Potential (mV)")) %>%
+  # add a columns with NA values to match names and places of columns we will have eventually with addition of other datafiles
+  add_column(`Total Algae (RFU)` = NA, .after = 7) %>%
+  add_column(`Chlorophyll (µg/L)` = NA, .after = 8) %>%
+  add_column(`Total Algae (cells/L)` = NA, .after = 9) %>%
+  add_column(`Dissolved Oxygen, Saturated (%)` = NA, .after = 10) %>%
+  # change datetime format and data type
+  mutate(datetime = format(as.POSIXct(datetime, format = "%m/%d/%y %H:%M"), "%Y/%m/%d %H:%M:%S"))%>%
+  mutate(datetime = gsub("/", "-", datetime))%>%
+  mutate(datetime = as_datetime(datetime)) %>%
+  # want data to fill in from end of last file to beginning of next file since the next file has more variables even though the dates overlap
+  filter(datetime < "2016/12/06 10:00:00")%>%
+  # get rid of probable data entry errors: salinity < 1, temp < 10F and 1C, pH < 3, conductivity < 2, orp < 0
   mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 1, NA, `Salinity (PSU)`))%>%
   mutate(`Temperature (ºF)` = ifelse(`Temperature (ºF)` < 10, NA, `Temperature (ºF)`))%>%
   mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 1, NA, `Temperature (ºC)`))%>%
   mutate(pH = ifelse(pH < 3, NA, pH))%>%
-  mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 2, NA, `Conductivity (µS/cm)`))%>%
+  mutate(`Conductivity (mS/cm)` = ifelse(`Conductivity (mS/cm)` < 2, NA, `Conductivity (mS/cm)`))%>%
   mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))
 
-
-# data from 10/12/18 - 5/25/21
-ocean_data_2018_2021 <- read_csv(here(path, "Ocean_Data_new.csv"), 
-                                 skip = 1, 
-                                 col_names = c("datetime",
-                                               "Temperature (ºC)",
-                                               "pH",
-                                               "Salinity (PSU)",
-                                               "Conductivity (µS/cm)",
-                                               "Oxygen Reduction Potential (mV)",
-                                               "Total Algae (cells/L)",
-                                               "Chlorophyll (µg/L)",
-                                               "Dissolved Oxygen, Saturated (%)")) %>%
-  # add temp_f column with NA values
-  add_column(`Temperature (ºF)` = NA, .after = 1)%>%
+# data from 12/6/2016 - 5/25/2021
+ocean_data_2016_2021 <- read_excel(here(path, "ocean_scada_data_2016_2021.xlsx"), 
+                                   skip = 1, 
+                                   col_names = c("datetime",
+                                                 "Temperature (ºF)",
+                                                 "Temperature (ºC)",
+                                                 "pH",
+                                                 "Salinity (PSU)",
+                                                 "Conductivity (mS/cm)",
+                                                 "Oxygen Reduction Potential (mV)",
+                                                 "Total Algae (RFU)",
+                                                 "Chlorophyll (µg/L)",
+                                                 "ro_flow_gpm",
+                                                 "Total Algae (cells/L)",
+                                                 "Dissolved Oxygen, Saturated (%)"), 
+                                   col_types = c("date",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric",
+                                                 "numeric")) %>%
+  select(-ro_flow_gpm) %>%
+  # change datetime format to match previous files
+  mutate(datetime = gsub("/", "-", datetime))%>%
+  mutate(datetime = as_datetime(datetime)) %>%
   # get rid of probable data entry errors: salinity < 1, temp < 10, temp_c < 1, pH < 0, conductivity < 2, orp < 0, total algae cells < 0, chlorophyll < 0
-  mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 1, NA, `Salinity (PSU)`))%>%
-  mutate(`Temperature (ºF)` = ifelse(`Temperature (ºF)` < 10, NA, `Temperature (ºF)`))%>%
-  mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 1, NA, `Temperature (ºC)`))%>%
+  mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 10, NA, `Salinity (PSU)`))%>%
+  mutate(`Temperature (ºF)` = ifelse(`Temperature (ºF)` < 20, NA, `Temperature (ºF)`))%>%
+  mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 10, NA, `Temperature (ºC)`))%>%
   mutate(pH = ifelse(pH < 3, NA, pH))%>%
-  mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 2, NA, `Conductivity (µS/cm)`))%>%
-  # ~3 days in January 2019 were reading `Conductivity (µS/cm)` in the 10,000s instead of 10s, so there must have been a conversion issue for those days
-  mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` > 1000, `Conductivity (µS/cm)`/1000, `Conductivity (µS/cm)`))%>%
+  mutate(`Conductivity (mS/cm)` = ifelse(`Conductivity (mS/cm)` < 0, NA, `Conductivity (mS/cm)`))%>%
+  # ~3 days in January 2019 were reading `Conductivity (mS/cm)` in the 10,000s instead of 10s, so there must have been a conversion issue for those days
+  mutate(`Conductivity (mS/cm)` = ifelse(`Conductivity (mS/cm)` > 1000, NA, `Conductivity (mS/cm)`))%>%
   mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))%>%
   mutate(`Total Algae (cells/L)` = ifelse(`Total Algae (cells/L)` < 0, NA, `Total Algae (cells/L)`))%>%
-  mutate(`Chlorophyll (µg/L)` = ifelse(`Chlorophyll (µg/L)` < 0, NA, `Chlorophyll (µg/L)`))
+  mutate(`Chlorophyll (µg/L)` = ifelse(`Chlorophyll (µg/L)` < 0, NA, `Chlorophyll (µg/L)`)) %>%
+  mutate(`Dissolved Oxygen, Saturated (%)` = ifelse(`Dissolved Oxygen, Saturated (%)` < 10, NA, `Dissolved Oxygen, Saturated (%)`))
+  
 
 ```
 
@@ -332,15 +364,11 @@ Join all dataframes together so there is one 2011-2022 dataframe.
 ```{r data-wrangling-2011-2021}
 # create 2011-2021 ocean data dataframe
 OceanDataFrame_2011_2021 <- rbind(ocean_data_2011_2014, 
-                              ocean_data_2014_2018,
-                              #all columns except total_algae_rfu (column 8)
-                              ocean_data_2016_2018[,c(1:7,9)],
-                              ocean_data_2018_2021[,c(1:7,9)])%>%
-  # join total_algae_rfu column on end
-  left_join(ocean_data_2016_2018[,c(1,8)], by = join_by(datetime))%>%
-  left_join(ocean_data_2018_2021[,c(1,8)], by = join_by(datetime))%>%
-  left_join(ocean_data_2018_2021[,c(1,10)], by = join_by(datetime)) %>%
+                                  ocean_data_2014,
+                                  ocean_data_2014_2016,
+                                  ocean_data_2016_2021)%>%
   # turn units into uS/cm instead of mS/cm
+  rename(`Conductivity (µS/cm)` = `Conductivity (mS/cm)`) %>%
   mutate(`Conductivity (µS/cm)` = `Conductivity (µS/cm)`*1000)
 
 ```
@@ -356,36 +384,38 @@ YsiFrame <- ysi_temp_c %>%
   left_join(ysi_chlorophyll, by = join_by(datetime))%>%
   left_join(ysi_total_algae, by = join_by(datetime)) %>%
   # turn units into uS/cm instead of mS/cm
-  mutate(`Conductivity (µS/cm)` = `Conductivity (µS/cm)`*1000) 
+  mutate(`Conductivity (µS/cm)` = `Conductivity (µS/cm)`*1000) %>%
+  # add columns to make the same as ocean frame
+  add_column(`Temperature (ºF)` = NA, .after = 1)%>%
+  add_column(`Total Algae (RFU)` = NA, .after = 7)%>%
+  add_column(`Dissolved Oxygen, Saturated (%)` = NA, .after = 10)
 
 
 # create old database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the datetime column
-YsiExoFrame <- exo_temp_c %>%
+YsiExoFrame <- exo_temp_f %>%
+  left_join(exo_temp_c, by = join_by(datetime)) %>%
   left_join(exo_ph, by = join_by(datetime)) %>%
   left_join(exo_salinity, by = join_by(datetime)) %>%
   left_join(exo_conductivity, by = join_by(datetime)) %>%
   left_join(exo_orp, by = join_by(datetime)) %>%
   left_join(exo_total_algae, by = join_by(datetime)) %>%
-  left_join(exo_chlorophyll, by = join_by(datetime)) %>%
+  left_join(exo_do_saturated, by = join_by(datetime)) %>%
   left_join(exo_do, by = join_by(datetime)) %>%
   left_join(exo_do_local, by = join_by(datetime)) %>%
-  left_join(exo_do_saturated, by = join_by(datetime)) %>%
   left_join(exo_nlf_conductivity, by = join_by(datetime)) %>%
   left_join(exo_ph_mv, by = join_by(datetime)) %>%
   left_join(exo_sp_conductivity, by = join_by(datetime)) %>%
-  left_join(exo_temp_f, by = join_by(datetime)) %>%
-  left_join(exo_total_dissolved_solids, by = join_by(datetime))
+  left_join(exo_total_dissolved_solids, by = join_by(datetime)) %>%
+  add_column(`Chlorophyll (µg/L)` = NA, .after = 8) %>%
+  add_column(`Total Algae (cells/L)` = NA, .after = 9) %>%
+  left_join(exo_chlorophyll, by = join_by(datetime)) 
 
 # create dataframe of all old database YSI Sonde data
-YsiAllFrame <- rbind(YsiFrame[,1:6], YsiExoFrame[,1:6]) %>%
-  left_join(YsiFrame[,c(1,7:8)], by = join_by(datetime)) %>%
-  left_join(YsiExoFrame[,c(1,7:16)], by = join_by(datetime))
-
-# edit column placement of YsiAllFrame to match up common columns with OceanDataFrame_2011_2021
-YsiAllFrameEdit <- YsiAllFrame %>%
-  relocate(`Temperature (ºF)`, .before = `Temperature (ºC)`) %>%
-  relocate(`Total Algae (RFU)`, .after = `Chlorophyll (µg/L)`) %>%
-  relocate(`Dissolved Oxygen, Saturated (%)`, .after = `Total Algae (cells/L)`)
+YsiAllFrame <- rbind(YsiFrame[,1:11], YsiExoFrame[,1:11]) %>%
+  left_join(YsiExoFrame[,c(1,12:18)], by = join_by(datetime)) %>%
+  # change datetime format and data type
+  mutate(datetime = gsub("/", "-", datetime))%>%
+  mutate(datetime = as_datetime(datetime))
 
 
 ```
@@ -394,8 +424,8 @@ YsiAllFrameEdit <- YsiAllFrame %>%
 Combine dataframes, keep unique rows, and move columns around so that similar variables are grouped together
 ```{r data-wrangling-combine-data}
 
-OceanWaterQualityFrame <- rbind(OceanDataFrame_2011_2021, YsiAllFrameEdit[, 1:11]) %>%
-  left_join(YsiAllFrameEdit[,c(1,12:18)], by = join_by(datetime)) %>%
+OceanWaterQualityFrame <- rbind(OceanDataFrame_2011_2021, YsiAllFrame[, 1:11]) %>%
+  left_join(YsiAllFrame[,c(1,12:18)], by = join_by(datetime)) %>%
   unique() %>%
   relocate(`pH (mV)`, .after = pH) %>%
   relocate(`Conductivity, Non-Linear Function (µS/cm)`, 

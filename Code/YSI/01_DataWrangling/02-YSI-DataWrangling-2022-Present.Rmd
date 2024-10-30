@@ -247,7 +247,7 @@ dfDSSProEdit <- dfDSSPro %>%
   relocate(datetime, .after = date) %>%
   select(-date, -time) %>%
   # filter out extra rows that got added when file was downloaded off of instrument
-  filter(datetime <= ymd_hms("2024-01-10 15:15:00"))
+  filter(datetime <= ymd_hms("2024-01-10 15:15:00")) 
 
 ```
 
@@ -278,7 +278,8 @@ dfOceanWaterQuality <- rbind(dfHistorical,
          `Chlorophyll (µg/L)` = as.double(`Chlorophyll (µg/L)`),
          `Total Algae (RFU)` = as.double(`Total Algae (RFU)`),
          `Total Algae (cells/L)` = as.double(`Total Algae (cells/L)`),
-         `Total Dissolved Solids (mg/L)` = as.double(`Total Dissolved Solids (mg/L)`)) 
+         `Total Dissolved Solids (mg/L)` = as.double(`Total Dissolved Solids (mg/L)`)) %>%
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
   
 
 ```

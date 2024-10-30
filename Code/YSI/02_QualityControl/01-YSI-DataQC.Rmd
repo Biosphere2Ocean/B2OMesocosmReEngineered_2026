@@ -40,33 +40,36 @@ dfPivot <- df %>%
                values_to = "variable_value")
 
 # this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
-AllVariablePlotPreQC <- dfPivot %>%
-  #filter(variable == "pH") %>%
-  ggplot(aes(x = Date, 
-             y = variable_value)) +
-  geom_line() +
-  # can comment out below line if filtering by one variable
-  facet_wrap(~variable, ncol = 3, scales = "free")+
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Water Quality by Variable from 2011-2023",
-       subtitle = "Pre-QC: All Outliers Still Present")+
-  xlab("Date")+
-  ylab("Nutrient Value")
-
-AllVariablePlotPreQC
+# getting list of column names from df, excluding "date" and "time" so we can use it to loop through
+var_names <- colnames(df)
+var_names <- var_names[! var_names %in% c("Date", "Time")]
+plotList_preqc <- list()
+for (i in 1:length(var_names)) {
+  plotList_preqc[[i]] <- dfPivot %>%
+    filter(variable == var_names[i]) %>%
+    ggplot(aes(x = Date,
+               y = variable_value)) +
+    geom_point() +
+    ylab(var_names[i])
+  
+  print(plotList_preqc[[i]])
+}
 
 ```
 
 ## Quality Control Data
+### Check Data Size
+```{r qc-data-check}
+dfCheck <- df %>%
+  mutate(Date = str_sub(Date, end=-4)) %>%
+  group_by(Date) %>% 
+  unique() %>%
+  na.omit() %>%
+  summarise(n = n()) %>%
+  filter(n >= 5000)
+
+```
+
 ### QC Function
 The following code defines a function to identify data points outside input standard deviations from the montlhy mean or median for each variable and replaces the identified outliers with NA values.
 At some point, this will be localized within a .R file called QCFunction.R, but for now, run the below chunk to quality control the data
@@ -111,7 +114,8 @@ for (v in var_names) {
     # filter dfVar by month and use only unique values
     dfVarNormal <- dfVar %>%
       filter(Date == d) %>%
-      unique()
+      unique() %>%
+      na.omit()
     
     # run shapiro test on var values if there are more than 3 unique values. 
     # p-value will be saved in shapiro_value if above is true, otherwise, sample will be considered non-normal, and shapiro_value will be saved as 0 
@@ -191,35 +195,39 @@ write_csv(dfQC,
 
 # pivot dfQC to long format from wide so that facet wrapping is easier
 dfQCPivot <- dfQC %>%
-  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
+  pivot_longer(cols = `Temperature (ºF)`:`Chlorophyll (RFU)`,
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(Date = as.Date(Date, format = "%Y/%m/%d"))
 
-# again, this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
-AllVariablePlotPostQC <- dfQCPivot %>%
-  ##filter(variable == "pH") %>%
-  ggplot(aes(x = Date, 
-             y = variable_value)) +
-  geom_line() +
-  # comment the below line if using the filter line
-  facet_wrap(~variable, ncol = 3, scales = "free")+
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Water Quality by Variable from 2011-2023",
-       subtitle = "Post-QC: Removed Values 2 Standard Deviations Outside Mean")+
-  xlab("Date")+
-  ylab("Nutrient Value")
 
-AllVariablePlotPostQC
+plotList_postqc <- list()
+for (i in 1:length(var_names)) {
+  plotList_postqc[[i]] <- dfQCPivot %>%
+    filter(variable == var_names[i]) %>%
+    ggplot(aes(x = Date,
+               y = variable_value)) +
+    geom_point() +
+    ylab(var_names[i]) +
+    scale_x_date(date_breaks = "1 year",
+                 date_labels = "%Y")
+  
+  print(plotList_postqc[[i]])
+}
+
+dfQCPivot %>% 
+  #mutate(datetime = paste(Date, Time)) %>%
+  #mutate(datetime = as.POSIXct(datetime)) %>%
+  filter(Date >= "2020-06-01" & Date <= "2021-01-01") %>%
+  filter(variable == "Salinity (PSU)") %>%
+  ggplot(aes(x = Date,
+               y = variable_value)) +
+    geom_point() +
+  #scale_x_datetime(date_breaks = "12 hours") +
+  scale_x_date(date_breaks = "1 month",
+                 date_labels = "%B")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    ylab("Temperature (ºC)")
 
 ```
 
@@ -238,11 +246,11 @@ Based on the above plot, the variables pH, salinity_psu, and temp_c still have s
 # implement calibration cutoff values
 dfQCCutoff <- dfQC %>%
   mutate(Date = as.Date(Date, format = "%m/%d/%Y")) %>%
-  mutate(pH = ifelse(pH < 7.5, NA, pH)) %>%
-  mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 21, NA, `Salinity (PSU)`)) %>%
-  mutate(`Salinity (PSU)` = ifelse(Date > "2020/01/01" & `Salinity (PSU)` < 31, NA, `Salinity (PSU)`)) %>%
-  mutate(`Salinity (PSU)` = ifelse(Date < "2013/01/01" & `Salinity (PSU)` < 24, NA, `Salinity (PSU)`)) %>%
-  mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 20 | `Temperature (ºC)` > 28, NA, `Temperature (ºC)`))
+  mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 10000, NA, `Conductivity (µS/cm)`)) %>%
+  mutate(pH = ifelse(pH < 7.0, NA, pH)) %>%
+  mutate(`Salinity (PSU)` = ifelse(Date >= "2020/01/01" & Date <= "2021-01-01" & `Salinity (PSU)` < 31, NA, `Salinity (PSU)`)) %>%
+  mutate(`Salinity (PSU)` = ifelse(Date <= "2013/01/01" & Date >= "2012-01-01" & `Salinity (PSU)` < 25, NA, `Salinity (PSU)`)) %>%
+  mutate(`Temperature (ºC)` = ifelse(Date <= "2014-10-31" & `Temperature (ºC)` < 20, NA, `Temperature (ºC)`))
 
 ```
 
@@ -252,35 +260,26 @@ Visualize final QC'd data to see if there are anymore changes to make.
 ```{r Visualize Post-QC, Post-Cutoff Data}
 # pivot dfQCCutoff to long format from wide so that facet wrapping is easier
 dfQCCutoffPivot <- dfQCCutoff %>%
-  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
+  pivot_longer(cols = `Temperature (ºF)`:`Chlorophyll (RFU)`,
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(Date = as.Date(Date, format = "%Y/%m/%d"))
 
 # again, this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
-AllVariablePlotPostQCCutoff <- dfQCCutoffPivot %>%
-  #filter(variable == "pH") %>%
-  ggplot(aes(x = Date, 
-             y = variable_value)) +
-  geom_line() +
-  # comment below line if using filter line
-  facet_wrap(~variable, ncol = 3, scales = "free")+
-  scale_x_date(breaks = waiver(), date_breaks = "1 year",
-               date_labels = "%b %Y") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.margin = margin(0.25, 0.45, 0.25, 0.25, "inch"))+
-  theme(strip.background = element_rect(fill = "white"))+
-  labs(title = "B2O Water Quality by Variable from 2011-2023",
-       subtitle = "Post-QC: Removed Values 2 Standard Deviations Outside Mean and Cutoff Values")+
-  xlab("Date")+
-  ylab("Nutrient Value")
+plotList_postqccutoff <- list()
+for (i in 1:length(var_names)) {
+  plotList_postqccutoff[[i]] <- dfQCPivot %>%
+    filter(variable == var_names[i]) %>%
+    ggplot(aes(x = Date,
+               y = variable_value)) +
+    geom_point() +
+    ylab(var_names[i]) +
+    scale_x_date(date_breaks = "1 year",
+                 date_labels = "%Y")
+  
+  print(plotList_postqccutoff[[i]])
+}
 
-AllVariablePlotPostQCCutoff
 
 ```
 

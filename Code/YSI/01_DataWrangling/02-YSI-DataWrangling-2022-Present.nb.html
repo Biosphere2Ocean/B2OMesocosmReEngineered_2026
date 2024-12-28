@@ -1756,34 +1756,44 @@ display: none;
 <h2>Import Libraries</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbmxpYnJhcnkoaGVyZSlcbiMgdHVybnMgb2ZmIHNjaWVudGlmaWMgbm90YXRpb25cbm9wdGlvbnMoc2NpcGVuID0gOTk5KVxuYGBgIn0= -->
-<pre class="r"><code>library(tidyverse)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbmxpYnJhcnkoaGVyZSlcbiMgdHVybnMgb2ZmIHNjaWVudGlmaWMgbm90YXRpb25cbm9wdGlvbnMoc2NpcGVuID0gOTk5KVxuYGBgXG5gYGAifQ== -->
+<pre class="r"><code>```r
+library(tidyverse)
 library(lubridate)
 library(here)
 # turns off scientific notation
 options(scipen = 999)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="import-data" class="section level1">
-<h1>Import Data</h1>
-<div id="old-b2-scada-database-2011-2022" class="section level2">
-<h2>Old B2 SCADA Database: 2011-2022</h2>
-<p>Use <code>01-YSI-Data-Clean-2011-2022.csv</code> created in
-<code>01-YSI-DataWrangling-2011-2022.Rmd</code></p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZIaXN0b3JpY2FsIDwtIHJlYWRfY3N2KFwiRGF0YS9DbGVhbi9ZU0kvMDFfRGF0YVdyYW5nbGluZy8wMS1ZU0ktRGF0YS1DbGVhbi0yMDExLTIwMjIuY3N2XCIpICU+JVxuICBtdXRhdGUoZGF0ZXRpbWUgPSB5bWRfaG1zKGRhdGV0aW1lKSlcbmBgYCJ9 -->
-<pre class="r"><code>dfHistorical &lt;- read_csv(&quot;Data/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011-2022.csv&quot;) %&gt;%
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+# Import Data
+## Old B2 SCADA Database: 2011-2022
+Use `01-YSI-Data-Clean-2011-2022.csv` created in `01-YSI-DataWrangling-2011-2022.Rmd`
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZIaXN0b3JpY2FsIDwtIHJlYWRfY3N2KFwiRGF0YS9DbGVhbi9ZU0kvMDFfRGF0YVdyYW5nbGluZy8wMS1ZU0ktRGF0YS1DbGVhbi0yMDExLTIwMjIuY3N2XCIpICU+JVxuICBtdXRhdGUoZGF0ZXRpbWUgPSB5bWRfaG1zKGRhdGV0aW1lKSlcbmBgYCJ9 --&gt;
+
+```r
+dfHistorical &lt;- read_csv(&quot;Data/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011-2022.csv&quot;) %&gt;%
   mutate(datetime = ymd_hms(datetime))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDIyNzMzIENvbHVtbnM6IDE4XG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5EZWxpbWl0ZXI6IFwiLFwiXG5jaHIgICgxKTogZGF0ZXRpbWVcbmRibCAoMTcpOiBUZW1wZXJhdHVyZSAowrpGKSwgVGVtcGVyYXR1cmUgKMK6QyksIHBILCBwSCAobVYpLCBTYWxpbml0eSAoUFNVKSwgQ29uZHVjdGl2Li4uXG5cbuKEuSBVc2UgYHNwZWMoKWAgdG8gcmV0cmlldmUgdGhlIGZ1bGwgY29sdW1uIHNwZWNpZmljYXRpb24gZm9yIHRoaXMgZGF0YS5cbuKEuSBTcGVjaWZ5IHRoZSBjb2x1bW4gdHlwZXMgb3Igc2V0IGBzaG93X2NvbF90eXBlcyA9IEZBTFNFYCB0byBxdWlldCB0aGlzIG1lc3NhZ2UuXG4ifQ== -->
-<pre><code>Rows: 422733 Columns: 18
-── Column specification ────────────────────────────────────────────────────────────────
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDI1MjMzIENvbHVtbnM6IDE4XG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5EZWxpbWl0ZXI6IFwiLFwiXG5jaHIgICgxKTogZGF0ZXRpbWVcbmRibCAoMTcpOiBUZW1wZXJhdHVyZSAowrpGKSwgVGVtcGVyYXR1cmUgKMK6QyksIHBILCBwSCAobVYpLCBTYWxpbml0eSAoUFNVKSwgQ29uZHVjdGl2aXR5ICjCtVMvY20pLC4uLlxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
+<pre><code>Rows: 425233 Columns: 18
+── Column specification ────────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr  (1): datetime
-dbl (17): Temperature (ºF), Temperature (ºC), pH, pH (mV), Salinity (PSU), Conductiv...
+dbl (17): Temperature (ºF), Temperature (ºC), pH, pH (mV), Salinity (PSU), Conductivity (µS/cm),...
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
@@ -1799,412 +1809,481 @@ name. Delete this before running the files through this code. I might
 figure out how to get around that via code one day, but not today.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBmaWxlIHBhdGggdG8gZm9sZGVyIGNvbnRhaW5pbmcgbmV3IHNjYWRhIGRhdGFiYXNlIDEvMjIvMjItcHJlc2VudCBvY2VhbiB3YXRlciBxdWFsaXR5IGZpbGVzXG5wYXRoIDwtIFwiRGF0YS9SYXcvUmF3RGF0YV9ZU0kvU0NBREEvU0NBREFfMjAyMl9QcmVzZW50XCJcblxuIyBjaGxvcm9waHlsbCBpbiBSRlUgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fY2hsb3JvcGh5bGwgPC0gcmVhZF9jc3YoaGVyZShwYXRoLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX0NITE9ST1BIWUxMX1JGVS5jc3ZcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFwiVElNRVNUQU1QXCIsIFwiVkFMVUVcIikpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgQ2hsb3JvcGh5bGwgKFJGVSlgID0gVkFMVUUpXG5gYGAifQ== -->
-<pre class="r"><code># file path to folder containing new scada database 1/22/22-present ocean water quality files
-path &lt;- &quot;Data/Raw/RawData_YSI/SCADA/SCADA_2022_Present&quot;
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBmaWxlIHBhdGggdG8gZm9sZGVyIGNvbnRhaW5pbmcgbmV3IHNjYWRhIGRhdGFiYXNlIDEvMjIvMjItcHJlc2VudCBvY2VhbiB3YXRlciBxdWFsaXR5IGZpbGVzXG5wYXRoIDwtIFxcRGF0YS9SYXcvUmF3RGF0YV9ZU0kvU0NBREEvU0NBREFfMjAyMl9QcmVzZW50XFxcblxuIyBjaGxvcm9waHlsbCBpbiBSRlUgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fY2hsb3JvcGh5bGwgPC0gcmVhZF9jc3YoaGVyZShwYXRoLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxcVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX0NITE9ST1BIWUxMX1JGVS5jc3ZcXCksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFxcVElNRVNUQU1QXFwsIFxcVkFMVUVcXCkpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgQ2hsb3JvcGh5bGwgKFJGVSlgID0gVkFMVUUpXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+# file path to folder containing new scada database 1/22/22-present ocean water quality files
+path &lt;- \Data/Raw/RawData_YSI/SCADA/SCADA_2022_Present\
 
 # chlorophyll in RFU from 1/22/22-present from current YSI EXO3 Sonde
 exo_chlorophyll &lt;- read_csv(here(path,
-                            &quot;UAB2_BIO1_B4000_YSI_EXO3_CHLOROPHYLL_RFU.csv&quot;),
+                            \UAB2_BIO1_B4000_YSI_EXO3_CHLOROPHYLL_RFU.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Chlorophyll (RFU)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBlbGVjdHJpY2FsIGNvbmR1Y3Rpdml0eSBpbiB1Uy9jbSBmcm9tIDEvMjIvMjItcHJlc2VudCBmcm9tIGN1cnJlbnQgWVNJIEVYTzMgU29uZGVcbmV4b19jb25kdWN0aXZpdHkgPC0gcmVhZF9jc3YoaGVyZShwYXRoLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX0NPTkRfVVNQQ00uY3N2XCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcIlRJTUVTVEFNUFwiLCBcIlZBTFVFXCIpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSAowrVTL2NtKWAgPSBWQUxVRSlcbmBgYCJ9 -->
-<pre class="r"><code># electrical conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBlbGVjdHJpY2FsIGNvbmR1Y3Rpdml0eSBpbiB1Uy9jbSBmcm9tIDEvMjIvMjItcHJlc2VudCBmcm9tIGN1cnJlbnQgWVNJIEVYTzMgU29uZGVcbmV4b19jb25kdWN0aXZpdHkgPC0gcmVhZF9jc3YoaGVyZShwYXRoLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxcVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX0NPTkRfVVNQQ00uY3N2XFwpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcXFRJTUVTVEFNUFxcLCBcXFZBTFVFXFwpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSAowrVTL2NtKWAgPSBWQUxVRSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+# electrical conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
 exo_conductivity &lt;- read_csv(here(path, 
-                                    &quot;UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv&quot;),
+                                    \UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Conductivity (µS/cm)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBuTEYgY29uZHVjdGl2aXR5IGluIHVTL2NtIGZyb20gMS8yMi8yMi1wcmVzZW50IGZyb20gY3VycmVudCBZU0kgRVhPMyBTb25kZVxuZXhvX25sZl9jb25kdWN0aXZpdHkgPC0gcmVhZF9jc3YoaGVyZShwYXRoLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfTkxGX0NPTkRfVVNQQ00uY3N2XCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcIlRJTUVTVEFNUFwiLCBcIlZBTFVFXCIpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWAgPSBWQUxVRSlcbmBgYCJ9 -->
-<pre class="r"><code># nLF conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBuTEYgY29uZHVjdGl2aXR5IGluIHVTL2NtIGZyb20gMS8yMi8yMi1wcmVzZW50IGZyb20gY3VycmVudCBZU0kgRVhPMyBTb25kZVxuZXhvX25sZl9jb25kdWN0aXZpdHkgPC0gcmVhZF9jc3YoaGVyZShwYXRoLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXFxVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfTkxGX0NPTkRfVVNQQ00uY3N2XFwpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcXFRJTUVTVEFNUFxcLCBcXFZBTFVFXFwpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWAgPSBWQUxVRSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+# nLF conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
 exo_nlf_conductivity &lt;- read_csv(here(path, 
-                                &quot;UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv&quot;),
+                                \UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Conductivity, Non-Linear Function (µS/cm)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBkaXNzb2x2ZWQgb3h5Z2VuIGluICUgbG9jYWwgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fZG9fbG9jYWwgPC0gcmVhZF9jc3YoaGVyZShwYXRoLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX09ET19fTE9DQUwuY3N2XCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcIlRJTUVTVEFNUFwiLCBcIlZBTFVFXCIpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBWQUxVRSlcbmBgYCJ9 -->
-<pre class="r"><code># dissolved oxygen in % local from 1/22/22-present from current YSI EXO3 Sonde
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBkaXNzb2x2ZWQgb3h5Z2VuIGluICUgbG9jYWwgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fZG9fbG9jYWwgPC0gcmVhZF9jc3YoaGVyZShwYXRoLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxcVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX09ET19fTE9DQUwuY3N2XFwpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcXFRJTUVTVEFNUFxcLCBcXFZBTFVFXFwpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBWQUxVRSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+# dissolved oxygen in % local from 1/22/22-present from current YSI EXO3 Sonde
 exo_do_local &lt;- read_csv(here(path, 
-                                    &quot;UAB2_BIO1_B4000_YSI_EXO3_ODO__LOCAL.csv&quot;),
+                                    \UAB2_BIO1_B4000_YSI_EXO3_ODO__LOCAL.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Dissolved Oxygen, Local (%)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBkaXNzb2x2ZWQgb3h5Z2VuIGluICUgc2F0dXJhdGVkIGZyb20gMS8yMi8yMi1wcmVzZW50IGZyb20gY3VycmVudCBZU0kgRVhPMyBTb25kZVxuZXhvX2RvX3NhdHVyYXRlZCA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfT0RPX19TQVQuY3N2XCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcIlRJTUVTVEFNUFwiLCBcIlZBTFVFXCIpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIFNhdHVyYXRlZCAoJSlgID0gVkFMVUUpXG5gYGAifQ== -->
-<pre class="r"><code># dissolved oxygen in % saturated from 1/22/22-present from current YSI EXO3 Sonde
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBkaXNzb2x2ZWQgb3h5Z2VuIGluICUgc2F0dXJhdGVkIGZyb20gMS8yMi8yMi1wcmVzZW50IGZyb20gY3VycmVudCBZU0kgRVhPMyBTb25kZVxuZXhvX2RvX3NhdHVyYXRlZCA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXFxVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfT0RPX19TQVQuY3N2XFwpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcXFRJTUVTVEFNUFxcLCBcXFZBTFVFXFwpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIFNhdHVyYXRlZCAoJSlgID0gVkFMVUUpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+# dissolved oxygen in % saturated from 1/22/22-present from current YSI EXO3 Sonde
 exo_do_saturated &lt;- read_csv(here(path, 
-                                    &quot;UAB2_BIO1_B4000_YSI_EXO3_ODO__SAT.csv&quot;),
+                                    \UAB2_BIO1_B4000_YSI_EXO3_ODO__SAT.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Dissolved Oxygen, Saturated (%)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBkaXNzb2x2ZWQgb3h5Z2VuIGluIG1nL0wgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fZG8gPC0gcmVhZF9jc3YoaGVyZShwYXRoLCBcIlVBQjJfQklPMV9CNDAwMF9ZU0lfRVhPM19PRE9fTUdQTC5jc3ZcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFwiVElNRVNUQU1QXCIsIFwiVkFMVUVcIikpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gVkFMVUUpXG5gYGAifQ== -->
-<pre class="r"><code># dissolved oxygen in mg/L from 1/22/22-present from current YSI EXO3 Sonde
-exo_do &lt;- read_csv(here(path, &quot;UAB2_BIO1_B4000_YSI_EXO3_ODO_MGPL.csv&quot;),
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBkaXNzb2x2ZWQgb3h5Z2VuIGluIG1nL0wgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fZG8gPC0gcmVhZF9jc3YoaGVyZShwYXRoLCBcXFVBQjJfQklPMV9CNDAwMF9ZU0lfRVhPM19PRE9fTUdQTC5jc3ZcXCksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFxcVElNRVNUQU1QXFwsIFxcVkFMVUVcXCkpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gVkFMVUUpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+# dissolved oxygen in mg/L from 1/22/22-present from current YSI EXO3 Sonde
+exo_do &lt;- read_csv(here(path, \UAB2_BIO1_B4000_YSI_EXO3_ODO_MGPL.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Dissolved Oxygen (mg/L)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyByZWR1Y3Rpb24gcG90ZW50aWFsIChPUlApIGluIG1WIGZyb20gMS8yMi8yMi1wcmVzZW50IGZyb20gY3VycmVudCBZU0kgRVhPMyBTb25kZVxuZXhvX29ycCA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFwiVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX09SUF9NVi5jc3ZcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFwiVElNRVNUQU1QXCIsIFwiVkFMVUVcIikpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgT3h5Z2VuIFJlZHVjdGlvbiBQb3RlbnRpYWwgKG1WKWAgPSBWQUxVRSlcbmBgYCJ9 -->
-<pre class="r"><code># reduction potential (ORP) in mV from 1/22/22-present from current YSI EXO3 Sonde
-exo_orp &lt;- read_csv(here(path, &quot;UAB2_BIO1_B4000_YSI_EXO3_ORP_MV.csv&quot;),
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyByZWR1Y3Rpb24gcG90ZW50aWFsIChPUlApIGluIG1WIGZyb20gMS8yMi8yMi1wcmVzZW50IGZyb20gY3VycmVudCBZU0kgRVhPMyBTb25kZVxuZXhvX29ycCA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFxcVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX09SUF9NVi5jc3ZcXCksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFxcVElNRVNUQU1QXFwsIFxcVkFMVUVcXCkpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgT3h5Z2VuIFJlZHVjdGlvbiBQb3RlbnRpYWwgKG1WKWAgPSBWQUxVRSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+# reduction potential (ORP) in mV from 1/22/22-present from current YSI EXO3 Sonde
+exo_orp &lt;- read_csv(here(path, \UAB2_BIO1_B4000_YSI_EXO3_ORP_MV.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Oxygen Reduction Potential (mV)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBwSCBpbiBwSCB1bml0cyBmcm9tIDEvMjIvMjItcHJlc2VudCBmcm9tIGN1cnJlbnQgWVNJIEVYTzMgU29uZGVcbmV4b19waCA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFwiVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX1BILmNzdlwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXCJUSU1FU1RBTVBcIiwgXCJWQUxVRVwiKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIHBIID0gVkFMVUUpXG5gYGAifQ== -->
-<pre class="r"><code># pH in pH units from 1/22/22-present from current YSI EXO3 Sonde
-exo_ph &lt;- read_csv(here(path, &quot;UAB2_BIO1_B4000_YSI_EXO3_PH.csv&quot;),
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBwSCBpbiBwSCB1bml0cyBmcm9tIDEvMjIvMjItcHJlc2VudCBmcm9tIGN1cnJlbnQgWVNJIEVYTzMgU29uZGVcbmV4b19waCA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFxcVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX1BILmNzdlxcKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXFxUSU1FU1RBTVBcXCwgXFxWQUxVRVxcKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIHBIID0gVkFMVUUpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+# pH in pH units from 1/22/22-present from current YSI EXO3 Sonde
+exo_ph &lt;- read_csv(here(path, \UAB2_BIO1_B4000_YSI_EXO3_PH.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          pH = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBwSCBpbiBtViBmcm9tIDEvMjIvMjItcHJlc2VudCBmcm9tIGN1cnJlbnQgWVNJIEVYTzMgU29uZGVcbmV4b19waF9tdiA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFwiVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX1BIX01WLmNzdlwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXCJUSU1FU1RBTVBcIiwgXCJWQUxVRVwiKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIGBwSCAobVYpYCA9IFZBTFVFKVxuYGBgIn0= -->
-<pre class="r"><code># pH in mV from 1/22/22-present from current YSI EXO3 Sonde
-exo_ph_mv &lt;- read_csv(here(path, &quot;UAB2_BIO1_B4000_YSI_EXO3_PH_MV.csv&quot;),
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBwSCBpbiBtViBmcm9tIDEvMjIvMjItcHJlc2VudCBmcm9tIGN1cnJlbnQgWVNJIEVYTzMgU29uZGVcbmV4b19waF9tdiA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFxcVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX1BIX01WLmNzdlxcKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXFxUSU1FU1RBTVBcXCwgXFxWQUxVRVxcKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIGBwSCAobVYpYCA9IFZBTFVFKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+# pH in mV from 1/22/22-present from current YSI EXO3 Sonde
+exo_ph_mv &lt;- read_csv(here(path, \UAB2_BIO1_B4000_YSI_EXO3_PH_MV.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `pH (mV)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBzYWxpbml0eSBpbiBwc3UgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fc2FsaW5pdHkgPC0gcmVhZF9jc3YoaGVyZShwYXRoLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfU0FMX1BTVS5jc3ZcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFwiVElNRVNUQU1QXCIsIFwiVkFMVUVcIikpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgU2FsaW5pdHkgKFBTVSlgID0gVkFMVUUpXG5gYGAifQ== -->
-<pre class="r"><code># salinity in psu from 1/22/22-present from current YSI EXO3 Sonde
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBzYWxpbml0eSBpbiBwc3UgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fc2FsaW5pdHkgPC0gcmVhZF9jc3YoaGVyZShwYXRoLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXFxVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfU0FMX1BTVS5jc3ZcXCksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFxcVElNRVNUQU1QXFwsIFxcVkFMVUVcXCkpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgU2FsaW5pdHkgKFBTVSlgID0gVkFMVUUpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+# salinity in psu from 1/22/22-present from current YSI EXO3 Sonde
 exo_salinity &lt;- read_csv(here(path,
-                                    &quot;UAB2_BIO1_B4000_YSI_EXO3_SAL_PSU.csv&quot;),
+                                    \UAB2_BIO1_B4000_YSI_EXO3_SAL_PSU.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Salinity (PSU)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBzcGVjaWZpYyBjb25kdWN0aXZpdHkgaW4gdVMvY20gZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fc3BfY29uZHVjdGl2aXR5IDwtIHJlYWRfY3N2KGhlcmUocGF0aCwgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfU1BDT05EX1VTUENNLmNzdlwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXCJUSU1FU1RBTVBcIiwgXCJWQUxVRVwiKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IFZBTFVFKVxuYGBgIn0= -->
-<pre class="r"><code># specific conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBzcGVjaWZpYyBjb25kdWN0aXZpdHkgaW4gdVMvY20gZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fc3BfY29uZHVjdGl2aXR5IDwtIHJlYWRfY3N2KGhlcmUocGF0aCwgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXFxVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfU1BDT05EX1VTUENNLmNzdlxcKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXFxUSU1FU1RBTVBcXCwgXFxWQUxVRVxcKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IFZBTFVFKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+# specific conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
 exo_sp_conductivity &lt;- read_csv(here(path, 
-                                  &quot;UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv&quot;),
+                                  \UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Conductivity, Specific (µS/cm)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0b3RhbCBhbGdhZSBwaHljb2VyeXRocmluIGluIFJGVSBmcm9tIDEvMjIvMjItcHJlc2VudCBmcm9tIGN1cnJlbnQgWVNJIEVYTzMgU29uZGVcbmV4b190b3RhbF9hbGdhZSA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX1RBTF9QRV9SRlUuY3N2XCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcIlRJTUVTVEFNUFwiLCBcIlZBTFVFXCIpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChSRlUpYCA9IFZBTFVFKVxuYGBgIn0= -->
-<pre class="r"><code># total algae phycoerythrin in RFU from 1/22/22-present from current YSI EXO3 Sonde
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyB0b3RhbCBhbGdhZSBwaHljb2VyeXRocmluIGluIFJGVSBmcm9tIDEvMjIvMjItcHJlc2VudCBmcm9tIGN1cnJlbnQgWVNJIEVYTzMgU29uZGVcbmV4b190b3RhbF9hbGdhZSA8LSByZWFkX2NzdihoZXJlKHBhdGgsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxcVUFCMl9CSU8xX0I0MDAwX1lTSV9FWE8zX1RBTF9QRV9SRlUuY3N2XFwpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2tpcCA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xfc2VsZWN0ID0gYyhcXFRJTUVTVEFNUFxcLCBcXFZBTFVFXFwpKSAlPiVcbiAgcmVuYW1lKGRhdGV0aW1lID0gVElNRVNUQU1QLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChSRlUpYCA9IFZBTFVFKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+# total algae phycoerythrin in RFU from 1/22/22-present from current YSI EXO3 Sonde
 exo_total_algae &lt;- read_csv(here(path, 
-                                  &quot;UAB2_BIO1_B4000_YSI_EXO3_TAL_PE_RFU.csv&quot;),
+                                  \UAB2_BIO1_B4000_YSI_EXO3_TAL_PE_RFU.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Total Algae (RFU)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0b3RhbCBkaXNzb2x2ZWQgc29saWRzIGluIG1nL0wgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fdG90YWxfZGlzc29sdmVkX3NvbGlkcyA8LSByZWFkX2NzdihoZXJlKHBhdGgsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIlVBQjJfQklPMV9CNDAwMF9ZU0lfRVhPM19URFNfTUdQTC5jc3ZcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFwiVElNRVNUQU1QXCIsIFwiVkFMVUVcIikpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgVG90YWwgRGlzc29sdmVkIFNvbGlkcyAobWcvTClgID0gVkFMVUUpXG5gYGAifQ== -->
-<pre class="r"><code># total dissolved solids in mg/L from 1/22/22-present from current YSI EXO3 Sonde
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyB0b3RhbCBkaXNzb2x2ZWQgc29saWRzIGluIG1nL0wgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fdG90YWxfZGlzc29sdmVkX3NvbGlkcyA8LSByZWFkX2NzdihoZXJlKHBhdGgsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcXFVBQjJfQklPMV9CNDAwMF9ZU0lfRVhPM19URFNfTUdQTC5jc3ZcXCksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBza2lwID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbF9zZWxlY3QgPSBjKFxcVElNRVNUQU1QXFwsIFxcVkFMVUVcXCkpICU+JVxuICByZW5hbWUoZGF0ZXRpbWUgPSBUSU1FU1RBTVAsXG4gICAgICAgICBgVG90YWwgRGlzc29sdmVkIFNvbGlkcyAobWcvTClgID0gVkFMVUUpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+# total dissolved solids in mg/L from 1/22/22-present from current YSI EXO3 Sonde
 exo_total_dissolved_solids &lt;- read_csv(here(path,
-                                    &quot;UAB2_BIO1_B4000_YSI_EXO3_TDS_MGPL.csv&quot;),
+                                    \UAB2_BIO1_B4000_YSI_EXO3_TDS_MGPL.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Total Dissolved Solids (mg/L)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0ZW1wZXJhdHVyZSBpbiBkZWdyZWVzIENlbGNpdXMgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fdGVtcF9jIDwtIHJlYWRfY3N2KGhlcmUocGF0aCwgXCJVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfVEVNUF9DLmNzdlwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXCJUSU1FU1RBTVBcIiwgXCJWQUxVRVwiKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpDKWAgPSBWQUxVRSlcbmBgYCJ9 -->
-<pre class="r"><code># temperature in degrees Celcius from 1/22/22-present from current YSI EXO3 Sonde
-exo_temp_c &lt;- read_csv(here(path, &quot;UAB2_BIO1_B4000_YSI_EXO3_TEMP_C.csv&quot;),
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyB0ZW1wZXJhdHVyZSBpbiBkZWdyZWVzIENlbGNpdXMgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fdGVtcF9jIDwtIHJlYWRfY3N2KGhlcmUocGF0aCwgXFxVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfVEVNUF9DLmNzdlxcKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXFxUSU1FU1RBTVBcXCwgXFxWQUxVRVxcKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpDKWAgPSBWQUxVRSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+# temperature in degrees Celcius from 1/22/22-present from current YSI EXO3 Sonde
+exo_temp_c &lt;- read_csv(here(path, \UAB2_BIO1_B4000_YSI_EXO3_TEMP_C.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Temperature (ºC)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0ZW1wZXJhdHVyZSBpbiBkZWdyZWVzIEZhaHJlbmhlaXQgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fdGVtcF9mIDwtIHJlYWRfY3N2KGhlcmUocGF0aCwgXCJVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfVEVNUF9GLmNzdlwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXCJUSU1FU1RBTVBcIiwgXCJWQUxVRVwiKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpGKWAgPSBWQUxVRSlcbmBgYCJ9 -->
-<pre class="r"><code># temperature in degrees Fahrenheit from 1/22/22-present from current YSI EXO3 Sonde
-exo_temp_f &lt;- read_csv(here(path, &quot;UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv&quot;),
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyB0ZW1wZXJhdHVyZSBpbiBkZWdyZWVzIEZhaHJlbmhlaXQgZnJvbSAxLzIyLzIyLXByZXNlbnQgZnJvbSBjdXJyZW50IFlTSSBFWE8zIFNvbmRlXG5leG9fdGVtcF9mIDwtIHJlYWRfY3N2KGhlcmUocGF0aCwgXFxVQUIyX0JJTzFfQjQwMDBfWVNJX0VYTzNfVEVNUF9GLmNzdlxcKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNraXAgPSAyLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sX3NlbGVjdCA9IGMoXFxUSU1FU1RBTVBcXCwgXFxWQUxVRVxcKSkgJT4lXG4gIHJlbmFtZShkYXRldGltZSA9IFRJTUVTVEFNUCxcbiAgICAgICAgIGBUZW1wZXJhdHVyZSAowrpGKWAgPSBWQUxVRSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+# temperature in degrees Fahrenheit from 1/22/22-present from current YSI EXO3 Sonde
+exo_temp_f &lt;- read_csv(here(path, \UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv\),
                               skip = 2,
-                              col_select = c(&quot;TIMESTAMP&quot;, &quot;VALUE&quot;)) %&gt;%
+                              col_select = c(\TIMESTAMP\, \VALUE\)) %&gt;%
   rename(datetime = TIMESTAMP,
          `Temperature (ºF)` = VALUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgyKTogVElNRVNUQU1QLCBWQUxVRVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 91797 Columns: 2
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): TIMESTAMP, VALUE
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="dsspro-backup" class="section level2">
-<h2>DSSPro Backup</h2>
-<p>This file is from the YSI DSSPro instrument. The EXO3 was sent in for
-maintenance from 11/17/2023 - 1/10/2024, so it was not recording the to
-the database. The YSI DSSPro was used to record data while the EXO3 was
-away. Unfortunately, not all of the same variables were recorded, but
-this will be fixed if the EXO3 ever needs to go back.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZEU1NQcm8gPC0gcmVhZF9jc3YoXCJEYXRhL1Jhdy9SYXdEYXRhX1lTSS9Tb25kZXMvcHJvZHNzYmFja3VwLTIzMTExNy0yNDAxMTIuY3N2XCIsXG4gICAgICAgICAgICAgICAgICAgICAjIGZpbGVzIGRvd25sb2FkZWQgZnJvbSB0aGUgWVNJIGluc3RydW1lbnRzIGFyZSBlbmNvZGVkIGFzIFVURi0xNiwgYnV0IG1vc3QgY29kZSBsYW5ndWFnZXMgb25seSByZWFkIFVURi04LiBNYWtlIHN1cmUgdG8ga2VlcCB0aGUgYmVsb3cgbGluZSBpbiB0byBmaXggdGhhdC5cbiAgICAgICAgICAgICAgICAgICAgIGxvY2FsZT1sb2NhbGUoZW5jb2Rpbmc9XCJVVEYtMTZcIiksXG4gICAgICAgICAgICAgICAgICAgICAjIGZpcnN0IGxpbmUgc2F5cyBzZXA9LCBzbyB0aGF0IGV4Y2VsIHJlYWRzIGluIHRoZSBjc3YgZmlsZSBsaWtlIGFuIGV4Y2VsIGZpbGUgc28gbWFrZSBzdXJlIHRvIHNraXAgdGhhdC4gY2FuIG9ubHkgc2VlIHRoaXMgbGluZSB3aGVuIHZpZXdpbmcgd2l0aCBhIHRleHQgZWRpdG9yXG4gICAgICAgICAgICAgICAgICAgICBza2lwID0gMSkgJT4lXG4gICMgcmVtb3ZlIGNvbHVtbnMgd2Ugd29uJ3QgbmVlZFxuICBzZWxlY3QoLWBVc2VyIElEYCwgLWBVbml0IElEYCwgLVNpdGUpJT4lXG4gIG11dGF0ZShkYXRldGltZSA9IHBhc3RlKERhdGUsIFRpbWUpKSAlPiVcbiAgc2VsZWN0KC1EYXRlLCAtVGltZSkgJT4lXG4gIHJlbmFtZShgVGVtcGVyYXR1cmUgKMK6RilgID0gXCLCsEZcIixcbiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBMb2NhbCAoJSlgID0gXCJETyAlXCIsXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gXCJETyBtZy9MXCIsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCA9IFwiQy11Uy9jbVwiLFxuICAgICAgICAgYFNhbGluaXR5IChQU1UpYCA9IFwiU0FMLVBTVVwiLFxuICAgICAgICAgYE94eWdlbiBSZWR1Y3Rpb24gUG90ZW50aWFsIChtVilgID0gXCJPUlAgbVZcIixcbiAgICAgICAgIGBDaGxvcm9waHlsbCAoUkZVKWAgPSBcIkNobCBSRlVcIixcbiAgICAgICAgIGBUb3RhbCBBbGdhZSAoUkZVKWAgPSBcIlBFIFJGVVwiKSAlPiVcbiAgcmVsb2NhdGUoZGF0ZXRpbWUsIC5iZWZvcmUgPSBgVGVtcGVyYXR1cmUgKMK6RilgKVxuYGBgIn0= -->
-<pre class="r"><code>dfDSSPro &lt;- read_csv(&quot;Data/Raw/RawData_YSI/Sondes/prodssbackup-231117-240112.csv&quot;,
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogOTE3OTcgQ29sdW1uczogMlxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 91797 Columns: 2 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+## DSSPro Backup
+This file is from the YSI DSSPro instrument. The EXO3 was sent in for maintenance from 11/17/2023 - 1/10/2024, so it was not recording the to the database. The YSI DSSPro was used to record data while the EXO3 was away. Unfortunately, not all of the same variables were recorded, but this will be fixed if the EXO3 ever needs to go back.
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZGZEU1NQcm8gPC0gcmVhZF9jc3YoXFxEYXRhL1Jhdy9SYXdEYXRhX1lTSS9Tb25kZXMvcHJvZHNzYmFja3VwLTIzMTExNy0yNDAxMTIuY3N2XFwsXG4gICAgICAgICAgICAgICAgICAgICAjIGZpbGVzIGRvd25sb2FkZWQgZnJvbSB0aGUgWVNJIGluc3RydW1lbnRzIGFyZSBlbmNvZGVkIGFzIFVURi0xNiwgYnV0IG1vc3QgY29kZSBsYW5ndWFnZXMgb25seSByZWFkIFVURi04LiBNYWtlIHN1cmUgdG8ga2VlcCB0aGUgYmVsb3cgbGluZSBpbiB0byBmaXggdGhhdC5cbiAgICAgICAgICAgICAgICAgICAgIGxvY2FsZT1sb2NhbGUoZW5jb2Rpbmc9XFxVVEYtMTZcXCksXG4gICAgICAgICAgICAgICAgICAgICAjIGZpcnN0IGxpbmUgc2F5cyBzZXA9LCBzbyB0aGF0IGV4Y2VsIHJlYWRzIGluIHRoZSBjc3YgZmlsZSBsaWtlIGFuIGV4Y2VsIGZpbGUgc28gbWFrZSBzdXJlIHRvIHNraXAgdGhhdC4gY2FuIG9ubHkgc2VlIHRoaXMgbGluZSB3aGVuIHZpZXdpbmcgd2l0aCBhIHRleHQgZWRpdG9yXG4gICAgICAgICAgICAgICAgICAgICBza2lwID0gMSkgJT4lXG4gICMgcmVtb3ZlIGNvbHVtbnMgd2Ugd29uJ3QgbmVlZFxuICBzZWxlY3QoLWBVc2VyIElEYCwgLWBVbml0IElEYCwgLVNpdGUpJT4lXG4gIG11dGF0ZShkYXRldGltZSA9IHBhc3RlKERhdGUsIFRpbWUpKSAlPiVcbiAgc2VsZWN0KC1EYXRlLCAtVGltZSkgJT4lXG4gIHJlbmFtZShgVGVtcGVyYXR1cmUgKMK6RilgID0gXFzCsEZcXCxcbiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBMb2NhbCAoJSlgID0gXFxETyAlXFwsXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiAobWcvTClgID0gXFxETyBtZy9MXFwsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCA9IFxcQy11Uy9jbVxcLFxuICAgICAgICAgYFNhbGluaXR5IChQU1UpYCA9IFxcU0FMLVBTVVxcLFxuICAgICAgICAgYE94eWdlbiBSZWR1Y3Rpb24gUG90ZW50aWFsIChtVilgID0gXFxPUlAgbVZcXCxcbiAgICAgICAgIGBDaGxvcm9waHlsbCAoUkZVKWAgPSBcXENobCBSRlVcXCxcbiAgICAgICAgIGBUb3RhbCBBbGdhZSAoUkZVKWAgPSBcXFBFIFJGVVxcKSAlPiVcbiAgcmVsb2NhdGUoZGF0ZXRpbWUsIC5iZWZvcmUgPSBgVGVtcGVyYXR1cmUgKMK6RilgKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+dfDSSPro &lt;- read_csv(\Data/Raw/RawData_YSI/Sondes/prodssbackup-231117-240112.csv\,
                      # files downloaded from the YSI instruments are encoded as UTF-16, but most code languages only read UTF-8. Make sure to keep the below line in to fix that.
-                     locale=locale(encoding=&quot;UTF-16&quot;),
+                     locale=locale(encoding=\UTF-16\),
                      # first line says sep=, so that excel reads in the csv file like an excel file so make sure to skip that. can only see this line when viewing with a text editor
                      skip = 1) %&gt;%
   # remove columns we won&#39;t need
   select(-`User ID`, -`Unit ID`, -Site)%&gt;%
   mutate(datetime = paste(Date, Time)) %&gt;%
   select(-Date, -Time) %&gt;%
-  rename(`Temperature (ºF)` = &quot;°F&quot;,
-         `Dissolved Oxygen, Local (%)` = &quot;DO %&quot;,
-         `Dissolved Oxygen (mg/L)` = &quot;DO mg/L&quot;,
-         `Conductivity (µS/cm)` = &quot;C-uS/cm&quot;,
-         `Salinity (PSU)` = &quot;SAL-PSU&quot;,
-         `Oxygen Reduction Potential (mV)` = &quot;ORP mV&quot;,
-         `Chlorophyll (RFU)` = &quot;Chl RFU&quot;,
-         `Total Algae (RFU)` = &quot;PE RFU&quot;) %&gt;%
+  rename(`Temperature (ºF)` = \°F\,
+         `Dissolved Oxygen, Local (%)` = \DO %\,
+         `Dissolved Oxygen (mg/L)` = \DO mg/L\,
+         `Conductivity (µS/cm)` = \C-uS/cm\,
+         `Salinity (PSU)` = \SAL-PSU\,
+         `Oxygen Reduction Potential (mV)` = \ORP mV\,
+         `Chlorophyll (RFU)` = \Chl RFU\,
+         `Total Algae (RFU)` = \PE RFU\) %&gt;%
   relocate(datetime, .before = `Temperature (ºF)`)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuIn0= -->
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details, e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMzcyMCBDb2x1bW5zOiAxNFxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICAoMik6IERhdGUsIFNpdGVcbmRibCAgKDgpOiDCsEYsIERPICUsIERPIG1nL0wsIEMtdVMvY20sIFNBTC1QU1UsIHBILCBPUlAgbVYsIENobCBSRlVcbm51bSAgKDEpOiBQRSBSRlVcbmxnbCAgKDIpOiBVbml0IElELCBVc2VyIElEXG50aW1lICgxKTogVGltZVxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 3720 Columns: 14
-── Column specification ────────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr  (2): Date, Site
-dbl  (8): °F, DO %, DO mg/L, C-uS/cm, SAL-PSU, pH, ORP mV, Chl RFU
-num  (1): PE RFU
-lgl  (2): Unit ID, User ID
-time (1): Time
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-<div id="data-wrangling" class="section level1">
-<h1>Data Wrangling</h1>
-<p>Goal here is to make all files look the same so they can be combined
-later ## New Database Files Combine all files from new database and make
-the resulting dataframe look like dfHistorical. Chop this dataframe in
-half so that we can sandwich in the DSSPro dataframe.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgbmV3IGRhdGFiYXNlIFlTSSBFWE8zIGRhdGFmcmFtZSBieSBqb2luaW5nIHRoZSBmaWxlcyBmb3IgZWFjaCB2YXJpYWJsZSBmcm9tIHRoaXMgaW5zdHJ1bWVudCBiYXNlZCBvbiB0aGUgZGF0ZXRpbWUgY29sdW1uXG5kZk5ld0RCIDwtIGV4b190ZW1wX2YgJT4lXG4gIGxlZnRfam9pbihleG9fdGVtcF9jLCBieSA9IGpvaW5fYnkoZGF0ZXRpbWUpKSAlPiVcbiAgbGVmdF9qb2luKGV4b19waCwgYnkgPSBqb2luX2J5KGRhdGV0aW1lKSkgJT4lXG4gIGxlZnRfam9pbihleG9fcGhfbXYsIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX3NhbGluaXR5LCBieSA9IGpvaW5fYnkoZGF0ZXRpbWUpKSAlPiVcbiAgbGVmdF9qb2luKGV4b19jb25kdWN0aXZpdHksIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX25sZl9jb25kdWN0aXZpdHksIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX3NwX2NvbmR1Y3Rpdml0eSwgYnkgPSBqb2luX2J5KGRhdGV0aW1lKSkgJT4lXG4gIGxlZnRfam9pbihleG9fZG8sIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX2RvX3NhdHVyYXRlZCwgYnkgPSBqb2luX2J5KGRhdGV0aW1lKSkgJT4lXG4gIGxlZnRfam9pbihleG9fZG9fbG9jYWwsIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX29ycCwgYnkgPSBqb2luX2J5KGRhdGV0aW1lKSkgJT4lXG4gIGxlZnRfam9pbihleG9fY2hsb3JvcGh5bGwsIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBtdXRhdGUoYENobG9yb3BoeWxsICjCtWcvTClgID0gTkEpICU+JVxuICBsZWZ0X2pvaW4oZXhvX3RvdGFsX2FsZ2FlLCBieSA9IGpvaW5fYnkoZGF0ZXRpbWUpKSAlPiVcbiAgbXV0YXRlKGBUb3RhbCBBbGdhZSAoY2VsbHMvTClgID0gTkEpICU+JVxuICBsZWZ0X2pvaW4oZXhvX3RvdGFsX2Rpc3NvbHZlZF9zb2xpZHMsIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBtdXRhdGUoZGF0ZXRpbWUgPSB5bWRfaG1zKGRhdGV0aW1lKSlcblxuIyBkZiBvZiBkYXRhIHJlY29yZGVkIGJlZm9yZSBFWE8zIGdvdCBzZW50IHRvIGJlIGZpeGVkXG5kZk5ld0RCX2JlZ2lubmluZyA8LSBkZk5ld0RCICU+JVxuICBmaWx0ZXIoZGF0ZXRpbWUgPCB5bWRfaG1zKFwiMjAyMy0xMS0xNyAxNDozMDowMFwiKSlcblxuIyBkZiBvZiBkYXRhIHJlY29yZGVkIGFmdGVyIEVYTzMgY2FtZSBiYWNrIGZyb20gYmVpbmcgZml4ZWRcbmRmTmV3REJfZW5kIDwtIGRmTmV3REIgJT4lXG4gIGZpbHRlcihkYXRldGltZSA+IHltZF9obXMoXCIyMDI0LTAxLTEwIDE1OjE2OjAwXCIpKVxuXG5gYGAifQ== -->
-<pre class="r"><code># create new database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the datetime column
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogT25lIG9yIG1vcmUgcGFyc2luZyBpc3N1ZXMsIGNhbGwgYHByb2JsZW1zKClgIG9uIHlvdXIgZGF0YSBmcmFtZSBmb3IgZGV0YWlscywgZS5nLjpcbiAgZGF0IDwtIHZyb29tKC4uLilcbiAgcHJvYmxlbXMoZGF0KVxuUm93czogMzcyMCBDb2x1bW5zOiAxNFxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Warning: One or more parsing issues, call <code>problems()</code> on
+your data frame for details, e.g.: dat &lt;- vroom(…) problems(dat)
+Rows: 3720 Columns: 14 ── Column specification
+────────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+# Data Wrangling
+Goal here is to make all files look the same so they can be combined later
+## New Database Files
+Combine all files from new database and make the resulting dataframe look like dfHistorical. Chop this dataframe in half so that we can sandwich in the DSSPro dataframe.
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBjcmVhdGUgbmV3IGRhdGFiYXNlIFlTSSBFWE8zIGRhdGFmcmFtZSBieSBqb2luaW5nIHRoZSBmaWxlcyBmb3IgZWFjaCB2YXJpYWJsZSBmcm9tIHRoaXMgaW5zdHJ1bWVudCBiYXNlZCBvbiB0aGUgZGF0ZXRpbWUgY29sdW1uXG5kZk5ld0RCIDwtIGV4b190ZW1wX2YgJT4lXG4gIGxlZnRfam9pbihleG9fdGVtcF9jLCBieSA9IGpvaW5fYnkoZGF0ZXRpbWUpKSAlPiVcbiAgbGVmdF9qb2luKGV4b19waCwgYnkgPSBqb2luX2J5KGRhdGV0aW1lKSkgJT4lXG4gIGxlZnRfam9pbihleG9fcGhfbXYsIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX3NhbGluaXR5LCBieSA9IGpvaW5fYnkoZGF0ZXRpbWUpKSAlPiVcbiAgbGVmdF9qb2luKGV4b19jb25kdWN0aXZpdHksIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX25sZl9jb25kdWN0aXZpdHksIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX3NwX2NvbmR1Y3Rpdml0eSwgYnkgPSBqb2luX2J5KGRhdGV0aW1lKSkgJT4lXG4gIGxlZnRfam9pbihleG9fZG8sIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX2RvX3NhdHVyYXRlZCwgYnkgPSBqb2luX2J5KGRhdGV0aW1lKSkgJT4lXG4gIGxlZnRfam9pbihleG9fZG9fbG9jYWwsIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBsZWZ0X2pvaW4oZXhvX29ycCwgYnkgPSBqb2luX2J5KGRhdGV0aW1lKSkgJT4lXG4gIGxlZnRfam9pbihleG9fY2hsb3JvcGh5bGwsIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBtdXRhdGUoYENobG9yb3BoeWxsICjCtWcvTClgID0gTkEpICU+JVxuICBsZWZ0X2pvaW4oZXhvX3RvdGFsX2FsZ2FlLCBieSA9IGpvaW5fYnkoZGF0ZXRpbWUpKSAlPiVcbiAgbXV0YXRlKGBUb3RhbCBBbGdhZSAoY2VsbHMvTClgID0gTkEpICU+JVxuICBsZWZ0X2pvaW4oZXhvX3RvdGFsX2Rpc3NvbHZlZF9zb2xpZHMsIGJ5ID0gam9pbl9ieShkYXRldGltZSkpICU+JVxuICBtdXRhdGUoZGF0ZXRpbWUgPSB5bWRfaG1zKGRhdGV0aW1lKSlcblxuIyBkZiBvZiBkYXRhIHJlY29yZGVkIGJlZm9yZSBFWE8zIGdvdCBzZW50IHRvIGJlIGZpeGVkXG5kZk5ld0RCX2JlZ2lubmluZyA8LSBkZk5ld0RCICU+JVxuICBmaWx0ZXIoZGF0ZXRpbWUgPCB5bWRfaG1zKFxcMjAyMy0xMS0xNyAxNDozMDowMFxcKSlcblxuIyBkZiBvZiBkYXRhIHJlY29yZGVkIGFmdGVyIEVYTzMgY2FtZSBiYWNrIGZyb20gYmVpbmcgZml4ZWRcbmRmTmV3REJfZW5kIDwtIGRmTmV3REIgJT4lXG4gIGZpbHRlcihkYXRldGltZSA+IHltZF9obXMoXFwyMDI0LTAxLTEwIDE1OjE2OjAwXFwpKVxuXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+# create new database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the datetime column
 dfNewDB &lt;- exo_temp_f %&gt;%
   left_join(exo_temp_c, by = join_by(datetime)) %&gt;%
   left_join(exo_ph, by = join_by(datetime)) %&gt;%
@@ -2226,22 +2305,35 @@ dfNewDB &lt;- exo_temp_f %&gt;%
 
 # df of data recorded before EXO3 got sent to be fixed
 dfNewDB_beginning &lt;- dfNewDB %&gt;%
-  filter(datetime &lt; ymd_hms(&quot;2023-11-17 14:30:00&quot;))
+  filter(datetime &lt; ymd_hms(\2023-11-17 14:30:00\))
 
 # df of data recorded after EXO3 came back from being fixed
 dfNewDB_end &lt;- dfNewDB %&gt;%
-  filter(datetime &gt; ymd_hms(&quot;2024-01-10 15:16:00&quot;))
+  filter(datetime &gt; ymd_hms(\2024-01-10 15:16:00\))
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<div id="dsspro-file" class="section level2">
-<h2>DSSPro File</h2>
-<p>Make dfDSSPro look like dfHistorical</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBhZGQgTkEgY29sdW1ucyB3aXRoIHNhbWUgbmFtZXMgYXMgY29sdW1ucyBtaXNzaW5nIGZyb20gb3RoZXIgZGF0YWZyYW1lc1xuZGZEU1NQcm9FZGl0IDwtIGRmRFNTUHJvICU+JVxuICBtdXRhdGUoYFRlbXBlcmF0dXJlICjCukMpYCA9IE5BLFxuICAgICAgICAgYHBIIChtVilgID0gTkEsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5LCBOb24tTGluZWFyIEZ1bmN0aW9uICjCtVMvY20pYCA9IE5BLFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSwgU3BlY2lmaWMgKMK1Uy9jbSlgID0gTkEsXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWAgPSBOQSxcbiAgICAgICAgIGBDaGxvcm9waHlsbCAowrVnL0wpYCA9IE5BLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChjZWxscy9MKWAgPSBOQSxcbiAgICAgICAgIGBUb3RhbCBEaXNzb2x2ZWQgU29saWRzIChtZy9MKWAgPSBOQSkgJT4lXG4gICMgbW92ZSBhbGwgY29sdW1ucyB0byBzYW1lIHBsYWNlcyBhcyBvdGhlciBkYXRhZnJhbWVzXG4gIHJlbG9jYXRlKGBUZW1wZXJhdHVyZSAowrpDKWAsIC5hZnRlciA9IGBUZW1wZXJhdHVyZSAowrpGKWApICU+JVxuICByZWxvY2F0ZShwSCwgLmFmdGVyID0gYFRlbXBlcmF0dXJlICjCukMpYCkgJT4lXG4gIHJlbG9jYXRlKGBwSCAobVYpYCwgLmFmdGVyID0gcEgpICU+JVxuICByZWxvY2F0ZShgU2FsaW5pdHkgKFBTVSlgLCAuYWZ0ZXIgPSBgcEggKG1WKWApICU+JVxuICByZWxvY2F0ZShgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCwgLmFmdGVyID0gYFNhbGluaXR5IChQU1UpYCkgJT4lXG4gIHJlbG9jYXRlKGBDb25kdWN0aXZpdHksIE5vbi1MaW5lYXIgRnVuY3Rpb24gKMK1Uy9jbSlgLCAuYWZ0ZXIgPSBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCkgJT4lXG4gIHJlbG9jYXRlKGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCwgLmFmdGVyID0gYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWApICU+JVxuICByZWxvY2F0ZShgRGlzc29sdmVkIE94eWdlbiAobWcvTClgLCAuYWZ0ZXIgPSBgQ29uZHVjdGl2aXR5LCBTcGVjaWZpYyAowrVTL2NtKWApICU+JVxuICByZWxvY2F0ZShgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWAsIC5hZnRlciA9IGBEaXNzb2x2ZWQgT3h5Z2VuIChtZy9MKWApICU+JVxuICByZWxvY2F0ZShgQ2hsb3JvcGh5bGwgKMK1Zy9MKWAsIC5hZnRlciA9IGBDaGxvcm9waHlsbCAoUkZVKWApICU+JVxuICAjIG1lc3Mgd2l0aCBkYXRldGltZSBjb2x1bW4gdG8gbWFrZSBpdCBpbnRvIFwiUE9TSVhjdFwiIFwiUE9TSVh0XCIgY2xhc3Mgc28gdGhhdCB3ZSBjYW4gZmlsdGVyXG4gIHNlcGFyYXRlKGRhdGV0aW1lLCBpbnRvID0gYyhcImRhdGVcIiwgXCJ0aW1lXCIpLCBzZXAgPSBcIiBcIikgJT4lXG4gIG11dGF0ZShkYXRlID0gYXMuRGF0ZShkYXRlLCBmb3JtYXQgPSBcIiVtLyVkLyV5XCIpKSAlPiVcbiAgbXV0YXRlKGRhdGV0aW1lID0geW1kX2htcyhwYXN0ZShkYXRlLCB0aW1lKSkpICU+JVxuICByZWxvY2F0ZShkYXRldGltZSwgLmFmdGVyID0gZGF0ZSkgJT4lXG4gIHNlbGVjdCgtZGF0ZSwgLXRpbWUpICU+JVxuICAjIGZpbHRlciBvdXQgZXh0cmEgcm93cyB0aGF0IGdvdCBhZGRlZCB3aGVuIGZpbGUgd2FzIGRvd25sb2FkZWQgb2ZmIG9mIGluc3RydW1lbnRcbiAgZmlsdGVyKGRhdGV0aW1lIDw9IHltZF9obXMoXCIyMDI0LTAxLTEwIDE1OjE1OjAwXCIpKVxuXG5gYGAifQ== -->
-<pre class="r"><code># add NA columns with same names as columns missing from other dataframes
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+## DSSPro File
+Make dfDSSPro look like dfHistorical
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBhZGQgTkEgY29sdW1ucyB3aXRoIHNhbWUgbmFtZXMgYXMgY29sdW1ucyBtaXNzaW5nIGZyb20gb3RoZXIgZGF0YWZyYW1lc1xuZGZEU1NQcm9FZGl0IDwtIGRmRFNTUHJvICU+JVxuICBtdXRhdGUoYFRlbXBlcmF0dXJlICjCukMpYCA9IE5BLFxuICAgICAgICAgYHBIIChtVilgID0gTkEsXG4gICAgICAgICBgQ29uZHVjdGl2aXR5LCBOb24tTGluZWFyIEZ1bmN0aW9uICjCtVMvY20pYCA9IE5BLFxuICAgICAgICAgYENvbmR1Y3Rpdml0eSwgU3BlY2lmaWMgKMK1Uy9jbSlgID0gTkEsXG4gICAgICAgICBgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWAgPSBOQSxcbiAgICAgICAgIGBDaGxvcm9waHlsbCAowrVnL0wpYCA9IE5BLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChjZWxscy9MKWAgPSBOQSxcbiAgICAgICAgIGBUb3RhbCBEaXNzb2x2ZWQgU29saWRzIChtZy9MKWAgPSBOQSkgJT4lXG4gICMgbW92ZSBhbGwgY29sdW1ucyB0byBzYW1lIHBsYWNlcyBhcyBvdGhlciBkYXRhZnJhbWVzXG4gIHJlbG9jYXRlKGBUZW1wZXJhdHVyZSAowrpDKWAsIC5hZnRlciA9IGBUZW1wZXJhdHVyZSAowrpGKWApICU+JVxuICByZWxvY2F0ZShwSCwgLmFmdGVyID0gYFRlbXBlcmF0dXJlICjCukMpYCkgJT4lXG4gIHJlbG9jYXRlKGBwSCAobVYpYCwgLmFmdGVyID0gcEgpICU+JVxuICByZWxvY2F0ZShgU2FsaW5pdHkgKFBTVSlgLCAuYWZ0ZXIgPSBgcEggKG1WKWApICU+JVxuICByZWxvY2F0ZShgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCwgLmFmdGVyID0gYFNhbGluaXR5IChQU1UpYCkgJT4lXG4gIHJlbG9jYXRlKGBDb25kdWN0aXZpdHksIE5vbi1MaW5lYXIgRnVuY3Rpb24gKMK1Uy9jbSlgLCAuYWZ0ZXIgPSBgQ29uZHVjdGl2aXR5ICjCtVMvY20pYCkgJT4lXG4gIHJlbG9jYXRlKGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCwgLmFmdGVyID0gYENvbmR1Y3Rpdml0eSwgTm9uLUxpbmVhciBGdW5jdGlvbiAowrVTL2NtKWApICU+JVxuICByZWxvY2F0ZShgRGlzc29sdmVkIE94eWdlbiAobWcvTClgLCAuYWZ0ZXIgPSBgQ29uZHVjdGl2aXR5LCBTcGVjaWZpYyAowrVTL2NtKWApICU+JVxuICByZWxvY2F0ZShgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWAsIC5hZnRlciA9IGBEaXNzb2x2ZWQgT3h5Z2VuIChtZy9MKWApICU+JVxuICByZWxvY2F0ZShgQ2hsb3JvcGh5bGwgKMK1Zy9MKWAsIC5hZnRlciA9IGBDaGxvcm9waHlsbCAoUkZVKWApICU+JVxuICAjIG1lc3Mgd2l0aCBkYXRldGltZSBjb2x1bW4gdG8gbWFrZSBpdCBpbnRvIFxcUE9TSVhjdFxcIFxcUE9TSVh0XFwgY2xhc3Mgc28gdGhhdCB3ZSBjYW4gZmlsdGVyXG4gIHNlcGFyYXRlKGRhdGV0aW1lLCBpbnRvID0gYyhcXGRhdGVcXCwgXFx0aW1lXFwpLCBzZXAgPSBcXCBcXCkgJT4lXG4gIG11dGF0ZShkYXRlID0gYXMuRGF0ZShkYXRlLCBmb3JtYXQgPSBcXCVtLyVkLyV5XFwpKSAlPiVcbiAgbXV0YXRlKGRhdGV0aW1lID0geW1kX2htcyhwYXN0ZShkYXRlLCB0aW1lKSkpICU+JVxuICByZWxvY2F0ZShkYXRldGltZSwgLmFmdGVyID0gZGF0ZSkgJT4lXG4gIHNlbGVjdCgtZGF0ZSwgLXRpbWUpICU+JVxuICAjIGZpbHRlciBvdXQgZXh0cmEgcm93cyB0aGF0IGdvdCBhZGRlZCB3aGVuIGZpbGUgd2FzIGRvd25sb2FkZWQgb2ZmIG9mIGluc3RydW1lbnRcbiAgZmlsdGVyKGRhdGV0aW1lIDw9IHltZF9obXMoXFwyMDI0LTAxLTEwIDE1OjE1OjAwXFwpKVxuXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+# add NA columns with same names as columns missing from other dataframes
 dfDSSProEdit &lt;- dfDSSPro %&gt;%
   mutate(`Temperature (ºC)` = NA,
          `pH (mV)` = NA,
@@ -2262,34 +2354,43 @@ dfDSSProEdit &lt;- dfDSSPro %&gt;%
   relocate(`Dissolved Oxygen (mg/L)`, .after = `Conductivity, Specific (µS/cm)`) %&gt;%
   relocate(`Dissolved Oxygen, Saturated (%)`, .after = `Dissolved Oxygen (mg/L)`) %&gt;%
   relocate(`Chlorophyll (µg/L)`, .after = `Chlorophyll (RFU)`) %&gt;%
-  # mess with datetime column to make it into &quot;POSIXct&quot; &quot;POSIXt&quot; class so that we can filter
-  separate(datetime, into = c(&quot;date&quot;, &quot;time&quot;), sep = &quot; &quot;) %&gt;%
-  mutate(date = as.Date(date, format = &quot;%m/%d/%y&quot;)) %&gt;%
+  # mess with datetime column to make it into \POSIXct\ \POSIXt\ class so that we can filter
+  separate(datetime, into = c(\date\, \time\), sep = \ \) %&gt;%
+  mutate(date = as.Date(date, format = \%m/%d/%y\)) %&gt;%
   mutate(datetime = ymd_hms(paste(date, time))) %&gt;%
   relocate(datetime, .after = date) %&gt;%
   select(-date, -time) %&gt;%
   # filter out extra rows that got added when file was downloaded off of instrument
-  filter(datetime &lt;= ymd_hms(&quot;2024-01-10 15:15:00&quot;))
+  filter(datetime &lt;= ymd_hms(\2024-01-10 15:15:00\))
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-<div id="combine-files" class="section level1">
-<h1>Combine Files</h1>
-<p>Combine all dataframes in a way that gives us all of the data and
-separate datetime column into Date and Time so it’s more usable in later
-analyses.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZPY2VhbldhdGVyUXVhbGl0eSA8LSByYmluZChkZkhpc3RvcmljYWwsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRmTmV3REJfYmVnaW5uaW5nLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZkRTU1Byb0VkaXQsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRmTmV3REJfZW5kKSAlPiVcbiAgZGlzdGluY3QoKSAlPiVcbiAgc2VwYXJhdGUoZGF0ZXRpbWUsIGludG8gPSBjKFwiRGF0ZVwiLCBcIlRpbWVcIiksIHNlcCA9IFwiIFwiKSAlPiVcbiAgIyBtYWtlIHN1cmUgYWxsIGNvbHVtbnMgYXJlIHByb3BlciBkYXRhIHR5cGVcbiAgbXV0YXRlKERhdGUgPSB5bWQoRGF0ZSksXG4gICAgICAgICBgVGVtcGVyYXR1cmUgKMK6RilgID0gYXMuZG91YmxlKGBUZW1wZXJhdHVyZSAowrpGKWApLFxuICAgICAgICAgYFRlbXBlcmF0dXJlICjCukMpYCA9IGFzLmRvdWJsZShgVGVtcGVyYXR1cmUgKMK6QylgKSxcbiAgICAgICAgIHBIID0gYXMuZG91YmxlKHBIKSxcbiAgICAgICAgIGBwSCAobVYpYCA9IGFzLmRvdWJsZShgcEggKG1WKWApLFxuICAgICAgICAgYFNhbGluaXR5IChQU1UpYCA9IGFzLmRvdWJsZShgU2FsaW5pdHkgKFBTVSlgKSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHkgKMK1Uy9jbSlgID0gYXMuZG91YmxlKGBDb25kdWN0aXZpdHkgKMK1Uy9jbSlgKSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHksIE5vbi1MaW5lYXIgRnVuY3Rpb24gKMK1Uy9jbSlgID0gYXMuZG91YmxlKGBDb25kdWN0aXZpdHksIE5vbi1MaW5lYXIgRnVuY3Rpb24gKMK1Uy9jbSlgKSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IGFzLmRvdWJsZShgQ29uZHVjdGl2aXR5LCBTcGVjaWZpYyAowrVTL2NtKWApLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4gKG1nL0wpYCA9IGFzLmRvdWJsZShgRGlzc29sdmVkIE94eWdlbiAobWcvTClgKSxcbiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBTYXR1cmF0ZWQgKCUpYCA9IGFzLmRvdWJsZShgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWApLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBhcy5kb3VibGUoYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWApLFxuICAgICAgICAgYE94eWdlbiBSZWR1Y3Rpb24gUG90ZW50aWFsIChtVilgID0gYXMuZG91YmxlKGBPeHlnZW4gUmVkdWN0aW9uIFBvdGVudGlhbCAobVYpYCksXG4gICAgICAgICBgQ2hsb3JvcGh5bGwgKFJGVSlgID0gYXMuZG91YmxlKGBDaGxvcm9waHlsbCAoUkZVKWApLFxuICAgICAgICAgYENobG9yb3BoeWxsICjCtWcvTClgID0gYXMuZG91YmxlKGBDaGxvcm9waHlsbCAowrVnL0wpYCksXG4gICAgICAgICBgVG90YWwgQWxnYWUgKFJGVSlgID0gYXMuZG91YmxlKGBUb3RhbCBBbGdhZSAoUkZVKWApLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChjZWxscy9MKWAgPSBhcy5kb3VibGUoYFRvdGFsIEFsZ2FlIChjZWxscy9MKWApLFxuICAgICAgICAgYFRvdGFsIERpc3NvbHZlZCBTb2xpZHMgKG1nL0wpYCA9IGFzLmRvdWJsZShgVG90YWwgRGlzc29sdmVkIFNvbGlkcyAobWcvTClgKSkgXG5gYGAifQ== -->
-<pre class="r"><code>dfOceanWaterQuality &lt;- rbind(dfHistorical,
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+# Combine Files
+Combine all dataframes in a way that gives us all of the data and separate datetime column into Date and Time so it&#39;s more usable in later analyses.
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZGZPY2VhbldhdGVyUXVhbGl0eSA8LSByYmluZChkZkhpc3RvcmljYWwsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRmTmV3REJfYmVnaW5uaW5nLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZkRTU1Byb0VkaXQsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRmTmV3REJfZW5kKSAlPiVcbiAgZGlzdGluY3QoKSAlPiVcbiAgc2VwYXJhdGUoZGF0ZXRpbWUsIGludG8gPSBjKFxcRGF0ZVxcLCBcXFRpbWVcXCksIHNlcCA9IFxcIFxcKSAlPiVcbiAgIyBtYWtlIHN1cmUgYWxsIGNvbHVtbnMgYXJlIHByb3BlciBkYXRhIHR5cGVcbiAgbXV0YXRlKERhdGUgPSB5bWQoRGF0ZSksXG4gICAgICAgICBgVGVtcGVyYXR1cmUgKMK6RilgID0gYXMuZG91YmxlKGBUZW1wZXJhdHVyZSAowrpGKWApLFxuICAgICAgICAgYFRlbXBlcmF0dXJlICjCukMpYCA9IGFzLmRvdWJsZShgVGVtcGVyYXR1cmUgKMK6QylgKSxcbiAgICAgICAgIHBIID0gYXMuZG91YmxlKHBIKSxcbiAgICAgICAgIGBwSCAobVYpYCA9IGFzLmRvdWJsZShgcEggKG1WKWApLFxuICAgICAgICAgYFNhbGluaXR5IChQU1UpYCA9IGFzLmRvdWJsZShgU2FsaW5pdHkgKFBTVSlgKSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHkgKMK1Uy9jbSlgID0gYXMuZG91YmxlKGBDb25kdWN0aXZpdHkgKMK1Uy9jbSlgKSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHksIE5vbi1MaW5lYXIgRnVuY3Rpb24gKMK1Uy9jbSlgID0gYXMuZG91YmxlKGBDb25kdWN0aXZpdHksIE5vbi1MaW5lYXIgRnVuY3Rpb24gKMK1Uy9jbSlgKSxcbiAgICAgICAgIGBDb25kdWN0aXZpdHksIFNwZWNpZmljICjCtVMvY20pYCA9IGFzLmRvdWJsZShgQ29uZHVjdGl2aXR5LCBTcGVjaWZpYyAowrVTL2NtKWApLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4gKG1nL0wpYCA9IGFzLmRvdWJsZShgRGlzc29sdmVkIE94eWdlbiAobWcvTClgKSxcbiAgICAgICAgIGBEaXNzb2x2ZWQgT3h5Z2VuLCBTYXR1cmF0ZWQgKCUpYCA9IGFzLmRvdWJsZShgRGlzc29sdmVkIE94eWdlbiwgU2F0dXJhdGVkICglKWApLFxuICAgICAgICAgYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWAgPSBhcy5kb3VibGUoYERpc3NvbHZlZCBPeHlnZW4sIExvY2FsICglKWApLFxuICAgICAgICAgYE94eWdlbiBSZWR1Y3Rpb24gUG90ZW50aWFsIChtVilgID0gYXMuZG91YmxlKGBPeHlnZW4gUmVkdWN0aW9uIFBvdGVudGlhbCAobVYpYCksXG4gICAgICAgICBgQ2hsb3JvcGh5bGwgKFJGVSlgID0gYXMuZG91YmxlKGBDaGxvcm9waHlsbCAoUkZVKWApLFxuICAgICAgICAgYENobG9yb3BoeWxsICjCtWcvTClgID0gYXMuZG91YmxlKGBDaGxvcm9waHlsbCAowrVnL0wpYCksXG4gICAgICAgICBgVG90YWwgQWxnYWUgKFJGVSlgID0gYXMuZG91YmxlKGBUb3RhbCBBbGdhZSAoUkZVKWApLFxuICAgICAgICAgYFRvdGFsIEFsZ2FlIChjZWxscy9MKWAgPSBhcy5kb3VibGUoYFRvdGFsIEFsZ2FlIChjZWxscy9MKWApLFxuICAgICAgICAgYFRvdGFsIERpc3NvbHZlZCBTb2xpZHMgKG1nL0wpYCA9IGFzLmRvdWJsZShgVG90YWwgRGlzc29sdmVkIFNvbGlkcyAobWcvTClgKSkgXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+dfOceanWaterQuality &lt;- rbind(dfHistorical,
                              dfNewDB_beginning,
                              dfDSSProEdit,
                              dfNewDB_end) %&gt;%
   distinct() %&gt;%
-  separate(datetime, into = c(&quot;Date&quot;, &quot;Time&quot;), sep = &quot; &quot;) %&gt;%
+  separate(datetime, into = c(\Date\, \Time\), sep = \ \) %&gt;%
   # make sure all columns are proper data type
   mutate(Date = ymd(Date),
          `Temperature (ºF)` = as.double(`Temperature (ºF)`),
@@ -2309,33 +2410,57 @@ analyses.</p>
          `Total Algae (RFU)` = as.double(`Total Algae (RFU)`),
          `Total Algae (cells/L)` = as.double(`Total Algae (cells/L)`),
          `Total Dissolved Solids (mg/L)` = as.double(`Total Dissolved Solids (mg/L)`)) </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogRXhwZWN0ZWQgMiBwaWVjZXMuIE1pc3NpbmcgcGllY2VzIGZpbGxlZCB3aXRoIGBOQWAgaW4gNDI1OSByb3dzIFszOCwgMTM0LCAyMzAsIDMyNixcbjQyMiwgNTE4LCA2MTQsIDcxMCwgODA2LCA5MDIsIDk5OCwgMTA5NCwgMTE5MCwgMTI4NiwgMTM4MiwgMTQ3OCwgMTU3NSwgMTY3MSwgMTc2NyxcbjE4NjMsIC4uLl0uXG5XYXJuaW5nOiBUaGVyZSB3ZXJlIDMgd2FybmluZ3MgaW4gYG11dGF0ZSgpYC5cblRoZSBmaXJzdCB3YXJuaW5nIHdhczpcbuKEuSBJbiBhcmd1bWVudDogYFRlbXBlcmF0dXJlICjCukYpID0gYXMuZG91YmxlKGBUZW1wZXJhdHVyZSAowrpGKWApYC5cbkNhdXNlZCBieSB3YXJuaW5nOlxuISBOQXMgaW50cm9kdWNlZCBieSBjb2VyY2lvblxu4oS5IFJ1biBcdTAwMWJdODs7aWRlOnJ1bjpkcGx5cjo6bGFzdF9kcGx5cl93YXJuaW5ncygpXHUwMDA3ZHBseXI6Omxhc3RfZHBseXJfd2FybmluZ3MoKVx1MDAxYl04OztcdTAwMDcgdG8gc2VlIHRoZSAyIHJlbWFpbmluZyB3YXJuaW5ncy5cbiJ9 -->
-<pre><code>Warning: Expected 2 pieces. Missing pieces filled with `NA` in 4259 rows [38, 134, 230, 326,
-422, 518, 614, 710, 806, 902, 998, 1094, 1190, 1286, 1382, 1478, 1575, 1671, 1767,
-1863, ...].
-Warning: There were 3 warnings in `mutate()`.
-The first warning was:
-ℹ In argument: `Temperature (ºF) = as.double(`Temperature (ºF)`)`.
-Caused by warning:
-! NAs introduced by coercion
-ℹ Run ]8;;ide:run:dplyr::last_dplyr_warnings()dplyr::last_dplyr_warnings()]8;; to see the 2 remaining warnings.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICBcblxuYGBgIn0= -->
-<pre class="r"><code>  
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogRXhwZWN0ZWQgMiBwaWVjZXMuIE1pc3NpbmcgcGllY2VzIGZpbGxlZCB3aXRoIGBOQWAgaW4gNDI1OSByb3dzIFszOCwgMTM0LCAyMzAsIDMyNixcbjQyMiwgNTE4LCA2MTQsIDcxMCwgODA2LCA5MDIsIDk5OCwgMTA5NCwgMTE5MCwgMTI4NiwgMTM4MiwgMTQ3OCwgMTU3NSwgMTY3MSwgMTc2NyxcbjE4NjMsIC4uLl0uXG5XYXJuaW5nOiBUaGVyZSB3ZXJlIDMgd2FybmluZ3MgaW4gYG11dGF0ZSgpYC5cblRoZSBmaXJzdCB3YXJuaW5nIHdhczpcbuKEuSBJbiBhcmd1bWVudDogYFRlbXBlcmF0dXJlICjCukYpID0gYXMuZG91YmxlKGBUZW1wZXJhdHVyZSAowrpGKWApYC5cbkNhdXNlZCBieSB3YXJuaW5nOlxuISBOQXMgaW50cm9kdWNlZCBieSBjb2VyY2lvblxu4oS5IFJ1biBcdTAwMWJdODs7aWRlOnJ1bjpkcGx5cjo6bGFzdF9kcGx5cl93YXJuaW5ncygpXHUwMDA3ZHBseXI6Omxhc3RfZHBseXJfd2FybmluZ3MoKVx1MDAxYl04OztcdTAwMDcgdG8gc2VlIHRoZSAyIHJlbWFpbmluZyB3YXJuaW5ncy5cbiJ9 --&gt;
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="write-file" class="section level1">
-<h1>Write File</h1>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfY3N2KGRmT2NlYW5XYXRlclF1YWxpdHksXG4gICAgICAgICAgZmlsZSA9IFwiRGF0YS9DbGVhbi9ZU0kvMDFfRGF0YVdyYW5nbGluZy8wMi1ZU0ktRGF0YS1DbGVhbi1BbGwuY3N2XCIsXG4gICAgICAgICAgY29sX25hbWVzID0gVFJVRSlcbmBgYCJ9 -->
-<pre class="r"><code>write_csv(dfOceanWaterQuality,
-          file = &quot;Data/Clean/YSI/01_DataWrangling/02-YSI-Data-Clean-All.csv&quot;,
+<p>Warning: Expected 2 pieces. Missing pieces filled with
+<code>NA</code> in 4259 rows [38, 134, 230, 326, 422, 518, 614, 710,
+806, 902, 998, 1094, 1190, 1286, 1382, 1478, 1575, 1671, 1767, 1863, …].
+Warning: There were 3 warnings in <code>mutate()</code>. The first
+warning was: ℹ In argument:
+<code>Temperature (ºF) = as.double(</code>Temperature
+(ºF)<code>)</code>. Caused by warning: ! NAs introduced by coercion ℹ
+Run
+]8;;ide:run:dplyr::last_dplyr_warnings()dplyr::last_dplyr_warnings()]8;;
+to see the 2 remaining warnings.</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuICBcblxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+  
+</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+# Write File
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxud3JpdGVfY3N2KGRmT2NlYW5XYXRlclF1YWxpdHksXG4gICAgICAgICAgZmlsZSA9IFxcRGF0YS9DbGVhbi9ZU0kvMDFfRGF0YVdyYW5nbGluZy8wMi1ZU0ktRGF0YS1DbGVhbi1BbGwuY3N2XFwsXG4gICAgICAgICAgY29sX25hbWVzID0gVFJVRSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+write_csv(dfOceanWaterQuality,
+          file = \Data/Clean/YSI/01_DataWrangling/02-YSI-Data-Clean-All.csv\,
           col_names = TRUE)</code></pre>
+<p>```</p>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->

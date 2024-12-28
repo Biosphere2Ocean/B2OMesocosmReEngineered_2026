@@ -10,6 +10,7 @@ output: html_notebook
 library(tidyverse)
 library(lubridate)
 library(here)
+library(readxl)
 # turns off scientific notation
 options(scipen = 999)
 ```
@@ -34,9 +35,18 @@ ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"
                                                "Salinity (PSU)",
                                                "Conductivity (µS/cm)",
                                                "Oxygen Reduction Potential (mV)")) %>%
-  # add a column called chlorophyll_ugl after `Oxygen Reduction Potential (mV)` and fill it with NA values
-  add_column(`Chlorophyll (µg/L)` = NA,
+  # add a column called `Total Algae (RFU)` after last column and fill it with NA values
+  add_column(`Total Algae (RFU)` = NA,
              .after = 7)%>%
+  # add a column called `Chlorophyll (µg/L)` after last column and fill it with NA values
+  add_column(`Chlorophyll (µg/L)` = NA,
+             .after = 8)%>%
+  # add a column called `Total Algae (cells/L)` after last column and fill it with NA values
+  add_column(`Total Algae (cells/L)` = NA,
+             .after = 9)%>%
+  # add a column called `Dissolved Oxygen, Saturated (%)` after last column and fill it with NA values
+  add_column(`Dissolved Oxygen, Saturated (%)` = NA,
+             .after = 10)%>%
   # get rid of probable data entry errors: salinity < 1, temp < 10, pH < 0, conductivity < 2, orp < 0
   mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 1, NA, `Salinity (PSU)`))%>%
   mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 10, NA, `Temperature (ºC)`)) %>%
@@ -54,9 +64,18 @@ ocean_data_2014_2018 <- read_csv(here(path, "Ocean_FTP_Data.csv"),
                                                "Salinity (PSU)",
                                                "Conductivity (µS/cm)",
                                                "Oxygen Reduction Potential (mV)")) %>%
-  # add a column called chlorophyll_ugl after `Oxygen Reduction Potential (mV)` and fill it with NA values
-  add_column(`Chlorophyll (µg/L)` = NA,
+  # add a column called `Total Algae (RFU)` after last column and fill it with NA values
+  add_column(`Total Algae (RFU)` = NA,
              .after = 7)%>%
+  # add a column called `Chlorophyll (µg/L)` after last column and fill it with NA values
+  add_column(`Chlorophyll (µg/L)` = NA,
+             .after = 8)%>%
+  # add a column called `Total Algae (cells/L)` after last column and fill it with NA values
+  add_column(`Total Algae (cells/L)` = NA,
+             .after = 9)%>%
+  # add a column called `Dissolved Oxygen, Saturated (%)` after last column and fill it with NA values
+  add_column(`Dissolved Oxygen, Saturated (%)` = NA,
+             .after = 10)%>%
   # change datetime format to match previous files
   mutate(datetime = format(as.POSIXct(datetime, format = "%m/%d/%y %H:%M"), "%Y/%m/%d %H:%M:%S"))%>%
   # data in this file is from YSI not in use after 5/8/18 at 8:00am. just use data before that date
@@ -68,6 +87,31 @@ ocean_data_2014_2018 <- read_csv(here(path, "Ocean_FTP_Data.csv"),
   mutate(pH = ifelse(pH < 3, NA, pH))%>%
   mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 2, NA, `Conductivity (µS/cm)`))%>%
   mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))
+
+# data from 12/6/16 - 5/25/21
+ocean_data_2016_2021 <- read_excel(here(path, "ocean_scada_data_2016_2021.xlsx"),
+                                   skip = 1,
+                                   col_names = c("datetime",
+                                                 "Temperature (ºF)",
+                                                 "Temperature (ºC)",
+                                                 "pH",
+                                                 "Salinity (PSU)",
+                                                 "Conductivity (µS/cm)",
+                                                 "Oxygen Reduction Potential (mV)",
+                                                 "Total Algae (RFU)",
+                                                 "Chlorophyll (µg/L)",
+                                                 "ro_flow_gpm",
+                                                 "Total Algae (cells/L)",
+                                                 "Dissolved Oxygen, Saturated (%)")) %>%
+  select(-ro_flow_gpm) %>%
+  # get rid of probable data entry errors: salinity < 1, temp < 10, pH < 0, conductivity < 2, orp < 0
+  mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 1, NA, `Salinity (PSU)`))%>%
+  mutate(`Temperature (ºF)` = ifelse(`Temperature (ºF)` < 10, NA, `Temperature (ºF)`))%>%
+  mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 1, NA, `Temperature (ºC)`))%>%
+  mutate(pH = ifelse(pH < 3, NA, pH))%>%
+  mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 2, NA, `Conductivity (µS/cm)`))%>%
+  mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`)) %>%
+  mutate(datetime = gsub("-", "/", datetime))
 
 # data from 5/8/18 - 6/12/18
 ocean_data_2016_2018 <- read_csv(here(path, "Ocean_FTP_Data_Extended.csv"), 
@@ -335,11 +379,15 @@ OceanDataFrame_2011_2021 <- rbind(ocean_data_2011_2014,
                               ocean_data_2014_2018,
                               #all columns except total_algae_rfu (column 8)
                               ocean_data_2016_2018[,c(1:7,9)],
+                              ocean_data_2016_2021[,c(1:7,9)],
                               ocean_data_2018_2021[,c(1:7,9)])%>%
   # join total_algae_rfu column on end
   left_join(ocean_data_2016_2018[,c(1,8)], by = join_by(datetime))%>%
-  left_join(ocean_data_2018_2021[,c(1,8)], by = join_by(datetime))%>%
-  left_join(ocean_data_2018_2021[,c(1,10)], by = join_by(datetime)) %>%
+  left_join(ocean_data_2016_2021[,c(1,8)], by = join_by(datetime))
+
+
+%>%
+  left_join(ocean_data_2018_2021[,c(1,8,10)], by = join_by(datetime))%>%
   # turn units into uS/cm instead of mS/cm
   mutate(`Conductivity (µS/cm)` = `Conductivity (µS/cm)`*1000)
 

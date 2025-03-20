@@ -5,7 +5,11 @@ Project: OceanWaterQuality
 Institution: Biosphere 2 Ocean
 output: html_notebook
 ---
+
+# Ocean Data Wrangling: 2011-2022
+
 ## Import Libraries
+
 ```{r label='Import-Libraries'}
 library(tidyverse)
 library(lubridate)
@@ -15,16 +19,22 @@ library(readxl)
 options(scipen = 999)
 ```
 
-# Import All Data Files
-## SCADA Files from Wei-Ren: 2011 - 2021
+## Import All Data Files
+
+Code for importing files will include some basic wrangling such as renaming columns, adding columns (populated with NAs) to some files that are present (with actual data) in other files, filtering out obvious data entry errors, checking datatypes, splitting any datetime columns into separate Date and Time columns, and keeping only data points recorded every 15 minutes. Much of this code is redundant, but I've found that the redundancy keeps everything as similar as possible and keeps errors made in the beginning steps from popping up in the later steps.
+
+### SCADA Files from Wei-Ren: 2011 - 2021
+
 This combines some but not all files from SCADA_2011_2021 folder which originally came from Wei-Ren Ng, Dr. Matej Durcik, and previously used SCADA databases. See 'YSI-metadata.xlsx' file for more details on origin. The files used below have the most complete data for the time period of 2011-2021.
 
-Code here adds columns with NAs to some files that are present with actual data in other files, and it does some basic filtering of obvious data-entry or instrument errors.
-
-```{r import-SCADA-files-from-2011-2021}
+```{r SCADA-files-from-2011-2021-path}
 # file path to folder containing old scada database 2011-2021 ocean water quality files
 path <- "Data/Raw/YSI/SCADA/SCADA_2011_2021"
+```
 
+### 7/22/11 - 8/4/14
+
+```{r import-SCADA-files-from-2011-2014}
 # data from 7/22/11 - 8/4/14
 ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"),
                                  skip = 1,
@@ -48,8 +58,17 @@ ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"
   mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 10, NA, `Temperature (ºC)`)) %>%
   mutate(pH = ifelse(pH < 0, NA, pH)) %>%
   mutate(`Conductivity (mS/cm)` = ifelse(`Conductivity (mS/cm)` < 2, NA, `Conductivity (mS/cm)`))%>%
-  mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))
+  mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`)) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time)) 
 
+```
+
+### 8/4/2014 - 10/3/2014
+
+```{r import-SCADA-files-from-end-2014}
 # data from 8/4/2014 - 10/3/2014
 ocean_data_2014 <- read_csv(here(path, "Ocean_FTP_Data_Acq.csv"), 
                                  skip = 1,
@@ -76,9 +95,18 @@ ocean_data_2014 <- read_csv(here(path, "Ocean_FTP_Data_Acq.csv"),
   mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 1, NA, `Temperature (ºC)`))%>%
   mutate(pH = ifelse(pH < 3, NA, pH))%>%
   mutate(`Conductivity (mS/cm)` = ifelse(`Conductivity (mS/cm)` < 2, NA, `Conductivity (mS/cm)`))%>%
-  mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))
+  mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`)) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time)) 
 
 
+```
+
+### 10/3/14 - 12/6/2016
+
+```{r import-SCADA-files-from-2014-2016}
 # data from 10/3/14 - 12/6/2016
 ocean_data_2014_2016 <- read_csv(here(path, "Ocean_FTP_Data.csv"), 
                                  skip = 1,
@@ -106,8 +134,17 @@ ocean_data_2014_2016 <- read_csv(here(path, "Ocean_FTP_Data.csv"),
   mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 1, NA, `Temperature (ºC)`))%>%
   mutate(pH = ifelse(pH < 3, NA, pH))%>%
   mutate(`Conductivity (mS/cm)` = ifelse(`Conductivity (mS/cm)` < 2, NA, `Conductivity (mS/cm)`))%>%
-  mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))
+  mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`)) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time)) 
 
+```
+
+### 12/6/2016 - 5/25/2021
+
+```{r import-SCADA-files-from-2016-2021}
 # data from 12/6/2016 - 5/25/2021
 ocean_data_2016_2021 <- read_excel(here(path, "ocean_scada_data_2016_2021.xlsx"), 
                                    skip = 1, 
@@ -150,82 +187,57 @@ ocean_data_2016_2021 <- read_excel(here(path, "ocean_scada_data_2016_2021.xlsx")
   mutate(`Oxygen Reduction Potential (mV)` = ifelse(`Oxygen Reduction Potential (mV)` < 0, NA, `Oxygen Reduction Potential (mV)`))%>%
   mutate(`Total Algae (cells/L)` = ifelse(`Total Algae (cells/L)` < 0, NA, `Total Algae (cells/L)`))%>%
   mutate(`Chlorophyll (µg/L)` = ifelse(`Chlorophyll (µg/L)` < 0, NA, `Chlorophyll (µg/L)`)) %>%
-  mutate(`Dissolved Oxygen, Saturated (%)` = ifelse(`Dissolved Oxygen, Saturated (%)` < 10, NA, `Dissolved Oxygen, Saturated (%)`))
-  
+  mutate(`Dissolved Oxygen, Saturated (%)` = ifelse(`Dissolved Oxygen, Saturated (%)` < 10, NA, `Dissolved Oxygen, Saturated (%)`)) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))  
 
 ```
 
+### Check Check: 2011-2021 Raw Files
 
-## Old B2 SCADA database files (10/21/19 - 2/23/22): old YSI sonde and new YSI EXO3 sonde
-These files are found in the SCADA_2019_2022 folder. They originate from the old B2 SCADA database which is no longer available on biosphere2.org. Some of the data will overlap with the SCADA data from Wei-Ren, but I want to make sure we have absolutely everything possible; will take out repeated data later
-### Old YSI Sonde (10/21/19-5/26/21)
-```{r import-files-old-db-ysi}
+Check that each of the dataframes created from the imported raw data has the expected number of data entries per day. This should be no more than 96: 4 data entries per hour x 24 hours per day = 96. This will also be important later for quality control.
+
+The expected output will be 4 empty dataframes (called tibbles here).
+
+```{r check-imported-data-2011-2021}
+ocean_data_2011_2014 %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+
+ocean_data_2014 %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+
+ocean_data_2014_2016 %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+
+ocean_data_2016_2021 %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+  
+```
+
+## Old B2 SCADA database files (5/26/21 - 2/23/22): YSI EXO3 sonde
+
+These files are found in the SCADA_2019_2022 folder. They originate from the **old** B2 SCADA database which is no longer available on biosphere2.org.
+
+### YSI EXO 3 Sonde (5/26/21-2/23/22)
+
+```{r import-files-old-db-ysi-exo-3}
 # file path to folder containing old scada database 10/21/19-2/23/22 ocean water quality files
 path <- "Data/Raw/YSI/SCADA/SCADA_2019_2022"
 
-# total algae phycoerythrin in cells/L 
-ysi_total_algae <- read_csv(here(path,
-                                       "UAB2_B240001_YSI_OCEANBGA_PE_593908.csv"),
-                                  # select columns with date, time, and the data values
-                                    col_select = c("TIMESTAMP", "VALUE")) %>%
-  # rename columns to match above files
-  rename(datetime = TIMESTAMP,
-         `Total Algae (cells/L)` = VALUE)
-
-# chlorophyll in ug/L 
-ysi_chlorophyll <- read_csv(here(path,
-                                       "UAB2_B240001_YSI_OCEANCHLORO_595563.csv"),
-                                  # select columns with date, time, and the data values
-                                  col_select = c("TIMESTAMP", "VALUE")) %>%
-  # rename columns to match above files
-  rename(datetime = TIMESTAMP,
-         `Chlorophyll (µg/L)` = VALUE)
-
-# electrical conductivity in mS/cm 
-ysi_conductivity <- read_csv(here(path, 
-                                        "UAB2_B240001_YSI_OCEANCONDUC_597443.csv"),
-                                   # select columns with date, time, and the data values
-                                   col_select = c("TIMESTAMP", "VALUE"))%>%
-  # rename columns to match above files
-  rename(datetime = TIMESTAMP,
-         `Conductivity (µS/cm)` = VALUE)
-
-# reduction potential (ORP) in mV 
-ysi_orp <- read_csv(here(path, "UAB2_B240001_YSI_OCEANORP_598894.csv"),
-                          # select columns with date, time, and the data values
-                                   col_select = c("TIMESTAMP", "VALUE")) %>%
-  # rename columns to match above files
-  rename(datetime = TIMESTAMP,
-         `Oxygen Reduction Potential (mV)` = VALUE)
-
-# pH in pH units 
-ysi_pH <- read_csv(here(path, "UAB2_B240001_YSI_OCEANPH_600334.csv"),
-                         # select columns with date, time, and the data values
-                                   col_select = c("TIMESTAMP", "VALUE")) %>%
-  # rename columns to match above files
-  rename(datetime = TIMESTAMP,
-         pH = VALUE)
-
-# salinity in ppt 
-ysi_salinity <- read_csv(here(path, "UAB2_B240001_YSI_OCEANSALANI_602884.csv"),
-                               # select columns with date, time, and the data values
-                                   col_select = c("TIMESTAMP", "VALUE")) %>%
-  # rename columns to match above files
-  rename(datetime = TIMESTAMP,
-         `Salinity (PSU)` = VALUE)
-
-# temperature in degrees Celcius 
-ysi_temp_c <- read_csv(here(path, "UAB2_B240001_YSI_OCEANTMP_604270.csv"),
-                             # select columns with date, time, and the data values
-                                   col_select = c("TIMESTAMP", "VALUE")) %>%
-  # rename columns to match above files
-  rename(datetime = TIMESTAMP,
-         `Temperature (ºC)` = VALUE)
-
-```
-
-### YSI EXO 3 Sonde (5/26/21-2/23/22)
-```{r import-files-old-db-ysi-exo-3}
 # chlorophyll in RFU 
 exo_chlorophyll <- read_csv(here(path, 
                                        "UAB2_B240001_YSI_EXO3_CHLORO_617107.csv"),
@@ -233,7 +245,11 @@ exo_chlorophyll <- read_csv(here(path,
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Chlorophyll (RFU)` = VALUE)
+         `Chlorophyll (RFU)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # electrical conductivity in uS/cm 
 exo_conductivity <- read_csv(here(path, 
@@ -242,7 +258,11 @@ exo_conductivity <- read_csv(here(path,
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   
   rename(datetime = TIMESTAMP,
-         `Conductivity (µS/cm)` = VALUE)
+         `Conductivity (µS/cm)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # nLF conductivity in uS/cm 
 exo_nlf_conductivity <- read_csv(here(path, 
@@ -251,7 +271,11 @@ exo_nlf_conductivity <- read_csv(here(path,
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Conductivity, Non-Linear Function (µS/cm)` = VALUE)
+         `Conductivity, Non-Linear Function (µS/cm)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # dissolved oxygen in % local 
 exo_do_local <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ODO__L_632594.csv"),
@@ -259,7 +283,11 @@ exo_do_local <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ODO__L_632594.csv"),
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Dissolved Oxygen, Local (%)` = VALUE)
+         `Dissolved Oxygen, Local (%)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # dissolved oxygen in % saturated 
 exo_do_saturated <- read_csv(here(path, 
@@ -268,7 +296,11 @@ exo_do_saturated <- read_csv(here(path,
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Dissolved Oxygen, Saturated (%)` = VALUE)
+         `Dissolved Oxygen, Saturated (%)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # dissolved oxygen in mg/L 
 exo_do <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ODO_MG_645798.csv"),
@@ -276,7 +308,11 @@ exo_do <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ODO_MG_645798.csv"),
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Dissolved Oxygen (mg/L)` = VALUE)
+         `Dissolved Oxygen (mg/L)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # reduction potential (ORP) in mV 
 exo_orp <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ORP_MV_647084.csv"),
@@ -284,7 +320,11 @@ exo_orp <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_ORP_MV_647084.csv"),
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Oxygen Reduction Potential (mV)` = VALUE)
+         `Oxygen Reduction Potential (mV)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # pH in pH units 
 exo_ph <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_PH_662411.csv"),
@@ -292,7 +332,11 @@ exo_ph <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_PH_662411.csv"),
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         pH = VALUE)
+         pH = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # pH in mV 
 exo_ph_mv <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_PH_MV_663459.csv"),
@@ -300,7 +344,11 @@ exo_ph_mv <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_PH_MV_663459.csv"),
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `pH (mV)` = VALUE)
+         `pH (mV)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # salinity in psu 
 exo_salinity <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_SAL_PS_647937.csv"),
@@ -308,7 +356,11 @@ exo_salinity <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_SAL_PS_647937.csv"),
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Salinity (PSU)` = VALUE)
+         `Salinity (PSU)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # specific conductivity in uS/cm 
 exo_sp_conductivity <- read_csv(here(path, 
@@ -317,7 +369,11 @@ exo_sp_conductivity <- read_csv(here(path,
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Conductivity, Specific (µS/cm)` = VALUE)
+         `Conductivity, Specific (µS/cm)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # total algae phycoerythrin in RFU 
 exo_total_algae <- read_csv(here(path, 
@@ -326,7 +382,11 @@ exo_total_algae <- read_csv(here(path,
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Total Algae (RFU)` = VALUE)
+         `Total Algae (RFU)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # total dissolved solids in mg/L 
 exo_total_dissolved_solids <- read_csv(here(path,
@@ -335,7 +395,11 @@ exo_total_dissolved_solids <- read_csv(here(path,
                                           col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Total Dissolved Solids (mg/L)` = VALUE)
+         `Total Dissolved Solids (mg/L)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # temperature in degrees Celcius 
 exo_temp_c <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_TEMP_C_655738.csv"),
@@ -344,8 +408,10 @@ exo_temp_c <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_TEMP_C_655738.csv"),
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
          `Temperature (ºC)` = VALUE) %>%
-  # keep data taken at the quarter hours and remove other data; Sonde or database must have gotten switched to recording in 1-minute intervals for a period of time here
-  filter(str_detect(datetime, pattern = ":00:") | str_detect(datetime, pattern = ":15:") | str_detect(datetime, pattern = ":30:") | str_detect(datetime, pattern = ":45:"))
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # temperature in degrees Fahrenheit 
 exo_temp_f <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_TEMP_F_659351.csv"),
@@ -353,14 +419,24 @@ exo_temp_f <- read_csv(here(path, "UAB2_B240001_YSI_EXO3_TEMP_F_659351.csv"),
                                    col_select = c("TIMESTAMP", "VALUE")) %>%
   # rename columns to match above files
   rename(datetime = TIMESTAMP,
-         `Temperature (ºF)` = VALUE)
+         `Temperature (ºF)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 ```
 
+Going to move the Data Check step to once the Sonde dataframes are combined to save some time.
 
-# Data Wrangling
-Join all dataframes together so there is one 2011-2022 dataframe. 
-## 2011-2021 SCADA Data
+## Data Wrangling
+
+Join all dataframes together so there is one 2011-2022 dataframe.
+
+### 2011-2021 SCADA Data
+
+Combine the data:
+
 ```{r data-wrangling-2011-2021}
 # create 2011-2021 ocean data dataframe
 OceanDataFrame_2011_2021 <- rbind(ocean_data_2011_2014, 
@@ -369,82 +445,99 @@ OceanDataFrame_2011_2021 <- rbind(ocean_data_2011_2014,
                                   ocean_data_2016_2021)%>%
   # turn units into uS/cm instead of mS/cm
   rename(`Conductivity (µS/cm)` = `Conductivity (mS/cm)`) %>%
-  mutate(`Conductivity (µS/cm)` = `Conductivity (µS/cm)`*1000)
+  mutate(`Conductivity (µS/cm)` = `Conductivity (µS/cm)`*1000)%>%
+  mutate(Date = as.Date(Date)) %>%
+  distinct()
 
 ```
 
-## Old Database Data: 2019-2022
+Check the data again:
+
+```{r check-oceandataframe-2011-2021}
+OceanDataFrame_2011_2021 %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+```
+
+### Old Database Data: 10/21/2019 - 2/23/2022
+
 ```{r data-wrangling-old-database}
-# create old database YSI dataframe by joining the files for each variable from this instrument based on the datetime column
-YsiFrame <- ysi_temp_c %>%
-  left_join(ysi_pH, by = join_by(datetime)) %>%
-  left_join(ysi_salinity, by = join_by(datetime)) %>%
-  left_join(ysi_conductivity, by = join_by(datetime)) %>%
-  left_join(ysi_orp, by = join_by(datetime)) %>%
-  left_join(ysi_chlorophyll, by = join_by(datetime))%>%
-  left_join(ysi_total_algae, by = join_by(datetime)) %>%
-  # turn units into uS/cm instead of mS/cm
-  mutate(`Conductivity (µS/cm)` = `Conductivity (µS/cm)`*1000) %>%
-  # add columns to make the same as ocean frame
-  add_column(`Temperature (ºF)` = NA, .after = 1)%>%
-  add_column(`Total Algae (RFU)` = NA, .after = 7)%>%
-  add_column(`Dissolved Oxygen, Saturated (%)` = NA, .after = 10)
+# create old database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the Date and Time columns
+YsiFrame <- exo_temp_f %>%
+  left_join(exo_temp_c, by = join_by(Date,Time)) %>%
+  left_join(exo_ph, by = join_by(Date,Time)) %>%
+  left_join(exo_salinity, by = join_by(Date,Time)) %>%
+  left_join(exo_conductivity, by = join_by(Date,Time)) %>%
+  left_join(exo_orp, by = join_by(Date,Time)) %>%
+  left_join(exo_total_algae, by = join_by(Date,Time)) %>%
+  left_join(exo_do_saturated, by = join_by(Date,Time)) %>%
+  left_join(exo_do, by = join_by(Date,Time)) %>%
+  left_join(exo_do_local, by = join_by(Date,Time)) %>%
+  left_join(exo_nlf_conductivity, by = join_by(Date,Time)) %>%
+  left_join(exo_ph_mv, by = join_by(Date,Time)) %>%
+  left_join(exo_sp_conductivity, by = join_by(Date,Time)) %>%
+  left_join(exo_total_dissolved_solids, by = join_by(Date,Time)) %>%
+  add_column(`Chlorophyll (µg/L)` = NA, .after = 9) %>%
+  add_column(`Total Algae (cells/L)` = NA, .after = 10) %>%
+  left_join(exo_chlorophyll, by = join_by(Date,Time)) %>%
+  mutate(Date = gsub("/", "-", Date))%>%
+  mutate(Date = as.Date(Date))
 
 
-# create old database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the datetime column
-YsiExoFrame <- exo_temp_f %>%
-  left_join(exo_temp_c, by = join_by(datetime)) %>%
-  left_join(exo_ph, by = join_by(datetime)) %>%
-  left_join(exo_salinity, by = join_by(datetime)) %>%
-  left_join(exo_conductivity, by = join_by(datetime)) %>%
-  left_join(exo_orp, by = join_by(datetime)) %>%
-  left_join(exo_total_algae, by = join_by(datetime)) %>%
-  left_join(exo_do_saturated, by = join_by(datetime)) %>%
-  left_join(exo_do, by = join_by(datetime)) %>%
-  left_join(exo_do_local, by = join_by(datetime)) %>%
-  left_join(exo_nlf_conductivity, by = join_by(datetime)) %>%
-  left_join(exo_ph_mv, by = join_by(datetime)) %>%
-  left_join(exo_sp_conductivity, by = join_by(datetime)) %>%
-  left_join(exo_total_dissolved_solids, by = join_by(datetime)) %>%
-  add_column(`Chlorophyll (µg/L)` = NA, .after = 8) %>%
-  add_column(`Total Algae (cells/L)` = NA, .after = 9) %>%
-  left_join(exo_chlorophyll, by = join_by(datetime)) 
+```
 
-# create dataframe of all old database YSI Sonde data
-YsiAllFrame <- rbind(YsiFrame[,1:11], YsiExoFrame[,1:11]) %>%
-  left_join(YsiExoFrame[,c(1,12:18)], by = join_by(datetime)) %>%
-  # change datetime format and data type
-  mutate(datetime = gsub("/", "-", datetime))%>%
-  mutate(datetime = as_datetime(datetime))
+Check the Sonde data:
 
-
+```{r check-sond-data}
+YsiFrame %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
 ```
 
 ## Combine Dataframes
+
 Combine dataframes, keep unique rows, and move columns around so that similar variables are grouped together
+
 ```{r data-wrangling-combine-data}
 
-OceanWaterQualityFrame <- rbind(OceanDataFrame_2011_2021, YsiAllFrame[, 1:11]) %>%
-  left_join(YsiAllFrame[,c(1,12:18)], by = join_by(datetime)) %>%
-  unique() %>%
+OceanWaterQualityFrame <- rbind(OceanDataFrame_2011_2021, YsiFrame[, 1:12]) %>%
+  left_join(YsiFrame[,c(1:2,13:19)], by = join_by(Date,Time)) %>%
   relocate(`pH (mV)`, .after = pH) %>%
   relocate(`Conductivity, Non-Linear Function (µS/cm)`, 
            `Conductivity, Specific (µS/cm)`, .after = `Conductivity (µS/cm)`) %>%
   relocate(`Dissolved Oxygen (mg/L)`, 
            `Dissolved Oxygen, Saturated (%)`, 
            `Dissolved Oxygen, Local (%)`, .after = `Conductivity, Specific (µS/cm)`) %>%
-  relocate(`Chlorophyll (RFU)`, .after = `Oxygen Reduction Potential (mV)`)
+  relocate(`Chlorophyll (RFU)`, .after = `Oxygen Reduction Potential (mV)`)  %>%
+  distinct()
+
 
 ```
 
-# Write Data to File
+Check the data one more time
+
+```{r final-data-check}
+dfCheck <- OceanWaterQualityFrame %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+dfCheck
+```
+
+## Write Data to File
+
 ```{r write-data-to-file}
 write_csv(OceanWaterQualityFrame,
           file = "Data/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011-2022.csv",
           col_names = TRUE)
 ```
 
-
+Ignore:
 
 ```{r eval=FALSE, echo=FALSE, import-and-format-UTF-16-files}
 # The following chunks are original code from Dan (and Renee) for EXO3 files -- can be ignored

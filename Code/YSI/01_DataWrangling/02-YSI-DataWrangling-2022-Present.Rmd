@@ -5,7 +5,11 @@ Project: OceanWaterQuality
 Institution: Biosphere 2 Ocean
 output: html_notebook
 ---
+
+# Ocean Data Wrangling: 2022-Present
+
 ## Import Libraries
+
 ```{r Import-Libraries}
 library(tidyverse)
 library(lubridate)
@@ -14,17 +18,20 @@ library(here)
 options(scipen = 999)
 ```
 
-# Import Data
-## Old B2 SCADA Database: 2011-2022
+## Import Data
+
+### Old B2 SCADA Database: 2011-2022
+
 Use `01-YSI-Data-Clean-2011-2022.csv` created in `01-YSI-DataWrangling-2011-2022.Rmd`
+
 ```{r import-data-old-scada-database}
-dfHistorical <- read_csv("Data/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011-2022.csv") %>%
-  mutate(datetime = ymd_hms(datetime))
+dfHistorical <- read_csv("Data/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011-2022.csv") 
 ```
 
-
 ## New B2 SCADA Database: 1/22/22 - Present
-These files are pulled from the B2 SCADA Database (https://data.b2.arizona.edu/Bio2Controls/OCDataAgreement.jsp). Each file will download with a numeric identifier at the end of the file name. Delete this before running the files through this code. I might figure out how to get around that via code one day, but not today.
+
+These files are pulled from the B2 SCADA Database (<https://data.b2.arizona.edu/Bio2Controls/OCDataAgreement.jsp>). Each file will download with a numeric identifier at the end of the file name. Delete this before running the files through this code. I might figure out how to get around that via code one day, but not today.
+
 ```{r import-SCADA-files-from-1/22/22-present}
 # file path to folder containing new scada database 1/22/22-present ocean water quality files
 path <- "Data/Raw/YSI/SCADA/SCADA_2022_Present"
@@ -35,7 +42,11 @@ exo_chlorophyll <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Chlorophyll (RFU)` = VALUE)
+         `Chlorophyll (RFU)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time)) 
 
 # electrical conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
 exo_conductivity <- read_csv(here(path, 
@@ -43,7 +54,11 @@ exo_conductivity <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Conductivity (µS/cm)` = VALUE)
+         `Conductivity (µS/cm)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # nLF conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
 exo_nlf_conductivity <- read_csv(here(path, 
@@ -51,7 +66,11 @@ exo_nlf_conductivity <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Conductivity, Non-Linear Function (µS/cm)` = VALUE)
+         `Conductivity, Non-Linear Function (µS/cm)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # dissolved oxygen in % local from 1/22/22-present from current YSI EXO3 Sonde
 exo_do_local <- read_csv(here(path, 
@@ -59,7 +78,11 @@ exo_do_local <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Dissolved Oxygen, Local (%)` = VALUE)
+         `Dissolved Oxygen, Local (%)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # dissolved oxygen in % saturated from 1/22/22-present from current YSI EXO3 Sonde
 exo_do_saturated <- read_csv(here(path, 
@@ -67,35 +90,55 @@ exo_do_saturated <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Dissolved Oxygen, Saturated (%)` = VALUE)
+         `Dissolved Oxygen, Saturated (%)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # dissolved oxygen in mg/L from 1/22/22-present from current YSI EXO3 Sonde
 exo_do <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_ODO_MGPL.csv"),
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Dissolved Oxygen (mg/L)` = VALUE)
+         `Dissolved Oxygen (mg/L)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # reduction potential (ORP) in mV from 1/22/22-present from current YSI EXO3 Sonde
 exo_orp <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_ORP_MV.csv"),
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Oxygen Reduction Potential (mV)` = VALUE)
+         `Oxygen Reduction Potential (mV)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # pH in pH units from 1/22/22-present from current YSI EXO3 Sonde
 exo_ph <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_PH.csv"),
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         pH = VALUE)
+         pH = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # pH in mV from 1/22/22-present from current YSI EXO3 Sonde
 exo_ph_mv <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_PH_MV.csv"),
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `pH (mV)` = VALUE)
+         `pH (mV)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # salinity in psu from 1/22/22-present from current YSI EXO3 Sonde
 exo_salinity <- read_csv(here(path,
@@ -103,7 +146,11 @@ exo_salinity <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Salinity (PSU)` = VALUE)
+         `Salinity (PSU)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # specific conductivity in uS/cm from 1/22/22-present from current YSI EXO3 Sonde
 exo_sp_conductivity <- read_csv(here(path, 
@@ -111,7 +158,11 @@ exo_sp_conductivity <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Conductivity, Specific (µS/cm)` = VALUE)
+         `Conductivity, Specific (µS/cm)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # total algae phycoerythrin in RFU from 1/22/22-present from current YSI EXO3 Sonde
 exo_total_algae <- read_csv(here(path, 
@@ -119,7 +170,11 @@ exo_total_algae <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Total Algae (RFU)` = VALUE)
+         `Total Algae (RFU)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # total dissolved solids in mg/L from 1/22/22-present from current YSI EXO3 Sonde
 exo_total_dissolved_solids <- read_csv(here(path,
@@ -127,26 +182,40 @@ exo_total_dissolved_solids <- read_csv(here(path,
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Total Dissolved Solids (mg/L)` = VALUE)
+         `Total Dissolved Solids (mg/L)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # temperature in degrees Celcius from 1/22/22-present from current YSI EXO3 Sonde
 exo_temp_c <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_TEMP_C.csv"),
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Temperature (ºC)` = VALUE)
+         `Temperature (ºC)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 # temperature in degrees Fahrenheit from 1/22/22-present from current YSI EXO3 Sonde
 exo_temp_f <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv"),
                               skip = 2,
                               col_select = c("TIMESTAMP", "VALUE")) %>%
   rename(datetime = TIMESTAMP,
-         `Temperature (ºF)` = VALUE)
+         `Temperature (ºF)` = VALUE) %>%
+  # separate datetime into Date and Time columns
+  separate(col = datetime, into = c("Date", "Time"), sep = " ") %>%
+  # make sure only data recorded on minutes 00, 15, 30, and 45 are kept
+  filter(grepl(':00:|:15:|:30:|:45:', Time))
 
 ```
 
 ## DSSPro Backup
+
 This file is from the YSI DSSPro instrument. The EXO3 was sent in for maintenance from 11/17/2023 - 1/10/2024, so it was not recording the to the database. The YSI DSSPro was used to record data while the EXO3 was away. Unfortunately, not all of the same variables were recorded, but this will be fixed if the EXO3 ever needs to go back.
+
 ```{r import-dsspro-file}
 dfDSSPro <- read_csv("Data/Raw/YSI/Sondes/prodssbackup-231117-240112.csv",
                      # files downloaded from the YSI instruments are encoded as UTF-16, but most code languages only read UTF-8. Make sure to keep the below line in to fix that.
@@ -155,8 +224,6 @@ dfDSSPro <- read_csv("Data/Raw/YSI/Sondes/prodssbackup-231117-240112.csv",
                      skip = 1) %>%
   # remove columns we won't need
   select(-`User ID`, -`Unit ID`, -Site)%>%
-  mutate(datetime = paste(Date, Time)) %>%
-  select(-Date, -Time) %>%
   rename(`Temperature (ºF)` = "°F",
          `Dissolved Oxygen, Local (%)` = "DO %",
          `Dissolved Oxygen (mg/L)` = "DO mg/L",
@@ -164,55 +231,95 @@ dfDSSPro <- read_csv("Data/Raw/YSI/Sondes/prodssbackup-231117-240112.csv",
          `Salinity (PSU)` = "SAL-PSU",
          `Oxygen Reduction Potential (mV)` = "ORP mV",
          `Chlorophyll (RFU)` = "Chl RFU",
-         `Total Algae (RFU)` = "PE RFU") %>%
-  relocate(datetime, .before = `Temperature (ºF)`)
+         `Total Algae (RFU)` = "PE RFU") 
 
 ```
 
-# Data Wrangling
+## Data Wrangling
+
 Goal here is to make all files look the same so they can be combined later
-## Historical File
+
+### Historical File
+
 ```{r data-wrangling-historical}
 dfHistorical <- dfHistorical %>%
-  relocate(`pH (mV)`, .after = pH)
+  relocate(`pH (mV)`, .after = pH) %>%
+  filter(Date < "2021-05-27")
   
 ```
 
-## New Database Files
+Check Data:
+
+```{r dfhistorical-data-check}
+dfHistorical %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+```
+
+### New Database Files
+
 Combine all files from new database and make the resulting dataframe look like dfHistorical. Chop this dataframe in half so that we can sandwich in the DSSPro dataframe.
+
 ```{r data-wrangling-new-database}
 # create new database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the datetime column
 dfNewDB <- exo_temp_f %>%
-  left_join(exo_temp_c, by = join_by(datetime)) %>%
-  left_join(exo_ph, by = join_by(datetime)) %>%
-  left_join(exo_ph_mv, by = join_by(datetime)) %>%
-  left_join(exo_salinity, by = join_by(datetime)) %>%
-  left_join(exo_conductivity, by = join_by(datetime)) %>%
-  left_join(exo_orp, by = join_by(datetime)) %>%
-  left_join(exo_total_algae, by = join_by(datetime)) %>%
+  left_join(exo_temp_c, by = join_by(Date, Time)) %>%
+  left_join(exo_ph, by = join_by(Date, Time)) %>%
+  left_join(exo_ph_mv, by = join_by(Date, Time)) %>%
+  left_join(exo_salinity, by = join_by(Date, Time)) %>%
+  left_join(exo_conductivity, by = join_by(Date, Time)) %>%
+  left_join(exo_orp, by = join_by(Date, Time)) %>%
+  left_join(exo_total_algae, by = join_by(Date, Time)) %>%
   mutate(`Chlorophyll (µg/L)` = NA) %>%
   mutate(`Total Algae (cells/L)` = NA) %>%
-  left_join(exo_do_saturated, by = join_by(datetime)) %>%
-  left_join(exo_do, by = join_by(datetime)) %>%
-  left_join(exo_do_local, by = join_by(datetime)) %>%
-  left_join(exo_nlf_conductivity, by = join_by(datetime)) %>%
-  left_join(exo_sp_conductivity, by = join_by(datetime)) %>%
-  left_join(exo_total_dissolved_solids, by = join_by(datetime)) %>%
-  left_join(exo_chlorophyll, by = join_by(datetime)) %>%
-  mutate(datetime = ymd_hms(datetime))
+  left_join(exo_do_saturated, by = join_by(Date, Time)) %>%
+  left_join(exo_do, by = join_by(Date, Time)) %>%
+  left_join(exo_do_local, by = join_by(Date, Time)) %>%
+  left_join(exo_nlf_conductivity, by = join_by(Date, Time)) %>%
+  left_join(exo_sp_conductivity, by = join_by(Date, Time)) %>%
+  left_join(exo_total_dissolved_solids, by = join_by(Date, Time)) %>%
+  left_join(exo_chlorophyll, by = join_by(Date, Time)) %>%
+  mutate(Date = as.Date(Date))
 
 # df of data recorded before EXO3 got sent to be fixed
 dfNewDB_beginning <- dfNewDB %>%
-  filter(datetime < ymd_hms("2023-11-17 14:30:00"))
+  filter(Date < "2023-11-17" & Time < "14:30:00")
 
 # df of data recorded after EXO3 came back from being fixed
 dfNewDB_end <- dfNewDB %>%
-  filter(datetime > ymd_hms("2024-01-10 15:16:00"))
+  filter(Date > "2024-01-10" & Time < "15:16:00")
 
 ```
 
-## DSSPro File
+Check Data:
+
+```{r newdb-data-check}
+dfNewDB %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+
+dfNewDB_beginning %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+
+dfNewDB_end %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+
+```
+
+### DSSPro File
+
 Make dfDSSPro look like dfHistorical
+
 ```{r data-wrangle-dsspro}
 # add NA columns with same names as columns missing from other dataframes
 dfDSSProEdit <- dfDSSPro %>%
@@ -240,26 +347,32 @@ dfDSSProEdit <- dfDSSPro %>%
   relocate(`Conductivity, Non-Linear Function (µS/cm)`, .after = `Dissolved Oxygen, Local (%)`) %>%
   relocate(`Conductivity, Specific (µS/cm)`, .after = `Conductivity, Non-Linear Function (µS/cm)`) %>%
   relocate(`Chlorophyll (RFU)`, .after = `Conductivity, Specific (µS/cm)`) %>%
-  # mess with datetime column to make it into "POSIXct" "POSIXt" class so that we can filter
-  separate(datetime, into = c("date", "time"), sep = " ") %>%
-  mutate(date = as.Date(date, format = "%m/%d/%y")) %>%
-  mutate(datetime = ymd_hms(paste(date, time))) %>%
-  relocate(datetime, .after = date) %>%
-  select(-date, -time) %>%
+  mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
   # filter out extra rows that got added when file was downloaded off of instrument
-  filter(datetime <= ymd_hms("2024-01-10 15:15:00")) 
+  filter(Date <= "2024-01-10" & Time <= "15:15:00")
 
 ```
 
+Data Check:
+
+```{r dsspro-data-check}
+dfDSSProEdit %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+```
+
 # Combine Files
+
 Combine all dataframes in a way that gives us all of the data and separate datetime column into Date and Time so it's more usable in later analyses.
+
 ```{r combine-files}
 dfOceanWaterQuality <- rbind(dfHistorical,
                              dfNewDB_beginning,
                              dfDSSProEdit,
                              dfNewDB_end) %>%
   distinct() %>%
-  separate(datetime, into = c("Date", "Time"), sep = " ") %>%
   # make sure all columns are proper data type
   mutate(Date = ymd(Date),
          `Temperature (ºF)` = as.double(`Temperature (ºF)`),
@@ -284,10 +397,21 @@ dfOceanWaterQuality <- rbind(dfHistorical,
 
 ```
 
+Final data check
+
+```{r check-data-final}
+dfOceanWaterQuality %>%
+  unique() %>% # keep only unique rows
+  group_by(Date) %>% # group each date together
+  summarise(n = n()) %>% # count the number of rows per group (date)
+  filter(n > 96) # keep only groups with more than 96 rows
+
+```
+
 # Write File
+
 ```{r write-data-to-file}
 write_csv(dfOceanWaterQuality,
           file = "Data/Clean/YSI/01_DataWrangling/02-YSI-Data-Clean-All.csv",
           col_names = TRUE)
 ```
-

@@ -60,11 +60,12 @@ for (i in 1:length(var_names)) {
 ## Quality Control Data
 ### Check Data Size
 ```{r qc-data-check}
-dfCheck <- df %>%
+dfCheck <- dfPivot %>%
+  # get the date as the month and year by taking off the last 4 digits (have to add an extra in there so it ends up being -4)
   mutate(Date = str_sub(Date, end=-4)) %>%
-  group_by(Date) %>% 
   unique() %>%
   na.omit() %>%
+  group_by(Date, variable) %>%
   summarise(n = n()) %>%
   filter(n >= 5000)
 

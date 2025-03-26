@@ -1,116 +1,85 @@
 row,column,cor_coeff,p_value
-Phosphate,Nitrate MR,0.35,0
-Phosphate,Nitrate HR,0.22,0
-Nitrate MR,Nitrate HR,0.59,0
-Phosphate,Silica,0.34,0
-Nitrate MR,Iron,0.13,0.05
-Phosphate,pH (Nutrients),-0.31,0
-Nitrate MR,pH (Nutrients),-0.23,0
-Nitrate HR,pH (Nutrients),-0.14,0.04
-Silica,pH (Nutrients),-0.31,0
-Iron,pH (Nutrients),-0.14,0.04
-Phosphate,Temperature (ºF),0.34,0
-Nitrate MR,Temperature (ºF),0.34,0
-Silica,Temperature (ºF),0.66,0
-pH (Nutrients),Temperature (ºF),-0.28,0
-Phosphate,Temperature (ºC),0.28,0
-Nitrate MR,Temperature (ºC),0.35,0
-Silica,Temperature (ºC),0.37,0
-pH (Nutrients),Temperature (ºC),-0.29,0
+Phosphate (mg/L),"Nitrate, Mid-Range (mg/L)",0.28,0
+Phosphate (mg/L),"Nitrate, High-Range (mg/L)",0.2,0
+"Nitrate, Mid-Range (mg/L)","Nitrate, High-Range (mg/L)",0.62,0
+"Nitrate, Mid-Range (mg/L)",Alkalinity (mg/L CaCO3),-0.14,0.02
+Phosphate (mg/L),Silica (mg/L),0.26,0
+"Nitrate, High-Range (mg/L)",Silica (mg/L),-0.12,0.05
+Alkalinity (mg/L CaCO3),Silica (mg/L),0.15,0.01
+"Nitrate, Mid-Range (mg/L)",Iron (mg/L),0.15,0.01
+"Nitrate, High-Range (mg/L)",Iron (mg/L),0.12,0.04
+Phosphate (mg/L),Temperature (ºF),0.22,0
+"Nitrate, Mid-Range (mg/L)",Temperature (ºF),0.36,0
+Silica (mg/L),Temperature (ºF),0.47,0
+Iron (mg/L),Temperature (ºF),0.17,0.02
+Phosphate (mg/L),Temperature (ºC),0.24,0
+"Nitrate, Mid-Range (mg/L)",Temperature (ºC),0.4,0
+"Nitrate, High-Range (mg/L)",Temperature (ºC),0.12,0.04
+Silica (mg/L),Temperature (ºC),0.31,0
+Iron (mg/L),Temperature (ºC),0.2,0
 Temperature (ºF),Temperature (ºC),1,0
-Alkalinity,pH (mV),0.4,0
-Temperature (ºF),pH (mV),-0.31,0
-Temperature (ºC),pH (mV),-0.31,0.01
-Phosphate,Salinity (PSU),-0.24,0
-Nitrate MR,Salinity (PSU),-0.14,0.05
-Nitrate HR,Salinity (PSU),-0.3,0
-pH (Nutrients),Salinity (PSU),0.21,0.02
-Temperature (ºF),Salinity (PSU),0.34,0
-Temperature (ºC),Salinity (PSU),0.31,0
-pH (mV),Salinity (PSU),-0.51,0
-Nitrate HR,Conductivity (µS/cm),-0.19,0.01
-Silica,Conductivity (µS/cm),0.17,0.04
-Temperature (ºF),Conductivity (µS/cm),0.82,0
-Temperature (ºC),Conductivity (µS/cm),0.77,0
-Salinity (PSU),Conductivity (µS/cm),0.85,0
-Nitrate MR,"Conductivity, Non-Linear Function (µS/cm)",-0.37,0
-Silica,"Conductivity, Non-Linear Function (µS/cm)",0.24,0.05
-pH (Nutrients),"Conductivity, Non-Linear Function (µS/cm)",-0.38,0
-pH (mV),"Conductivity, Non-Linear Function (µS/cm)",-0.43,0
-Salinity (PSU),"Conductivity, Non-Linear Function (µS/cm)",0.84,0
-Conductivity (µS/cm),"Conductivity, Non-Linear Function (µS/cm)",0.95,0
-Nitrate MR,"Conductivity, Specific (µS/cm)",-0.37,0
-Silica,"Conductivity, Specific (µS/cm)",0.25,0.04
-pH (Nutrients),"Conductivity, Specific (µS/cm)",-0.38,0
-pH (mV),"Conductivity, Specific (µS/cm)",-0.42,0
-Salinity (PSU),"Conductivity, Specific (µS/cm)",0.83,0
-Conductivity (µS/cm),"Conductivity, Specific (µS/cm)",0.96,0
+"Nitrate, Mid-Range (mg/L)",pH (mV),-0.38,0
+"Nitrate, High-Range (mg/L)",pH (mV),-0.29,0
+Alkalinity (mg/L CaCO3),pH (mV),-0.2,0.01
+Phosphate (mg/L),Salinity (PSU),-0.2,0
+"Nitrate, Mid-Range (mg/L)",Salinity (PSU),-0.14,0.03
+"Nitrate, High-Range (mg/L)",Salinity (PSU),-0.27,0
+Temperature (ºF),Salinity (PSU),0.37,0
+Temperature (ºC),Salinity (PSU),0.26,0
+pH (mV),Salinity (PSU),-0.28,0
+Temperature (ºF),Conductivity (µS/cm),0.66,0
+Temperature (ºC),Conductivity (µS/cm),0.58,0
+pH (mV),Conductivity (µS/cm),-0.22,0.01
+Salinity (PSU),Conductivity (µS/cm),0.8,0
+pH (mV),"Conductivity, Non-Linear Function (µS/cm)",-0.28,0
+Salinity (PSU),"Conductivity, Non-Linear Function (µS/cm)",0.8,0
+Conductivity (µS/cm),"Conductivity, Non-Linear Function (µS/cm)",0.99,0
+Ammonia (mg/L),"Conductivity, Specific (µS/cm)",-0.56,0.05
+pH (mV),"Conductivity, Specific (µS/cm)",-0.3,0
+Salinity (PSU),"Conductivity, Specific (µS/cm)",0.8,0
+Conductivity (µS/cm),"Conductivity, Specific (µS/cm)",0.99,0
 "Conductivity, Non-Linear Function (µS/cm)","Conductivity, Specific (µS/cm)",1,0
-Phosphate,Dissolved Oxygen (mg/L),0.32,0
-pH (Nutrients),Dissolved Oxygen (mg/L),0.32,0
-Conductivity (µS/cm),Dissolved Oxygen (mg/L),-0.33,0.01
-"Conductivity, Non-Linear Function (µS/cm)",Dissolved Oxygen (mg/L),-0.24,0.03
-"Conductivity, Specific (µS/cm)",Dissolved Oxygen (mg/L),-0.25,0.02
-Nitrate MR,"Dissolved Oxygen, Saturated (%)",-0.44,0
-Nitrate HR,"Dissolved Oxygen, Saturated (%)",-0.28,0
-Silica,"Dissolved Oxygen, Saturated (%)",0.26,0
-pH (Nutrients),"Dissolved Oxygen, Saturated (%)",0.21,0
-Temperature (ºC),"Dissolved Oxygen, Saturated (%)",-0.25,0
-Conductivity (µS/cm),"Dissolved Oxygen, Saturated (%)",-0.21,0
-Dissolved Oxygen (mg/L),"Dissolved Oxygen, Saturated (%)",0.85,0
-Phosphate,"Dissolved Oxygen, Local (%)",0.37,0
-pH (Nutrients),"Dissolved Oxygen, Local (%)",0.27,0.01
-Dissolved Oxygen (mg/L),"Dissolved Oxygen, Local (%)",0.92,0
-"Dissolved Oxygen, Saturated (%)","Dissolved Oxygen, Local (%)",0.83,0
-Phosphate,Oxygen Reduction Potential (mV),-0.46,0
-Nitrate MR,Oxygen Reduction Potential (mV),-0.25,0
-Silica,Oxygen Reduction Potential (mV),-0.75,0
-Iron,Oxygen Reduction Potential (mV),-0.27,0
-pH (Nutrients),Oxygen Reduction Potential (mV),0.67,0
-Temperature (ºF),Oxygen Reduction Potential (mV),-0.58,0
-Temperature (ºC),Oxygen Reduction Potential (mV),-0.41,0
-pH (mV),Oxygen Reduction Potential (mV),0.35,0
-Conductivity (µS/cm),Oxygen Reduction Potential (mV),-0.21,0
-"Conductivity, Non-Linear Function (µS/cm)",Oxygen Reduction Potential (mV),-0.27,0.01
-"Conductivity, Specific (µS/cm)",Oxygen Reduction Potential (mV),-0.27,0.01
-Nitrate MR,Chlorophyll (RFU),0.26,0.03
-pH (Nutrients),Chlorophyll (RFU),0.39,0
-pH (mV),Chlorophyll (RFU),0.4,0
-Salinity (PSU),Chlorophyll (RFU),-0.5,0
-Conductivity (µS/cm),Chlorophyll (RFU),-0.5,0
-"Conductivity, Non-Linear Function (µS/cm)",Chlorophyll (RFU),-0.56,0
-"Conductivity, Specific (µS/cm)",Chlorophyll (RFU),-0.55,0
-Dissolved Oxygen (mg/L),Chlorophyll (RFU),0.34,0
-"Dissolved Oxygen, Local (%)",Chlorophyll (RFU),0.31,0
-Oxygen Reduction Potential (mV),Chlorophyll (RFU),0.32,0
-Nitrate MR,Total Algae (RFU),0.25,0
-Iron,Total Algae (RFU),-0.18,0.05
-pH (Nutrients),Total Algae (RFU),0.22,0.02
-pH (mV),Total Algae (RFU),0.41,0
-"Conductivity, Non-Linear Function (µS/cm)",Total Algae (RFU),-0.5,0
-"Conductivity, Specific (µS/cm)",Total Algae (RFU),-0.49,0
-Dissolved Oxygen (mg/L),Total Algae (RFU),0.32,0.01
-"Dissolved Oxygen, Local (%)",Total Algae (RFU),0.27,0.02
-Chlorophyll (RFU),Total Algae (RFU),0.85,0
-Nitrate MR,Total Dissolved Solids (mg/L),-0.36,0
-Silica,Total Dissolved Solids (mg/L),0.27,0.03
-pH (Nutrients),Total Dissolved Solids (mg/L),-0.38,0
-pH (mV),Total Dissolved Solids (mg/L),-0.41,0
-Salinity (PSU),Total Dissolved Solids (mg/L),0.87,0
-Conductivity (µS/cm),Total Dissolved Solids (mg/L),0.97,0
-"Conductivity, Non-Linear Function (µS/cm)",Total Dissolved Solids (mg/L),0.97,0
-"Conductivity, Specific (µS/cm)",Total Dissolved Solids (mg/L),0.97,0
-Dissolved Oxygen (mg/L),Total Dissolved Solids (mg/L),-0.26,0.02
-Oxygen Reduction Potential (mV),Total Dissolved Solids (mg/L),-0.23,0.04
-Chlorophyll (RFU),Total Dissolved Solids (mg/L),-0.58,0
-Total Algae (RFU),Total Dissolved Solids (mg/L),-0.48,0
-Phosphate,pH (YSI),-0.27,0
-Nitrate MR,pH (YSI),-0.3,0
-Silica,pH (YSI),-0.35,0
-Iron,pH (YSI),-0.16,0.03
-pH (Nutrients),pH (YSI),0.6,0
-Temperature (ºF),pH (YSI),-0.22,0.01
-Temperature (ºC),pH (YSI),-0.18,0
-pH (mV),pH (YSI),-0.26,0.02
-"Dissolved Oxygen, Saturated (%)",pH (YSI),0.31,0
-Oxygen Reduction Potential (mV),pH (YSI),0.64,0
+Salinity (PSU),Dissolved Oxygen (mg/L),-0.2,0.04
+Conductivity (µS/cm),Dissolved Oxygen (mg/L),-0.23,0.01
+"Conductivity, Non-Linear Function (µS/cm)",Dissolved Oxygen (mg/L),-0.26,0
+"Conductivity, Specific (µS/cm)",Dissolved Oxygen (mg/L),-0.26,0
+Phosphate (mg/L),"Dissolved Oxygen, Saturated (%)",-0.2,0
+"Nitrate, Mid-Range (mg/L)","Dissolved Oxygen, Saturated (%)",-0.42,0
+"Nitrate, High-Range (mg/L)","Dissolved Oxygen, Saturated (%)",-0.2,0
+Alkalinity (mg/L CaCO3),"Dissolved Oxygen, Saturated (%)",0.16,0.01
+Iron (mg/L),"Dissolved Oxygen, Saturated (%)",-0.15,0.02
+Temperature (ºF),"Dissolved Oxygen, Saturated (%)",-0.31,0
+Temperature (ºC),"Dissolved Oxygen, Saturated (%)",-0.37,0
+Dissolved Oxygen (mg/L),"Dissolved Oxygen, Saturated (%)",0.95,0
+Phosphate (mg/L),"Dissolved Oxygen, Local (%)",0.17,0.03
+Alkalinity (mg/L CaCO3),"Dissolved Oxygen, Local (%)",0.21,0
+Iron (mg/L),"Dissolved Oxygen, Local (%)",-0.21,0.01
+Temperature (ºF),"Dissolved Oxygen, Local (%)",-0.17,0.02
+Temperature (ºC),"Dissolved Oxygen, Local (%)",-0.22,0
+pH (mV),"Dissolved Oxygen, Local (%)",-0.29,0
+Dissolved Oxygen (mg/L),"Dissolved Oxygen, Local (%)",0.34,0
+"Dissolved Oxygen, Saturated (%)","Dissolved Oxygen, Local (%)",0.5,0
+Phosphate (mg/L),Oxygen Reduction Potential (mV),-0.32,0
+"Nitrate, Mid-Range (mg/L)",Oxygen Reduction Potential (mV),-0.38,0
+"Nitrate, High-Range (mg/L)",Oxygen Reduction Potential (mV),-0.2,0
+Silica (mg/L),Oxygen Reduction Potential (mV),-0.49,0
+Iron (mg/L),Oxygen Reduction Potential (mV),-0.36,0
+Temperature (ºF),Oxygen Reduction Potential (mV),-0.6,0
+Temperature (ºC),Oxygen Reduction Potential (mV),-0.47,0
+Salinity (PSU),Oxygen Reduction Potential (mV),0.15,0.02
+"Dissolved Oxygen, Saturated (%)",Oxygen Reduction Potential (mV),0.21,0
+Iron (mg/L),Chlorophyll (RFU),-0.17,0.05
+pH (mV),Chlorophyll (RFU),0.17,0.03
+"Dissolved Oxygen, Saturated (%)",Chlorophyll (RFU),0.17,0.03
+"Dissolved Oxygen, Local (%)",Chlorophyll (RFU),0.33,0
+Silica (mg/L),Total Algae (RFU),0.24,0.01
+pH (mV),Total Algae (RFU),0.39,0
+"Dissolved Oxygen, Saturated (%)",Total Algae (RFU),-0.22,0.01
+Chlorophyll (RFU),Total Algae (RFU),0.46,0
+Iron (mg/L),Total Dissolved Solids (mg/L),-0.22,0.01
+pH (mV),Total Dissolved Solids (mg/L),-0.34,0
+Salinity (PSU),Total Dissolved Solids (mg/L),0.79,0
+Conductivity (µS/cm),Total Dissolved Solids (mg/L),0.99,0
+"Conductivity, Non-Linear Function (µS/cm)",Total Dissolved Solids (mg/L),0.99,0
+"Conductivity, Specific (µS/cm)",Total Dissolved Solids (mg/L),0.99,0
+Dissolved Oxygen (mg/L),Total Dissolved Solids (mg/L),-0.38,0

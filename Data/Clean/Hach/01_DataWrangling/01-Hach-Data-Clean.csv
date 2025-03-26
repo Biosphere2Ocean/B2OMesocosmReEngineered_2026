@@ -1531,3 +1531,139 @@ Date,Location,Turbidity (RFU),Phosphate (mg/L),"Nitrate, Mid-Range (mg/L)","Nitr
 2024-08-16,Mangroves,16,0.28,1.2,1.37,NA,NA,NA,NA,NA,NA,CS,NA
 2024-08-16,Raceway 1,0,0.01,1.33,1.7,8.09,101,0.19,0.04,NA,NA,CS,NA
 2024-08-16,Raceway 2,0,0,1.33,1.6,8.03,109,0.29,0.132,NA,NA,CS,NA
+2024-09-09,Raceway 1,0,0.06,1.7,2.4,NA,131,NA,NA,0.01,NA,"CS, SS","Calcium: 357 (NOTE: No pH probe, alakalinity is based on color)"
+2024-09-09,Raceway 2,0,0.3,1.8,2.4,NA,95,NA,NA,0.01,NA,"CS, SS","Calcium: 338 (NOTE: No pH probe, alakalinity is based on color)"
+2024-09-13,Ocean,0,0,1.5,2.8,NA,116,1.15,0.018,NA,NA,"CS, SJE","NOTE: No pH probe, alakalinity is based on color"
+2024-09-13,Mangroves,5,0.39,2.3,3.6,NA,NA,NA,NA,NA,NA,"CS, SJE","NOTE: No pH probe, alakalinity is based on color"
+2024-09-13,Raceway 1,0,0.45,1.5,2.4,NA,100,0.23,0.061,NA,NA,"CS, SJE","NOTE: No pH probe, alakalinity is based on color"
+2024-09-13,Raceway 2,0,0.05,1.9,3.2,NA,97,0.12,0.025,NA,NA,"CS, SJE","NOTE: No pH probe, alakalinity is based on color"
+2024-09-16,Raceway 1,0,0.05,1.5,1.7,NA,113,NA,NA,0,NA,"SS, CS",Calcium: 357
+2024-09-16,Raceway 2,0,0.06,1.2,1.6,NA,96,NA,NA,0,NA,"SS, CS",Calcium: 361
+2024-09-20,Ocean,0,0.03,1.53,2.2,NA,127,0.86,0.043,NA,NA,"SJE, CS","NOTE: No pH probe, alakalinity is based on color"
+2024-09-20,Mangroves,18,0.27,1.37,1.77,NA,NA,NA,NA,NA,NA,"SJE, CS","NOTE: No pH probe, alakalinity is based on color"
+2024-09-20,Raceway 1,0,0.01,1.3,2.1,NA,112,0.23,0.054,NA,NA,"SJE, CS","NOTE: No pH probe, alakalinity is based on color"
+2024-09-20,Raceway 2,0,0.03,1.43,1.97,NA,93,0.1,0.01,NA,NA,"SJE, CS","NOTE: No pH probe, alakalinity is based on color"
+2024-09-23,Raceway 1,0,0.09,1.63,2.5,NA,180,NA,NA,0.01,NA,"SS, CS","Calcium: 386 NOTE: No pH probe, alakalinity is based on color"
+2024-09-23,Raceway 2,0,0.04,1.5,2.1,NA,190,NA,NA,0.01,NA,"SS,CS","Calcium: 356 NOTE: No pH probe, alakalinity is based on color"
+2024-09-27,Ocean,0,0.2,1.7,2.4,NA,111,0.73,0.031,NA,NA,"SE,CS","NOTE: No pH prob, alkalinity Based on color"
+2024-09-27,Mangroves,17,0.58,1.5,1.5,NA,NA,NA,NA,NA,NA,"SE, CS","NOTE: No pH prob, alkalinity Based on color"
+2024-09-27,Raceway 1,0,0.04,1.3,2,NA,116,0.17,0.03,NA,NA,"SE,CS","NOTE: No pH prob, alkalinity Based on color"
+2024-09-27,Raceway 2,0,0,1.3,1.8,NA,94,0.17,0.016,NA,NA,"SE,CS","NOTE: No pH prob, alkalinity Based on color"
+2024-09-30,Raceway 1,0,0.17,1.4,2.2,NA,100,NA,NA,0.01,NA,"SS, CS","NOTE: No pH probe, alkalinity Based on color"
+2024-09-30,Raceway 2,0,0.11,1.5,2.2,NA,151,NA,NA,0.01,NA,"SS, CS","NOTE: No pH probe, alkalinity Based on color"
+2024-10-04,Ocean,0,0.12,1.7,2.7,NA,127,0.81,0.06,NA,NA,CS,"NOTE: No pH probe, alkalinity Based on color"
+2024-10-04,Mangroves,14,0.57,1.2,1.1,NA,NA,NA,NA,NA,NA,CS,"NOTE: No pH probe, alkalinity Based on color"
+2024-10-04,Raceway 1,0,0,1.4,2.1,NA,127,0.23,0,NA,NA,CS,"NOTE: No pH probe, alkalinity Based on color"
+2024-10-04,Raceway 2,0,0,1.5,2.1,NA,90,0.2,0.014,NA,NA,CS,"NOTE: No pH probe, alkalinity Based on color"
+2024-10-07,Raceway 1,0,0.09,1.3,2.26,NA,125,NA,NA,0,NA,"CS,SS","NOTE: No Calcium because no more powder packets,  No pH probe, alkalinity Based on color"
+2024-10-07,Raceway 2,0,0.03,1.26,2.1,NA,82,NA,NA,0,NA,"CS,SS","NOTE: No Calcium because no more powder packets,  No pH probe, alkalinity Based on color"
+2024-10-11,Ocean,0,0.02,1.1,1.3,NA,128,0.81,0.046,NA,NA,"CS, SJE","NOTE: No pH probe, alkalinity Based on color"
+2024-10-11,Mangroves,15,0.43,1.9,2.1,NA,NA,NA,NA,NA,NA,"CS, SJE","NOTE: No pH probe, alkalinity Based on color"
+2024-10-11,Raceway 1,0,0.02,1.6,1.8,NA,103,0.18,0.054,NA,NA,"CS, SJE","NOTE: No pH probe, alkalinity Based on color"
+2024-10-11,Raceway 2,0,0.08,1.5,1.7,NA,81,0.19,0.013,NA,NA,"CS, SJE","NOTE: No pH probe, alkalinity Based on color"
+2024-10-14,Raceway 1,0,0.04,1.5,2.1,NA,153,NA,NA,0.06,NA,SS,"NOTE: No Calcium because no more powder packets,  No pH probe, alkalinity Based on color"
+2024-10-14,Raceway 2,1,0.02,1.33,2,NA,96,NA,NA,0.01,NA,SS,"NOTE: No Calcium because no more powder packets,  No pH probe, alkalinity Based on color"
+2024-10-18,Ocean,0,0.21,1,1.63,NA,121,0.82,0.021,NA,NA,SJE,"NOTE: No pH probe, alkalinity based on color"
+2024-10-18,Mangroves,17,0.56,1.8,1.87,NA,NA,NA,NA,NA,NA,SJE,"NOTE: No pH probe, alkalinity based on color"
+2024-10-18,Raceway 1,0,0.04,1.57,2.53,NA,114,0.24,0.022,NA,NA,SJE,"NOTE: No pH probe, alkalinity based on color"
+2024-10-18,Raceway 2,0,0,1.3,1.7,NA,90,1.17,0.118,NA,NA,SJE,"NOTE: No pH probe, alkalinity based on color"
+2024-10-21,Raceway 1,0,0.01,2,2.7,NA,126,NA,NA,0.01,NA,CS,"NOTE: No Calcium because no more powder packets, No pH probe, alkalinity Based on color"
+2024-10-21,Raceway 2,0,0,1.7,2.3,NA,88,NA,NA,0.01,NA,CS,"NOTE: No Calcium because no more powder packets, No pH probe, alkalinity Based on color"
+2024-10-25,Ocean,0,0,1.3,0.8,NA,122,0.9,0.032,NA,NA,"SJE, CS",NOTE: pH probe came too late for accurate readings
+2024-10-25,Mangroves,14,0.42,1.7,1.63,NA,NA,NA,NA,NA,NA,"SJE, CS",NOTE: pH probe came too late for accurate readings
+2024-10-25,Raceway 1,0,0.01,1.4,1.76,NA,113,0.27,0.01,NA,NA,"SJE, CS",NOTE: pH probe came too late for accurate readings
+2024-10-25,Raceway 2,0,0.04,1.2,1.36,NA,83,0.19,0.049,NA,NA,"SJE, CS",NOTE: pH probe came too late for accurate readings
+2024-10-28,Raceway 1,0,0.02,1.3,1.96,NA,178,NA,NA,0,NA,"CS, SS",NOTE: No calcium because no more powder packets
+2024-10-28,Raceway 2,0,0.02,1.53,2.2,NA,125,NA,NA,0,NA,"CS, SS",NOTE: No calcium because no more powder packets
+2024-11-01,Ocean,0,0.01,1.2,1.5,8.19,130,1,0.047,NA,NA,"CS, SJE",NA
+2024-11-01,Mangrove,15,0.33,1.8,1.7,NA,NA,NA,NA,NA,NA,"CS, SJE",NA
+2024-11-01,Raceway 1,0,0.01,1,1,7.99,105,0.23,0.024,NA,NA,"CS, SJE",NA
+2024-11-01,Raceway 2,0,0.05,1,1.5,8.09,110,0.37,0.095,NA,NA,"CS, SJE",NA
+2024-11-04,Raceway 1,0,0.02,1.2,1.53,NA,136,NA,NA,0.01,NA,"CS, SS","Calcium: 357, Note: Alk based on color"
+2024-11-04,Raceway 2,0,0.03,1.2,1.73,NA,142,NA,NA,0.02,NA,"CS, SS","Calcium: 369, Note: Alk based on color"
+2024-11-08,Ocean,0,0.09,0.9,2.2,8.18,133,1.14,0.012,NA,NA,"CS, SJE",NA
+2024-11-08,Mangroves,14,0.35,1,0.7,NA,NA,NA,NA,NA,NA,"CS, SJE",NA
+2024-11-08,Raceway 1,0,0.01,0.9,1.4,8.16,98,0.32,0.076,NA,NA,"CS, SJE",NA
+2024-11-08,Raceway 2,0,0.04,0.9,1.6,8.23,115,0.37,0.04,NA,NA,"CS, SJE",NA
+2024-11-15,Ocean,0,0.05,1.1,1.3,NA,130,1.24,0.032,NA,NA,"SJE, CS","NOTE: No pH probe, alkalinity based on color"
+2024-11-15,Mangroves,14,0.39,1.9,2.5,NA,NA,NA,NA,NA,NA,"SJE, CS","NOTE: No pH probe, alkalinity based on color"
+2024-11-15,Raceway 1,0,0.01,0.9,1.1,NA,87,0.24,0.057,NA,NA,"SJE, CS","NOTE: No pH probe, alkalinity based on color"
+2024-11-15,Raceway 2,0,0.02,1.6,2.2,NA,91,0.52,0.042,NA,NA,"SJE, CS","NOTE: No pH probe, alkalinity based on color"
+2024-11-18,Raceway 1,0,0.04,1.1,1.4,NA,90,NA,NA,0,NA,"SS,CS","Calcium: 360 NOTE: No pH probe, alkalinity based on color"
+2024-11-18,Raceway 2,0,0.43,1.2,1.3,NA,91,NA,NA,0.01,NA,"SS,CS","Calcium: 360 NOTE: No pH probe, alkalinity based on color"
+2024-11-22,Ocean,0,0.09,1.4,2.27,NA,129,1.5,0.015,NA,NA,SJE. CS,NA
+2024-11-22,Mangroves,17,0.28,1.1,1.77,NA,NA,NA,NA,NA,NA,"SJE, CS",NA
+2024-11-22,Raceway 1,0,0,1.2,1.9,NA,88,0.25,0.041,NA,NA,"SJE, CS",NA
+2024-11-22,Raceway 2,0,0.02,1.3,2,NA,86,0.62,0.039,NA,NA,NA,NA
+2024-11-27,Ocean,0,0.1,1.1,1.8,8.13,125,1.46,0.071,NA,NA,"RG, LC",pH probe working normal
+2024-11-27,Mangroves,14,0.43,1.7,2.2,NA,NA,NA,NA,NA,NA,"RG, LC",NA
+2024-11-27,Raceway 1,0,0.04,1.3,2.1,8,83,0.55,0.015,NA,NA,"RG, LC",NA
+2024-11-27,Raceway 2,0,0.02,1.5,2.2,8,82,0.83,0.038,NA,NA,"RG, LC",NA
+2024-12-02,Raceway 1,0,0.07,1.8,4.13,NA,46,NA,NA,0,NA,"CS, SS",NA
+2024-12-02,Raceway 2,0,0.07,1.3,2.2,NA,115,NA,NA,0,NA,"CS, SS",NA
+2024-12-06,Ocean,0,0.06,0.93,1.8,8.07,121,1.67,0.013,NA,NA,"SJE, CS",pH probe working normal
+2024-12-06,Mangroves,14,0.23,1.5,1.6,NA,NA,NA,NA,NA,NA,"SJE, CS",NA
+2024-12-06,Raceway 1,0,0.02,1.1,1.4,8,70,0.55,0.049,NA,NA,"SJE, Cs",NA
+2024-12-06,Raceway 2,0,0.02,1,1.8,8.04,75,1.41,0.013,NA,NA,"SJE, CS",NA
+2024-12-13,Ocean,0,0.06,1.1,1.5,8.03,125,1.72,0.043,NA,NA,"LC, RG",NA
+2024-12-13,Mangroves,14,0.31,1.3,1.3,NA,NA,NA,NA,NA,NA,"LC, RG",NA
+2024-12-13,Raceway 1,0,0.05,1.1,1.8,7.95,83,0.56,0.047,NA,NA,"LC, RG",NA
+2024-12-13,Raceway 2,0,0.02,1.5,2.2,7.98,110,1.72,0.04,NA,NA,"LC, RG",NA
+2024-12-27,Ocean,0,0.05,1,1.6,7.97,122,1.69,0.041,NA,NA,LC,NA
+2024-12-27,Mangroves,10,0.34,1,1.2,NA,NA,NA,NA,NA,NA,LC,NA
+2024-12-27,Raceway 1,0,0,1.3,1.9,8.01,67,0.23,0.086,NA,NA,LC,NA
+2024-12-27,Raceway 2,0,0.03,1.5,2.4,8.05,74,1.34,0.048,NA,NA,LC,NA
+2025-01-10,Ocean,0,0.07,0.9,1.7,7.78,124,1.9,0.025,NA,NA,"RG, LC",NA
+2025-01-10,Mangroves,13,0.36,1.2,1.1,NA,NA,NA,NA,NA,NA,"RG, LC",NA
+2025-01-10,Raceway 1,0,0.01,0.8,1.3,7.89,77,0.25,0.04,NA,NA,"RG, LC",NA
+2025-01-10,Raceway 2,0,0.04,1.3,2.2,8,106,0.42,0.04,NA,NA,"RG, LC",NA
+2025-01-13,Raceway 1,0,0.03,1,1.67,NA,86,NA,NA,0.01,NA,CS,Calcium: 343
+2025-01-13,Raceway 2,0,0.03,1.1,1.7,NA,85,NA,NA,0.01,NA,CS,Calcium: 376
+2025-01-17,Ocean,0,0.07,0.93,1.4,7.88,124,1.96,0.047,NA,NA,"CM, CS,SJE",NA
+2025-01-17,Mangroves,16,0.36,1.1,1.2,NA,NA,NA,NA,NA,NA,"CM, CS, SJE",NA
+2025-01-17,Raceway 1,0,0.04,0.8,1.26,7.86,78,0.14,0.056,NA,NA,"CM, CS, SJE",NA
+2025-01-17,Raceway 2,0,0.04,1.4,1.96,7.76,107,0.36,0.047,NA,NA,"CM, CS, SJE",NA
+2025-01-24,Raceway 1,0,0,1.2,1.7,7.8,86,0.19,0.015,NA,NA,"CM, CS,SJE",NA
+2025-01-24,Raceway 2,0,0.03,1.6,2.5,7.85,108,0.72,0.02,NA,NA,"CM, CS, SJE",NA
+2025-01-24,Ocean,0,0.04,0.9,0.96,7.88,132,1.83,0.01,NA,NA,"CM, CS, SJE",NA
+2025-01-24,Mangroves,14,0.24,1.1,1.36,NA,NA,NA,NA,NA,NA,"CM, CS, SJE",NA
+2025-01-24,Raceway 1,0,0.01,1.1,1.7,NA,66,NA,NA,0.01,NA,CS,Calcium: 342
+2025-01-27,Raceway 2,0,0.02,1.2,1.9,NA,94,NA,NA,0.01,NA,CS,Calcium: 348
+2025-01-27,Ocean,NA,NA,NA,NA,NA,NA,NA,NA,0.01,NA,CS,NA
+2025-01-31,Ocean,0,0.02,0.97,1.43,8.16,123,1.77,0.042,NA,NA,"CM, CS, SJE",NA
+2025-01-31,Mangroves,14,0.21,0.83,1.2,NA,NA,NA,NA,NA,NA,"CM, CS, SJE",NA
+2025-01-31,Raceway 1,0,0.01,1.1,1.77,7.93,79,0.19,0.03,NA,NA,"CM, CS, SJE",NA
+2025-01-31,Raceway 2,0,0.02,1.37,2.07,8.06,100,0.92,0.035,NA,NA,"CM, CS, SJE",NA
+2025-02-03,Raceway 1,0,0,1.4,2.2,NA,67,NA,NA,0,NA,CS,Calcium: 325
+2025-02-03,Raceway 2,9,0.01,1.2,1.4,NA,92,NA,NA,0.03,NA,CS,"Calcium: 269 NOTE: calcium substrate in mix tank --> milkiness in R2, everything turned off"
+2025-02-07,Ocean,0,0.03,1.3,2.1,7.98,138,1.74,0.036,NA,NA,"CS, CM, SJE",NA
+2025-02-07,Mangroves,12,0.21,1.3,1.5,NA,NA,NA,NA,NA,NA,"CS, CM, SJE",NA
+2025-02-07,Raceway 1,0,0.04,1.2,2.2,7.82,74,0.18,0.079,NA,NA,"CS, CM, SJE",NA
+2025-02-07,Raceway 2,0,0.03,1.1,1.8,8.02,77,0.76,0.009,NA,NA,"CS, CM, SJE",NA
+2025-02-10,Raceway 1,0,0,1.2,1.5,NA,126,NA,NA,0,NA,"CS, SS",Calcium: 325
+2025-02-10,Raceway 2,0,0.02,1.1,1.8,NA,157,NA,NA,0.01,NA,"CS, SS",Calcium: 290
+2025-02-14,Ocean,0,0.19,1.6,2.4,8.16,123,1.52,0.034,NA,NA,CM. CS,NA
+2025-02-14,Mangroves,12,0.29,1.4,1.6,NA,NA,NA,NA,NA,NA,CM. CS,NA
+2025-02-14,Raceway 1,0,0,1.26,1.9,7.69,73,0.22,0.004,NA,NA,CM. CS,NA
+2025-02-14,Raceway 2,0,0.03,2.06,3.06,7.67,109,0.55,0.007,NA,NA,CM. CS,NA
+2025-02-17,Raceway 1,0,0.05,1.1,1.7,NA,123,NA,NA,0.01,NA,"CS, SS",Calcium: 317
+2025-02-17,Raceway 2,0,0,1.1,1.7,NA,110,NA,NA,0.01,NA,"CS, SS",Calcium: 358
+2025-02-21,Ocean,0,0.03,1.46,1.93,8.25,126,NA,0.006,NA,NA,"CM, CS, SS,",collected sample at the shore.
+2025-02-21,Mangroves,13,0.36,0.9,0.97,NA,NA,NA,NA,NA,NA,"CM, CS, SS",NA
+2025-02-21,Raceway 1,0,0.01,1.3,1.9,8.01,107,0.66,0.004,NA,NA,"CM, CS, SS",NA
+2025-02-21,Raceway 2,0,0.09,1.46,2.23,8.03,112,1.69,0.02,NA,NA,"CM, CS, SS",NA
+2025-02-24,Raceway 1,0,0.01,1.4,2,NA,135,NA,NA,0.01,NA,"CS, SS",Calcium: 331
+2025-02-24,Raceway 2,0,0,1.3,1.9,NA,121,NA,NA,0.01,NA,"CS, SS",Calcium: 373
+2025-02-28,Ocean,0,0.06,1.1,2,7.94,122,1.67,0,NA,NA,"CS, SJE",NA
+2025-02-28,Mangroves,16,0.22,1.5,1.8,NA,NA,NA,NA,0,NA,"CS, SJE",NA
+2025-02-28,Raceway 1,0,0.02,1.4,2.3,7.89,102,0.22,0.027,NA,NA,"CS, SJE",NA
+2025-02-28,Raceway 2,0,0.01,1.5,2.1,7.91,91,0.62,0.009,NA,NA,"CS, SJE",NA
+2025-03-03,Raceway 1,0,0,1.36,1.9,NA,160,NA,NA,0.01,NA,"CS, SS",Calcium: 372
+2025-03-03,Raceway 2,0,0.06,1.43,1.66,NA,164,NA,NA,0.01,NA,"CS, SS",Calcium: 392
+2025-03-03,Ocean,NA,NA,NA,NA,NA,NA,NA,NA,0,NA,"CS, SS",NA
+2025-03-07,Ocean,0,0,0.96,1.47,7.96,129,1.61,0.002,NA,NA,"CS, SJE",NA
+2025-03-07,Mangroves,11,0.15,1.1,1.5,NA,NA,NA,NA,NA,NA,"CS, SJE",NA
+2025-03-07,Raceway 1,0,0,1.1,2,7.83,91,0.22,0.005,NA,NA,"CS, SJE",NA
+2025-03-07,Raceway 2,0,0,1.3,1.9,7.83,99,0.34,0,NA,NA,"CS, SJE",NA
+2025-03-17,Raceway 1,0,0.07,1.3,2.5,NA,134,NA,NA,0,NA,"CS, SS",Calcium: 328
+2025-03-17,Raceway 2,0,0.03,1.5,2.4,NA,178,NA,NA,0,NA,"CS, SS",Calcium: 401

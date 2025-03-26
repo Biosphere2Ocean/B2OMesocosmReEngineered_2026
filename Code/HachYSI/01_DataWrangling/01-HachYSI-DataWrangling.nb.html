@@ -1772,11 +1772,11 @@ options(scipen = 999)</code></pre>
 <pre class="r"><code># use 02-YSI-Data-QCCutoff.csv
 dfYSI &lt;- read_csv(&quot;Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNTEyODY2IENvbHVtbnM6IDE5XG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5EZWxpbWl0ZXI6IFwiLFwiXG5kYmwgICgxNyk6IFRlbXBlcmF0dXJlICjCukYpLCBUZW1wZXJhdHVyZSAowrpDKSwgcEgsIHBIIChtViksIFNhbGluaXR5IChQU1UpLCBDb25kdWN0aS4uLlxuZGF0ZSAgKDEpOiBEYXRlXG50aW1lICAoMSk6IFRpbWVcblxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
-<pre><code>Rows: 512866 Columns: 19
-── Column specification ────────────────────────────────────────────────────────────────
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMzYxMjE2IENvbHVtbnM6IDE5XG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5EZWxpbWl0ZXI6IFwiLFwiXG5kYmwgICgxNyk6IFRlbXBlcmF0dXJlICjCukYpLCBUZW1wZXJhdHVyZSAowrpDKSwgcEgsIHBIIChtViksIFNhbGluaXR5IChQU1UpLCBDb25kdWN0aXZpdHkgKMK1Uy9jbS4uLlxuZGF0ZSAgKDEpOiBEYXRlXG50aW1lICAoMSk6IFRpbWVcblxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
+<pre><code>Rows: 361216 Columns: 19
+── Column specification ───────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
-dbl  (17): Temperature (ºF), Temperature (ºC), pH, pH (mV), Salinity (PSU), Conducti...
+dbl  (17): Temperature (ºF), Temperature (ºC), pH, pH (mV), Salinity (PSU), Conductivity (µS/cm...
 date  (1): Date
 time  (1): Time
 
@@ -1787,12 +1787,12 @@ time  (1): Time
 <pre class="r"><code># use 02-Hach-Data-Clean-QC.csv
 dfHach &lt;- read_csv(&quot;Data/Clean/Hach/02_QualityControl/02-Hach-Data-Clean-QC.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTUyOSBDb2x1bW5zOiAxMVxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICAoMSk6IExvY2F0aW9uXG5kYmwgICg5KTogVHVyYmlkaXR5IChSRlUpLCBQaG9zcGhhdGUgKG1nL0wpLCBOaXRyYXRlLCBNaWQtUmFuZ2UgKG1nL0wpLCBOaXRyYXRlLCBIaWcuLi5cbmRhdGUgKDEpOiBEYXRlXG5cbuKEuSBVc2UgYHNwZWMoKWAgdG8gcmV0cmlldmUgdGhlIGZ1bGwgY29sdW1uIHNwZWNpZmljYXRpb24gZm9yIHRoaXMgZGF0YS5cbuKEuSBTcGVjaWZ5IHRoZSBjb2x1bW4gdHlwZXMgb3Igc2V0IGBzaG93X2NvbF90eXBlcyA9IEZBTFNFYCB0byBxdWlldCB0aGlzIG1lc3NhZ2UuXG4ifQ== -->
-<pre><code>Rows: 1529 Columns: 11
-── Column specification ────────────────────────────────────────────────────────────────
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTY2NSBDb2x1bW5zOiAxMVxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICAoMSk6IExvY2F0aW9uXG5kYmwgICg5KTogVHVyYmlkaXR5IChSRlUpLCBQaG9zcGhhdGUgKG1nL0wpLCBOaXRyYXRlLCBNaWQtUmFuZ2UgKG1nL0wpLCBOaXRyYXRlLCBIaWdoLVJhbmdlIChtZy4uLlxuZGF0ZSAoMSk6IERhdGVcblxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
+<pre><code>Rows: 1665 Columns: 11
+── Column specification ───────────────────────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
 chr  (1): Location
-dbl  (9): Turbidity (RFU), Phosphate (mg/L), Nitrate, Mid-Range (mg/L), Nitrate, Hig...
+dbl  (9): Turbidity (RFU), Phosphate (mg/L), Nitrate, Mid-Range (mg/L), Nitrate, High-Range (mg...
 date (1): Date
 
 ℹ Use `spec()` to retrieve the full column specification for this data.

@@ -1,0 +1,35 @@
+---
+title: "Hach and YSI Figures for Paper"
+collaborators: Renee Grambihler
+project: OceanWaterQuality
+institution: Biosphere 2 Ocean
+output: html_notebook
+---
+
+```{r import-libraries}
+library(tidyverse)
+library(lubridate)
+library(Hmisc)
+library(corrplot)
+library(ggcorrplot)
+source("Code/Functions/CorrelationFunction.R")
+options(scipen = 999)
+```
+
+```{r import-data}
+# time series data
+dfTS <- read_csv("Data/Clean/HachYSI/01_DataWrangling/05-HachYSI-Data-All.csv")
+
+# correlation data
+## pvalue matrix
+matPval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-Pvalues.csv")
+## rvalue matrix
+matRval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-RValues.csv")
+
+```
+
+```{r env-var-vertical}
+# environmental variability plot 1x3 2011-2024
+
+```
+

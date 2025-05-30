@@ -54,7 +54,7 @@ dfYSI_edit <- dfYSI %>%
   mutate(`Chlorophyll (RFU)` = median(`Chlorophyll (RFU)`, na.rm = TRUE)) %>%
   mutate(`Total Algae (RFU)` = median(`Total Algae (RFU)`, na.rm = TRUE)) %>%
   mutate(`Total Dissolved Solids (mg/L)` = median(`Total Dissolved Solids (mg/L)`, na.rm = TRUE))%>%
-  select(-Time, -Date, -`Chlorophyll (µg/L)`, -`Total Algae (cells/L)`, -pH) %>%
+  select(-Time, -Date, -`Chlorophyll (µg/L)`, -`Total Algae (cells/L)`) %>%
   distinct() %>%
   mutate(Date = paste(year, month, week, sep = "-")) %>%
   ungroup() %>%
@@ -96,7 +96,6 @@ dfHach_edit <- dfHach %>%
 # combine dfHach_edit and dfYSI_edit, with dfHach_edit being first because it has fewer observations
 dfHachYSI <- left_join(dfHach_edit, dfYSI_edit) %>%
   select(-Date) 
-
 ```
 
 ## Create Correlation Matrices

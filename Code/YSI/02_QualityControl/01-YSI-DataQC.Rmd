@@ -14,8 +14,6 @@ output: html_notebook
 ```{r Import Libraries}
 library(tidyverse)
 library(lubridate)
-#library(here)
-# source("./QCFunction.R")
 # turns scientific notation off
 options(scipen = 999)
 ```
@@ -58,8 +56,29 @@ for (i in 1:length(var_names)) {
 ```
 
 ## Quality Control Data
+### Pre-QC Cutoffs
+Implement cutoffs based on the context of our dataset that will account for sensor drift and ageing, espeically with such a large quantity of data:
+- salinity <= 15 psu
+- conductivity <= 25000
+- pH < 5
+```{r pre-qc-cutoffs}
+# implement calibration cutoff values
+df <- df %>%
+  mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 25000, NA, `Conductivity (µS/cm)`)) %>%
+  mutate(pH = ifelse(pH < 5.0, NA, pH)) %>%
+  mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` <= 15, NA, `Salinity (PSU)`)) 
+```
+
+
 ### Check Data Size
+Can't run groups of 5000 or more observations through the QC function, so we need to check the data size. Want resulting dataframe from this chunk to have 0 observations in it. 
 ```{r qc-data-check}
+# re-run dfPivot code to update from changes to df
+dfPivot <- df %>%
+  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
+               names_to = "variable",
+               values_to = "variable_value")
+
 dfCheck <- dfPivot %>%
   # get the date as the month and year by taking off the last 4 digits (have to add an extra in there so it ends up being -4)
   mutate(Date = str_sub(Date, end=-4)) %>%
@@ -97,8 +116,9 @@ for (v in var_names) {
   
   dfVar <- dfVar %>%
     # mutate date column so it's just year and month - this will allow us to do summary statistics by month
-    mutate(Date = paste(year(Date), month(Date), sep = "-"),
-           stat = NA) %>%
+    # mutate(Date = paste(year(Date), week(Date), sep = "-"),
+    #        stat = NA) %>%
+    mutate(stat = NA) %>%
     group_by(Date) %>%
     # make columns for monthly standard deviation, mean, and median absolute deviation (mad) 
     mutate(sd_monthly = sd(as.numeric(var), na.rm = TRUE),
@@ -196,7 +216,7 @@ write_csv(dfQC,
 
 # pivot dfQC to long format from wide so that facet wrapping is easier
 dfQCPivot <- dfQC %>%
-  pivot_longer(cols = `Temperature (ºF)`:`Chlorophyll (RFU)`,
+  pivot_longer(cols = `Temperature (ºF)`:`Total Dissolved Solids (mg/L)`,
                names_to = "variable",
                values_to = "variable_value")%>%
   mutate(Date = as.Date(Date, format = "%Y/%m/%d"))
@@ -216,19 +236,17 @@ for (i in 1:length(var_names)) {
   print(plotList_postqc[[i]])
 }
 
-dfQCPivot %>% 
-  #mutate(datetime = paste(Date, Time)) %>%
-  #mutate(datetime = as.POSIXct(datetime)) %>%
-  filter(Date >= "2020-06-01" & Date <= "2021-01-01") %>%
-  filter(variable == "Salinity (PSU)") %>%
-  ggplot(aes(x = Date,
-               y = variable_value)) +
-    geom_point() +
-  #scale_x_datetime(date_breaks = "12 hours") +
-  scale_x_date(date_breaks = "1 month",
-                 date_labels = "%B")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    ylab("Temperature (ºC)")
+# dfQCPivot %>% 
+#   filter(Date >= "2020-06-01" & Date <= "2021-01-01") %>%
+#   filter(variable == "Salinity (PSU)") %>%
+#   ggplot(aes(x = Date,
+#                y = variable_value)) +
+#     geom_point() +
+#   #scale_x_datetime(date_breaks = "12 hours") +
+#   scale_x_date(date_breaks = "1 month",
+#                  date_labels = "%B")+
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+#     ylab("Temperature (ºC)")
 
 ```
 
@@ -238,20 +256,22 @@ Based on the above plot, the variables pH, salinity_psu, and temp_c still have s
 - pH < 7.5
 - salinity_psu < 21
 - salinity_psu < 31 & date > "2020/01/01"
-- salinity_psu < 24 & date < "2013/01/01"
+- salinity_psu < 25 & date < "2013/01/01"
 - temp_c < 20 or > 28
 ```{r Implement Cutoffs}
 # read in QCOceanWaterQualityData.csv that was created in a previous chunk if it is not already in your environment
-# dfQC <- read_csv("Data/Clean/YSI/02_QualityControl/01-YSI-Data-QC.csv")
+dfQC <- read_csv("Data/Clean/YSI/02_QualityControl/01-YSI-Data-QC.csv")
 
-# implement calibration cutoff values
+# implement post-QC cutoff values
 dfQCCutoff <- dfQC %>%
-  mutate(Date = as.Date(Date, format = "%m/%d/%Y")) %>%
   mutate(`Conductivity (µS/cm)` = ifelse(`Conductivity (µS/cm)` < 10000, NA, `Conductivity (µS/cm)`)) %>%
-  mutate(pH = ifelse(pH < 7.0, NA, pH)) %>%
-  mutate(`Salinity (PSU)` = ifelse(Date >= "2020/01/01" & Date <= "2021-01-01" & `Salinity (PSU)` < 31, NA, `Salinity (PSU)`)) %>%
+  mutate(`Conductivity (µS/cm)` = ifelse(Date >= "2020/01/01" & Date <= "2022-01-01" & `Conductivity (µS/cm)` < 43000, NA, `Conductivity (µS/cm)`)) %>%
+  mutate(pH = ifelse(pH < 7.5, NA, pH)) %>%
+  mutate(`Salinity (PSU)` = ifelse(`Salinity (PSU)` < 21, NA, `Salinity (PSU)`)) %>%
+  mutate(`Salinity (PSU)` = ifelse(Date >= "2020/01/01" & Date <= "2022-01-01" & `Salinity (PSU)` < 31, NA, `Salinity (PSU)`)) %>%
   mutate(`Salinity (PSU)` = ifelse(Date <= "2013/01/01" & Date >= "2012-01-01" & `Salinity (PSU)` < 25, NA, `Salinity (PSU)`)) %>%
-  mutate(`Temperature (ºC)` = ifelse(Date <= "2014-10-31" & `Temperature (ºC)` < 20, NA, `Temperature (ºC)`))
+  mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` < 20, NA, `Temperature (ºC)`))%>%
+  mutate(`Temperature (ºC)` = ifelse(`Temperature (ºC)` > 28, NA, `Temperature (ºC)`))
 
 ```
 
@@ -269,7 +289,7 @@ dfQCCutoffPivot <- dfQCCutoff %>%
 # again, this plots all variables at once and can be hard to see on a small screen. You can change the code to look at one variable at a time by adding a filter line and commenting out the facet_wrap line: see option commented below
 plotList_postqccutoff <- list()
 for (i in 1:length(var_names)) {
-  plotList_postqccutoff[[i]] <- dfQCPivot %>%
+  plotList_postqccutoff[[i]] <- dfQCCutoffPivot %>%
     filter(variable == var_names[i]) %>%
     ggplot(aes(x = Date,
                y = variable_value)) +

@@ -20,14 +20,17 @@ options(scipen = 999)
 # time series data
 dfTS <- read_csv("Data/Clean/HachYSI/01_DataWrangling/05-HachYSI-Data-All.csv") %>%
   select(-pH_Hach) %>% #take out pH data from Hach
-  rename(pH = `pH (YSI)`) %>% #rename pH data from YSI to just pH
+  rename(pH = `pH (YSI)`, 
+         `Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`) %>% #rename pH data from YSI to just pH
   mutate(`Temperature (ºC)` = ifelse(Date >= "2021-01-01" & Date < "2022-01-02" & `Temperature (ºC)` > 25.5, NA, `Temperature (ºC)`))
 
 # correlation data
 ## pvalue matrix
-matPval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-Pvalues.csv") 
+matPval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-Pvalues.csv") %>%
+  rename(`Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`)
 ## rvalue matrix
-matRval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-RValues.csv") 
+matRval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-RValues.csv") %>%
+  rename(`Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`)
 
 ```
 
@@ -80,17 +83,17 @@ ggsave(filename = "HachYSI-1x3HistoryPlot.pdf",
 
 ```{r current}
 # environmental variability plot 
-# 1x3: Temp C, Salinity (PSU), pH; 2018-2024
+# 1x3: Temp C, Salinity (PSU), pH; 2021-2024
 plotCurrent <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Daily") %>%
-  filter(Date >= "2018-01-01") %>%
+  filter(Date >= "2021-01-01") %>%
   # keep just date, temperature celcius, salinity psu, and pH columns
   select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH) %>%
   pivot_longer(cols = `Temperature (ºC)`:pH,
                names_to = "var_name",
                values_to = "var_value") %>%
-  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)","Salinity (PSU)","pH")))) %>%
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)","Salinity (PSU)", "pH")))) %>%
   ggplot(aes(x = Date,
              y = var_value)) +
   facet_wrap(~var_name,
@@ -116,7 +119,7 @@ plotCurrent <- dfTS %>%
 plotCurrent
 
 # Save Plot
-ggsave(filename = "HachYSI-1x3CurrentPlot.pdf", 
+ggsave(filename = "HachYSI-1x3CurrentPlot.pdf",
        plot = plotCurrent,
        path = "Figures/HachYSI/02_Paper",
        width = 6,
@@ -126,29 +129,29 @@ ggsave(filename = "HachYSI-1x3CurrentPlot.pdf",
 
 ```{r nutrients-water-qual-timeseries}
 # nutrients and water quality time series plot 
-# 2x2: Alkalinity, Nitrate MR, Iron, Silica; 2018-2024 
+# 2x2: Alkalinity, Nitrate MR, Iron, Silica; 2020-2024 
 dfNutWatQual_reg <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Daily") %>%
-  filter(Date >= "2018-01-01") %>%
+  filter(Date >= "2021-01-01") %>%
   # keep just date, alkalinity, nitrate mr, iron, and silica columns
-  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate, Mid-Range (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`) %>%
-  pivot_longer(cols = `Temperature (ºC)`:`Iron (mg/L)`,
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
+  pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
                names_to = "var_name",
                values_to = "var_value") %>%
-  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate, Mid-Range (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)"))))
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)"))))
 
 dfNutWatQual_naomit <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Monthly") %>%
-  filter(Date >= "2018-01-01") %>%
+  filter(Date >= "2021-01-01") %>%
   # keep just date, alkalinity, nitrate mr, iron, and silica columns
-  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate, Mid-Range (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`) %>%
-  pivot_longer(cols = `Temperature (ºC)`:`Iron (mg/L)`,
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
+  pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
                names_to = "var_name",
                values_to = "var_value") %>%
   na.omit() %>%
-  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate, Mid-Range (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)"))))
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)"))))
 
 plotNutWatQual_ts <- 
     ggplot(data = dfNutWatQual_reg,
@@ -162,10 +165,11 @@ plotNutWatQual_ts <-
                                         `Salinity (PSU)` = "Salinity (PSU)",
                                         pH = "pH", 
                                         `Alkalinity (mg/L CaCO3)` = "Alkalinity (mg/L CaCO3)",
-                                        `Nitrate, Mid-Range (mg/L)` = "Nitrate, Mid-Range (mg/L)",
+                                        `Nitrate (mg/L)` = "Nitrate (mg/L)",
                                         `Phosphate (mg/L)` = "Phosphate (mg/L)", 
                                         `Silica (mg/L)` = "Silica (mg/L)",
-                                        `Iron (mg/L)` = "Iron (mg/L)"))) +
+                                        `Iron (mg/L)` = "Iron (mg/L)",
+                                        `Dissolved Oxygen (mg/L)` = "Dissolved Oxygen (mg/L)"))) +
     geom_point(color = "lightgray",
                alpha = 0.4) +
     geom_line(data = dfNutWatQual_naomit,
@@ -186,7 +190,7 @@ plotNutWatQual_ts <-
 plotNutWatQual_ts
 
 # Save Plot
-ggsave(filename = "HachYSI-NutWatQualPlot-TimeSeries.pdf", 
+ggsave(filename = "HachYSI-NutWatQualPlot-TimeSeries.pdf",
        plot = plotNutWatQual_ts,
        path = "Figures/HachYSI/02_Paper",
        width = 7,
@@ -198,21 +202,21 @@ ggsave(filename = "HachYSI-NutWatQualPlot-TimeSeries.pdf",
 
 ```{r nutrients-water-qual-climatology}
 # nutrients and water quality time series plot 
-# 1x4: Alkalinity, Nitrate MR, Iron, Silica; 2020-2024 
+# 1x4: Alkalinity, Nitrate MR, Iron, Silica; 2021-2024 
 plotNutWatQual_s <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Monthly") %>%
-  filter(Date >= "2018-01-01") %>%
+  filter(Date >= "2021-01-01") %>%
   # keep just date, alkalinity, nitrate mr, iron, and silica columns
-  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate, Mid-Range (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`) %>%
-  pivot_longer(cols = `Temperature (ºC)`:`Iron (mg/L)`,
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
+  pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
                names_to = "var_name",
                values_to = "var_value") %>%
   mutate(month = month(Date, label = FALSE)) %>%
   group_by(month, var_name) %>%
   reframe(mean = mean(var_value, na.rm = TRUE)) %>%
   mutate(Date = as.Date(paste(2021, month, 01, sep = "-"))) %>%
-  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate, Mid-Range (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)")))) %>%
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)")))) %>%
   ggplot(aes(x = as.Date(yday(Date), "2021-01-01"),
              y = mean)) +
   facet_wrap(~var_name,
@@ -223,10 +227,11 @@ plotNutWatQual_s <- dfTS %>%
                                       `Salinity (PSU)` = "Salinity (PSU)",
                                       pH = "pH", 
                                       `Alkalinity (mg/L CaCO3)` = "Alkalinity (mg/L CaCO3)",
-                                      `Nitrate, Mid-Range (mg/L)` = "Nitrate, Mid-Range (mg/L)",
+                                      `Nitrate (mg/L)` = "Nitrate (mg/L)",
                                       `Phosphate (mg/L)` = "Phosphate (mg/L)", 
                                       `Silica (mg/L)` = "Silica (mg/L)",
-                                      `Iron (mg/L)` = "Iron (mg/L)"))) +
+                                      `Iron (mg/L)` = "Iron (mg/L)",
+                                      `Dissolved Oxygen (mg/L)` = "Dissolved Oxygen (mg/L)"))) +
   geom_line() +
   scale_x_date(date_breaks = "month",
                date_labels = "%B") +
@@ -245,11 +250,11 @@ plotNutWatQual_s <- dfTS %>%
 plotNutWatQual_s
 
 # Save Plot
-ggsave(filename = "HachYSI-NutWatQualPlot-Climatology.pdf", 
+ggsave(filename = "HachYSI-NutWatQualPlot-Climatology.pdf",
        plot = plotNutWatQual_s,
        path = "Figures/HachYSI/02_Paper",
        width = 7,
-       height = 7)
+       height = 10)
 
 
 ```
@@ -257,15 +262,15 @@ ggsave(filename = "HachYSI-NutWatQualPlot-Climatology.pdf",
 
 
 ```{r nutrients-water-qual-correlation}
-# Correlation Matrix, Significant; 2018-2024 
+# Correlation Matrix, Significant; 2021-2024 
 # change row names of dataframes to be the column names
 row_names <- colnames(matPval)
 rownames(matPval) <- row_names
 rownames(matRval) <- row_names
 
-matPval <- matPval[c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate, Mid-Range (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)"), c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate, Mid-Range (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)")]
+matPval <- matPval[c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)"), c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)")]
 
-matRval <- matRval[c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate, Mid-Range (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)"), c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate, Mid-Range (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)")]
+matRval <- matRval[c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)"), c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)")]
 
 row_names <- colnames(matPval)
 rownames(matPval) <- row_names
@@ -287,8 +292,10 @@ corrPlot_signif <- ggcorrplot(matRval,
                               colors = c("#6D9EC1", "white", "#E46726"), 
                               lab = TRUE,
                               insig = "blank")
+corrPlot_signif
+
 # Save Plot
-ggsave(filename = "HachYSI-Correlogram-Significant.pdf", 
+ggsave(filename = "HachYSI-Correlogram-Significant.pdf",
        plot = corrPlot_signif,
        path = "Figures/HachYSI/02_Paper",
        width = 7, height = 7)

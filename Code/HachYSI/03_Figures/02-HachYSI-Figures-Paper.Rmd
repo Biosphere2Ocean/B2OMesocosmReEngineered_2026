@@ -133,7 +133,8 @@ ggsave(filename = "HachYSI-1x3CurrentPlot.pdf",
 dfNutWatQual_reg <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Daily") %>%
-  filter(Date >= "2021-01-01") %>%
+  filter(Date >= "2021-01-01")%>%
+  filter(`Dissolved Oxygen (mg/L)` < 7.0) %>%
   # keep just date, alkalinity, nitrate mr, iron, and silica columns
   select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
   pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
@@ -145,6 +146,7 @@ dfNutWatQual_naomit <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Monthly") %>%
   filter(Date >= "2021-01-01") %>%
+  filter(`Dissolved Oxygen (mg/L)` < 7.0) %>%
   # keep just date, alkalinity, nitrate mr, iron, and silica columns
   select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
   pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
@@ -194,7 +196,7 @@ ggsave(filename = "HachYSI-NutWatQualPlot-TimeSeries.pdf",
        plot = plotNutWatQual_ts,
        path = "Figures/HachYSI/02_Paper",
        width = 7,
-       height = 7)
+       height = 8)
 
 
 ```
@@ -207,6 +209,7 @@ plotNutWatQual_s <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Monthly") %>%
   filter(Date >= "2021-01-01") %>%
+  filter(`Dissolved Oxygen (mg/L)` < 7.0) %>%
   # keep just date, alkalinity, nitrate mr, iron, and silica columns
   select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
   pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,

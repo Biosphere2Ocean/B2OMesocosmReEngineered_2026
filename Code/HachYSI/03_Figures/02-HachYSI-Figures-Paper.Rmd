@@ -9,31 +9,32 @@ output: html_notebook
 ```{r import-libraries}
 library(tidyverse)
 library(lubridate)
-library(Hmisc)
+#library(Hmisc)
 library(corrplot)
-library(ggcorrplot)
+# library(ggcorrplot)
 source("Code/Functions/CorrelationFunction.R")
-options(scipen = 999)
+options(scipen = 999) 
 ```
 
 ```{r import-data}
 # time series data
 dfTS <- read_csv("Data/Clean/HachYSI/01_DataWrangling/05-HachYSI-Data-All.csv") %>%
   select(-pH_Hach) %>% #take out pH data from Hach
-  rename(pH = `pH (YSI)`, 
-         `Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`) %>% #rename pH data from YSI to just pH
+  rename(pH = `pH (YSI)`, #rename pH data from YSI to just pH
+         `Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`) %>% # rename Nitrate MR to just Nitrate
   mutate(`Temperature (ºC)` = ifelse(Date >= "2021-01-01" & Date < "2022-01-02" & `Temperature (ºC)` > 25.5, NA, `Temperature (ºC)`))
 
 # correlation data
 ## pvalue matrix
-matPval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-Pvalues.csv") %>%
-  rename(`Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`)
-## rvalue matrix
-matRval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-RValues.csv") %>%
-  rename(`Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`)
+# matPval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-Pvalues.csv") %>%
+#   rename(`Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`)
+# ## rvalue matrix
+# matRval <- read_csv("Data/Clean/HachYSI/02_Correlations/HachYSI-CorrelationMatrix-RValues.csv") %>%
+#   rename(`Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`)
 
 ```
 
+# B2O History 2011-2024
 ```{r history}
 # history plot 
 # 1x3: Temp C, Salinity (PSU), pH; 2011-2024
@@ -59,6 +60,7 @@ plotHistory <- dfTS %>%
   scale_x_date(date_breaks = "year",
                date_labels = "%Y") +
   ylab(NULL) +
+  xlab(NULL) +
   theme_bw() + 
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -71,16 +73,14 @@ plotHistory <- dfTS %>%
 plotHistory
 
 # Save Plot
-ggsave(filename = "HachYSI-1x3HistoryPlot.pdf", 
+ggsave(filename = "HachYSI-1x3HistoryPlot.png",
        plot = plotHistory,
-       path = "Figures/HachYSI/02_Paper",
-       width = 6,
-       height = 4)
+       path = "Figures/HachYSI/02_Paper")
 
 
 ```
 
-
+# Environmental Variability 2021-2024
 ```{r current}
 # environmental variability plot 
 # 1x3: Temp C, Salinity (PSU), pH; 2021-2024
@@ -119,17 +119,18 @@ plotCurrent <- dfTS %>%
 plotCurrent
 
 # Save Plot
-ggsave(filename = "HachYSI-1x3CurrentPlot.pdf",
-       plot = plotCurrent,
-       path = "Figures/HachYSI/02_Paper",
-       width = 6,
-       height = 4)
+# ggsave(filename = "HachYSI-1x3CurrentPlot.png",
+#        plot = plotCurrent,
+#        path = "Figures/HachYSI/02_Paper",
+#        width = 6,
+#        height = 4)
 
 ```
 
+# Nutrients and Water Quailty Time Series 2020-2024
 ```{r nutrients-water-qual-timeseries}
 # nutrients and water quality time series plot 
-# 2x2: Alkalinity, Nitrate MR, Iron, Silica; 2020-2024 
+# Temp, Salinity, pH, Alaklinity Nitrate, Phosphate, Silica, Iron, DO; 2021-2024 
 dfNutWatQual_reg <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Daily") %>%
@@ -180,6 +181,7 @@ plotNutWatQual_ts <-
     scale_x_date(date_breaks = "year",
                  date_labels = "%Y") +
     ylab(NULL) +
+    xlab(NULL) +
     theme_bw() + 
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
@@ -192,32 +194,36 @@ plotNutWatQual_ts <-
 plotNutWatQual_ts
 
 # Save Plot
-ggsave(filename = "HachYSI-NutWatQualPlot-TimeSeries.pdf",
-       plot = plotNutWatQual_ts,
-       path = "Figures/HachYSI/02_Paper",
-       width = 7,
-       height = 8)
+# ggsave(filename = "HachYSI-NutWatQualPlot-TimeSeries.png",
+#        plot = plotNutWatQual_ts,
+#        path = "Figures/HachYSI/02_Paper",
+#        height = 8)
 
 
 ```
 
-
+# Seasonal Variation 2021-2024
 ```{r nutrients-water-qual-climatology}
 # nutrients and water quality time series plot 
-# 1x4: Alkalinity, Nitrate MR, Iron, Silica; 2021-2024 
+# Temp, Salinity, pH, Alaklinity Nitrate, Phosphate, Silica, Iron, DO; 2021-2024 
 plotNutWatQual_s <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Monthly") %>%
   filter(Date >= "2021-01-01") %>%
   filter(`Dissolved Oxygen (mg/L)` < 7.0) %>%
-  # keep just date, alkalinity, nitrate mr, iron, and silica columns
+  # keep just columns that will be plotted
   select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
+  # pivot dataframe longer bc ggplot likes that better
   pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
                names_to = "var_name",
                values_to = "var_value") %>%
+  # add month number (jan = 1, feb = 2, etc)
   mutate(month = month(Date, label = FALSE)) %>%
   group_by(month, var_name) %>%
-  reframe(mean = mean(var_value, na.rm = TRUE)) %>%
+  # use reframe instead of summarise bc it'll return more cols and rows 
+  reframe(min = min(var_value, na.rm = TRUE),
+          max = max(var_value, na.rm = TRUE),
+          mean = mean(var_value, na.rm = TRUE)) %>%
   mutate(Date = as.Date(paste(2021, month, 01, sep = "-"))) %>%
   mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)")))) %>%
   ggplot(aes(x = as.Date(yday(Date), "2021-01-01"),
@@ -236,10 +242,14 @@ plotNutWatQual_s <- dfTS %>%
                                       `Iron (mg/L)` = "Iron (mg/L)",
                                       `Dissolved Oxygen (mg/L)` = "Dissolved Oxygen (mg/L)"))) +
   geom_line() +
+  geom_ribbon(aes(ymin = min,
+                  ymax = max), 
+              color = "lightgray",
+              alpha = 0.3) +
   scale_x_date(date_breaks = "month",
                date_labels = "%B") +
   ylab(NULL) +
-  xlab("Month") +
+  xlab(NULL) +
   theme_bw() + 
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -253,11 +263,10 @@ plotNutWatQual_s <- dfTS %>%
 plotNutWatQual_s
 
 # Save Plot
-ggsave(filename = "HachYSI-NutWatQualPlot-Climatology.pdf",
-       plot = plotNutWatQual_s,
-       path = "Figures/HachYSI/02_Paper",
-       width = 7,
-       height = 10)
+# ggsave(filename = "HachYSI-NutWatQualPlot-Climatology.png",
+#        plot = plotNutWatQual_s,
+#        path = "Figures/HachYSI/02_Paper",
+#        height = 8)
 
 
 ```

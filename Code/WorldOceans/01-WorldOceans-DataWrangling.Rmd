@@ -24,7 +24,9 @@ dfCoords <- read_csv("Data/Clean/WorldOceans/RegionsCoordinates.csv")
 # do some basic editing: date format, add in iron value that doesn't wanna import
 dfWOD_edit <- dfWOD %>%
   mutate(Date = as.Date(Date, format = "%m/%d/%y")) %>%
-  mutate(`Iron (mg/L)` = ifelse(`Silicate (µmol/kg)` == "0.21", "0.024", `Iron (mg/L)`))
+  mutate(`Iron (mg/L)` = ifelse(`Silicate (µmol/kg)` == "0.21", "0.024", `Iron (mg/L)`)) %>%
+  # not sure where Indian Ocean data is from so taking it out
+  filter(Ocean != "Indian")
 
 # make dataframe of just Diane Marshall Islands data because it's in a different format than rest of data
 dfMarshalls <- dfWOD_edit %>%
@@ -35,20 +37,42 @@ colnames(dfMarshalls) <- c("Date", "Ocean", "Region", "Location", "Depth (m)", "
                            "pH", "Chlorophyll (µg/L)", "Alkalinity (mg/L)", 
                            "Dissolved Organic Carbon (µmol/kg)", "Iron (mg/L)")
 
+
+# not sure why, but 01-Clean-WorldOceanData.csv has alkalinity as µEq/L even though only the raw data file from the Atlantic uses µEq/L. The other 2 (both in Pacific) both use µmol/kg. Just going to change both to mg/L now instead of with the rest of the nutrients later 
+
+# atlantic ocean: uEq/L -> mg/L: uEq/L / 0.01998 / 1000 mEq/L = mg/L 
+# not sure how exactly we get mg from mEq, but the 0.01998 is some conversion factor from USGS [Atkinson 1999]
+dfWOD_atlantic <- dfWOD_edit %>%
+  filter(Ocean == "Atlantic") %>%
+  mutate(`Alkalinity (mg/L)` = `Alkalinity (µEq/L)` / 0.01998 / 1000, 
+         .after = `Chlorophyll (µg/L)`) %>%
+  select(-`Alkalinity (µEq/L)`)
+
+# pacific ocean: µmol/kg -> mg/L: umol/L * density seawater (kg/L) * molecular mass CaCO3 (g/mol) / 1000000 umol/mol * 1000 mg/g
+# = umol/L * 1.025 kg/L * 100.09 g/mol / 1000000 umol/mol * 1000 mg/g
+dfWod_pacific <- dfWOD_edit %>%
+  filter(Ocean == "Pacific") %>%
+  # take out marshall islands since they are in dfMarshalls and in mg/L already 
+  filter(Date != "2024-08-29") %>%
+  mutate(`Alkalinity (mg/L)` = `Alkalinity (µEq/L)` * 1.025 * 100.09 / 1000000 * 1000, 
+         .after = `Chlorophyll (µg/L)`) %>%
+  select(-`Alkalinity (µEq/L)`)
+
 # convert data to units that will match B2 data
-dfWOD_edit <- dfWOD_edit %>%
+dfWOD_correct <- rbind(dfWod_pacific, dfWOD_atlantic) %>%
   # make sure Marshall's data isn't in there
   filter(Date < "2024-08-29") %>%
   # convert from µmol/kg of each compound into mg/L using average density of seawater at sealevel (1.025 kg/L) and the molecular weight of each compound (ex: phosphate = [PO4]3- = 94.973 g/mol)
+  # for alkalinity, convert uEq/L to mg/L using conversion factor 0.01998 (USGS): 
+  #100 mg/L is 1000 umol/kg whis is 2 meq/L
   mutate(`Phosphate (mg/L)` = `Phosphate (µmol/kg)` * 1.025 * 94.973 / 1000000000,
          `Silicate (mg/L)` = `Silicate (µmol/kg)` * 1.025 * 76.08 / 1000000000,
          `Nitrate (mg/L)` = `Nitrate (µmol/kg)` * 1.025 * 62.0049 / 1000000000) %>%
   select(-`Phosphate (µmol/kg)`, -`Silicate (µmol/kg)`, -`Nitrate (µmol/kg)`) %>%
-  rename(`Alkalinity (mg/L)` = `Alkalinity (µEq/L)`) %>%
   relocate(contains(c("Phosphate (mg/L)", "Silicate (mg/L)", "Nitrate (mg/L)")), .after = `Salinity (PSU)`)
 
 # combine dataframes
-dfWOD_combo <- rbind(dfWOD_edit, dfMarshalls)
+dfWOD_combo <- rbind(dfWOD_correct, dfMarshalls)
 
 ```
 

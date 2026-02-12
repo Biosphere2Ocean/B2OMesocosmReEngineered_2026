@@ -206,7 +206,7 @@ plotNutWatQual_ts
 ```{r nutrients-water-qual-climatology}
 # nutrients and water quality time series plot 
 # Temp, Salinity, pH, Alaklinity Nitrate, Phosphate, Silica, Iron, DO; 2021-2024 
-plotNutWatQual_s <- dfTS %>%
+dfNutWatQual_s <- dfTS %>%
   # use Daily time interval
   filter(`Time Interval` == "Monthly") %>%
   filter(Date >= "2021-01-01") %>%
@@ -223,9 +223,14 @@ plotNutWatQual_s <- dfTS %>%
   # use reframe instead of summarise bc it'll return more cols and rows 
   reframe(min = min(var_value, na.rm = TRUE),
           max = max(var_value, na.rm = TRUE),
-          mean = mean(var_value, na.rm = TRUE)) %>%
+          mean = mean(var_value, na.rm = TRUE),
+          q1 = quantile(var_value, 0.25, na.rm = TRUE),
+          q2 = quantile(var_value, 0.75, na.rm = TRUE)) %>%
   mutate(Date = as.Date(paste(2021, month, 01, sep = "-"))) %>%
-  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)")))) %>%
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)")))) 
+
+# plot 
+plotNutWatQual_s <- dfNutWatQual_s %>%
   ggplot(aes(x = as.Date(yday(Date), "2021-01-01"),
              y = mean)) +
   facet_wrap(~var_name,
@@ -242,12 +247,13 @@ plotNutWatQual_s <- dfTS %>%
                                       `Iron (mg/L)` = "Iron (mg/L)",
                                       `Dissolved Oxygen (mg/L)` = "Dissolved Oxygen (mg/L)"))) +
   geom_line() +
-  geom_ribbon(aes(ymin = min,
-                  ymax = max), 
+  geom_ribbon(aes(ymin = q1,
+                  ymax = q2), 
               color = "lightgray",
               alpha = 0.3) +
   scale_x_date(date_breaks = "month",
                date_labels = "%B") +
+  scale_y_continuous(breaks = waiver(), n.breaks = 6) +
   ylab(NULL) +
   xlab(NULL) +
   theme_bw() + 
@@ -263,10 +269,10 @@ plotNutWatQual_s <- dfTS %>%
 plotNutWatQual_s
 
 # Save Plot
-# ggsave(filename = "HachYSI-NutWatQualPlot-Climatology.png",
-#        plot = plotNutWatQual_s,
-#        path = "Figures/HachYSI/02_Paper",
-#        height = 8)
+ggsave(filename = "HachYSI-NutWatQualPlot-Climatology.png",
+       plot = plotNutWatQual_s,
+       path = "Figures/HachYSI/02_Paper",
+       height = 8)
 
 
 ```

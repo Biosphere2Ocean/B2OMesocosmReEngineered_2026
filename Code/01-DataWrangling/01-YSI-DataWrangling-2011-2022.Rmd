@@ -29,7 +29,7 @@ This combines some but not all files from SCADA_2011_2021 folder which originall
 
 ```{r SCADA-files-from-2011-2021-path}
 # file path to folder containing old scada database 2011-2021 ocean water quality files
-path <- "Data/Raw/YSI/SCADA/SCADA_2011_2021"
+path <- "InputData/Raw/YSI/SCADA/SCADA_2011_2021"
 ```
 
 ### 7/22/11 - 8/4/14
@@ -45,7 +45,6 @@ ocean_data_2011_2014 <- read_csv(here(path, "Ocean_FTP_Data - pre 2014-8-11.csv"
                                                "Salinity (PSU)",
                                                "Conductivity (mS/cm)",
                                                "Oxygen Reduction Potential (mV)")) %>%
-<<<<<<< HEAD
   # add a column called `Total Algae (RFU)` after last column and fill it with NA values
   add_column(`Total Algae (RFU)` = NA,
              .after = 7)%>%

@@ -3,7 +3,7 @@ This repository contains data and code for the associated manuscript "The Biosph
 
 #### Contact Information
 Principal Investigator: **Diane Thompson**  
-ORCID:  
+ORCID: 0000-0002-6181-1259  
 Institution: University of Arizona  
 Email: thompsod@arizona.edu  
 
@@ -43,6 +43,7 @@ The data used in this analysis were recorded by multiple instruments between 201
 
 
 # Data and File Overview
+
 
 
 # Data Specific Information

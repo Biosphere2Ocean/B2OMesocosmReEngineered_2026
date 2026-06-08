@@ -1,0 +1,10 @@
+Ocean,Region,Temperature (ºC),pH,Salinity (PSU),Alkalinity (mg/L),Phosphate (mg/L),Silicate (mg/L),Nitrate (mg/L),Iron (mg/L)
+Atlantic,Florida,26.9612,8.0348,36.0974,119.2822,NA,NA,NA,NA
+Atlantic,Florida Keys,30.1,7.9957,36.3563,119.2897,NA,NA,NA,NA
+Atlantic,Northwest Gulf of Mexico,29.4,8.0066,36.6192,120.5896,NA,NA,NA,NA
+Atlantic,Southern Carribean,24.9275,8.0879,37.3583,125.3564,0,0,0,NA
+Atlantic,U.S. Virgin Islands,29.31,7.9873,34.3354,112.7829,NA,NA,NA,NA
+Biosphere 2,Arizona,25.0605,8.13,32.9,125.75,0.0912,1.3213,1.1412,0.0095
+Pacific,Main Hawaiian Islands,26.4215,8.0233,34.615,233.1306,NA,NA,NA,NA
+Pacific,Marshall Islands,30.95,8.5317,NA,1057.6667,0.045,0.345,1.55,0.024
+Pacific,North Philippine Sea,27.882,8.0897,34.5916,238.9989,0,0,0,NA

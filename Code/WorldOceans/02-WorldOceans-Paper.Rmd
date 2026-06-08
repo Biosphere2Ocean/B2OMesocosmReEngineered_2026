@@ -1,0 +1,85 @@
+---
+title: "02-WorldOceans-Paper"
+output: html_document
+---
+
+```{r import-libraries}
+library(tidyverse)
+library(lubridate)
+options(scipen = 999)
+```
+
+```{r import-data}
+# world ocean data
+dfWOD <- read_csv("Data/Clean/WorldOceans/02-Clean-WorldOceanData-Final.csv") %>%
+  select(-Latitude, -Longitude) %>%
+  # add singular Iron datapoint that refuses to load even though it's on the csv :(
+  mutate(`Iron (mg/L)` = ifelse(`Silicate (mg/L)` == "0.21", "0.024", `Iron (mg/L)`))%>%
+  # filter out data before B2 data exists
+  filter(Date >= "2011-01-01")
+
+# b2o data 
+dfB2O <- read_csv("Data/Clean/HachYSI/01_DataWrangling/05-HachYSI-Data-All.csv")
+
+```
+
+
+```{r make-table}
+
+dfB2O_map <- dfB2O %>%
+  filter(`Time Interval` == "Yearly") %>%
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, `Phosphate (mg/L)`,
+         `Silica (mg/L)`, `Nitrate, Mid-Range (mg/L)`, `pH (YSI)`, `Alkalinity (mg/L CaCO3)`,
+         `Iron (mg/L)`) %>%
+  rename(`Silicate (mg/L)` = `Silica (mg/L)`,
+         `Alkalinity (mg/L)` = `Alkalinity (mg/L CaCO3)`,
+         `Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`,
+         pH = `pH (YSI)`) %>%
+  add_column(Ocean = "Biosphere 2", .after = "Date") %>%
+  add_column(Region = "Arizona", .after = "Ocean") %>%
+  add_column(Location = "Biosphere 2", .after = "Region") %>%
+  mutate(Year = year(Date)) %>%
+  relocate(Year, .after = Date) %>%
+  select(-Date)
+
+
+dfWOD_map <- dfWOD %>%
+  select(-`Chlorophyll (µg/L)`, -`Dissolved Organic Carbon (µmol/kg)`, -`Depth (m)`) %>%
+  mutate(Year = year(Date)) %>%
+  select(-Date) %>%
+  group_by(Year, Location) %>%
+  mutate(`Temperature (ºC)` = median(`Temperature (ºC)`, na.rm = TRUE),
+         `Salinity (PSU)` = median(`Salinity (PSU)`, na.rm = TRUE),
+         `Phosphate (mg/L)` = median(`Phosphate (mg/L)`, na.rm = TRUE),
+         `Silicate (mg/L)` = median(`Silicate (mg/L)`, na.rm = TRUE),
+         `Nitrate (mg/L)` = median(`Nitrate (mg/L)`, na.rm = TRUE),
+         `pH` = median(`pH`, na.rm = TRUE),
+         `Alkalinity (mg/L)` = median(`Alkalinity (mg/L)`, na.rm = TRUE),
+         `Iron (mg/L)` = median(`Iron (mg/L)`, na.rm = TRUE)) %>%
+  relocate(Year, .before = Ocean) %>%
+  unique() %>%
+  mutate(`Iron (mg/L)` = as.double(`Iron (mg/L)`))
+
+
+dfMap_all <- rbind(dfWOD_map, dfB2O_map) %>%
+  group_by(Year, Ocean, Region) %>%
+  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE))) %>%
+  mutate(across(where(is.numeric),  ~round(.x, digits = 4))) %>%
+  relocate(pH, .after = `Temperature (ºC)`) %>%
+  relocate(`Alkalinity (mg/L)`, .after = `Salinity (PSU)`)
+
+dfMap_less <- rbind(dfWOD_map, dfB2O_map) %>%
+  ungroup() %>%
+  filter(Year >= 2021) %>%
+  select(-Year) %>%
+  group_by(Ocean, Region) %>%
+  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE))) %>%
+  mutate(across(where(is.numeric),  ~round(.x, digits = 4))) %>%
+  relocate(pH, .after = `Temperature (ºC)`) %>%
+  relocate(`Alkalinity (mg/L)`, .after = `Salinity (PSU)`)
+
+write_csv(dfMap_all, "Data/Clean/WorldOceans/03-Clean-WorldOceanData-Paper-All.csv")
+write_csv(dfMap_less, "Data/Clean/WorldOceans/04-Clean-WorldOceanData-Paper-Mean.csv")
+
+```
+

@@ -1,0 +1,57 @@
+Year,Ocean,Region,Temperature (ºC),pH,Salinity (PSU),Alkalinity (mg/L),Phosphate (mg/L),Silicate (mg/L),Nitrate (mg/L),Iron (mg/L)
+2011,Biosphere 2,Arizona,25.9,8.5,28.8,NA,NA,NA,NA,NA
+2011,Pacific,Guam and Marianas Islands,27.913,8.066,34.6863,233.1819,NA,NA,NA,NA
+2011,Pacific,North Philippine Sea,28.637,8.1296,34.3094,237.419,0,0,0,NA
+2011,Pacific,Pacific Remote Islands Area,26.392,8.0814,35.2185,237.2035,NA,NA,NA,NA
+2012,Biosphere 2,Arizona,25.7,8.7,26.3,NA,NA,NA,NA,NA
+2012,Pacific,American Samoa,29.3413,8.0643,35.4058,238.3659,NA,NA,NA,NA
+2012,Pacific,Pacific Remote Islands Area,26.9273,8.0106,35.1198,235.851,NA,NA,NA,NA
+2013,Biosphere 2,Arizona,23.9,8.8,25.2,NA,NA,NA,NA,NA
+2013,Pacific,Hawaiian Archipelago,26.8353,8.0247,35.3053,236.609,NA,NA,NA,NA
+2014,Biosphere 2,Arizona,24.8,8.6,24.1,NA,NA,NA,NA,NA
+2014,Pacific,Guam and Marianas Islands,27.6751,8.0569,34.7562,233.6902,NA,NA,NA,NA
+2014,Pacific,Pacific Remote Islands Area,25.9519,8.0802,35.3172,237.6242,NA,NA,NA,NA
+2015,Atlantic,Florida Keys,24.9,7.961,32.1,115.0701,NA,NA,NA,NA
+2015,Biosphere 2,Arizona,22.7,8.3,24.3,NA,NA,NA,NA,NA
+2015,Pacific,American Samoa,30.0015,8.0426,34.5884,232.867,NA,NA,NA,NA
+2015,Pacific,French Polynesia,29.258,8.1222,35.8356,248.3143,0,0,0,NA
+2015,Pacific,Hawaiian Archipelago,27.632,7.9836,35.3973,235.1812,NA,NA,NA,NA
+2015,Pacific,Pacific Remote Islands Area,28.2752,8.0082,35.0533,235.7484,NA,NA,NA,NA
+2016,Atlantic,Florida Keys,26.7585,8.034,36.0285,119.2167,NA,NA,NA,NA
+2016,Atlantic,Puerto Rico,29.4,8.025,36.0458,117.4775,NA,NA,NA,NA
+2016,Atlantic,U.S. Virgin Islands,29.3,8,35.7014,116.7367,NA,NA,NA,NA
+2016,Biosphere 2,Arizona,23.7,8.1,24.7,NA,NA,NA,NA,NA
+2016,Pacific,Hawaiian Archipelago,27.0436,8.026,34.9296,234.8414,NA,NA,NA,NA
+2016,Pacific,Pacific Remote Islands Area,27.8775,7.9826,35.2628,237.8601,NA,NA,NA,NA
+2017,Atlantic,Florida Keys,28.185,8.0285,36.4134,119.3036,NA,NA,NA,NA
+2017,Atlantic,U.S. Virgin Islands,29.05,8.0167,35.271,115.5213,NA,NA,NA,NA
+2017,Biosphere 2,Arizona,22.22,8.2,27.5,NA,0.05,NA,0.9,NA
+2017,Pacific,Guam and Marianas Islands,29.3199,8.0379,34.5063,232.5469,NA,NA,NA,NA
+2017,Pacific,Pacific Remote Islands Area,27.4663,7.991,35.0533,236.0545,NA,NA,NA,NA
+2018,Atlantic,Florida Keys,28.755,8.0236,36.4067,119.3642,NA,NA,NA,NA
+2018,Atlantic,Northwest Gulf of Mexico,29.2,8.0189,35.6267,120.9882,NA,NA,NA,NA
+2018,Atlantic,Southeast Florida Coral Reef Initiative,28.3,8.0324,35.8738,119.5088,NA,NA,NA,NA
+2018,Biosphere 2,Arizona,24.3,8.7,31.415,132,0.09,0.31,1,0.004
+2018,Pacific,American Samoa,28.3575,8.0685,35.1955,237.3933,NA,NA,NA,NA
+2018,Pacific,Pacific Remote Islands Area,28.7192,8.0047,34.8061,234.7516,NA,NA,NA,NA
+2019,Atlantic,Florida Keys,27.4,8.0337,36.4535,119.4466,NA,NA,NA,NA
+2019,Atlantic,Flower Garden Banks,27.75,7.9973,34.0071,118.2362,NA,NA,NA,NA
+2019,Atlantic,Northwest Gulf of Mexico,27.75,7.9973,34.0071,118.2362,NA,NA,NA,NA
+2019,Atlantic,U.S. Virgin Islands,28.5,8.0132,35.7336,117.7572,NA,NA,NA,NA
+2019,Biosphere 2,Arizona,22.895,8.2875,33.875,125.2,0.03,0.45,0.7,0.003
+2019,Pacific,Hawaiian Archipelago,27.536,8.0203,34.8246,234.0292,NA,NA,NA,NA
+2020,Atlantic,Florida,28.9,8.0632,35.6622,119.0644,NA,NA,NA,NA
+2020,Biosphere 2,Arizona,24.895,8.4375,34.26,128,0.04,0.55,0.75,0
+2021,Atlantic,Florida,23.8,8.0502,36.0487,119.0049,NA,NA,NA,NA
+2021,Atlantic,Southern Carribean,24.9275,8.0879,37.3583,125.3564,0,0,0,NA
+2021,Biosphere 2,Arizona,25.0029,8.1473,33.2219,128,0.11,1.58,1.2,0.002
+2021,Pacific,Main Hawaiian Islands,26.4215,8.0233,34.615,233.1306,NA,NA,NA,NA
+2022,Atlantic,Florida,27.5934,8.0317,36.1071,119.3376,NA,NA,NA,NA
+2022,Atlantic,Florida Keys,30.1,7.9957,36.3563,119.2897,NA,NA,NA,NA
+2022,Atlantic,Northwest Gulf of Mexico,29.4,8.0066,36.6192,120.5896,NA,NA,NA,NA
+2022,Atlantic,U.S. Virgin Islands,29.31,7.9873,34.3354,112.7829,NA,NA,NA,NA
+2022,Biosphere 2,Arizona,25.0465,8.1307,33.2022,122,0.105,1.61,1,0.008
+2022,Pacific,North Philippine Sea,27.882,8.0897,34.5916,238.9989,0,0,0,NA
+2023,Biosphere 2,Arizona,25.0777,8.1545,33.08,130,0.09,1.195,1.2,0.012
+2024,Biosphere 2,Arizona,25.1151,8.0875,32.0959,123,0.06,0.9,1.165,0.016
+2024,Pacific,Marshall Islands,30.95,8.5317,NA,1057.6667,0.045,0.345,1.55,0.024

@@ -3,7 +3,10 @@ title: "Ocean Data Wrangling: 2011-2022"
 Collaborators: Renee Grambihler
 Project: OceanWaterQuality
 Institution: Biosphere 2 Ocean
-output: html_notebook
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 # Ocean Data Wrangling: 2011-2022

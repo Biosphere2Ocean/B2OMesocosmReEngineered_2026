@@ -3,14 +3,15 @@ title: "Ocean Data Wrangling: 2022-Present"
 Collaborators: Renee Grambihler
 Project: OceanWaterQuality
 Institution: Biosphere 2 Ocean
-output: html_notebook
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 # Ocean Data Wrangling: 2022-Present
 
-## Import Libraries
-
-```{r Import-Libraries}
+```{r label='Import-Libraries'}
 library(tidyverse)
 library(lubridate)
 library(here)
@@ -25,16 +26,19 @@ options(scipen = 999)
 Use `01-YSI-Data-Clean-2011-2022.csv` created in `01-YSI-DataWrangling-2011-2022.Rmd`
 
 ```{r import-data-old-scada-database}
-dfHistorical <- read_csv("Data/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011-2022.csv") 
+dfHistorical <- read_csv("InputData/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011-2022.csv") 
 ```
 
 ## New B2 SCADA Database: 1/22/22 - Present
 
-These files are pulled from the B2 SCADA Database (<https://data.b2.arizona.edu/Bio2Controls/OCDataAgreement.jsp>). Each file will download with a numeric identifier at the end of the file name. Delete this before running the files through this code. I might figure out how to get around that via code one day, but not today.
+These files are pulled from the [B2 SCADA Database](<https://data.b2.arizona.edu/Bio2Controls/OCDataAgreement.jsp>). Each file will download with a numeric identifier at the end of the file name. Delete this before running the files through this code. I might figure out how to get around that via code one day, but not today.
 
-```{r import-SCADA-files-from-1/22/22-present}
+```{r SCADA-files-from-1/22/22-present-path}
 # file path to folder containing new scada database 1/22/22-present ocean water quality files
 path <- "Data/Raw/YSI/SCADA/SCADA_2022_Present"
+```
+
+```{r import-SCADA-files-from-1/22/22-present}
 
 # chlorophyll in RFU from 1/22/22-present from current YSI EXO3 Sonde
 exo_chlorophyll <- read_csv(here(path,

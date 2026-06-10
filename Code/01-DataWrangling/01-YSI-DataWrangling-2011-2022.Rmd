@@ -9,7 +9,8 @@ editor_options:
     wrap: 72
 ---
 
-**Input Files**  
+## Input and Output Files 
+### Input Files
 InputData/Raw/YSI/SCADA_2011_2021: YSI SCADA data from 2011 - 2021  
   `Ocean_FTP_Data - pre 2014-8-11.csv`: data from 7/22/11 - 8/4/14  
       - variables: 
@@ -204,29 +205,29 @@ InputData/Raw/YSI/SCADA_2019_2022: YSI SCADA data from 5/26/21-2/23/22
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
 
-**Output Files**
+### Output Files
 InputData/Clean/01-DataWrangling:
-  `YSI-Data-Clean-2011-2022.csv`: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2024
+  `YSI-Data-Clean-2011-2022.csv`: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2022
      - variables: 
-          Date: date  
-          Time: time  
-          Temperature (ºF): numeric; temperature value in degrees Fahrenheit  
-          Temperature (ºC): numeric; temperature value in degrees Celcius  
-          pH: numeric; pH value in pH units  
-          pH (mV): numeric; pH value in miliVolts  
-          Salinity (PSU): numeric; salinity value in Potential Salinity Units  
-          Conductivity (µS/cm): numeric; electrical conductivity value in µSemens/cm  
-          Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSemens/cm  
-          Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSemens/cm  
-          Dissolved Oxygen (mg/L): numeric; dissolved oxygen value in mg/L  
-          Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen value in %  
-          Dissolved Oxygen, Local (%): numeric; local dissolved oxygen value in %  
-          Oxygen Reduction Potential (mV): numeric; oxidation-reduction potential value in miliVolts  
-          Chlorophyll (RFU): numeric; chlorophyll value in RFU  
-          Total Algae (RFU): numeric; total algae phycoerythrin value in RFU  
-          Chlorophyll (µg/L): numeric; chlorophyll value in µg/L  
-          Total Algae (cells/L): numeric; total algae phycoerythrin value in cells/L
-          Total Dissolved Solids (mg/L): numeric; total dissolved solids value in mg/L  
+          `Date`: date  
+          `Time`: time  
+          `Temperature (ºF)`: numeric; temperature value in degrees Fahrenheit  
+          `Temperature (ºC)`: numeric; temperature value in degrees Celcius  
+          `pH`: numeric; pH value in pH units  
+          `pH (mV)`: numeric; pH value in miliVolts  
+          `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
+          `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
+          `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
+          `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+          `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
+          `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
+          `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
+          `Oxygen Reduction Potential (mV)`: numeric; oxidation-reduction potential value in miliVolts  
+          `Chlorophyll (RFU)`: numeric; chlorophyll value in RFU  
+          `Total Algae (RFU)`: numeric; total algae phycoerythrin value in RFU  
+          `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
+          `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
+          `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
 
 
 

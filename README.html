@@ -360,7 +360,7 @@ coral reef resilience experiments”.</p>
 <div id="contact-information" class="section level4">
 <h4>Contact Information</h4>
 <p>Principal Investigator: <strong>Diane Thompson</strong><br />
-ORCID:<br />
+ORCID: 0000-0002-6181-1259<br />
 Institution: University of Arizona<br />
 Email: <a href="mailto:thompsod@arizona.edu" class="email">thompsod@arizona.edu</a></p>
 <p>Co-Investigator/Responsible for Repository: <strong>Renee
@@ -386,8 +386,8 @@ MIT (Code)</p>
 Database</a>.</p>
 </div>
 </div>
-<div id="repository-summary" class="section level1">
-<h1>Repository Summary</h1>
+<div id="methodological-information" class="section level1">
+<h1>Methodological Information</h1>
 <p>This repository includes data files, quality control code, data
 analyses code, and figure-making code.</p>
 <p>The data used in this analysis were recorded by multiple instruments
@@ -397,50 +397,46 @@ environmental parameters at 15-minute intervals, including temperature
 (◦C), salinity (PSU), pH, and dissolved oxygen (mg/L). Colorimetry and
 titration tests (Hach) were performed weekly and included alkalinity
 (mg/L), nitrate (mg/L), phosphate (mg/L), iron (mg/L), and silicate
-(mg/L). A full breakdown of the instrumentation timeline and quality
-control and analysis methodology can be found in the Supplementary
-Materials of the associated manuscript. More information on the recorded
-parameters is detailed below.</p>
-<div id="repository-organization" class="section level2">
-<h2>Repository Organization</h2>
-<ul>
-<li><code>README.md</code>: readme file</li>
-<li><code>/Code</code>: contains all R scripts for wrangling, quality
-control, and data analyses
-<ul>
-<li><code>/Code_HOBO</code>: scripts pertaining HOBO probe data
-<ul>
-<li><code>/hoboph.R</code>: TBD</li>
-</ul></li>
-<li><code>/Code_NutrientData</code>: scripts pertaining to Colorimetry
-data from B2 Ocean, Coral Raceways, and Mangroves</li>
-<li><code>Code_RShiny</code>: scripts for RShiny data
-visualizations</li>
-<li><code>Code_YSI</code>: scripts pertaining to YSI and historical B2
-Ocean data</li>
-</ul></li>
-<li><code>/Data</code>: contains all data files used in R scripts
-<ul>
-<li><code>/CleanData</code>: data files that have been cleaned/processed
-and are ready for analyses
-<ul>
-<li><code>/CleanData_YSI</code>: clean Exo YSI Sonde data
-<ul>
-<li><code>/01_DataWrangling</code>: compiling and wrangling data</li>
-<li><code>/02_QualityControl</code>: quality control pipeline</li>
-</ul></li>
-</ul></li>
-<li><code>/RawData</code>: raw data files
-<ul>
-<li><code>/RawData_HOBO</code>: from HOBO sondes</li>
-<li><code>/RawData_NutrientData</code>: from Colorimetry</li>
-<li><code>RawData_YSI</code>: from historical and YSI Exo Sonde</li>
-</ul></li>
-</ul></li>
-<li><code>/Metadata</code>: contains all metadata files for code scripts
-and data</li>
-</ul>
+(mg/L).</p>
+<div id="collection-and-generation-of-data" class="section level2">
+<h2>Collection and Generation of Data</h2>
 </div>
+<div id="processing-data" class="section level2">
+<h2>Processing Data</h2>
+</div>
+</div>
+<div id="data-and-file-overview" class="section level1">
+<h1>Data and File Overview</h1>
+<p>.<br />
+├── README.md: This document<br />
+├── Metadata: directory containing additional metadata files<br />
+├── Code: directory containing all code that accompanies this
+manuscript<br />
+    ├── 01-DataWrangling: subdirectory<br />
+    │  ├─ 01-YSI-DataWrangling-2011-2022.Rmd<br />
+    │  ├─ 02-YSI-DataWrangling-2022-Present.Rmd<br />
+    │  ├─ 03-Hach-DataWrangling.Rmd<br />
+    │  ├─ 04-HachYSI-DataWrangling.Rmd<br />
+    │  └─ 05-WorldOceans-DataWrangling.Rmd<br />
+    ├── 02-QualityControl: subdirectory     │  ├─
+Hach-QualityControl.Rmd<br />
+    │  └─ YSI-DataQC.Rmd<br />
+    ├── 03-Statistics: subdirectory<br />
+    │  ├─     ├── 04-FigureMaking: subdirectory<br />
+    │  ├─     ├── Functions: subdirectory     │  ├─ ├── InputData:
+directory containing data files input to code<br />
+    ├── Raw: subdirectory     │  ├─ Hach: subdirectory<br />
+    │  ├─ YSI: subdirectory<br />
+    │  └─ WorldOceans: subdirectory<br />
+    ├── Clean: subdirectory containing cleaned data files run through
+data wrangling code<br />
+    │  ├─ 01-DataWrangling: subdirectory<br />
+├── OutputData: directory containing data files output from code<br />
+├── Figures: directory containing figures produced from the code files
+in this manuscript</p>
+</div>
+<div id="data-specific-information" class="section level1">
+<h1>Data Specific Information</h1>
 </div>
 
 

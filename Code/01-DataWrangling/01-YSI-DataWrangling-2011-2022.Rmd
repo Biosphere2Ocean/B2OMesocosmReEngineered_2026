@@ -206,27 +206,27 @@ InputData/Raw/YSI/SCADA_2019_2022: YSI SCADA data from 5/26/21-2/23/22
 
 **Output Files**
 InputData/Clean/01-DataWrangling:
-  `YSI-Data-Clean-2011-2022.csv`
+  `YSI-Data-Clean-2011-2022.csv`: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2024
      - variables: 
-          Date
-          Time 
-          Temperature (ºF)
-          Temperature (ºC)
-          pH
-          pH (mV)
-          Salinity (PSU)
-          Conductivity (µS/cm)
-          Conductivity, Non-Linear Function (µS/cm)
-          Conductivity, Specific (µS/cm)
-          Dissolved Oxygen (mg/L)
-          Dissolved Oxygen, Saturated (%)
-          Dissolved Oxygen, Local (%)
-          Oxygen Reduction Potential (mV)
-          Chlorophyll (RFU)
-          Total Algae (RFU)
-          Chlorophyll (µg/L)
-          Total Algae (cells/L)
-          Total Dissolved Solids (mg/L)
+          Date: date  
+          Time: time  
+          Temperature (ºF): numeric; temperature value in degrees Fahrenheit  
+          Temperature (ºC): numeric; temperature value in degrees Celcius  
+          pH: numeric; pH value in pH units  
+          pH (mV): numeric; pH value in miliVolts  
+          Salinity (PSU): numeric; salinity value in Potential Salinity Units  
+          Conductivity (µS/cm): numeric; electrical conductivity value in µSemens/cm  
+          Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSemens/cm  
+          Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSemens/cm  
+          Dissolved Oxygen (mg/L): numeric; dissolved oxygen value in mg/L  
+          Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen value in %  
+          Dissolved Oxygen, Local (%): numeric; local dissolved oxygen value in %  
+          Oxygen Reduction Potential (mV): numeric; oxidation-reduction potential value in miliVolts  
+          Chlorophyll (RFU): numeric; chlorophyll value in RFU  
+          Total Algae (RFU): numeric; total algae phycoerythrin value in RFU  
+          Chlorophyll (µg/L): numeric; chlorophyll value in µg/L  
+          Total Algae (cells/L): numeric; total algae phycoerythrin value in cells/L
+          Total Dissolved Solids (mg/L): numeric; total dissolved solids value in mg/L  
 
 
 

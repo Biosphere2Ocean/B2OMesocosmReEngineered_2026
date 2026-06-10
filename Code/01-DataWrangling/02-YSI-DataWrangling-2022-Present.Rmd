@@ -26,7 +26,7 @@ options(scipen = 999)
 Use `01-YSI-Data-Clean-2011-2022.csv` created in `01-YSI-DataWrangling-2011-2022.Rmd`
 
 ```{r import-data-old-scada-database}
-dfHistorical <- read_csv("InputData/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean-2011-2022.csv") 
+dfHistorical <- read_csv("InputData/Clean/01-DataWrangling/YSI-Data-Clean-2011-2022.csv") 
 ```
 
 ## New B2 SCADA Database: 1/22/22 - Present
@@ -34,8 +34,8 @@ dfHistorical <- read_csv("InputData/Clean/YSI/01_DataWrangling/01-YSI-Data-Clean
 These files are pulled from the [B2 SCADA Database](<https://data.b2.arizona.edu/Bio2Controls/OCDataAgreement.jsp>). Each file will download with a numeric identifier at the end of the file name. Delete this before running the files through this code. I might figure out how to get around that via code one day, but not today.
 
 ```{r SCADA-files-from-1/22/22-present-path}
-# file path to folder containing new scada database 1/22/22-present ocean water quality files
-path <- "Data/Raw/YSI/SCADA/SCADA_2022_Present"
+# file path to folder containing new scada database 1/22/22-09/25/2024 ocean water quality files
+path <- "Data/Raw/YSI/SCADA/SCADA_2022_2024"
 ```
 
 ```{r import-SCADA-files-from-1/22/22-present}
@@ -216,12 +216,12 @@ exo_temp_f <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv"),
 
 ```
 
-## DSSPro Backup
+## ProDSS Backup
 
-This file is from the YSI DSSPro instrument. The EXO3 was sent in for maintenance from 11/17/2023 - 1/10/2024, so it was not recording the to the database. The YSI DSSPro was used to record data while the EXO3 was away. Unfortunately, not all of the same variables were recorded, but this will be fixed if the EXO3 ever needs to go back.
+This file is from the YSI ProDSS instrument. The EXO3 was sent in for maintenance from 11/17/2023 - 1/10/2024, so it was not recording the to the database. The YSI ProDSS was used to record data while the EXO3 was away. Unfortunately, not all of the same variables were recorded, but this will be fixed if the EXO3 ever needs to go back.
 
-```{r import-dsspro-file}
-dfDSSPro <- read_csv("Data/Raw/YSI/Sondes/prodssbackup-231117-240112.csv",
+```{r import-ProDSS-file}
+dfProDSS <- read_csv("Data/Raw/YSI/ProDSS/prodssbackup-231117-240112.csv",
                      # files downloaded from the YSI instruments are encoded as UTF-16, but most code languages only read UTF-8. Make sure to keep the below line in to fix that.
                      locale=locale(encoding="UTF-16"),
                      # first line says sep=, so that excel reads in the csv file like an excel file so make sure to skip that. can only see this line when viewing with a text editor
@@ -264,7 +264,7 @@ dfHistorical %>%
 
 ### New Database Files
 
-Combine all files from new database and make the resulting dataframe look like dfHistorical. Chop this dataframe in half so that we can sandwich in the DSSPro dataframe.
+Combine all files from new database and make the resulting dataframe look like dfHistorical. Chop this dataframe in half so that we can sandwich in the ProDSS dataframe.
 
 ```{r data-wrangling-new-database}
 # create new database YSI EXO3 dataframe by joining the files for each variable from this instrument based on the datetime column
@@ -320,13 +320,13 @@ dfNewDB_end %>%
 
 ```
 
-### DSSPro File
+### ProDSS File
 
-Make dfDSSPro look like dfHistorical
+Make dfProDSS look like dfHistorical
 
-```{r data-wrangle-dsspro}
+```{r data-wrangle-ProDSS}
 # add NA columns with same names as columns missing from other dataframes
-dfDSSProEdit <- dfDSSPro %>%
+dfProDSSEdit <- dfProDSS %>%
   mutate(`Temperature (ºC)` = NA,
          `pH (mV)` = NA,
          `Conductivity, Non-Linear Function (µS/cm)` = NA,
@@ -359,8 +359,8 @@ dfDSSProEdit <- dfDSSPro %>%
 
 Data Check:
 
-```{r dsspro-data-check}
-dfDSSProEdit %>%
+```{r ProDSS-data-check}
+dfProDSSEdit %>%
   unique() %>% # keep only unique rows
   group_by(Date) %>% # group each date together
   summarise(n = n()) %>% # count the number of rows per group (date)
@@ -374,7 +374,7 @@ Combine all dataframes in a way that gives us all of the data and separate datet
 ```{r combine-files}
 dfOceanWaterQuality <- rbind(dfHistorical,
                              dfNewDB_beginning,
-                             dfDSSProEdit,
+                             dfProDSSEdit,
                              dfNewDB_end) %>%
   distinct() %>%
   # make sure all columns are proper data type
@@ -416,6 +416,6 @@ dfOceanWaterQuality %>%
 
 ```{r write-data-to-file}
 write_csv(dfOceanWaterQuality,
-          file = "Data/Clean/YSI/01_DataWrangling/02-YSI-Data-Clean-All.csv",
+          file = "Data/Clean/01-DataWrangling/YSI-Data-Clean-All.csv",
           col_names = TRUE)
 ```

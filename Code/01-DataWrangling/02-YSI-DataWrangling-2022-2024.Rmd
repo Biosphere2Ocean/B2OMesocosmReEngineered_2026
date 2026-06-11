@@ -1,15 +1,216 @@
 ---
-title: "Ocean Data Wrangling: 2022-Present"
+title: "YSI Data Wrangling: 2022-2024"
 Collaborators: Renee Grambihler
-Project: OceanWaterQuality
-Institution: Biosphere 2 Ocean
+Project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+Institution: Biosphere 2 Reef Lab
 output: html_document
 editor_options: 
   markdown: 
     wrap: 72
 ---
 
-# Ocean Data Wrangling: 2022-Present
+# YSI Data Wrangling: 2022-2024
+## Input and Output Files 
+### Input Files
+InputData/Clean/01-DataWrangling:  
+  `YSI-Data-Clean-2011-2022.csv`: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2022  
+    - variables: 
+            `Date`: date  
+            `Time`: time  
+            `Temperature (ºF)`: numeric; temperature value in degrees Fahrenheit  
+            `Temperature (ºC)`: numeric; temperature value in degrees Celcius  
+            `pH`: numeric; pH value in pH units  
+            `pH (mV)`: numeric; pH value in miliVolts  
+            `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
+            `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
+            `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
+            `Oxygen Reduction Potential (mV)`: numeric; oxidation-reduction potential value in miliVolts  
+            `Chlorophyll (RFU)`: numeric; chlorophyll value in RFU  
+            `Total Algae (RFU)`: numeric; total algae phycoerythrin value in RFU  
+            `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
+            `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
+            `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
+  
+InputData/Raw/YSI/SCADA_2022_2024: YSI EXO3 Multiparameter Sonde data from SCADA database from 5/26/2021 - 12/31/2024
+  `UAB2_BIO1_B4000_YSI_EXO3_CHLOROPHYLL_RFU.csv`: chlorophyll in RFU  
+    - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
+          `VALUE`: numeric; chlorophyll value in RFU  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv`: electrical conductivity in uSemens/cm  
+      - variables: 
+          `ID`: numeric; individual datum id / row number 
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
+          `VALUE`: numeric; electrical conductivity value in uSemens/cm  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv`: nLF conductivity in uSemens/cm  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
+          `VALUE`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_ODO__LOCAL.csv`: dissolved oxygen in %, local  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; local dissolved oxygen value in %  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_ODO__SAT.csv`: dissolved oxygen in % saturated  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; saturated dissolved oxygen value in %  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_ODO_MGPL.csv`: dissolved oxygen in mg/L  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; dissolved oxygen in mg/L  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_ORP_MV.csv`: oxidation-reduction potential (ORP) in miliVolts 
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: oxidation-reduction potential value in miliVolts  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_PH.csv`: pH in pH units 
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; pH value in pH units  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_PH_MV.csv`: pH in miliVolts  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime   
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; pH value in miliVolts  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_SAL_PSU.csv`: salinity in PSU  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; salinity value in Potential Salinity Units  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv`: specific conductivity in µSemens/cm 
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; specific conductivity value in µSemens/cm  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_TAL_PE_RFU.csv`: total algae phycoerythrin in RFU  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; total algae phycoerythrin value in RFU  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_TDS_MGPL.csv`: total dissolved solids in mg/L  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: total dissolved solids value in mg/L  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_TEMP_C.csv`: temperature in degrees Celcius  
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; temperature value in degrees Celcius  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+  
+  `UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv`: temperature in degrees Fahrenheit 
+      - variables: 
+          `ID`: numeric; individual datum id / row number  
+          `TIMESTAMP`: datetime  
+          `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
+          `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
+          `VALUE`: numeric; temperature value in degrees Fahrenheit  
+          `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
+          `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
+
+  
+### Output Files
+InputData/Clean/01-DataWrangling:  
+  ``YSI-Data-Clean-All.csv``: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2024  
+    - variables: 
+            `Date`: date  
+            `Time`: time  
+            `Temperature (ºF)`: numeric; temperature value in degrees Fahrenheit  
+            `Temperature (ºC)`: numeric; temperature value in degrees Celcius  
+            `pH`: numeric; pH value in pH units  
+            `pH (mV)`: numeric; pH value in miliVolts  
+            `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
+            `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
+            `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
+            `Oxygen Reduction Potential (mV)`: numeric; oxidation-reduction potential value in miliVolts  
+            `Chlorophyll (RFU)`: numeric; chlorophyll value in RFU  
+            `Total Algae (RFU)`: numeric; total algae phycoerythrin value in RFU  
+            `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
+            `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
+            `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
+
 
 ```{r label='Import-Libraries'}
 library(tidyverse)
@@ -35,7 +236,7 @@ These files are pulled from the [B2 SCADA Database](<https://data.b2.arizona.edu
 
 ```{r SCADA-files-from-1/22/22-present-path}
 # file path to folder containing new scada database 1/22/22-09/25/2024 ocean water quality files
-path <- "Data/Raw/YSI/SCADA/SCADA_2022_2024"
+path <- "InputData/Raw/YSI/SCADA_2022_2024"
 ```
 
 ```{r import-SCADA-files-from-1/22/22-present}
@@ -416,6 +617,6 @@ dfOceanWaterQuality %>%
 
 ```{r write-data-to-file}
 write_csv(dfOceanWaterQuality,
-          file = "Data/Clean/01-DataWrangling/YSI-Data-Clean-All.csv",
+          file = "InputData/Clean/01-DataWrangling/YSI-Data-Clean-All.csv",
           col_names = TRUE)
 ```

@@ -37,6 +37,8 @@ This repository includes data files, quality control code, data analyses code, a
 
 The data used in this analysis were recorded by multiple instruments between 2011 and 2024 and stored in the Biosphere 2 SCADA Database. Over this time period, various Multiparameter Sondes (YSI) recorded environmental parameters at 15-minute intervals, including temperature (◦C), salinity (PSU), pH, and dissolved oxygen (mg/L). Colorimetry and titration tests (Hach) were performed weekly and included alkalinity (mg/L), nitrate (mg/L), phosphate (mg/L), iron (mg/L), and silicate (mg/L).
 
+*****NOAA Database info!!!!****
+
 ## Collection and Generation of Data
 
 
@@ -45,6 +47,8 @@ The data used in this analysis were recorded by multiple instruments between 201
 ---------------------------------------------
 
 # Data and File Overview
+The following is a data tree of the files contained within this repository. Full summaries and variable descriptions for each file can be found in the next section titled "Data Specific Information".
+
 .  
 ├── README.md: This document  
 ├── Metadata: directory containing additional metadata files  
@@ -53,10 +57,9 @@ The data used in this analysis were recorded by multiple instruments between 201
     │   ├── 01-YSI-DataWrangling-2011-2022.Rmd  
     │   ├── 02-YSI-DataWrangling-2022-Present.Rmd  
     │   ├── 03-Hach-DataWrangling.Rmd  
-    │   ├── 04-HachYSI-DataWrangling.Rmd  
-    │   └── 05-WorldOceans-DataWrangling.Rmd  
+    │   └── 04-WorldOceans-DataWrangling.Rmd  
     ├── 02-QualityControl: subdirectory  
-    │   ├── Hach-QualityControl.Rmd  
+    │   ├── Hach-DataQC.Rmd  
     │   └── YSI-DataQC.Rmd  
     ├── 03-Statistics: subdirectory  
     │   ├── 
@@ -66,19 +69,68 @@ The data used in this analysis were recorded by multiple instruments between 201
     │   ├── 
 ├── InputData: directory containing data files input to code  
     ├── Raw: subdirectory 
-    │   ├── Hach: subdirectory  
+    │   ├── Hach: subdirectory containing data file from colorimetry and titration nutrients water quality testing 
+    │   │   └── B2ONutrientData.xlsx
     │   ├── YSI: subdirectory containing environmental data files from YSI multiparameter sondes in the Biosphere 2 Ocean
-    │   │   ├── ProDSS: subdirectory containing files from YSI ProDSS multiparameter sonde
-        │   │   └── prodssbackup-231117-240112.csv
+    │   │   ├── ProDSS: subdirectory containing data files from YSI ProDSS multiparameter sonde
+    │   │   │   └── prodssbackup-231117-240112.csv
     │   │   ├── SCADA_2011_2021: subdirectory containing files from YSI EXO multiparameter sonde from 2011-2021
-    │   │   ├── SCADA_2019_2022: subdirectory containing files from YSI EXO2 and EXO3 multiparameter sondes from 2019-2022 
-    │   │   └── SCADA_2022_2024: subdirectory containing files from YSI EXO3 multiparameter sonde from 2022-2024,
-    │   └── WorldOceans: subdirectory  
-    ├── Clean: subdirectory containing cleaned data files run through data wrangling code  
-    │   ├── 01-DataWrangling: subdirectory   
-├── OutputData: directory containing data files output from code  
-├── Figures: directory containing figures produced from the code files in this manuscript  
+    │   │   │   ├── Ocean_FTP_Data - pre 2014-8-11.csv
+    │   │   │   ├── Ocean_FTP_Data.csv
+    │   │   │   ├── Ocean_FTP_Data_Acq.csv
+    │   │   │   └── ocean_scada_data_2016_2021.xlsx
+    │   │   ├── SCADA_2019_2022: subdirectory containing data files from YSI EXO2 and EXO3 multiparameter sondes from 2019-2022 
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_CHLORO_617107.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_COND_U_617936.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_NLF_CO_661668.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_ODO__L_632594.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_ODO__S_635338.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_ODO_MG_645798.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_ORP_MV_647084.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_PH_662411.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_PH_MV_663459.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_SAL_PS_647937.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_SPCOND_648943.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_TAL_PE_650659.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_TDS_MG_653051.csv
+    │   │   │   ├── UAB2_B240001_YSI_EXO3_TEMP_C_655738.csv
+    │   │   │   └── UAB2_B240001_YSI_EXO3_TEMP_F_659351.csv
+    │   │   └── SCADA_2022_2024: subdirectory containing files from YSI EXO3 multiparameter sonde from 2022-2024
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_CHLOROPHYLL_RFU.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_ODO__LOCAL.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_ODO__SAT.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_ODO_MGPL.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_ORP_MV.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_PH.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_PH_MV.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_SAL_PSU.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_TAL_PE_RFU.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_TDS_MGPL.csv
+    │   │   │   ├── UAB2_BIO1_B4000_YSI_EXO3_TEMP_C.csv
+    │   │   │   └── UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv
+    │   └── WorldOceans: subdirectory containing files used to compile water quality data from oceans around the world, these files were not directly used in code but rather manipulated in MS Excel to compile a cleaned file called `01-Clean-WorldOceanData.csv`
+    │   │   ├── CRCP_Carbonate_Chemistry_Atlantic_be0f_43c1_53bd.csv
+    │   │   └── CRCP_Carbonate_Chemistry_Pacific_2198_7707_9695.csv
+    ├── Clean: subdirectory containing cleaned data files run through Data Wrangling code and Quality Control code  
+    │   ├── 01-DataWrangling: subdirectory containing cleaned data files from Data Wrangling 
+    │   │   ├── Hach-Data-Clean.csv
+    │   │   ├── WorldOceans-Data-Clean-Final.csv
+    │   │   ├── WorldOceans-Data-Clean.csv
+    │   │   ├── YSI-Data-Clean-2011-2022.csv
+    │   │   └── YSI-Data-Clean-All.csv
+    │   ├── 02-QualityControl: subdirectory containing data files output from Quality Control code
+    │   │   ├── Hach-Data-QC.csv
+    │   │   ├── YSI-Data-QC.csv
+    │   │   └── YSI-Data-QC-Cutoff.csv
+├── OutputData: directory containing data files output from Statistics code  
+    │   ├── Correlations: subdirectory 
+    │   ├── DescriptiveStatistics: subdirectory 
+    │   └── WorldOceans-Paper: subdirectory
+├── Figures: directory containing figures produced from the Figure Making code files in this manuscript  
 
 ---------------------------------------------
 
-# Data Specific Information
+# Data-Specific Information

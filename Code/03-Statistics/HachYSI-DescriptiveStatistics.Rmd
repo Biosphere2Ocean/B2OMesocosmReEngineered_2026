@@ -1,12 +1,23 @@
 ---
-title: "Hach and YSI Data Wrangling"
+title: "Hach and YSI Descriptive Statistics"
 collaborators: Renee Grambihler
-project: OceanWaterQuality
-institution: Biosphere 2 Ocean
-output: html_notebook
+project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+institution: Biosphere 2 Reef Lab
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
-## Import Libraries
-```{r Import Libraries}
+# Hach and YSI Data Wrangling
+## Input and Output Files
+### Input Files
+
+
+### Output Files
+
+
+
+```{r label='Import-Libraries'}
 library(tidyverse)
 library(lubridate)
 options(scipen = 999)
@@ -15,10 +26,10 @@ options(scipen = 999)
 ## Import Data
 ```{r import data}
 # use 02-YSI-Data-QCCutoff.csv
-dfYSI <- read_csv("Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
+dfYSI <- read_csv("InputData/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
 
 # use 02-Hach-Data-Clean-QC.csv
-dfHach <- read_csv("Data/Clean/Hach/02_QualityControl/02-Hach-Data-Clean-QC.csv")
+dfHach <- read_csv("InputData/Clean/Hach/02_QualityControl/02-Hach-Data-Clean-QC.csv")
 
 ```
 

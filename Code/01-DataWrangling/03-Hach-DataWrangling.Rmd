@@ -1,12 +1,98 @@
 ---
-title: "HACH Data Wrangling"
+title: "HACH Data Wrangling: 2017-2024"
 Collaborators: Renee Grambihler
-Project: "Ocean Water Quality"
-Institution: Biosphere 2 Ocean
+Project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+Institution: Biosphere 2 Reef Lab
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+# Hach Data Wrangling: 2017-2024
+## Input and Output Files
+### Input Files
+InputData/Raw/Hach/:  
+  `B2ONutrientData.xlsx`: all Biosphere 2 Systems nutrient water quality data obtained via colorimetry and titration (Hach brand); systems include Ocean, Mangroves, and 2 Coral Raceways; sheet "Pre-formatted Data" holds data from 2017-2022; sheet "Data" holds data from 2022-2024 that is formatted more for analysis in R.  
+    - `Pre-formatted Data`: variable names are repeated for each location and made distinct in file by color coding, key is found in Notes column but Ocean is column 2:11, Mangroves is 12:19, Raceway 1 is 20:29, and Raceway 2 is 30:39  
+        - variables:  
+          `Date`: date in mm/dd/yyyy  
+          `Turbidity`: numeric; Ocean turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+          `Phosphate`: numeric; Ocean phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+          `Nitrate MR`: numeric; Ocean nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+          `Nitrate HR`: numeric; Ocean nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+          `pH`: numeric; Ocean pH in pH units  
+          `Alkalinity`: numeric; Ocean calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+          `Silica`: numeric; Ocean silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+          `Iron`: numeric; Ocean iron concentration in range 0.009-1.400 measured in mg/L  
+          `Ammonia`: numeric; Ocean ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
+          `ORP`: numeric; Ocean oxidation-reduction potential (ORP) measured in miliVolts  
+          `Turbidity`: numeric; Mangroves turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+          `Phosphate`: numeric; Mangroves phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+          `Nitrate MR`: numeric; Mangroves nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+          `Nitrate HR`: numeric; Mangroves nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+          `pH`: numeric; Mangroves pH in pH units  
+          `Alkalinity`: numeric; Mangroves calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+          `Silica`: numeric; Mangroves silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+          `ORP`: numeric; Mangroves oxidation-reduction potential (ORP) measured in miliVolts  
+          `Turbidity`: numeric; Raceway 1 turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+          `Phosphate`: numeric; Raceway 1 phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+          `Nitrate MR`: numeric; Raceway 1 nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+          `Nitrate HR`: numeric; Raceway 1 nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+          `pH`: numeric; Raceway 1 pH in pH units  
+          `Alkalinity`: numeric; Raceway 1 calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+          `Silica`: numeric; Raceway 1 silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+          `Iron`: numeric; Raceway 1 iron concentration in range 0.009-1.400 measured in mg/L  
+          `Ammonia`: numeric; Raceway 1 ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
+          `ORP`: numeric; Raceway 1 oxidation-reduction potential (ORP) measured in miliVolts  
+          `Turbidity`: numeric; Raceway 2 turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+          `Phosphate`: numeric; Raceway 2 phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+          `Nitrate MR`: numeric; Raceway 2 nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+          `Nitrate HR`: numeric; Raceway 2 nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+          `pH`: numeric; Raceway 2 pH in pH units  
+          `Alkalinity`: numeric; Raceway 2 calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+          `Silica`: numeric; Raceway 2 silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+          `Iron`: numeric; Raceway 2 iron concentration in range 0.009-1.400 measured in mg/L  
+          `Ammonia`: numeric; Raceway 2 ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
+          `Initials`: character; initials of person or people taking measurements  
+          `Notes`: character; key for color coding, any notes from that measurement  
+        
+    - `Data`: 
+        - variables:  
+          `Date`: date in mm/dd/yyy
+          `Location`: character; location of measurements; Ocean, Mangroves, Raceway 1, or Raceway 2  
+          `Turbidity`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+          `Phosphate`: numeric; phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+          `Nitrate MR`: numeric; nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+          `Nitrate HR`: numeric; nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+          `pH`: numeric; pH in pH units  
+          `Alkalinity`: calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+          `Silica`: numeric; silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+          `Iron`: numeric; iron concentration in range 0.009-1.400 measured in mg/L  
+          `Ammonia`: numeric; ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
+          `Initials`: character; initials of person or people taking measurements  
+          `Notes`: character; any notes from that measurement  
 
-# Libraries
-```{r libraries}
+### Output Files
+InputData/Clean/01-DataWrangling/:  
+  `Hach-Data-Clean.csv` 
+    - variables: 
+      `Date`: date in mm/dd/yy  
+      `Location`: character; location of measurements; Ocean, Mangroves, Raceway 1, or Raceway 2  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+      `pH`: pH in pH units  
+      `Alkalinity (mg/L CaCO3)`: numeric; calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; iron concentration in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
+      `ORP`:  numeric;oxidation-reduction potential (ORP) measured in miliVolts  
+      `Initials`: character; initials of person or people taking measurements  
+      `Notes`: character; any notes from that measurement  
+
+
+```{r label='Import-Libraries'}
 library(tidyverse)
 library(readxl)
 library(lubridate)
@@ -16,15 +102,15 @@ options(scipen = 999)
 
 # Import Data
 ```{r import data}
-# download B20NutrientData excel file from the Box and import it into R with your own filepath in "" below. The Pre-formatted Data (2017-2022) is on one sheet, and the Formatted Data (2022-present) is on a different sheet. 
+# internal use: download B20NutrientData excel file from the Box. The Pre-formatted Data (2017-2022) is on one sheet, and the Formatted Data (2022-2024) is on a different sheet. 
 
 # Import Pre-Formatted Data sheet from excel file (sheet "Pre-formatted Data")
-PreFormattedData <- read_excel("Data/Raw/Hach/B2ONutrientData.xlsx",
+PreFormattedData <- read_excel("InputData/Raw/Hach/B2ONutrientData.xlsx",
                                sheet = "Pre-formatted Data",
                                col_names = TRUE)
 
 # Import Formatted Data sheet from excel file (sheet "Data")
-FormattedData <- read_excel("Data/Raw/Hach/B2ONutrientData.xlsx", 
+FormattedData <- read_excel("InputData/Raw/Hach/B2ONutrientData.xlsx", 
                             sheet = "Data", 
                             col_names = TRUE)
 ```
@@ -132,7 +218,7 @@ AllData <- rbind(PreFormattedDataTidy, FormattedDataTidy) %>%
          Ammonia = as.numeric(Ammonia),
          Ammonia = round(Ammonia, digits = 2),
          Date = as.Date(Date, format = "%m/%d/%y")) %>%
-  rename(`Turbidity (RFU)` = Turbidity,
+  rename(`Turbidity (FAU)` = Turbidity,
          `Phosphate (mg/L)` = Phosphate,
          `Nitrate, Mid-Range (mg/L)` = `Nitrate MR`,
          `Nitrate, High-Range (mg/L)` = `Nitrate HR`,
@@ -146,7 +232,7 @@ AllData <- rbind(PreFormattedDataTidy, FormattedDataTidy) %>%
 ## Save Data
 ```{r save data}
 write_csv(AllData,
-          file = "Data/Clean/Hach/01_DataWrangling/01-Hach-Data-Clean.csv")
+          file = "InputData/Clean/01-DataWrangling/Hach-Data-Clean.csv")
 
 ```
 

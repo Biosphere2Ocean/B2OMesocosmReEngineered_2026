@@ -1,14 +1,14 @@
 ---
-title: "Ocean Data Wrangling: 2011-2022"
+title: "YSI Data Wrangling: 2011-2022"
 Collaborators: Renee Grambihler
-Project: OceanWaterQuality
-Institution: Biosphere 2 Ocean
+Project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+Institution: Biosphere 2 Reef Lab
 output: html_document
 editor_options: 
   markdown: 
     wrap: 72
 ---
-
+# Ocean Data Wrangling: 2011-2022
 ## Input and Output Files 
 ### Input Files
 InputData/Raw/YSI/SCADA_2011_2021: YSI SCADA data from 2011 - 2021  
@@ -228,10 +228,6 @@ InputData/Clean/01-DataWrangling:
           `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
           `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
           `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
-
-
-
-# Ocean Data Wrangling: 2011-2022
 
 ```{r label='Import-Libraries'}
 library(tidyverse)

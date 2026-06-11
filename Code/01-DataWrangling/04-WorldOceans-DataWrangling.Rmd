@@ -1,20 +1,76 @@
 ---
 title: "World Oceans Data Wrangling"
 Collaborators: Renee Grambihler
-Project: "Ocean Water Quality"
-Institution: Biosphere 2 Ocean
+Project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+Institution: Biosphere 2 Reef Lab
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
-# Import Libraries
-```{r import-libraries}
+# World Oceans Data Wrangling
+## Input and Output Files
+### Input Files
+InputData/Clean/01-DataWrangling: 
+  `WorldOceans-Data-Clean.csv`: water quality data from Atlantic and Pacific Oceans from 2011-2024
+    - variables:  
+      `Date`: date; mm/dd/yy 
+      `Ocean`: character; name of ocean data was obtained from  
+      `Region`: character; region of ocean that data was obtained from  
+      `Depth (m)`: numeric; depth underwater data was obtained from  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `Salinity (PSU)`: numeric; salinity in Potential Salinity Units  
+      `Phosphate (µmol/kg)`: numeric; phosphate concentration in µmol/kg  
+      `Silicate (µmol/kg)`: numeric; silicate concentration in µmol/kg    
+      `Nitrate (µmol/kg)`: numeric; nitrate concentration in µmol/kg  
+      `pH`: numeric; pH in pH units  
+      `Chlorophyll (µg/L)`: numeric; chlorophyll concentration in µg/L   
+      `Alkalinity (µEq/L)`: numeric; alkalinity concentration in µEquivalents/L  
+      `Dissolved Organic Carbon (µmol/kg)`: numeric; dissolved organic carbon concentration in µmol/kg  
+      `Iron (mg/L)`: numeric; iron concentration in mg/L  
+  
+  `WorldOceans-RegionsCoordinates-Clean.csv`: ocean regions found in `WorldOceans-Data-Clean.csv` and their coordinates in longitude and latitude 
+    - variables:  
+      `Region`: character; ocean region corresponding to those found in `WorldOceans-Data-Clean.csv`  
+      `Latitude`: numeric; latitude of region datum point  
+      `Longitude`: numeric; longitude of region datum point  
+  
+
+### Output Files
+Data/Clean/WorldOceans: 
+  `02-Clean-WorldOceanData-Final.csv`: combination of `WorldOceans-RegionsCoordinates-Clean.csv` and `WorldOceans-Data-Clean.csv` with additional Location column for more specific geographic location label
+    - variables:  
+      `Date`: date; mm/dd/yy 
+      `Ocean`: character; name of ocean data was obtained from  
+      `Region`: character; region of ocean that data was obtained from  
+      `Location`: character; more specific geographic location than region, such as an island, state, atoll, or reef  
+      `Depth (m)`: numeric; depth underwater data was obtained from  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `Salinity (PSU)`: numeric; salinity in Potential Salinity Units  
+      `Phosphate (µmol/kg)`: numeric; phosphate concentration in µmol/kg  
+      `Silicate (µmol/kg)`: numeric; silicate concentration in µmol/kg    
+      `Nitrate (µmol/kg)`: numeric; nitrate concentration in µmol/kg  
+      `pH`: numeric; pH in pH units  
+      `Chlorophyll (µg/L)`: numeric; chlorophyll concentration in µg/L   
+      `Alkalinity (µEq/L)`: numeric; alkalinity concentration in µEquivalents/L  
+      `Dissolved Organic Carbon (µmol/kg)`: numeric; dissolved organic carbon concentration in µmol/kg  
+      `Iron (mg/L)`: numeric; iron concentration in mg/L
+      `Latitude`: numeric; latitude of region datum point  
+      `Longitude`: numeric; longitude of region datum point
+
+
+```{r label='Import-Libraries'}
 library(tidyverse)
 library(lubridate)
 ```
 
 # Import Data
 ```{r import-data}
-dfWOD <- read_csv("Data/Clean/WorldOceans/01-Clean-WorldOceanData.csv") 
+# `WorldOceans-Data-Clean.csv` was compiled separately in MS Excel from the data files in InputData/Raw/WorldOceans which was obtained from the NOAA National Centers for Environmental Information NCEI World Ocean Database
+dfWOD <- read_csv("InputData/Clean/01-Wrangling/WorldOceans-Data-Clean.csv") 
 
-dfCoords <- read_csv("Data/Clean/WorldOceans/RegionsCoordinates.csv")
+# `WorldOceans-RegionsCoordinates-Clean.csv` was compiled in MS Excel using coordiantes of the locations in `WorldOceans-Data-Clean.csv`
+dfCoords <- read_csv("InputData/Clean/01-Wrangling/WorldOceans-RegionsCoordinates-Clean.csv")
 
 ```
 
@@ -101,6 +157,6 @@ dfWOD_final <- dfWOD_final %>%
 # Write Data
 ```{r write-data}
 write_csv(dfWOD_final,
-          file = "Data/Clean/WorldOceans/02-Clean-WorldOceanData-Final.csv")
+          file = "Data/Clean/WorldOceans/WorldOceans-Data-Clean-Final.csv")
 ```
 

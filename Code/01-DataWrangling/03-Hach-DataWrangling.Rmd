@@ -74,8 +74,8 @@ InputData/Raw/Hach/:
 
 ### Output Files
 InputData/Clean/01-DataWrangling/:  
-  `Hach-Data-Clean.csv` 
-    - variables: 
+  `Hach-Data-Clean.csv`: cleaned Hach nutrient water quality data for all locations from 2017-2024  
+    - variables:  
       `Date`: date in mm/dd/yy  
       `Location`: character; location of measurements; Ocean, Mangroves, Raceway 1, or Raceway 2  
       `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  

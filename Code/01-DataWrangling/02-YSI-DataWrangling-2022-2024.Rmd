@@ -189,7 +189,7 @@ InputData/Raw/YSI/SCADA_2022_2024: YSI EXO3 Multiparameter Sonde data from SCADA
   
 ### Output Files
 InputData/Clean/01-DataWrangling:  
-  ``YSI-Data-Clean-All.csv``: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2024  
+  `YSI-Data-Clean-All.csv`: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2024  
     - variables: 
             `Date`: date  
             `Time`: time  

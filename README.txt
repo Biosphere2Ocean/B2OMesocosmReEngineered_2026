@@ -53,17 +53,17 @@ The following is a data tree of the files contained within this repository. Full
 ├── README.md: This document  
 ├── Metadata: directory containing additional metadata files  
 ├── Code: directory containing all code that accompanies this manuscript  
-    ├── 01-DataWrangling: subdirectory  
+    ├── 01-DataWrangling: subdirectory containing code files for wrangling data files used in downstream analyses  
     │   ├── 01-YSI-DataWrangling-2011-2022.Rmd  
     │   ├── 02-YSI-DataWrangling-2022-Present.Rmd  
     │   ├── 03-Hach-DataWrangling.Rmd  
     │   └── 04-WorldOceans-DataWrangling.Rmd  
-    ├── 02-QualityControl: subdirectory  
+    ├── 02-QualityControl: subdirectory containing code files for quality controlling cleaned files from data wrangling code  
     │   ├── Hach-DataQC.Rmd  
     │   └── YSI-DataQC.Rmd  
-    ├── 03-Statistics: subdirectory  
-    │   ├── 
-    ├── 04-FigureMaking: subdirectory  
+    ├── 03-Statistics: subdirectory containing code file for running statistics on the cleaned and quality controlled data   
+    │   └── HachYSI-DescriptiveStatistics.Rmd
+    ├── 04-FigureMaking: subdirectory containing code files for making the figures in the associated manuscript that are associated with this dataset  
     │   ├── 
     ├── Functions: subdirectory 
     │   ├── 
@@ -126,8 +126,12 @@ The following is a data tree of the files contained within this repository. Full
     │   │   ├── YSI-Data-QC.csv
     │   │   └── YSI-Data-QC-Cutoff.csv
 ├── OutputData: directory containing data files output from Statistics code  
-    │   ├── Correlations: subdirectory 
-    │   ├── DescriptiveStatistics: subdirectory 
+    │   ├── DescriptiveStatistics: subdirectory containing data files output from Statistics code
+    │   │   ├── HachYSI-Data-Medians-All.csv
+    │   │   ├── HachYSI-Data-Medians-Daily.csv
+    │   │   ├── HachYSI-Data-Medians-Weekly.csv
+    │   │   ├── HachYSI-Data-Medians-Monthly.csv
+    │   │   ├── HachYSI-Data-Medians-Yearly.csv
     │   └── WorldOceans-Paper: subdirectory
 ├── Figures: directory containing figures produced from the Figure Making code files in this manuscript  
 

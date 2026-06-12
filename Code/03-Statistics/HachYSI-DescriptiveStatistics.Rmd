@@ -11,10 +11,189 @@ editor_options:
 # Hach and YSI Data Wrangling
 ## Input and Output Files
 ### Input Files
-
+InputData/Clean/02-QualityControl: 
+  `YSI-Data-QC-Cutoff.csv`: all Biosphere 2 Ocean remote sensing multiparameter sonde water quality data after being run through quality control parameters and cutoff values 
+    - variables: 
+            `Date`: date  
+            `Time`: time  
+            `Temperature (ºF)`: numeric; temperature value in degrees Fahrenheit  
+            `Temperature (ºC)`: numeric; temperature value in degrees Celcius  
+            `pH`: numeric; pH value in pH units  
+            `pH (mV)`: numeric; pH value in miliVolts  
+            `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
+            `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
+            `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
+            `Oxygen Reduction Potential (mV)`: numeric; oxidation-reduction potential value in miliVolts  
+            `Chlorophyll (RFU)`: numeric; chlorophyll value in RFU  
+            `Total Algae (RFU)`: numeric; total algae phycoerythrin value in RFU  
+            `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
+            `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
+            `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
+        
+  `Hach-Data-QC.csv`: Hach nutrient water quality data after being run through quality control parameters
+    - variables:  
+      `Date`: date in mm/dd/yy  
+      `Location`: character; location of measurements; Ocean, Mangroves, Raceway 1, or Raceway 2  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+      `pH`: pH in pH units  
+      `Alkalinity (mg/L CaCO3)`: numeric; calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; iron concentration in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
 
 ### Output Files
-
+OutputData/DescriptiveStatistics: 
+  `HachYSI-Data-Medians-Daily.csv`: daily median of all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+    - variables:   
+      `Time Interval`: character; time interval at which the median is being taken, "daily" for this file  
+      `Date`: date; YYYY-mm-dd  
+      `Temperature (ºF)`: numeric; temperature in degrees Fahrenheit  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH (mV)`: numeric; pH in miliVolts  
+      `Salinity (PSU)`: numeric; salinity in Potenial Salinity Units  
+      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSemens/cm  
+      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSemens/cm  
+      `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen in mg/L  
+      `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen in %  
+      `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen in %  
+      `Oxygen Reduction Potential (mV)`: numeric; oxidative-reduction potential in miliVolts  
+      `Chlorophyll (RFU)`: numeric; chlorophyll in Relative Fluorescent Units  
+      `Total Algae (RFU)`: numeric; total algae in Relative Fluorescent Units  
+      `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids in mg/L  
+      `pH (YSI)`: numeric; pH in pH units from the YSI dataset  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      `pH_Hach`: numeric; pH in pH units from the Hach dataset  
+      `Alkalinity (mg/L CaCO3)`: numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; Iron in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
+  
+  `HachYSI-Data-Medians-Monthly.csv`: monthly median of all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+    - variables:   
+      `Time Interval`: character; time interval at which the median is being taken, "monthly" for this file  
+      `Date`: date; YYYY-mm-dd  
+      `Temperature (ºF)`: numeric; temperature in degrees Fahrenheit  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH (mV)`: numeric; pH in miliVolts  
+      `Salinity (PSU)`: numeric; salinity in Potenial Salinity Units  
+      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSemens/cm  
+      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSemens/cm  
+      `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen in mg/L  
+      `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen in %  
+      `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen in %  
+      `Oxygen Reduction Potential (mV)`: numeric; oxidative-reduction potential in miliVolts  
+      `Chlorophyll (RFU)`: numeric; chlorophyll in Relative Fluorescent Units  
+      `Total Algae (RFU)`: numeric; total algae in Relative Fluorescent Units  
+      `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids in mg/L  
+      `pH (YSI)`: numeric; pH in pH units from the YSI dataset  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      `pH_Hach`: numeric; pH in pH units from the Hach dataset  
+      `Alkalinity (mg/L CaCO3)`: numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; Iron in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
+  
+  `HachYSI-Data-Medians-Weekly.csv`: weekly median of all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+    - variables:   
+      `Time Interval`: character; time interval at which the median is being taken, "weekly" for this file  
+      `Date`: date; YYYY-mm-dd  
+      `Temperature (ºF)`: numeric; temperature in degrees Fahrenheit  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH (mV)`: numeric; pH in miliVolts  
+      `Salinity (PSU)`: numeric; salinity in Potenial Salinity Units  
+      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSemens/cm  
+      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSemens/cm  
+      `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen in mg/L  
+      `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen in %  
+      `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen in %  
+      `Oxygen Reduction Potential (mV)`: numeric; oxidative-reduction potential in miliVolts  
+      `Chlorophyll (RFU)`: numeric; chlorophyll in Relative Fluorescent Units  
+      `Total Algae (RFU)`: numeric; total algae in Relative Fluorescent Units  
+      `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids in mg/L  
+      `pH (YSI)`: numeric; pH in pH units from the YSI dataset  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      `pH_Hach`: numeric; pH in pH units from the Hach dataset  
+      `Alkalinity (mg/L CaCO3)`: numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; Iron in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
+  
+  `HachYSI-Data-Medians-Yearly.csv`: yearly median of all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+    - variables:   
+      `Time Interval`: character; time interval at which the median is being taken, "yearly" for this file  
+      `Date`: date; YYYY-mm-dd  
+      `Temperature (ºF)`: numeric; temperature in degrees Fahrenheit  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH (mV)`: numeric; pH in miliVolts  
+      `Salinity (PSU)`: numeric; salinity in Potenial Salinity Units  
+      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSemens/cm  
+      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSemens/cm  
+      `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen in mg/L  
+      `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen in %  
+      `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen in %  
+      `Oxygen Reduction Potential (mV)`: numeric; oxidative-reduction potential in miliVolts  
+      `Chlorophyll (RFU)`: numeric; chlorophyll in Relative Fluorescent Units  
+      `Total Algae (RFU)`: numeric; total algae in Relative Fluorescent Units  
+      `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids in mg/L  
+      `pH (YSI)`: numeric; pH in pH units from the YSI dataset  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      `pH_Hach`: numeric; pH in pH units from the Hach dataset  
+      `Alkalinity (mg/L CaCO3)`: numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; Iron in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
+  
+  `HachYSI-Data-Medians-All.csv`: all median time interval data combined for all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+    - variables:   
+      `Time Interval`: character; time interval at which the median is being taken, "daily", "weekly", "monthly", and "yearly" for this file  
+      `Date`: date; YYYY-mm-dd  
+      `Temperature (ºF)`: numeric; temperature in degrees Fahrenheit  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH (mV)`: numeric; pH in miliVolts  
+      `Salinity (PSU)`: numeric; salinity in Potenial Salinity Units  
+      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSemens/cm  
+      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSemens/cm  
+      `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen in mg/L  
+      `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen in %  
+      `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen in %  
+      `Oxygen Reduction Potential (mV)`: numeric; oxidative-reduction potential in miliVolts  
+      `Chlorophyll (RFU)`: numeric; chlorophyll in Relative Fluorescent Units  
+      `Total Algae (RFU)`: numeric; total algae in Relative Fluorescent Units  
+      `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids in mg/L  
+      `pH (YSI)`: numeric; pH in pH units from the YSI dataset  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      `pH_Hach`: numeric; pH in pH units from the Hach dataset  
+      `Alkalinity (mg/L CaCO3)`: numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; Iron in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
 
 
 ```{r label='Import-Libraries'}
@@ -29,7 +208,7 @@ options(scipen = 999)
 dfYSI <- read_csv("InputData/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv")
 
 # use 02-Hach-Data-Clean-QC.csv
-dfHach <- read_csv("InputData/Clean/Hach/02_QualityControl/02-Hach-Data-Clean-QC.csv")
+dfHach <- read_csv("InputData/Clean/02-QualityControl/Hach-Data-QC.csv")
 
 ```
 
@@ -295,27 +474,27 @@ dfYSIHach_all <- rbind(dfYSIHach_daily, dfYSIHach_weekly, dfYSIHach_monthly, dfY
 ```{r write csv file}
 # create csv file of YSI and Hach daily values
 write_csv(dfYSIHach_daily, 
-          file = "Data/Clean/HachYSI/01_DataWrangling/01-HachYSI-Data-Daily.csv", 
+          file = "OutputData/DescriptiveStatistics/HachYSI-Data-Medians-Daily.csv", 
           col_names = TRUE)
 
 # create csv file of YSI and Hach weekly values
 write_csv(dfYSIHach_weekly,
-          file = "Data/Clean/HachYSI/01_DataWrangling/02-HachYSI-Data-Weekly.csv",
+          file = "OutputData/DescriptiveStatistics/HachYSI-Data-Medians-Weeky.csv",
           col_names = TRUE)
 
 # create csv file of YSI and Hach monthly values
 write_csv(dfYSIHach_monthly,
-          file = "Data/Clean/HachYSI/01_DataWrangling/03-HachYSI-Data-Monthly.csv",
+          file = "OutputData/DescriptiveStatistics/HachYSI-Data-Medians-Monthly.csv",
           col_names = TRUE)
 
 # create csv file of YSI and Hach yearly values
 write_csv(dfYSIHach_yearly,
-          file = "Data/Clean/HachYSI/01_DataWrangling/04-HachYSI-Data-Yearly.csv",
+          file = "OutputData/DescriptiveStatistics/HachYSI-Data-Medians-Yearly.csv",
           col_names = TRUE)
 
 # create csv file of YSI and Hach all values
 write_csv(dfYSIHach_all,
-          file = "Data/Clean/HachYSI/01_DataWrangling/05-HachYSI-Data-All.csv",
+          file = "OutputData/DescriptiveStatistics/HachYSI-Data-Medians-All.csv",
           col_names = TRUE)
 
 ```

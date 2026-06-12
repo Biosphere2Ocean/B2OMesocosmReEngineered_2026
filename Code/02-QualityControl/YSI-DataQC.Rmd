@@ -1,17 +1,91 @@
 ---
-title: "Ocean Data Quality Control"
+title: "YSI Data Quality Control"
 collaborators: Renee Grambihler
-project: OceanWaterQuality
-institution: Biosphere 2 Ocean
-output: html_notebook
+project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+institution: Biosphere 2 Reef Lab
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 # Data Quality Control
 
 > Please Note:  If you have access to the file 02-YSI-Data-QCCutoff.csv, then you do not need to run this notebook in order to proceed with downstream data analyses. If you would like to see how the data was quality controlled, then continue.
 
+## Input and Output Files  
+### Input Files  
+InputData/Clean/01-DataWrangling: 
+  `YSI-Data-Clean-All.csv`: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2024  
+    - variables: 
+            `Date`: date  
+            `Time`: time  
+            `Temperature (ºF)`: numeric; temperature value in degrees Fahrenheit  
+            `Temperature (ºC)`: numeric; temperature value in degrees Celcius  
+            `pH`: numeric; pH value in pH units  
+            `pH (mV)`: numeric; pH value in miliVolts  
+            `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
+            `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
+            `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
+            `Oxygen Reduction Potential (mV)`: numeric; oxidation-reduction potential value in miliVolts  
+            `Chlorophyll (RFU)`: numeric; chlorophyll value in RFU  
+            `Total Algae (RFU)`: numeric; total algae phycoerythrin value in RFU  
+            `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
+            `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
+            `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
 
-## Import Libraries
-```{r Import Libraries}
+
+### Output Files 
+InputData/Clean/02-QualityControl:
+  `YSI-Data-QC.csv`: all Biosphere 2 Ocean remote sensing multiparameter sonde water quality data after being run through quality control parameters of removing data more than 2 standard deviations outside of the daily mean or median depending on normality of the day's data
+    - variables: 
+            `Date`: date  
+            `Time`: time  
+            `Temperature (ºF)`: numeric; temperature value in degrees Fahrenheit  
+            `Temperature (ºC)`: numeric; temperature value in degrees Celcius  
+            `pH`: numeric; pH value in pH units  
+            `pH (mV)`: numeric; pH value in miliVolts  
+            `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
+            `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
+            `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
+            `Oxygen Reduction Potential (mV)`: numeric; oxidation-reduction potential value in miliVolts  
+            `Chlorophyll (RFU)`: numeric; chlorophyll value in RFU  
+            `Total Algae (RFU)`: numeric; total algae phycoerythrin value in RFU  
+            `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
+            `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
+            `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
+  
+  `YSI-Data-QC-Cutoff.csv`: all Biosphere 2 Ocean remote sensing multiparameter sonde water quality data after being run through quality control parameters and cutoff values 
+    - variables: 
+            `Date`: date  
+            `Time`: time  
+            `Temperature (ºF)`: numeric; temperature value in degrees Fahrenheit  
+            `Temperature (ºC)`: numeric; temperature value in degrees Celcius  
+            `pH`: numeric; pH value in pH units  
+            `pH (mV)`: numeric; pH value in miliVolts  
+            `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
+            `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
+            `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
+            `Oxygen Reduction Potential (mV)`: numeric; oxidation-reduction potential value in miliVolts  
+            `Chlorophyll (RFU)`: numeric; chlorophyll value in RFU  
+            `Total Algae (RFU)`: numeric; total algae phycoerythrin value in RFU  
+            `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
+            `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
+            `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
+
+
+```{r label='Import-Libraries'}
 library(tidyverse)
 library(lubridate)
 # turns scientific notation off
@@ -19,11 +93,10 @@ options(scipen = 999)
 ```
 
 ## Import Raw Data
-This uses csv file created in OceanDataWrangling.Rmd. You do not need to re-run that script to use this csv.
 ```{r Import Data}
 # if you get an error when running line below, make sure to set R Markdown to run chunks in project directory: Tools > Global Options > R Markdown (in side panel) > "Evaluate chunks in directory:" drop down menu select Project
 
-df <- read_csv("Data/Clean/YSI/01_DataWrangling/02-YSI-Data-Clean-All.csv") 
+df <- read_csv("InputData/Clean/01-DataWrangling/YSI-Data-Clean-All.csv") 
 
 head(df)
 
@@ -81,7 +154,9 @@ dfPivot <- df %>%
 
 dfCheck <- dfPivot %>%
   # get the date as the month and year by taking off the last 4 digits (have to add an extra in there so it ends up being -4)
-  mutate(Date = str_sub(Date, end=-4)) %>%
+  #mutate(Date = str_sub(Date, end=-4)) %>%
+  # to go by each day: 
+  select(-Time) %>%
   unique() %>%
   na.omit() %>%
   group_by(Date, variable) %>%
@@ -116,14 +191,15 @@ for (v in var_names) {
   
   dfVar <- dfVar %>%
     # mutate date column so it's just year and month - this will allow us to do summary statistics by month
-    # mutate(Date = paste(year(Date), week(Date), sep = "-"),
+    # mutate(Date = paste(year(Date), month(Date), sep = "-"),
     #        stat = NA) %>%
+    # to use daily median instead of monthly: 
     mutate(stat = NA) %>%
     group_by(Date) %>%
-    # make columns for monthly standard deviation, mean, and median absolute deviation (mad) 
-    mutate(sd_monthly = sd(as.numeric(var), na.rm = TRUE),
-           mean_monthly = mean(as.numeric(var), na.rm = TRUE),
-           mad_monthly = mad(as.numeric(var), na.rm = TRUE))
+    # make columns for daily standard deviation, mean, and median absolute deviation (mad) 
+    mutate(sd_daily = sd(as.numeric(var), na.rm = TRUE),
+           mean_daily = mean(as.numeric(var), na.rm = TRUE),
+           mad_daily = mad(as.numeric(var), na.rm = TRUE))
   
   # create vector of unique dates from dfVar. Will give just the unique year/month combos
   unique_dates <- unique(dfVar$Date)
@@ -154,31 +230,31 @@ for (v in var_names) {
                            "median"))
   }
   
-  # calculate z-scores for each data point based on the monthly mean or median
+  # calculate z-scores for each data point based on the daily mean or median
   # if the value of stat is "mean", then a normal z-score will be calculated using the mean
   # if the value of stat is "median", then a modified z-score will be calculated using the median
-  # if the denominator in the suggested calculation is going to be 0 (sd_monthly for normal and mad_monthly for modified), then either the normal z-score will be calculated, or 0 will be put in for the zscore. Some reasoning is included below: 
+  # if the denominator in the suggested calculation is going to be 0 (sd_daily for normal and mad_daily for modified), then either the normal z-score will be calculated, or 0 will be put in for the zscore. Some reasoning is included below: 
   dfVar <- dfVar %>%
     # create column called zscore and populate with NA values
     mutate(zscore = NA,
-           # if stat is median and mad_monthly is > 0, then calculate the modified z-score for zscore column, otherwise, keep original zscore value (NA in this case). This is to avoid dividing by 0
-           zscore = ifelse(stat == "median" & mad_monthly > 0,
-                           0.6745 * (var - mean_monthly) / mad_monthly,
+           # if stat is median and mad_daily is > 0, then calculate the modified z-score for zscore column, otherwise, keep original zscore value (NA in this case). This is to avoid dividing by 0
+           zscore = ifelse(stat == "median" & mad_daily > 0,
+                           0.6745 * (var - mean_daily) / mad_daily,
                            zscore),
-           # if stat is mean and sd_monthly is > 0, then calculate normal z-score for zscore column, otherwise, keep original zscore value. This is to avoid dividing by 0.
-           zscore = ifelse(stat == "mean" & sd_monthly > 0,
-                           (var - mean_monthly)/sd_monthly,
+           # if stat is mean and sd_daily is > 0, then calculate normal z-score for zscore column, otherwise, keep original zscore value. This is to avoid dividing by 0.
+           zscore = ifelse(stat == "mean" & sd_daily > 0,
+                           (var - mean_daily)/sd_daily,
                            zscore),
-           # if stat is mean and sd_monthly is < or = to 0, make zscore value 0, otherwise, keep original zscore value. If the data are normal, and the standard deviation is <=0, then the z-score should be 0 anyways. This is again to avoid dividing by 0.
-           zscore = ifelse(stat == "mean" & sd_monthly <= 0,
+           # if stat is mean and sd_daily is < or = to 0, make zscore value 0, otherwise, keep original zscore value. If the data are normal, and the standard deviation is <=0, then the z-score should be 0 anyways. This is again to avoid dividing by 0.
+           zscore = ifelse(stat == "mean" & sd_daily <= 0,
                            0,
                            zscore), 
-           # if stat is median and mad_monthly is <= 0 and sd_monthly > 0, then calculate a normal z-score for zscore column, otherwise, keep original zscore value. This is to avoid dividing by 0: if median is suggested (non normal data) but the var value is not different from the median, this will give 0 as mad value (mad = constant * |var - median|; see ?mad for more details)
-           zscore = ifelse(stat == "median" & mad_monthly <= 0 & sd_monthly > 0,
-                           (var - mean_monthly)/sd_monthly,
+           # if stat is median and mad_daily is <= 0 and sd_daily > 0, then calculate a normal z-score for zscore column, otherwise, keep original zscore value. This is to avoid dividing by 0: if median is suggested (non normal data) but the var value is not different from the median, this will give 0 as mad value (mad = constant * |var - median|; see ?mad for more details)
+           zscore = ifelse(stat == "median" & mad_daily <= 0 & sd_daily > 0,
+                           (var - mean_daily)/sd_daily,
                            zscore), 
-           # if stat is median and mad_monthly is <= 0 and sd_monthly <= 0, zscore is 0, otherwise, keep original zscore value
-           zscore = ifelse(stat == "median" & mad_monthly <= 0 & sd_monthly <= 0, 
+           # if stat is median and mad_daily is <= 0 and sd_daily <= 0, zscore is 0, otherwise, keep original zscore value
+           zscore = ifelse(stat == "median" & mad_daily <= 0 & sd_daily <= 0, 
                            0,
                            zscore))
 
@@ -204,7 +280,7 @@ for (v in var_names) {
 Save QC'd data from above chunk to csv called 02-OceanWaterQualityData-QC. The next steps take the QC process further by implementing cutoff values. 
 ```{r Save QC Data}
 write_csv(dfQC, 
-          file = "Data/Clean/YSI/02_QualityControl/01-YSI-Data-QC.csv", 
+          file = "Data/Clean/02-QualityControl/YSI-Data-QC.csv", 
           col_names = TRUE)
 ```
 
@@ -260,7 +336,7 @@ Based on the above plot, the variables pH, salinity_psu, and temp_c still have s
 - temp_c < 20 or > 28
 ```{r Implement Cutoffs}
 # read in QCOceanWaterQualityData.csv that was created in a previous chunk if it is not already in your environment
-dfQC <- read_csv("Data/Clean/YSI/02_QualityControl/01-YSI-Data-QC.csv")
+dfQC <- read_csv("Data/Clean/02-QualityControl/YSI-Data-QC.csv")
 
 # implement post-QC cutoff values
 dfQCCutoff <- dfQC %>%
@@ -308,7 +384,7 @@ for (i in 1:length(var_names)) {
 Everything looks good, so we can write the final QC'd data to a csv file.
 ```{r Write Post-QC csv}
 write_csv(dfQCCutoff, 
-          file = "Data/Clean/YSI/02_QualityControl/02-YSI-Data-QCCutoff.csv", 
+          file = "InputData/Clean/02-QualityControl/YSI-Data-QC-Cutoff.csv", 
           col_names = TRUE)  
 
 ```

@@ -1,12 +1,52 @@
 ---
 title: "HACH Data Quality Control"
 Collaborators: Renee Grambihler
-Project: "Ocean Water Quality"
-Institution: Biosphere 2 Ocean
+Project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+Institution: Biosphere 2 Reef Lab
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+# Hach Data Quality Control  
+## Input and Output Files  
+### Input Files  
+InputData/Clean/01-DataWrangling: 
+  `Hach-Data-Clean.csv`: cleaned Hach nutrient water quality data for all locations from 2017-2024  
+    - variables: 
+      `Date`: date in mm/dd/yy  
+      `Location`: character; location of measurements; Ocean, Mangroves, Raceway 1, or Raceway 2  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+      `pH`: pH in pH units  
+      `Alkalinity (mg/L CaCO3)`: numeric; calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; iron concentration in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
+      `ORP`:  numeric;oxidation-reduction potential (ORP) measured in miliVolts  
+      `Initials`: character; initials of person or people taking measurements  
+      `Notes`: character; any notes from that measurement  
 
-# Libraries
-```{r libraries}
+### Output Files
+InputData/Clean/02-QualityControl:
+  `Hach-Data-QC.csv`: Hach nutrient water quality data after being run through quality control parameters
+    - variables:  
+      `Date`: date in mm/dd/yy  
+      `Location`: character; location of measurements; Ocean, Mangroves, Raceway 1, or Raceway 2  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; nitrate (NO3-) mid-range concentration from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; nitrate (NO3-) high-range from 0.3-30.0 measured in mg/L  
+      `pH`: pH in pH units  
+      `Alkalinity (mg/L CaCO3)`: numeric; calcium carbonate (CaCO3) concentration in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; silica (SiO2) concentration in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; iron concentration in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
+
+
+```{r label='Import-Libraries'}
 library(tidyverse)
 library(lubridate)
 # remove scientific notation
@@ -17,7 +57,7 @@ options(scipen = 999)
 ```{r import data}
 # use B2ONutrientData-Clean.csv
 # drop ORP, Initials, Notes columns
-df <- read_csv("Data/Clean/Hach/01_DataWrangling/01-Hach-Data-Clean.csv") %>%
+df <- read_csv("InputData/Clean/01-DataWrangling/Hach-Data-Clean.csv") %>%
   select(-ORP, -Initials, -Notes)
 ```
 
@@ -94,6 +134,6 @@ dfQC <- dfQC %>%
 ### Save QC'd Data
 ```{r save data}
 write_csv(dfQC,
-          file = "Data/Clean/Hach/02_QualityControl/02-Hach-Data-Clean-QC.csv")
+          file = "InputData/Clean/02-QualityControl/Hach-Data-QC.csv")
 ```
 

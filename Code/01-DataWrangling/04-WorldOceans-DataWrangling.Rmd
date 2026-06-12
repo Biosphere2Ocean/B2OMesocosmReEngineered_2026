@@ -37,8 +37,8 @@ InputData/Clean/01-DataWrangling:
   
 
 ### Output Files
-Data/Clean/WorldOceans: 
-  `02-Clean-WorldOceanData-Final.csv`: combination of `WorldOceans-RegionsCoordinates-Clean.csv` and `WorldOceans-Data-Clean.csv` with additional Location column for more specific geographic location label
+InputData/Clean/01-DataWrangling: 
+  `WorldOceans-Data-Clean-Final.csv`: combination of `WorldOceans-RegionsCoordinates-Clean.csv` and `WorldOceans-Data-Clean.csv` with additional Location column for more specific geographic location label
     - variables:  
       `Date`: date; mm/dd/yy 
       `Ocean`: character; name of ocean data was obtained from  

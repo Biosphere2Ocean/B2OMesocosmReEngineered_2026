@@ -1,0 +1,318 @@
+---
+title: "Hach and YSI Figures"
+collaborators: Renee Grambihler
+project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+institution: Biosphere 2 Reef Lab
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+# Hach and YSI Figures
+## Input and Output Files
+### Input Files
+OutputData/: 
+  `HachYSI-Data-Medians-All.csv`: all median time interval data combined for all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+    - variables:   
+      `Time Interval`: character; time interval at which the median is being taken, "daily", "weekly", "monthly", and "yearly" for this file  
+      `Date`: date; YYYY-mm-dd  
+      `Temperature (ºF)`: numeric; temperature in degrees Fahrenheit  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH (mV)`: numeric; pH in miliVolts  
+      `Salinity (PSU)`: numeric; salinity in Potenial Salinity Units  
+      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSemens/cm  
+      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSemens/cm  
+      `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen in mg/L  
+      `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen in %  
+      `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen in %  
+      `Oxygen Reduction Potential (mV)`: numeric; oxidative-reduction potential in miliVolts  
+      `Chlorophyll (RFU)`: numeric; chlorophyll in Relative Fluorescent Units  
+      `Total Algae (RFU)`: numeric; total algae in Relative Fluorescent Units  
+      `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids in mg/L  
+      `pH (YSI)`: numeric; pH in pH units from the YSI dataset  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      `pH_Hach`: numeric; pH in pH units from the Hach dataset  
+      `Alkalinity (mg/L CaCO3)`: numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; Iron in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
+
+### Output Files
+Figures/: 
+  `HachYSI-1x3HistoryPlot.png`: Scatter plot of temperature (c), salinity, and pH from 2011-2024 to show historical context of B2O. 
+  
+  `HachYSI-1x3CurrentPlot.png`: Scatter plot of temperature (c), salinity, and pH from 2021-2024 to show environmental variability of B2O in recent years.
+  
+  `HachYSI-NutWatQualPlot-TimeSeries.png`: Line plot with shaded ranges for Temperature (ºC), Salinity (PSU), pH, Alkalinity (mg/L CaCO3), Nitrate (mg/L), Phosphate (mg/L), Silica (mg/L), Iron (mg/L), and Dissolved Oxygen (mg/L) in B2O from 2020-2024. 
+  
+  `HachYSI-NutWatQualPlot-Climatology.png`: Line plot showing seasonal variation of Temperature (ºC), Salinity (PSU), pH, Alkalinity (mg/L CaCO3), Nitrate (mg/L), Phosphate (mg/L), Silica (mg/L), Iron (mg/L), and Dissolved Oxygen (mg/L) over the course of each year (january - december) from 2021-2024. 
+  
+
+```{r label='Import-Libraries'}
+library(tidyverse)
+library(lubridate)
+options(scipen = 999) 
+```
+
+# Import Data
+```{r import-data}
+# time series data
+dfTS <- read_csv("OutputData/HachYSI-Data-Medians-All.csv") %>%
+  select(-pH_Hach) %>% #take out pH data from Hach
+  rename(pH = `pH (YSI)`, #rename pH data from YSI to just pH
+         `Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`) %>% # rename Nitrate MR to just Nitrate
+  # implement another cutoff value -- heat exchanger very reliable and kept temp lower than or equal to 25.5 during 2021
+  mutate(`Temperature (ºC)` = ifelse(Date >= "2021-01-01" & Date < "2022-01-02" & `Temperature (ºC)` > 25.5, 
+                                     NA, 
+                                     `Temperature (ºC)`))
+```
+
+# B2O History 2011-2024
+Scatter plot nutrient and water quality data from 2011-2024 to show historical context of B2O. 
+```{r history}
+# history plot 
+# 1x3: Temp C, Salinity (PSU), pH; 2011-2024
+plotHistory <- dfTS %>%
+  # use Daily time interval
+  filter(`Time Interval` == "Daily") %>%
+  # keep just date, temperature celcius, salinity psu, and pH columns
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH) %>%
+  pivot_longer(cols = `Temperature (ºC)`:pH,
+               names_to = "var_name",
+               values_to = "var_value") %>%
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)","Salinity (PSU)","pH")))) %>%
+  ggplot(aes(x = Date,
+             y = var_value)) +
+  facet_wrap(~var_name,
+             ncol = 1,
+             scales = "free_y",
+             strip.position = "left", 
+             labeller = as_labeller(c(`Temperature (ºC)` = "Temperature (ºC)", 
+                                      `Salinity (PSU)` = "Salinity (PSU)",
+                                      pH = "pH"))) +
+  geom_point(size = 0.25) +
+  scale_x_date(date_breaks = "year",
+               date_labels = "%Y") +
+  ylab(NULL) +
+  xlab(NULL) +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(colour = "black"),
+        strip.background = element_blank(), 
+        strip.placement = "outside")
+  
+plotHistory
+
+# Save Plot
+ggsave(filename = "HachYSI-1x3HistoryPlot.png",
+       plot = plotHistory,
+       path = "Figures")
+
+```
+
+# Environmental Variability 2021-2024
+Scatter plot of temperature, salinity, and pH from 2021-2024 to show environmental variability of B2O in recent years.
+```{r current}
+# environmental variability plot 
+# 1x3: Temp C, Salinity (PSU), pH; 2021-2024
+plotCurrent <- dfTS %>%
+  # use Daily time interval
+  filter(`Time Interval` == "Daily") %>%
+  filter(Date >= "2021-01-01") %>%
+  # keep just date, temperature celcius, salinity psu, and pH columns
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH) %>%
+  pivot_longer(cols = `Temperature (ºC)`:pH,
+               names_to = "var_name",
+               values_to = "var_value") %>%
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)","Salinity (PSU)", "pH")))) %>%
+  ggplot(aes(x = Date,
+             y = var_value)) +
+  facet_wrap(~var_name,
+             ncol = 1,
+             scales = "free_y",
+             strip.position = "left", 
+             labeller = as_labeller(c(`Temperature (ºC)` = "Temperature (ºC)", 
+                                      `Salinity (PSU)` = "Salinity (PSU)",
+                                      pH = "pH"))) +
+  geom_point(size = 0.25) +
+  scale_x_date(date_breaks = "year",
+               date_labels = "%Y") +
+  ylab(NULL) +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(colour = "black"),
+        strip.background = element_blank(), 
+        strip.placement = "outside")
+  
+plotCurrent
+
+# Save Plot
+ggsave(filename = "HachYSI-1x3CurrentPlot.png",
+       plot = plotCurrent,
+       path = "Figures",
+       width = 6,
+       height = 4)
+
+```
+
+# Nutrients and Water Quality Time Series 2020-2024
+Line plot with ranges for nutrients and water quality of B2O from 2020-2024. 
+```{r nutrients-water-qual-timeseries}
+# nutrients and water quality time series plot 
+# Temp, Salinity, pH, Alaklinity Nitrate, Phosphate, Silica, Iron, DO; 2021-2024 
+dfNutWatQual_reg <- dfTS %>%
+  # use Daily time interval
+  filter(`Time Interval` == "Daily") %>%
+  filter(Date >= "2021-01-01")%>%
+  filter(`Dissolved Oxygen (mg/L)` < 7.0) %>%
+  # keep just date, alkalinity, nitrate mr, iron, and silica columns
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
+  pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
+               names_to = "var_name",
+               values_to = "var_value") %>%
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)"))))
+
+dfNutWatQual_naomit <- dfTS %>%
+  # use Daily time interval
+  filter(`Time Interval` == "Monthly") %>%
+  filter(Date >= "2021-01-01") %>%
+  filter(`Dissolved Oxygen (mg/L)` < 7.0) %>%
+  # keep just date, alkalinity, nitrate mr, iron, and silica columns
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
+  pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
+               names_to = "var_name",
+               values_to = "var_value") %>%
+  na.omit() %>%
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)"))))
+
+plotNutWatQual_ts <- 
+    ggplot(data = dfNutWatQual_reg,
+           aes(x = Date,
+               y = var_value)) +
+    facet_wrap(~var_name,
+               ncol = 2,
+               scales = "free_y",
+               strip.position = "left", 
+               labeller = as_labeller(c(`Temperature (ºC)` = "Temperature (ºC)",
+                                        `Salinity (PSU)` = "Salinity (PSU)",
+                                        pH = "pH", 
+                                        `Alkalinity (mg/L CaCO3)` = "Alkalinity (mg/L CaCO3)",
+                                        `Nitrate (mg/L)` = "Nitrate (mg/L)",
+                                        `Phosphate (mg/L)` = "Phosphate (mg/L)", 
+                                        `Silica (mg/L)` = "Silica (mg/L)",
+                                        `Iron (mg/L)` = "Iron (mg/L)",
+                                        `Dissolved Oxygen (mg/L)` = "Dissolved Oxygen (mg/L)"))) +
+    geom_point(color = "lightgray",
+               alpha = 0.4) +
+    geom_line(data = dfNutWatQual_naomit,
+              aes(x = Date,
+               y = var_value)) +
+    scale_x_date(date_breaks = "year",
+                 date_labels = "%Y") +
+    ylab(NULL) +
+    xlab(NULL) +
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          axis.line = element_line(colour = "black"),
+          strip.background = element_blank(), 
+          strip.placement = "outside") 
+
+plotNutWatQual_ts
+
+# Save Plot
+ggsave(filename = "HachYSI-NutWatQualPlot-TimeSeries.png",
+       plot = plotNutWatQual_ts,
+       path = "Figures",
+       height = 8)
+
+
+```
+
+# Seasonal Variation 2021-2024
+Line plot showing variation over the course of a year from 2021-2024. 
+```{r nutrients-water-qual-climatology}
+# nutrients and water quality time series plot 
+# Temp, Salinity, pH, Alaklinity Nitrate, Phosphate, Silica, Iron, DO; 2021-2024 
+dfNutWatQual_s <- dfTS %>%
+  # use Daily time interval
+  filter(`Time Interval` == "Monthly") %>%
+  filter(Date >= "2021-01-01") %>%
+  filter(`Dissolved Oxygen (mg/L)` < 7.0) %>%
+  # keep just columns that will be plotted
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, pH, `Alkalinity (mg/L CaCO3)`, `Nitrate (mg/L)`, `Phosphate (mg/L)`, `Silica (mg/L)`, `Iron (mg/L)`, `Dissolved Oxygen (mg/L)`) %>%
+  # pivot dataframe longer bc ggplot likes that better
+  pivot_longer(cols = `Temperature (ºC)`:`Dissolved Oxygen (mg/L)`,
+               names_to = "var_name",
+               values_to = "var_value") %>%
+  # add month number (jan = 1, feb = 2, etc)
+  mutate(month = month(Date, label = FALSE)) %>%
+  group_by(month, var_name) %>%
+  # use reframe instead of summarise bc it'll return more cols and rows 
+  reframe(min = min(var_value, na.rm = TRUE),
+          max = max(var_value, na.rm = TRUE),
+          mean = mean(var_value, na.rm = TRUE),
+          q1 = quantile(var_value, 0.25, na.rm = TRUE),
+          q2 = quantile(var_value, 0.75, na.rm = TRUE)) %>%
+  mutate(Date = as.Date(paste(2021, month, 01, sep = "-"))) %>%
+  mutate(across(var_name, ~factor(., levels=c("Temperature (ºC)", "Salinity (PSU)", "pH", "Alkalinity (mg/L CaCO3)", "Nitrate (mg/L)", "Phosphate (mg/L)", "Silica (mg/L)", "Iron (mg/L)", "Dissolved Oxygen (mg/L)")))) 
+
+# plot 
+plotNutWatQual_s <- dfNutWatQual_s %>%
+  ggplot(aes(x = as.Date(yday(Date), "2021-01-01"),
+             y = mean)) +
+  facet_wrap(~var_name,
+             ncol = 2,
+             scales = "free_y",
+             strip.position = "left", 
+             labeller = as_labeller(c(`Temperature (ºC)` = "Temperature (ºC)",
+                                      `Salinity (PSU)` = "Salinity (PSU)",
+                                      pH = "pH", 
+                                      `Alkalinity (mg/L CaCO3)` = "Alkalinity (mg/L CaCO3)",
+                                      `Nitrate (mg/L)` = "Nitrate (mg/L)",
+                                      `Phosphate (mg/L)` = "Phosphate (mg/L)", 
+                                      `Silica (mg/L)` = "Silica (mg/L)",
+                                      `Iron (mg/L)` = "Iron (mg/L)",
+                                      `Dissolved Oxygen (mg/L)` = "Dissolved Oxygen (mg/L)"))) +
+  geom_line() +
+  geom_ribbon(aes(ymin = q1,
+                  ymax = q2), 
+              color = "lightgray",
+              alpha = 0.3) +
+  scale_x_date(date_breaks = "month",
+               date_labels = "%B") +
+  scale_y_continuous(breaks = waiver(), n.breaks = 6) +
+  ylab(NULL) +
+  xlab(NULL) +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(colour = "black"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        strip.background = element_blank(), 
+        strip.placement = "outside") 
+  
+plotNutWatQual_s
+
+# Save Plot
+ggsave(filename = "HachYSI-NutWatQualPlot-Climatology.png",
+       plot = plotNutWatQual_s,
+       path = "Figures",
+       height = 8)
+
+
+```

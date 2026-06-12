@@ -28,7 +28,7 @@ License:
 CC BY 4.0 (Data)  
 MIT (Code)  
 
-Raw data can also be accessed from the [Biosphere 2 Database](https://biosphere2.org/biosphere-2-ocean-scada-data).
+Raw data can also be accessed from the Biosphere 2 Database (https://biosphere2.org/biosphere-2-ocean-scada-data).
 
 ---------------------------------------------
 
@@ -64,9 +64,8 @@ The following is a data tree of the files contained within this repository. Full
     ├── 03-Statistics: subdirectory containing code file for running statistics on the cleaned and quality controlled data   
     │   └── HachYSI-DescriptiveStatistics.Rmd
     ├── 04-FigureMaking: subdirectory containing code files for making the figures in the associated manuscript that are associated with this dataset  
-    │   ├── 
-    ├── Functions: subdirectory 
-    │   ├── 
+    │   ├── HachYSI-Figures.Rmd
+    │   └── WorldOceans-Figures.Rmd
 ├── InputData: directory containing data files input to code  
     ├── Raw: subdirectory 
     │   ├── Hach: subdirectory containing data file from colorimetry and titration nutrients water quality testing 
@@ -132,8 +131,13 @@ The following is a data tree of the files contained within this repository. Full
     │   │   ├── HachYSI-Data-Medians-Weekly.csv
     │   │   ├── HachYSI-Data-Medians-Monthly.csv
     │   │   ├── HachYSI-Data-Medians-Yearly.csv
-    │   └── WorldOceans-Paper: subdirectory
+    │   │   ├── WorldOceans-Data-Mean-2021-2024.csv
+    │   │   └── WorldOceans-Data-MeanPerYear.csv
 ├── Figures: directory containing figures produced from the Figure Making code files in this manuscript  
+    │   ├── HachYSI-1x3CurrentPlot.png
+    │   ├── HachYSI-1x3HistoryPlot.png
+    │   ├── HachYSI-NutWatQualPlot-Climatology.png
+    │   └── HachYSI-NutWatQualPlot-TimeSeries.png
 
 ---------------------------------------------
 

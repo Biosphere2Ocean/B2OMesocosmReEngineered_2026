@@ -1,0 +1,202 @@
+---
+title: "World Oceans Figures"
+collaborators: Renee Grambihler
+project: "The Biosphere 2 Ocean mesocosm: (re)engineered for state-of-the-art coral reef resilience experiments"
+institution: Biosphere 2 Reef Lab
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+# World Oceans Figures
+Make tables using the World Oceans Data to compare to Biosphere 2 Ocean data.  
+## Input and Output Files
+### Input Files
+InputData/Clean/01-DataWrangling: 
+  `WorldOceans-Data-Clean-Final.csv`: combination of `WorldOceans-RegionsCoordinates-Clean.csv` and `WorldOceans-Data-Clean.csv` with additional Location column for more specific geographic location label
+    - variables:  
+      `Date`: date; mm/dd/yy 
+      `Ocean`: character; name of ocean data was obtained from  
+      `Region`: character; region of ocean that data was obtained from  
+      `Location`: character; more specific geographic location than region, such as an island, state, atoll, or reef  
+      `Depth (m)`: numeric; depth underwater data was obtained from  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `Salinity (PSU)`: numeric; salinity in Potential Salinity Units  
+      `Phosphate (µmol/kg)`: numeric; phosphate concentration in µmol/kg  
+      `Silicate (µmol/kg)`: numeric; silicate concentration in µmol/kg    
+      `Nitrate (µmol/kg)`: numeric; nitrate concentration in µmol/kg  
+      `pH`: numeric; pH in pH units  
+      `Chlorophyll (µg/L)`: numeric; chlorophyll concentration in µg/L   
+      `Alkalinity (µEq/L)`: numeric; alkalinity concentration in µEquivalents/L  
+      `Dissolved Organic Carbon (µmol/kg)`: numeric; dissolved organic carbon concentration in µmol/kg  
+      `Iron (mg/L)`: numeric; iron concentration in mg/L
+      `Latitude`: numeric; latitude of region datum point  
+      `Longitude`: numeric; longitude of region datum point
+    
+OutputData/: 
+  `HachYSI-Data-Medians-All.csv`: all median time interval data combined for all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+    - variables:   
+      `Time Interval`: character; time interval at which the median is being taken, "daily", "weekly", "monthly", and "yearly" for this file  
+      `Date`: date; YYYY-mm-dd  
+      `Temperature (ºF)`: numeric; temperature in degrees Fahrenheit  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH (mV)`: numeric; pH in miliVolts  
+      `Salinity (PSU)`: numeric; salinity in Potenial Salinity Units  
+      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSemens/cm  
+      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSemens/cm  
+      `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen in mg/L  
+      `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen in %  
+      `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen in %  
+      `Oxygen Reduction Potential (mV)`: numeric; oxidative-reduction potential in miliVolts  
+      `Chlorophyll (RFU)`: numeric; chlorophyll in Relative Fluorescent Units  
+      `Total Algae (RFU)`: numeric; total algae in Relative Fluorescent Units  
+      `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids in mg/L  
+      `pH (YSI)`: numeric; pH in pH units from the YSI dataset  
+      `Turbidity (FAU)`: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      `Phosphate (mg/L)`: numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      `Nitrate, Mid-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      `Nitrate, High-Range (mg/L)`: numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      `pH_Hach`: numeric; pH in pH units from the Hach dataset  
+      `Alkalinity (mg/L CaCO3)`: numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      `Silica (mg/L)`: numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      `Iron (mg/L)`: numeric; Iron in range 0.009-1.400 measured in mg/L  
+      `Ammonia (mg/L)`: numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
+
+
+### Output Files
+OutputData/:
+  `WorldOceans-Data-MeanPerYear.csv`: table of mean of each variable for each region for each year
+    - variables: 
+      `Year`: date; year as YYYY  
+      `Ocean`: character; name of ocean measurements were taken in  
+      `Region`: character; region measurements were taken in  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH`: numeric; pH in pH units  
+      `Salinity (PSU)`: numeric; salinity in Potential Salinity Units  
+      `Alkalinity (mg/L)`: numeric; alkalinity in mg/L  
+      `Phosphate (mg/L)`: numeric; phosphate in mg/L  
+      `Silicate (mg/L)`: numeric; silicate in mg/L  
+      `Nitrate (mg/L)`: numeric; nitrate in mg/L  
+      `Iron (mg/L)`: numeric; iron in mg/L  
+  
+  `WorldOceans-Data-Mean-2021-2024.csv`:
+    - variables: 
+      `Ocean`: character; name of ocean measurements were taken in  
+      `Region`: character; region measurements were taken in  
+      `Temperature (ºC)`: numeric; temperature in degrees Celcius  
+      `pH`: numeric; pH in pH units  
+      `Salinity (PSU)`: numeric; salinity in Potential Salinity Units  
+      `Alkalinity (mg/L)`: numeric; alkalinity in mg/L  
+      `Phosphate (mg/L)`: numeric; phosphate in mg/L  
+      `Silicate (mg/L)`: numeric; silicate in mg/L  
+      `Nitrate (mg/L)`: numeric; nitrate in mg/L  
+      `Iron (mg/L)`: numeric; iron in mg/L  
+      
+
+```{r label='Import-Libraries'}
+library(tidyverse)
+library(lubridate)
+options(scipen = 999)
+```
+
+# Import Data 
+Import the World Oceans data and the YSI and Hach Medians data. 
+```{r import-data}
+# world ocean data
+dfWOD <- read_csv("InputData/Clean/01-DataWrangling/WorldOceans-Data-Clean-Final.csv") %>%
+  select(-Latitude, -Longitude) %>%
+  # add singular Iron datapoint that refuses to load even though it's on the csv :(
+  mutate(`Iron (mg/L)` = ifelse(`Silicate (mg/L)` == "0.21", "0.024", `Iron (mg/L)`))%>%
+  # filter out data before B2 data exists
+  filter(Date >= "2011-01-01")
+
+# b2o data 
+dfB2O <- read_csv("OutputData/HachYSI-Data-Medians-All.csv")
+
+```
+
+# Data Wrangling
+```{r data-wrangling}
+# biosphere 2 ocean dataframe 
+dfB2O_map <- dfB2O %>%
+  # use yearly medians 
+  filter(`Time Interval` == "Yearly") %>%
+  # use same variables as world oceans data
+  # using YSI pH because it is more reliable 
+  # using mid-range nitrate because it measures closer to the levels seen in b2o 
+  select(Date, `Temperature (ºC)`, `Salinity (PSU)`, `Phosphate (mg/L)`,
+         `Silica (mg/L)`, `Nitrate, Mid-Range (mg/L)`, `pH (YSI)`, `Alkalinity (mg/L CaCO3)`,
+         `Iron (mg/L)`) %>%
+  # rename variables to match world oceans data
+  rename(`Silicate (mg/L)` = `Silica (mg/L)`,
+         `Alkalinity (mg/L)` = `Alkalinity (mg/L CaCO3)`,
+         `Nitrate (mg/L)` = `Nitrate, Mid-Range (mg/L)`,
+         pH = `pH (YSI)`) %>%
+  # add columns for b2o location
+  add_column(Ocean = "Biosphere 2", .after = "Date") %>%
+  add_column(Region = "Arizona", .after = "Ocean") %>%
+  add_column(Location = "Biosphere 2", .after = "Region") %>%
+  # use just the year
+  mutate(Year = year(Date)) %>%
+  relocate(Year, .after = Date) %>%
+  select(-Date)
+
+# world oceans dataframe 
+dfWOD_map <- dfWOD %>%
+  # remove columns not being used
+  select(-`Chlorophyll (µg/L)`, -`Dissolved Organic Carbon (µmol/kg)`, -`Depth (m)`) %>%
+  # use just the year
+  mutate(Year = year(Date)) %>%
+  select(-Date) %>%
+  group_by(Year, Location) %>%
+  # take the medians for each year for each variable 
+  mutate(`Temperature (ºC)` = median(`Temperature (ºC)`, na.rm = TRUE),
+         `Salinity (PSU)` = median(`Salinity (PSU)`, na.rm = TRUE),
+         `Phosphate (mg/L)` = median(`Phosphate (mg/L)`, na.rm = TRUE),
+         `Silicate (mg/L)` = median(`Silicate (mg/L)`, na.rm = TRUE),
+         `Nitrate (mg/L)` = median(`Nitrate (mg/L)`, na.rm = TRUE),
+         `pH` = median(`pH`, na.rm = TRUE),
+         `Alkalinity (mg/L)` = median(`Alkalinity (mg/L)`, na.rm = TRUE),
+         `Iron (mg/L)` = median(`Iron (mg/L)`, na.rm = TRUE)) %>%
+  relocate(Year, .before = Ocean) %>%
+  # make sure there are no repeat rows
+  unique() %>%
+  # change Iron data class to double 
+  mutate(`Iron (mg/L)` = as.double(`Iron (mg/L)`))
+
+```
+
+# Make Tables
+Make one table for the mean of each region for each year and one table for the mean of each region for 2021-2024
+```{r make-tables}
+# mean of each year for each region
+dfMap_mean_per_year <- rbind(dfWOD_map, dfB2O_map) %>%
+  group_by(Year, Ocean, Region) %>%
+  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE))) %>%
+  mutate(across(where(is.numeric),  ~round(.x, digits = 4))) %>%
+  relocate(pH, .after = `Temperature (ºC)`) %>%
+  relocate(`Alkalinity (mg/L)`, .after = `Salinity (PSU)`)
+
+# mean of each region for 2021-2024
+dfMap_mean_2021_2024 <- rbind(dfWOD_map, dfB2O_map) %>%
+  ungroup() %>%
+  filter(Year >= 2021) %>%
+  select(-Year) %>%
+  group_by(Ocean, Region) %>%
+  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE))) %>%
+  mutate(across(where(is.numeric),  ~round(.x, digits = 4))) %>%
+  relocate(pH, .after = `Temperature (ºC)`) %>%
+  relocate(`Alkalinity (mg/L)`, .after = `Salinity (PSU)`)
+
+```
+
+# Write Tables
+```{r write-tables}
+# All years
+write_csv(dfMap_mean_per_year, "OutputData/WorldOceans-Data-MeanPerYear.csv")
+
+# 2021-2024
+write_csv(dfMap_less, "OutputData/WorldOceans-Data-Mean-2021-2024.csv")
+```
+

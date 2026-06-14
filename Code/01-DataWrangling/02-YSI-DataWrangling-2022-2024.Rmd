@@ -162,7 +162,7 @@ InputData/Raw/YSI/SCADA_2022_2024: YSI EXO3 Multiparameter Sonde data from SCADA
           `TIMESTAMP`: datetime
           `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation   
           `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
-          `VALUE`: total dissolved solids value in mg/L  
+          `VALUE`: numeric; total dissolved solids value in mg/L  
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
   
@@ -186,10 +186,27 @@ InputData/Raw/YSI/SCADA_2022_2024: YSI EXO3 Multiparameter Sonde data from SCADA
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
 
+InputData/Raw/YSI/ProDSS/:
+  `prodssbackup-231117-240112.csv`: YSI ProDSS Multiparameter Sonde data from 11/17/2023 - 1/10/2024 when EXO3 was sent in for maintenance
+    - variables: 
+          `Date`: date; mm/dd/yy
+          `Time`: time; HH:MM:SS
+          `Site`: character; name of site being measured
+          `Unit ID`: numeric; identifier for instrument in YSI software
+          `User ID`: character; identifier for person associated with dataset being recorded
+          `∞F`: numeric; temperature in degrees Celsius
+          `DO %`: numeric; dissolved oxygen in %
+          `DO mg/L`: numeric; dissolved oxygen in mg/L
+          `C-uS/cm`: numeric; electric conductivity in µSemens/cm
+          `SAL-PSU`: numeric; salinity in Potential Salinity Units
+          `pH`: numeric; pH in pH units
+          `ORP mV`: numeric; oxidative-reduction potential in miliVolts
+          `Chl RFU`: numeric; chlorophyll in Relative Fluorescent Units
+          `PE RFU`: numeric; total algae phycoerythrin in Relative Fluorescent Units
   
 ### Output Files
 InputData/Clean/01-DataWrangling:  
-  `YSI-Data-Clean-All.csv`: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2024  
+  `YSI-Data-Clean-All.csv`: all Biosphere 2 Ocean remote sensing Sonde data from 2011 - 2024
     - variables: 
             `Date`: date  
             `Time`: time  
@@ -209,7 +226,7 @@ InputData/Clean/01-DataWrangling:
             `Total Algae (RFU)`: numeric; total algae phycoerythrin value in RFU  
             `Chlorophyll (µg/L)`: numeric; chlorophyll value in µg/L  
             `Total Algae (cells/L)`: numeric; total algae phycoerythrin value in cells/L
-            `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L  
+            `Total Dissolved Solids (mg/L)`: numeric; total dissolved solids value in mg/L 
 
 
 ```{r label='Import-Libraries'}
@@ -422,7 +439,7 @@ exo_temp_f <- read_csv(here(path, "UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv"),
 This file is from the YSI ProDSS instrument. The EXO3 was sent in for maintenance from 11/17/2023 - 1/10/2024, so it was not recording the to the database. The YSI ProDSS was used to record data while the EXO3 was away. Unfortunately, not all of the same variables were recorded, but this will be fixed if the EXO3 ever needs to go back.
 
 ```{r import-ProDSS-file}
-dfProDSS <- read_csv("Data/Raw/YSI/ProDSS/prodssbackup-231117-240112.csv",
+dfProDSS <- read_csv("InputData/Raw/YSI/ProDSS/prodssbackup-231117-240112.csv",
                      # files downloaded from the YSI instruments are encoded as UTF-16, but most code languages only read UTF-8. Make sure to keep the below line in to fix that.
                      locale=locale(encoding="UTF-16"),
                      # first line says sep=, so that excel reads in the csv file like an excel file so make sure to skip that. can only see this line when viewing with a text editor

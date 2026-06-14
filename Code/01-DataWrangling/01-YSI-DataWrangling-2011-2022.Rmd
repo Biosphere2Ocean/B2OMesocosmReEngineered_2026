@@ -75,7 +75,7 @@ InputData/Raw/YSI/SCADA_2019_2022: YSI SCADA data from 5/26/21-2/23/22
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
   
-  `UAB2_B240001_YSI_EXO3_NLF_CO_661668.csv`: nLF conductivity in uSemens/cm  
+  `UAB2_B240001_YSI_EXO3_NLF_CO_661668.csv`: electrical conductivity as a non-linear function in uSemens/cm  
       - variables: 
           `ID`: numeric; individual datum id / row number  
           `TIMESTAMP`: datetime  
@@ -85,7 +85,7 @@ InputData/Raw/YSI/SCADA_2019_2022: YSI SCADA data from 5/26/21-2/23/22
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
   
-  `UAB2_B240001_YSI_EXO3_ODO__L_632594.csv`: dissolved oxygen in %, local  
+  `UAB2_B240001_YSI_EXO3_ODO__L_632594.csv`: local dissolved oxygen in % 
       - variables: 
           `ID`: numeric; individual datum id / row number  
           `TIMESTAMP`: datetime  
@@ -95,7 +95,7 @@ InputData/Raw/YSI/SCADA_2019_2022: YSI SCADA data from 5/26/21-2/23/22
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
   
-  `UAB2_B240001_YSI_EXO3_ODO__S_635338.csv`: dissolved oxygen in % saturated  
+  `UAB2_B240001_YSI_EXO3_ODO__S_635338.csv`: saturated dissolved oxygen in %   
       - variables: 
           `ID`: numeric; individual datum id / row number  
           `TIMESTAMP`: datetime  

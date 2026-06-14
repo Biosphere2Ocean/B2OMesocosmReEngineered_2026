@@ -17,6 +17,7 @@ InputData/Clean/01-DataWrangling:
       `Date`: date; mm/dd/yy 
       `Ocean`: character; name of ocean data was obtained from  
       `Region`: character; region of ocean that data was obtained from  
+      `Location`: character; more specific geographic location than region, such as an island, state, atoll, or reef  
       `Depth (m)`: numeric; depth underwater data was obtained from  
       `Temperature (ºC)`: numeric; temperature in degrees Celcius  
       `Salinity (PSU)`: numeric; salinity in Potential Salinity Units  
@@ -38,7 +39,7 @@ InputData/Clean/01-DataWrangling:
 
 ### Output Files
 InputData/Clean/01-DataWrangling: 
-  `WorldOceans-Data-Clean-Final.csv`: combination of `WorldOceans-RegionsCoordinates-Clean.csv` and `WorldOceans-Data-Clean.csv` with additional Location column for more specific geographic location label
+  `WorldOceans-Data-Clean-Final.csv`: combination of `WorldOceans-RegionsCoordinates-Clean.csv` and `WorldOceans-Data-Clean.csv` coordinates for each location added
     - variables:  
       `Date`: date; mm/dd/yy 
       `Ocean`: character; name of ocean data was obtained from  

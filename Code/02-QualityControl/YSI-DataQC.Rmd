@@ -24,9 +24,9 @@ InputData/Clean/01-DataWrangling:
             `pH`: numeric; pH value in pH units  
             `pH (mV)`: numeric; pH value in miliVolts  
             `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
-            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
-            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
-            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSiemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSiemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSiemens/cm  
             `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
             `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
             `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
@@ -49,9 +49,9 @@ InputData/Clean/02-QualityControl:
             `pH`: numeric; pH value in pH units  
             `pH (mV)`: numeric; pH value in miliVolts  
             `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
-            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
-            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
-            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSiemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSiemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSiemens/cm  
             `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
             `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
             `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
@@ -71,9 +71,9 @@ InputData/Clean/02-QualityControl:
             `pH`: numeric; pH value in pH units  
             `pH (mV)`: numeric; pH value in miliVolts  
             `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
-            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
-            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
-            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSiemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSiemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSiemens/cm  
             `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
             `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
             `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  

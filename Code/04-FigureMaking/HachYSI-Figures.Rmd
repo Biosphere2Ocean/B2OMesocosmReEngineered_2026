@@ -20,9 +20,9 @@ OutputData/:
       `Temperature (ºC)`: numeric; temperature in degrees Celcius  
       `pH (mV)`: numeric; pH in miliVolts  
       `Salinity (PSU)`: numeric; salinity in Potenial Salinity Units  
-      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSemens/cm  
-      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
-      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSemens/cm  
+      `Conductivity (µS/cm)`: numeric; electrical conductivity in µSiemens/cm  
+      `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity as a non-linear function in µSiemens/cm  
+      `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity in µSiemens/cm  
       `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen in mg/L  
       `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen in %  
       `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen in %  

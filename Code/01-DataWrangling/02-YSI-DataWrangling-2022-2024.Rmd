@@ -22,9 +22,9 @@ InputData/Clean/01-DataWrangling:
             `pH`: numeric; pH value in pH units  
             `pH (mV)`: numeric; pH value in miliVolts  
             `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
-            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
-            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
-            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSiemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSiemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSiemens/cm  
             `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
             `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
             `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  
@@ -46,23 +46,23 @@ InputData/Raw/YSI/SCADA_2022_2024: YSI EXO3 Multiparameter Sonde data from SCADA
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
   
-  `UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv`: electrical conductivity in uSemens/cm  
+  `UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv`: electrical conductivity in uSiemens/cm  
       - variables: 
           `ID`: numeric; individual datum id / row number 
           `TIMESTAMP`: datetime  
           `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
           `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
-          `VALUE`: numeric; electrical conductivity value in uSemens/cm  
+          `VALUE`: numeric; electrical conductivity value in uSiemens/cm  
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
   
-  `UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv`: nLF conductivity in uSemens/cm  
+  `UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv`: nLF conductivity in uSiemens/cm  
       - variables: 
           `ID`: numeric; individual datum id / row number  
           `TIMESTAMP`: datetime  
           `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
           `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
-          `VALUE`: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+          `VALUE`: numeric; electrical conductivity as a non-linear function in µSiemens/cm  
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable  
   
@@ -136,13 +136,13 @@ InputData/Raw/YSI/SCADA_2022_2024: YSI EXO3 Multiparameter Sonde data from SCADA
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
   
-  `UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv`: specific conductivity in µSemens/cm 
+  `UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv`: specific conductivity in µSiemens/cm 
       - variables: 
           `ID`: numeric; individual datum id / row number  
           `TIMESTAMP`: datetime  
           `TRENDFLAGS`: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
           `STATUS`: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device   
-          `VALUE`: numeric; specific conductivity value in µSemens/cm  
+          `VALUE`: numeric; specific conductivity value in µSiemens/cm  
           `TRENDFLAGS_TAG`: character; text value interpretation of `TRENDFLAGS` variable  
           `STATUS_TAG`: character; text value interpretation of `STATUS` variable   
   
@@ -197,7 +197,7 @@ InputData/Raw/YSI/ProDSS/:
           `∞F`: numeric; temperature in degrees Celsius
           `DO %`: numeric; dissolved oxygen in %
           `DO mg/L`: numeric; dissolved oxygen in mg/L
-          `C-uS/cm`: numeric; electric conductivity in µSemens/cm
+          `C-uS/cm`: numeric; electric conductivity in µSiemens/cm
           `SAL-PSU`: numeric; salinity in Potential Salinity Units
           `pH`: numeric; pH in pH units
           `ORP mV`: numeric; oxidative-reduction potential in miliVolts
@@ -215,9 +215,9 @@ InputData/Clean/01-DataWrangling:
             `pH`: numeric; pH value in pH units  
             `pH (mV)`: numeric; pH value in miliVolts  
             `Salinity (PSU)`: numeric; salinity value in Potential Salinity Units  
-            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSemens/cm  
-            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSemens/cm  
-            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSemens/cm  
+            `Conductivity (µS/cm)`: numeric; electrical conductivity value in µSiemens/cm  
+            `Conductivity, Non-Linear Function (µS/cm)`: numeric; electrical conductivity value as a non-linear function in µSiemens/cm  
+            `Conductivity, Specific (µS/cm)`: numeric; specific electrical conductivity value in µSiemens/cm  
             `Dissolved Oxygen (mg/L)`: numeric; dissolved oxygen value in mg/L  
             `Dissolved Oxygen, Saturated (%)`: numeric; saturated dissolved oxygen value in %  
             `Dissolved Oxygen, Local (%)`: numeric; local dissolved oxygen value in %  

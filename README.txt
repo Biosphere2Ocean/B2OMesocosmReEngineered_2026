@@ -159,21 +159,98 @@ The following is a data tree of the files contained within this repository. Full
 
 ---------------------------------------------
 # DATA-SPECIFIC INFORMATION
-YSI-metadata.xlsx
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
-  - Missing data codes: 
+YSI-metadata.xlsx: spreadsheet of metadata for YSI data files
+  Sheet 1: Metadata: lists and descriptions of variables, units, files, dates, and sources for files
+    - Number of variables: 19
+    - Number of cases/rows: 123
+    - Variable List: 
+        Variable_Name: alphanumeric; name of variables in each file
+        Varible_Description: character; description of variable 
+        Units: alphanumeric; units of variable 
+        File_Name: alphanumeric; name of file variable is found in
+        File_Start_Date: date; start date of file variable is found in; mm/dd/yy
+        File_End_Date: date; end date of file variable is found in; mm/dd/yy
+        Data_Source_File: character; where file is from, source of file
+        Data_Source_Instrument: alphanumeric; instrument file is from
+        Data_Source_Person: character; name of person file was obtained from
+        Missing_Dates_Start_1: first start date (mm/dd/yy) of data missing from file
+        Missing_Dates_End_1: first end date (mm/dd/yy) of data missing from file
+        Missing_Dates_Start_2: second start date (mm/dd/yy) of data missing from file
+        Missing_Dates_End_2: second end date (mm/dd/yy) of data missing from file
+        Missing_Dates_Start_3: third start date (mm/dd/yy) of data missing from file
+        Missing_Dates_End_3: third end date (mm/dd/yy) of data missing from file
+        Missing_Dates_Start_4: fourth start date (mm/dd/yy) of data missing from file
+        Missing_Dates_End_4: fourth end date (mm/dd/yy) of data missing from file
+        Missing_Dates_Start_5: fifth start date (mm/dd/yy) of data missing from file
+        Missing_Dates_End_5: fifth end date (mm/dd/yy) of data missing from file
+    - Missing data codes: none/blank space
+  Sheet 2: Data Check Matrix: matrix with variable names on y-axis and file names on x-axis to map which files contain which variables since there is overlap
+    - Number of variables: 37
+    - Number of cases/rows: 61
+    - Variable List: 
+        Variable_Name: alphanumeric; name of variable found in files
+        ocean_scada_data_2016_2021.xlsx: YSI SCADA data from 12/6/2016 - 5/25/2021  
+        UAB2_B240001_YSI_OCEANBGA_PE_593908.csv: YSI SCADA data from old database from 10/21/19-5/26/21 for phycoerythrin
+        UAB2_B240001_YSI_OCEANCHLORO_595563.csv: YSI SCADA data from old database from 10/21/19-5/26/21 for chlorophyll in cells/L
+        UAB2_B240001_YSI_OCEANCONDUC_597443.csv: YSI SCADA data from old database from 10/21/19-5/26/21 for electrical conductivity in miliSiemens/cm
+        UAB2_B240001_YSI_OCEANORP_598894.csv: YSI SCADA data from old database from 10/21/19-5/26/21 for oxidative-reduction potential in mV
+        UAB2_B240001_YSI_OCEANPH_600334.csv: YSI SCADA data from old database from 10/21/19-5/26/21 for pH
+        UAB2_B240001_YSI_OCEANSALANI_602884.csv: YSI SCADA data from old database from 10/21/19-5/26/21 for salinity in ppt
+        UAB2_B240001_YSI_OCEANTMP_604270.csv: YSI SCADA data from old database from 10/21/19-5/26/21 for temperature in degrees Celcius
+        UAB2_BIO1_B4000_YSI_EXO3_BATTERY_V_688363.csv: YSI SCADA data from new database from 1/22/22-present for battery power of the instrument in Volts
+        UAB2_BIO1_B4000_YSI_EXO3_CABLE_PWR_V_689040.csv: YSI SCADA data from new database from 1/22/22-present for cable power of the instrument in Volts
+        UAB2_BIO1_B4000_YSI_EXO3_CHLOROPHYLL_RFU_687484.csv: YSI SCADA data from new database from 1/22/22-present for chlorophyll in RFU
+        UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM_686791.csv: YSI SCADA data from new database from 1/22/22-present for electrical conductivity in µSiemens/cm
+        UAB2_BIO1_B4000_YSI_EXO3_DATE_MMDDYY_684687.csv: YSI SCADA data from new database from 1/22/22-present for date in mm-dd-yy
+        UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM_675074.csv: YSI SCADA data from new database from 1/22/22-present for non-linear electrical conductivity in µSiemens/cm
+        UAB2_BIO1_B4000_YSI_EXO3_ODO__LOCAL_685469.csv: YSI SCADA data from new database from 1/22/22-present for local dissolved oxygen in %
+        UAB2_BIO1_B4000_YSI_EXO3_ODO__SAT_683139.csv: YSI SCADA data from new database from 1/22/22-present for saturated dissolved oxygen in %
+        UAB2_BIO1_B4000_YSI_EXO3_ODO_MGPL_684055.csv: YSI SCADA data from new database from 1/22/22-present for for dissolved oxygen in mg/L
+        UAB2_BIO1_B4000_YSI_EXO3_ORP_MV_682052.csv: YSI SCADA data from new database from 1/22/22-present for oxidative-reduction potential in miliVolts
+        UAB2_BIO1_B4000_YSI_EXO3_PH_673160.csv: YSI SCADA data from new database from 1/22/22-present for pH in pH units
+        UAB2_BIO1_B4000_YSI_EXO3_PH_MV_672635.csv: YSI SCADA data from new database from 1/22/22-present for pH in miliVolts
+        UAB2_BIO1_B4000_YSI_EXO3_SAL_PSU_682617.csv: YSI SCADA data from new database from 1/22/22-present for salinity in PSU
+        UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM_681325.csv: YSI SCADA data from new database from 1/22/22-present for specific electrical conductivity in µSiemens/cm
+        UAB2_BIO1_B4000_YSI_EXO3_TAL_PE_RFU_680581.csv: YSI SCADA data from new database from 1/22/22-present for for total algae phycoerytherin in RFU
+        UAB2_BIO1_B4000_YSI_EXO3_TDS_MGPL_679560.csv: YSI SCADA data from new database from 1/22/22-present for total dissolved solids in mg/L
+        UAB2_BIO1_B4000_YSI_EXO3_TEMP_C_680104.csv: YSI SCADA data from new database from 1/22/22-present for temperature in degrees Celcius
+        UAB2_BIO1_B4000_YSI_EXO3_TEMP_F_675540.csv: YSI SCADA data from new database from 1/22/22-present for temperature in degrees Fahrenheit
+        UAB2_BIO1_B4000_YSI_EXO3_TIME_HHMMSS_678335.csv: YSI SCADA data from new database from 1/22/22-present for time in HH:MM:SS
+        UAB2_BIO1_B4000_YSI_EXO3_WIPER_POS_V_674331.csv: YSI SCADA data from new database from 1/22/22-present for wiper position in Volts
+        Ocean_Data_new_15minAVG.csv: YSI SCADA data from 10/17/18-5/25/21 for multiple variables 
+        Ocean_Data_new.csv: YSI SCADA data from 10/12/18-5/25/21 for multiple variables 
+        Ocean_FTP_Data - pre 2014-8-11.csv: YSI SCADA data from 7/22/11-8/4/14 for multiple variables 
+        Ocean_FTP_Data - upto_2014_10_20.csv: YSI SCADA data from 10/3/14-10/20/14 for multiple variables 
+        Ocean_FTP_Data_Acq.csv: YSI SCADA data from 7/3/13-3/12/15 for multiple variables 
+        Ocean_FTP_Data_Extended.csv: YSI SCADA data from 11/18/16-6/12/18 for multiple variables 
+        Ocean_FTP_Data.csv: YSI SCADA data from 10/3/24-5/8/18 for multiple variables 
+        Ocean_FTP_fullset_Data.csv: YSI SCADA data from 7/11/16-10/6/16 for multiple variables 
+    - Missing data codes: none/blank space
+  Sheet 3: Data Timeline: matrix with file or database name on y-axis and year on x-axis
+    - Number of variables: 14
+    - Number of cases/rows: 13
+    - Variable List: 
+        File_Name: character; name of file or database
+        2011: date in m/dd/YY of interval of missing data points for 2011
+        2012: date in m/dd/YY of interval of missing data points for 2012
+        2013: date in m/dd/YY of interval of missing data points for 2013
+        2014: date in m/dd/YY of interval of missing data points for 2014
+        2015: date in m/dd/YY of interval of missing data points for 2015
+        2016: date in m/dd/YY of interval of missing data points for 2016
+        2017: date in m/dd/YY of interval of missing data points for 2017
+        2018: date in m/dd/YY of interval of missing data points for 2018
+        2019: date in m/dd/YY of interval of missing data points for 2019
+        2020: date in m/dd/YY of interval of missing data points for 2020
+        2021: date in m/dd/YY of interval of missing data points for 2021
+        2022: date in m/dd/YY of interval of missing data points for 2022
+        2023: date in m/dd/YY of interval of missing data points for 2023
+    - Missing data codes: none/blank space
 
 B2ONutrientData.xlsx: all Biosphere 2 Systems nutrient water quality data obtained via colorimetry and titration (Hach brand); systems include Ocean, Mangroves, and 2 Coral Raceways; sheet "Pre-formatted Data" holds data from 2017-2022; sheet "Data" holds data from 2022-2024 that is formatted more for analysis in R.
-  - Number of variables: 
-    - Sheet 1: 40
-    - Sheet 2: 13
-  - Number of cases/rows: 
-    - Sheet 1: 252
-    - Sheet 2: 660
-  - Variable List: 
-    - Sheet 1: Pre-formatted Data
+  Sheet 1: Pre-formatted Data
+    - Number of variables: 40
+    - Numer of rows: 252
+    - Variable List: 
         Date: date in mm/dd/yyyy  
         Turbidity: numeric; Ocean turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)  
         Phosphate: numeric; Ocean phosphate (PO4 3-) concentration in range 0.02-2.50 measured in mg/L  
@@ -214,7 +291,11 @@ B2ONutrientData.xlsx: all Biosphere 2 Systems nutrient water quality data obtain
         Ammonia: numeric; Raceway 2 ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
         Initials: character; initials of person or people taking measurements  
         Notes: character; key for color coding, any notes from that measurement  
-    - Sheet 2: Data
+    - Missing data codes: "NA"
+  Sheet 2: Data
+    - Number of variables: 13 
+    - Number of rows: 660
+    - Number of variables: 
         Date: date in mm/dd/yyy
         Location: character; location of measurements; Ocean, Mangroves, Raceway 1, or Raceway 2  
         Turbidity: numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units (FAU)
@@ -228,7 +309,7 @@ B2ONutrientData.xlsx: all Biosphere 2 Systems nutrient water quality data obtain
         Ammonia: numeric; ammonia (NH3) concentration in range 0.01-0.50 measured in mg/L  
         Initials: character; initials of person or people taking measurements  
         Notes: character; any notes from that measurement  
-  - Missing data codes: "NA"
+    - Missing data codes: "NA"
 
 prodssbackup-231117-240112.csv: YSI ProDSS Multiparameter Sonde data from 11/17/2023 - 1/10/2024 when EXO3 was sent in for maintenance
   - Number of variables: 14
@@ -242,7 +323,7 @@ prodssbackup-231117-240112.csv: YSI ProDSS Multiparameter Sonde data from 11/17/
       ∞F: numeric; temperature in degrees Celsius
       DO %: numeric; dissolved oxygen in %
       DO mg/L: numeric; dissolved oxygen in mg/L
-      C-uS/cm: numeric; electric conductivity in µSemens/cm
+      C-uS/cm: numeric; electric conductivity in µSiemens/cm
       SAL-PSU: numeric; salinity in Potential Salinity Units
       pH: numeric; pH in pH units
       ORP mV: numeric; oxidative-reduction potential in miliVolts
@@ -260,7 +341,7 @@ Ocean_FTP_Data - pre 2014-8-11.csv: YSI SCADA data from 7/22/11 - 8/4/14
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Temp_C: numeric; Temperature (ºC)  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_pH: numeric; pH  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Salinity: numeric; Salinity (Practial Salinity Units)  
-      \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Conductivity: numeric; Conductivity (miliSemens/cm)  
+      \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Conductivity: numeric; Conductivity (miliSiemens/cm)  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_ORP: numeric; Oxygen Reduction Potential (miliVolts)  
   - Missing data codes: "NA"
 
@@ -273,7 +354,7 @@ Ocean_FTP_Data.csv: YSI SCADA data from 10/3/14 - 12/6/2016
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Temp_C: numeric; Temperature (ºC)  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_pH: numeric; pH  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Salinity: numeric; Salinity (Practial Salinity Units)  
-      \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Conductivity: numeric; Conductivity (miliSemens/cm)  
+      \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Conductivity: numeric; Conductivity (miliSiemens/cm)  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_ORP: numeric; Oxygen Reduction Potential (miliVolts)  
   - Missing data codes: "NA"
 
@@ -286,7 +367,7 @@ Ocean_FTP_Data_Acq.csv: YSI SCADA data from 8/4/2014 - 10/3/2014
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Temp_C: numeric; Temperature (ºC)  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_pH: numeric; pH  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Salinity: numeric; Salinity (Practical Salinity Units)  
-      \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Conductivity: numeric; Conductivity (miliSemens/cm)  
+      \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_Conductivity: numeric; Conductivity (miliSiemens/cm)  
       \\b2cdaqp\b2cdaq\DES_SAV_PLC.Ocean_ORP: numeric; Oxygen Reduction Potential (miliVolts)  
   - Missing data codes: "NA"
 
@@ -299,7 +380,7 @@ ocean_scada_data_2016_2021.xlsx: YSI SCADA data from 12/6/2016 - 5/25/2021
       Ocean_Temp: numeric; Temperature (ºC)  
       Ocean_pH: numeric; pH  
       Ocean_Salinity: numeric; Salinity (PSU)  
-      Ocean_Conductivity: numeric; Conductivity (miliSemens/cm)  
+      Ocean_Conductivity: numeric; Conductivity (miliSiemens/cm)  
       Ocean_ORP: numeric; Oxygen Reduction Potential (miliVolts)  
       Ocean_APE: numeric; Total Algae (RFU)  
       Ocean_Chlorophyll: numeric; Chlorophyll (µg/L)  
@@ -321,7 +402,7 @@ UAB2_B240001_YSI_EXO3_CHLORO_617107.csv: YSI SCADA data from 5/26/21-2/23/22 for
       STATUS_TAG: character; text value interpretation of `STATUS` variable  
   - Missing data codes: "NA"
 
-UAB2_B240001_YSI_EXO3_COND_U_617936.csv: YSI SCADA data from 5/26/21-2/23/22 for electrical conductivity in uSemens/cm  
+UAB2_B240001_YSI_EXO3_COND_U_617936.csv: YSI SCADA data from 5/26/21-2/23/22 for electrical conductivity in uSiemens/cm  
   - Number of variables: 7
   - Number of cases/rows: 26130
   - Variable List: 
@@ -329,12 +410,12 @@ UAB2_B240001_YSI_EXO3_COND_U_617936.csv: YSI SCADA data from 5/26/21-2/23/22 for
       TIMESTAMP: datetime  
       TRENDFLAGS: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
       STATUS: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
-      VALUE: numeric; electrical conductivity value in uSemens/cm  
+      VALUE: numeric; electrical conductivity value in uSiemens/cm  
       TRENDFLAGS_TAG: character; text value interpretation of `TRENDFLAGS` variable  
       STATUS_TAG: character; text value interpretation of `STATUS` variable    
   - Missing data codes: "NA"
 
-UAB2_B240001_YSI_EXO3_NLF_CO_661668.csv: YSI SCADA data from 5/26/21-2/23/22 for electrical conductivity as a non-linear function in uSemens/cm  
+UAB2_B240001_YSI_EXO3_NLF_CO_661668.csv: YSI SCADA data from 5/26/21-2/23/22 for electrical conductivity as a non-linear function in uSiemens/cm  
   - Number of variables: 7
   - Number of cases/rows: 26130
   - Variable List: 
@@ -342,7 +423,7 @@ UAB2_B240001_YSI_EXO3_NLF_CO_661668.csv: YSI SCADA data from 5/26/21-2/23/22 for
       TIMESTAMP: datetime  
       TRENDFLAGS: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
       STATUS: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
-      VALUE: numeric; electrical conductivity as a non-linear function in µSemens/cm
+      VALUE: numeric; electrical conductivity as a non-linear function in µSiemens/cm
       TRENDFLAGS_TAG: character; text value interpretation of `TRENDFLAGS` variable  
       STATUS_TAG: character; text value interpretation of `STATUS` variable    
   - Missing data codes: "NA"
@@ -438,7 +519,7 @@ UAB2_B240001_YSI_EXO3_SAL_PS_647937.csv: YSI SCADA data from 5/26/21-2/23/22 for
       STATUS_TAG: character; text value interpretation of `STATUS` variable    
   - Missing data codes: "NA" 
   
-UAB2_B240001_YSI_EXO3_SPCOND_648943.csv: YSI SCADA data from 5/26/21-2/23/22 for specific conductivity in µSemens/cm 
+UAB2_B240001_YSI_EXO3_SPCOND_648943.csv: YSI SCADA data from 5/26/21-2/23/22 for specific conductivity in µSiemens/cm 
   - Number of variables: 7
   - Number of cases/rows: 26130
   - Variable List: 
@@ -446,7 +527,7 @@ UAB2_B240001_YSI_EXO3_SPCOND_648943.csv: YSI SCADA data from 5/26/21-2/23/22 for
       TIMESTAMP: datetime  
       TRENDFLAGS: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
       STATUS: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
-      VALUE: numeric; specific conductivity value in µSemens/cm  
+      VALUE: numeric; specific conductivity value in µSiemens/cm  
       TRENDFLAGS_TAG: character; text value interpretation of `TRENDFLAGS` variable  
       STATUS_TAG: character; text value interpretation of `STATUS` variable    
   - Missing data codes: "NA" 
@@ -516,7 +597,7 @@ UAB2_BIO1_B4000_YSI_EXO3_CHLOROPHYLL_RFU.csv: YSI EXO3 Multiparameter Sonde data
       STATUS_TAG: character; text value interpretation of `STATUS` variable  
   - Missing data codes: "NA" 
   
-UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv: YSI EXO3 Multiparameter Sonde data from SCADA database from 5/26/2021 - 12/31/2024 for electrical conductivity in uSemens/cm  
+UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv: YSI EXO3 Multiparameter Sonde data from SCADA database from 5/26/2021 - 12/31/2024 for electrical conductivity in uSiemens/cm  
   - Number of variables: 7
   - Number of cases/rows: 126167
   - Variable List:
@@ -524,12 +605,12 @@ UAB2_BIO1_B4000_YSI_EXO3_COND_USPCM.csv: YSI EXO3 Multiparameter Sonde data from
       TIMESTAMP: datetime  
       TRENDFLAGS: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
       STATUS: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
-      VALUE: numeric; electrical conductivity value in uSemens/cm  
+      VALUE: numeric; electrical conductivity value in uSiemens/cm  
       TRENDFLAGS_TAG: character; text value interpretation of `TRENDFLAGS` variable  
       STATUS_TAG: character; text value interpretation of `STATUS` variable  
   - Missing data codes: "NA" 
   
-UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv: YSI EXO3 Multiparameter Sonde data from SCADA database from 5/26/2021 - 12/31/2024 for electrical conductivity as a non-linear function in µSemens/cm
+UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv: YSI EXO3 Multiparameter Sonde data from SCADA database from 5/26/2021 - 12/31/2024 for electrical conductivity as a non-linear function in µSiemens/cm
   - Number of variables: 7
   - Number of cases/rows: 126167
   - Variable List:
@@ -537,7 +618,7 @@ UAB2_BIO1_B4000_YSI_EXO3_NLF_COND_USPCM.csv: YSI EXO3 Multiparameter Sonde data 
       TIMESTAMP: datetime  
       TRENDFLAGS: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
       STATUS: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
-      VALUE: numeric; electrical conductivity as a non-linear function in µSemens/cm  
+      VALUE: numeric; electrical conductivity as a non-linear function in µSiemens/cm  
       TRENDFLAGS_TAG: character; text value interpretation of `TRENDFLAGS` variable  
       STATUS_TAG: character; text value interpretation of `STATUS` variable  
   - Missing data codes: "NA" 
@@ -633,7 +714,7 @@ UAB2_BIO1_B4000_YSI_EXO3_SAL_PSU.csv: YSI EXO3 Multiparameter Sonde data from SC
       STATUS_TAG: character; text value interpretation of `STATUS` variable  
   - Missing data codes: "NA" 
   
-UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv: YSI EXO3 Multiparameter Sonde data from SCADA database from 5/26/2021 - 12/31/2024 for specific conductivity in µSemens/cm  
+UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv: YSI EXO3 Multiparameter Sonde data from SCADA database from 5/26/2021 - 12/31/2024 for specific conductivity in µSiemens/cm  
   - Number of variables: 7
   - Number of cases/rows: 126167
   - Variable List:
@@ -641,7 +722,7 @@ UAB2_BIO1_B4000_YSI_EXO3_SPCOND_USPCM.csv: YSI EXO3 Multiparameter Sonde data fr
       TIMESTAMP: datetime  
       TRENDFLAGS: numeric; metadata property from Niagara Framework that describes the condition or state of a recorded data point, identifies interruptions, restarts, and overrides/interpolation  
       STATUS: numeric; component variable built into Niagara Framework indicating the operational health, override status, or alarm condition of a point or device  
-      VALUE: numeric; specific conductivity value in µSemens/cm  
+      VALUE: numeric; specific conductivity value in µSiemens/cm  
       TRENDFLAGS_TAG: character; text value interpretation of `TRENDFLAGS` variable  
       STATUS_TAG: character; text value interpretation of `STATUS` variable  
   - Missing data codes: "NA" 
@@ -698,25 +779,90 @@ UAB2_BIO1_B4000_YSI_EXO3_TEMP_F.csv: YSI EXO3 Multiparameter Sonde data from SCA
       STATUS_TAG: character; text value interpretation of `STATUS` variable  
   - Missing data codes: "NA" 
   
-  
-  
-  
-  
 CRCP_Carbonate_Chemistry_Atlantic_be0f_43c1_53bd.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
-  - Missing data codes: "NA" 
+  - Number of variables: 28
+  - Number of cases/rows: 2765
+  - Variable List: 
+      time: datetime; YYYY-mm-ddTHH:MM:SSZ in UTC
+      CTDID: alphanumeric; CTD Cast Identifier: unique tag for each sampling event 
+      Region: character; abbreviation for region of each measurement  
+      Year: numeric; year
+      Mission: alphanumeric; abbrebiation or title for each sampling mission
+      Location: character; abbreviation for specific location of each measurement 
+      UTCDate: date; yy/mm/dd in UTC
+      UTCTime: time; time in HH:MM
+      Date_UTC: datetime; YYYY-mm-ddTHH:MM:SSZ in UTC
+      Sample_Depth_m: depth of measurement in meters
+      DIC: numeric; dissolved inorganic carbon in µmol/kg
+      TA: numeric; total alkalinity in µEquivalents/kg
+      pH_measured: numeric; pH as a raw measurement in pH units
+      pH_calculated: numeric; pH as calculated by software CO2SYS version 2.1 (Pierrot, D. E. Lewis, and D. W. R. Wallace. 2006.)
+      pCO2: numeric; partial pressure of carbon dioxide in microatmospheres
+      Aragonite_Sat: numeric; aragonite saturation state (no units)
+      Calcdsalinity: numeric; salinity in PSU as calculated from density measurement
+      Salinity_Bottle: numeric; salinity in PSU as calculated from density measurement
+      Conductivity_Sm: electrical conductivity in Siemens/meter
+      Salinity_CTD: numeric; salinity in PSU
+      Temperature_C: numeric; temperature in degrees Celcius
+      Pressure_db: numeric; atmosphereic pressure in dbar
+      Density_Sigmat: numeric; seawater density as sigma-t in kg/m^3
+      SiteID: alphanumeric; identifier for each site
+      Survey_design: character; type of survey site, either "Permanent" or "Random"
+      Sample_frequency: character; how often site was sampled
+      Notes: character; notes
+      accession_url: alphanumeric; hyperlink URL to access dataset for each measurement 
+  - Missing data codes: "NaN" 
+  - Link to full metadata: https://www.ncei.noaa.gov/data/oceans/ncei/ocads/metadata/0173496.html
   
 CRCP_Carbonate_Chemistry_Pacific_2198_7707_9695.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
-  - Missing data codes: "NA" 
-  
-  
-  
-  
+  - Number of variables: 42
+  - Number of cases/rows: 2524
+  - Variable List: 
+      time: datetime; YYYY-mm-ddTHH:MM:SSZ
+      EXPOCODE: alphanumeic; expedition code, unique identifier for research expedition consisting of a "four-digit International Council for the Exploration of the Sea (ICES) platform code and the date of departure from port (UTC) in YYYYMMDD." (NOAA)
+      CRUISE_ID: alphanumeric; code assigned to a cruise
+      STATION_ID: alphanumeric; identifier for the station at the island or atoll (LOCATION) associated with the sample. Combines a 3-letter island code (derived from LOCATIONCODE) with a 2-4 digit site number
+      CAST_NUMBER: alphanumeric; Cast number, where a cast is the lowering of equipment over the side at one station (STATION_ID). Cast_number is sequential and starts with 1 for each station
+      SAMPLE_ID: numeric; unique numeric identifer for each water sample (4-digit number)
+      YEAR_UTC: numeric; calendar year in UTC of sample
+      MONTH_UTC: numeric; calendar month in UTC of sample
+      DAY_UTC: numeric; calendar day in UTC of sample
+      TIME_UTC: time; time in UTC (HH:MM:SS) of sample
+      YEARDAY_UTC: numeric; Day number of sample in an annual cycle
+      PRESSURE_DB_CTD: numeric; Hydrostatic pressure recorded from CTD at the depth where the sample was taken. unit: decibar
+      PRESSURE_DB_CALCULATED: numeric; Pressure calculated from depth (using the R package "oce") for samples not associated with a CTD cast. unit: decibar
+      DEPTH_METER: numeric; depth sample was taken at in meters
+      TEMPERATURE_ITS90_CTD: numeric; In situ temperature recorded from CTD with the scale of ITS-90. unit: degrees Celcius
+      TEMPERATURE_ITS90_FLAG: numeric; quality flag for TEMPERATURE_ITS90_CTD
+      TEMPERATURE_ITS90_SCS: numeric; Temperature recorded by the Scientific Computer System (SCS) with the scale of ITS-90. units: degrees Celcius
+      SALINITY_PSS78_CTD: numeric; Salinity calculated from conductivity recorded by CTD using the equation of the Practical Salinity Scale of 1978. units: Siemens/meter
+      SALINITY_PSS78_CTD_FLAG: numeric; quality flag for TEMPERATURE_ITS90_SCS
+      SALINITY_PSS78_BOTTLE: numeric; Salinity calculated from conductivity measured from discrete bottles using the equation of the Practical Salinity Scale of 1978. units: Siemens/meter
+      SALINITY_PSS78_BOTTLE_FLAG: numeric; quality flag for SALINITY_PSS78_BOTTLE
+      SALINITY_PSS78_SCS: numeric; Salinity recorded by the Scientific Computer System (SCS) using the equation of the Practical Salinity Scale of 1978. units: Siemens/meter
+      DIC_UMOL_KG: numeric; dissolve inorganic carbon in µmols/kg
+      DIC_UMOL_KG_FLAG: numeric; quality flag for DIC_UMOL_KG
+      TALK_UMOL_KG: numeric; total alkalinity in µmol/kg
+      TALK_UMOL_KG_FLAG: numeric; quality flag for TALK_UMOL_KG
+      CTDCASTID_ESD: numeric; Unique numeric ID of CTD cast (4-digit number)
+      ASSOC_OCC_SITEID: alphanumeric; An identifier for the fixed NCRMP climate site associated with the sample, if any. An OCC_SITEID is a 3-dimensional identifier that describes a location (LATITUDE_DEC and LONGITUDE_DEC) and depth of a fixed climate site and includes "OCC" prefix, a 3-letter location code (derived from LOCATIONCODE), and a 3-digit site number. A sample is assigned an ASSOC_OCC_SITEID only if its coordinates (LATITUDE_DEC and LONGITUDE_DEC) are within a 150-m radius of a pre-existing OCC_SITEID; otherwise, no ASSOC_OCC_SITEID is assigned
+      REGION: character; The name of the region where the CTD cast was conducted in the Pacific Islands region: American Samoa, Pacific Remote Islands Areas, Guam and Marianas Islands, Hawaiian Archipelago
+      REGIONCODE: character; Code for REGION: American Samoa (AMSM), Pacific Remote Island Areas (PRIA), Guam and Marianas Islands (CNMI), Main Hawaiian Islands (MHI), Northwestern Hawaiian Islands (NWHI)
+      LOCATION: character; Name of island or atoll where the sample was collected in the Pacific Islands region (REGION)
+      LOCATIONCODE: character; 3-Letter unique code for LOCATION.
+      SURVEY_DESIGN: character; NCRMP survey design associated with the sample. Survey designs include: samples collected at permanent climate sites (Permanent); samples co-located with fish or benthic stratified random survey sites (Stratified_Random); samples at random sites not associated with climate, benthic, or fish sites (Random); samples conducted offshore to collect end member data (End_member); and samples collected to calibrate underway systems (Calibration). SURVEY_DESIGN does not apply to non-NCRMP data collected prior to 2013
+      SAMPLE_FREQUENCY: character; Indicates if water sample is discrete (Single) or if the sample is part a series of water samples collected ~every 4 hrs in a ~24-hr period at the same STATION_ID (Diel)
+      TEMPERATURE_ITS90_BEST: numeric; Best temperature value associated with the sample (degrees Celsius), derived from either TEMPERATURE_ITS90_CTD or TEMPERATURE_ITS90_SCS
+      TEMPERATURE_ITS90_BEST_ORIGIN: character; Source of 'TEMPERATURE_ITS90_BEST' measurement: CTD (TEMPERATURE_ITS90_CTD) or SCS (TEMPERATURE_ITS90_SCS)
+      SALINITY_PSS78_BEST: numeric; Best salinity value associated with the sample (PSU), derived from either SALINITY_PSS78_CTD, SALINITY_PSS78_BOTTLE, or SALINITY_PSS78_SCS
+      SALINITY_PSS78_BEST_ORIGIN: character; Source of 'SALINITY_PSS78_BEST' measurement: CTD (SALINITY_PSS78_CTD), discrete bottle sample (SALINITY_PSS78_BOTTLE), or SCS (SALINITY_PSS78_SCS)
+      PH_TS_CALCULATED: numeric; pH in pH units
+      PCO2_UATM_CALCULATED: numeric; pCO2 (fCO2) autonomous in microatmospheres
+      TIMESTAMP_UTC: datetime; Date and time of water sample in UTC YYYY-mm-ddTHH:MM:SSZ
+      accession_url: alphanumeric; hyperlink URL to access dataset for each measurement 
+  - Missing data codes: "NaN" 
+  - Link to full metadata: https://www.ncei.noaa.gov/data/oceans/ncei/ocads/metadata/0232262.html
+
 Hach-Data-Clean.csv: cleaned Hach nutrient water quality data for all locations from 2017-2024
   - Number of variables: 14
   - Number of cases/rows: 1668
@@ -801,9 +947,9 @@ YSI-Data-Clean-2011-2022.csv: all Biosphere 2 Ocean remote sensing Sonde data fr
       pH: numeric; pH value in pH units  
       pH (mV): numeric; pH value in miliVolts  
       Salinity (PSU): numeric; salinity value in Potential Salinity Units  
-      Conductivity (µS/cm): numeric; electrical conductivity value in µSemens/cm  
-      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSemens/cm
-      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSemens/cm  
+      Conductivity (µS/cm): numeric; electrical conductivity value in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSiemens/cm
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSiemens/cm  
       Dissolved Oxygen (mg/L): numeric; dissolved oxygen value in mg/L  
       Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen value in %  
       Dissolved Oxygen, Local (%): numeric; local dissolved oxygen value in %  
@@ -826,9 +972,9 @@ YSI-Data-Clean-All.csv: all Biosphere 2 Ocean remote sensing Sonde data from 201
       pH: numeric; pH value in pH units  
       pH (mV): numeric; pH value in miliVolts  
       Salinity (PSU): numeric; salinity value in Potential Salinity Units  
-      Conductivity (µS/cm): numeric; electrical conductivity value in µSemens/cm  
-      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSemens/cm
-      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSemens/cm  
+      Conductivity (µS/cm): numeric; electrical conductivity value in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSiemens/cm
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSiemens/cm  
       Dissolved Oxygen (mg/L): numeric; dissolved oxygen value in mg/L  
       Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen value in %  
       Dissolved Oxygen, Local (%): numeric; local dissolved oxygen value in %  
@@ -839,11 +985,6 @@ YSI-Data-Clean-All.csv: all Biosphere 2 Ocean remote sensing Sonde data from 201
       Total Algae (cells/L): numeric; total algae phycoerythrin value in cells/L
       Total Dissolved Solids (mg/L): numeric; total dissolved solids value in mg/L  
   - Missing data codes: "NA" 
-
-
-
-
-
 
 Hach-Data-QC.csv: Hach nutrient water quality data after being run through quality control parameters
   - Number of variables: 11
@@ -873,9 +1014,9 @@ YSI-Data-QC.csv: all Biosphere 2 Ocean remote sensing multiparameter sonde water
       pH: numeric; pH value in pH units  
       pH (mV): numeric; pH value in miliVolts  
       Salinity (PSU): numeric; salinity value in Potential Salinity Units  
-      Conductivity (µS/cm): numeric; electrical conductivity value in µSemens/cm  
-      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSemens/cm  
-      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSemens/cm  
+      Conductivity (µS/cm): numeric; electrical conductivity value in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSiemens/cm  
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSiemens/cm  
       Dissolved Oxygen (mg/L): numeric; dissolved oxygen value in mg/L  
       Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen value in %  
       Dissolved Oxygen, Local (%): numeric; local dissolved oxygen value in %  
@@ -887,7 +1028,7 @@ YSI-Data-QC.csv: all Biosphere 2 Ocean remote sensing multiparameter sonde water
       Total Dissolved Solids (mg/L): numeric; total dissolved solids value in mg/L  
   - Missing data codes: "NA" 
   
-YSI-Data-QC-Cutoff.csv: all Biosphere 2 Ocean remote sensing multiparameter sonde water quality data after being run through quality control parameters and cutoff values
+YSI-Data-QC-Cutoff.csv: all Biosphere 2 Ocean remote sensing multiparameter sonde water quality data after being run through quality control parameters and implementing cutoff values
   - Number of variables: 19
   - Number of cases/rows: 361216
   - Variable List:
@@ -898,9 +1039,9 @@ YSI-Data-QC-Cutoff.csv: all Biosphere 2 Ocean remote sensing multiparameter sond
       pH: numeric; pH value in pH units  
       pH (mV): numeric; pH value in miliVolts  
       Salinity (PSU): numeric; salinity value in Potential Salinity Units  
-      Conductivity (µS/cm): numeric; electrical conductivity value in µSemens/cm  
-      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSemens/cm  
-      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSemens/cm  
+      Conductivity (µS/cm): numeric; electrical conductivity value in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity value as a non-linear function in µSiemens/cm  
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity value in µSiemens/cm  
       Dissolved Oxygen (mg/L): numeric; dissolved oxygen value in mg/L  
       Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen value in %  
       Dissolved Oxygen, Local (%): numeric; local dissolved oxygen value in %  
@@ -912,85 +1053,203 @@ YSI-Data-QC-Cutoff.csv: all Biosphere 2 Ocean remote sensing multiparameter sond
       Total Dissolved Solids (mg/L): numeric; total dissolved solids value in mg/L  
   - Missing data codes: "NA" 
   
-  
-  
-  
-  
-  
-  
-HachYSI-Data-Medians-All.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
+HachYSI-Data-Medians-All.csv: all median time interval data combined for all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+  - Number of variables: 26
+  - Number of cases/rows: 5124
+  - Variable List: 
+      Time Interval: character; time interval at which the median is being taken, "daily", "weekly", "monthly", and "yearly" for this file  
+      Date: date; YYYY-mm-dd  
+      Temperature (ºF): numeric; temperature in degrees Fahrenheit  
+      Temperature (ºC): numeric; temperature in degrees Celcius  
+      pH (mV): numeric; pH in miliVolts  
+      Salinity (PSU): numeric; salinity in Potenial Salinity Units  
+      Conductivity (µS/cm): numeric; electrical conductivity in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity as a non-linear function in µSiemens/cm  
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity in µSiemens/cm  
+      Dissolved Oxygen (mg/L): numeric; dissolved oxygen in mg/L  
+      Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen in %  
+      Dissolved Oxygen, Local (%): numeric; local dissolved oxygen in %  
+      Oxygen Reduction Potential (mV): numeric; oxidative-reduction potential in miliVolts  
+      Chlorophyll (RFU): numeric; chlorophyll in Relative Fluorescent Units  
+      Total Algae (RFU): numeric; total algae in Relative Fluorescent Units  
+      Total Dissolved Solids (mg/L): numeric; total dissolved solids in mg/L  
+      pH (YSI): numeric; pH in pH units from the YSI dataset  
+      Turbidity (FAU): numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      Phosphate (mg/L): numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      Nitrate, Mid-Range (mg/L): numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      Nitrate, High-Range (mg/L): numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      pH_Hach: numeric; pH in pH units from the Hach dataset  
+      Alkalinity (mg/L CaCO3): numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      Silica (mg/L): numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      Iron (mg/L): numeric; Iron in range 0.009-1.400 measured in mg/L  
+      Ammonia (mg/L): numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
   - Missing data codes: "NA" 
   
-  
-HachYSI-Data-Medians-Daily.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
+HachYSI-Data-Medians-Daily.csv: daily median of all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+  - Number of variables: 26
+  - Number of cases/rows: 4321
+  - Variable List: 
+      Time Interval: character; time interval at which the median is being taken, "daily" for this file  
+      Date: date; YYYY-mm-dd  
+      Temperature (ºF): numeric; temperature in degrees Fahrenheit  
+      Temperature (ºC): numeric; temperature in degrees Celcius  
+      pH (mV): numeric; pH in miliVolts  
+      Salinity (PSU): numeric; salinity in Potenial Salinity Units  
+      Conductivity (µS/cm): numeric; electrical conductivity in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity as a non-linear function in µSiemens/cm  
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity in µSiemens/cm  
+      Dissolved Oxygen (mg/L): numeric; dissolved oxygen in mg/L  
+      Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen in %  
+      Dissolved Oxygen, Local (%): numeric; local dissolved oxygen in %  
+      Oxygen Reduction Potential (mV): numeric; oxidative-reduction potential in miliVolts  
+      Chlorophyll (RFU): numeric; chlorophyll in Relative Fluorescent Units  
+      Total Algae (RFU): numeric; total algae in Relative Fluorescent Units  
+      Total Dissolved Solids (mg/L): numeric; total dissolved solids in mg/L  
+      pH (YSI): numeric; pH in pH units from the YSI dataset  
+      Turbidity (FAU): numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      Phosphate (mg/L): numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      Nitrate, Mid-Range (mg/L): numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      Nitrate, High-Range (mg/L): numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      pH_Hach: numeric; pH in pH units from the Hach dataset  
+      Alkalinity (mg/L CaCO3): numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      Silica (mg/L): numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      Iron (mg/L): numeric; Iron in range 0.009-1.400 measured in mg/L  
+      Ammonia (mg/L): numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
   - Missing data codes: "NA" 
   
-  
-HachYSI-Data-Medians-Weekly.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
+HachYSI-Data-Medians-Weekly.csv: weekly median of all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+  - Number of variables: 26
+  - Number of cases/rows: 635
+  - Variable List: 
+      Time Interval: character; time interval at which the median is being taken, "weekly" for this file  
+      Date: date; YYYY-mm-dd  
+      Temperature (ºF): numeric; temperature in degrees Fahrenheit  
+      Temperature (ºC): numeric; temperature in degrees Celcius  
+      pH (mV): numeric; pH in miliVolts  
+      Salinity (PSU): numeric; salinity in Potenial Salinity Units  
+      Conductivity (µS/cm): numeric; electrical conductivity in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity as a non-linear function in µSiemens/cm  
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity in µSiemens/cm  
+      Dissolved Oxygen (mg/L): numeric; dissolved oxygen in mg/L  
+      Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen in %  
+      Dissolved Oxygen, Local (%): numeric; local dissolved oxygen in %  
+      Oxygen Reduction Potential (mV): numeric; oxidative-reduction potential in miliVolts  
+      Chlorophyll (RFU): numeric; chlorophyll in Relative Fluorescent Units  
+      Total Algae (RFU): numeric; total algae in Relative Fluorescent Units  
+      Total Dissolved Solids (mg/L): numeric; total dissolved solids in mg/L  
+      pH (YSI): numeric; pH in pH units from the YSI dataset  
+      Turbidity (FAU): numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      Phosphate (mg/L): numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      Nitrate, Mid-Range (mg/L): numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      Nitrate, High-Range (mg/L): numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      pH_Hach: numeric; pH in pH units from the Hach dataset  
+      Alkalinity (mg/L CaCO3): numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      Silica (mg/L): numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      Iron (mg/L): numeric; Iron in range 0.009-1.400 measured in mg/L  
+      Ammonia (mg/L): numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
   - Missing data codes: "NA" 
   
-  
-HachYSI-Data-Medians-Monthly.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
+HachYSI-Data-Medians-Monthly.csv: monthly median of all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+  - Number of variables: 26
+  - Number of cases/rows: 154
+  - Variable List: 
+      Time Interval: character; time interval at which the median is being taken, "monthly" for this file  
+      Date: date; YYYY-mm-dd  
+      Temperature (ºF): numeric; temperature in degrees Fahrenheit  
+      Temperature (ºC): numeric; temperature in degrees Celcius  
+      pH (mV): numeric; pH in miliVolts  
+      Salinity (PSU): numeric; salinity in Potenial Salinity Units  
+      Conductivity (µS/cm): numeric; electrical conductivity in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity as a non-linear function in µSiemens/cm  
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity in µSiemens/cm  
+      Dissolved Oxygen (mg/L): numeric; dissolved oxygen in mg/L  
+      Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen in %  
+      Dissolved Oxygen, Local (%): numeric; local dissolved oxygen in %  
+      Oxygen Reduction Potential (mV): numeric; oxidative-reduction potential in miliVolts  
+      Chlorophyll (RFU): numeric; chlorophyll in Relative Fluorescent Units  
+      Total Algae (RFU): numeric; total algae in Relative Fluorescent Units  
+      Total Dissolved Solids (mg/L): numeric; total dissolved solids in mg/L  
+      pH (YSI): numeric; pH in pH units from the YSI dataset  
+      Turbidity (FAU): numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      Phosphate (mg/L): numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      Nitrate, Mid-Range (mg/L): numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      Nitrate, High-Range (mg/L): numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      pH_Hach: numeric; pH in pH units from the Hach dataset  
+      Alkalinity (mg/L CaCO3): numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      Silica (mg/L): numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      Iron (mg/L): numeric; Iron in range 0.009-1.400 measured in mg/L  
+      Ammonia (mg/L): numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
   - Missing data codes: "NA" 
   
-  
-HachYSI-Data-Medians-Yearly.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
+HachYSI-Data-Medians-Yearly.csv: yearly median of all colorimetry and titration nutrient data (hach) and multiparameter sonde data (ysi) for the Biosphere 2 Ocean from 2011-2024  
+  - Number of variables: 26
+  - Number of cases/rows: 14
+  - Variable List: 
+      Time Interval: character; time interval at which the median is being taken, "yearly" for this file  
+      Date: date; YYYY-mm-dd  
+      Temperature (ºF): numeric; temperature in degrees Fahrenheit  
+      Temperature (ºC): numeric; temperature in degrees Celcius  
+      pH (mV): numeric; pH in miliVolts  
+      Salinity (PSU): numeric; salinity in Potenial Salinity Units  
+      Conductivity (µS/cm): numeric; electrical conductivity in µSiemens/cm  
+      Conductivity, Non-Linear Function (µS/cm): numeric; electrical conductivity as a non-linear function in µSiemens/cm  
+      Conductivity, Specific (µS/cm): numeric; specific electrical conductivity in µSiemens/cm  
+      Dissolved Oxygen (mg/L): numeric; dissolved oxygen in mg/L  
+      Dissolved Oxygen, Saturated (%): numeric; saturated dissolved oxygen in %  
+      Dissolved Oxygen, Local (%): numeric; local dissolved oxygen in %  
+      Oxygen Reduction Potential (mV): numeric; oxidative-reduction potential in miliVolts  
+      Chlorophyll (RFU): numeric; chlorophyll in Relative Fluorescent Units  
+      Total Algae (RFU): numeric; total algae in Relative Fluorescent Units  
+      Total Dissolved Solids (mg/L): numeric; total dissolved solids in mg/L  
+      pH (YSI): numeric; pH in pH units from the YSI dataset  
+      Turbidity (FAU): numeric; turbidity (water transparency) in the range 21-1000 Formazine Attenuation Units   
+      Phosphate (mg/L): numeric; phosphate (PO4 3-) in range 0.02-2.50 measured in mg/L  
+      Nitrate, Mid-Range (mg/L): numeric; Nitrate (NO3-) from 0.2-5.0 measured in mg/L  
+      Nitrate, High-Range (mg/L): numeric; Nitrate (NO3-) from 0.3-30.0 measured in mg/L  
+      pH_Hach: numeric; pH in pH units from the Hach dataset  
+      Alkalinity (mg/L CaCO3): numeric; Calcium Carbonate (CaCO3) in range 100-400 measured in mg/L  
+      Silica (mg/L): numeric; Silica (SiO2) in range 0.01-1.60 measured in mg/L  
+      Iron (mg/L): numeric; Iron in range 0.009-1.400 measured in mg/L  
+      Ammonia (mg/L): numeric; Ammonia (NH3) in range 0.01-0.50 measured in mg/L  
   - Missing data codes: "NA" 
   
-  
-WorldOceans-Data-Mean-2021-2024.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
+WorldOceans-Data-Mean-2021-2024.csv: table of mean of each variable for each region for total time range of 2021-2024
+  - Number of variables: 10
+  - Number of cases/rows: 9
+  - Variable List:
+      Ocean: character; name of ocean measurements were taken in  
+      Region: character; region measurements were taken in  
+      Temperature (ºC): numeric; temperature in degrees Celcius  
+      pH: numeric; pH in pH units  
+      Salinity (PSU): numeric; salinity in Potential Salinity Units  
+      Alkalinity (mg/L): numeric; alkalinity in mg/L  
+      Phosphate (mg/L): numeric; phosphate in mg/L  
+      Silicate (mg/L): numeric; silicate in mg/L  
+      Nitrate (mg/L): numeric; nitrate in mg/L  
+      Iron (mg/L): numeric; iron in mg/L  
   - Missing data codes: "NA" 
   
-  
-WorldOceans-Data-MeanPerYear.csv
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
+WorldOceans-Data-MeanPerYear.csv: table of mean of each variable for each region for each year from 2011-2024
+  - Number of variables: 11
+  - Number of cases/rows: 56
+  - Variable List:
+      Year: date; year as YYYY  
+      Ocean: character; name of ocean measurements were taken in  
+      Region: character; region measurements were taken in  
+      Temperature (ºC): numeric; temperature in degrees Celcius  
+      pH: numeric; pH in pH units  
+      Salinity (PSU): numeric; salinity in Potential Salinity Units  
+      Alkalinity (mg/L): numeric; alkalinity in mg/L  
+      Phosphate (mg/L): numeric; phosphate in mg/L  
+      Silicate (mg/L): numeric; silicate in mg/L  
+      Nitrate (mg/L): numeric; nitrate in mg/L  
+      Iron (mg/L): numeric; iron in mg/L  
   - Missing data codes: "NA" 
+
+HachYSI-1x3CurrentPlot.png: Scatter plot of Temperature (ºC), Salinity (PSU), and pH from 2021-2024 to show environmental variability of B2O in recent years.
   
+HachYSI-1x3HistoryPlot.png: Scatter plot of Temperature (ºC), Salinity (PSU), and pH from 2011-2024 to show historical context of B2O.
   
-HachYSI-1x3CurrentPlot.png
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
-  - Missing data codes: "NA" 
+HachYSI-NutWatQualPlot-Climatology.png: Line plot showing seasonal variation of Temperature (ºC), Salinity (PSU), pH, Alkalinity (mg/L CaCO3), Nitrate (mg/L), Phosphate (mg/L), Silica (mg/L), Iron (mg/L), and Dissolved Oxygen (mg/L) over the course of each year (january - december) from 2021-2024. 
   
-  
-HachYSI-1x3HistoryPlot.png
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
-  - Missing data codes: "NA" 
-  
-  
-HachYSI-NutWatQualPlot-Climatology.png
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
-  - Missing data codes: "NA" 
-  
-  
-HachYSI-NutWatQualPlot-TimeSeries.png
-  - Number of variables:
-  - Number of cases/rows:
-  - Variable List: <list variable name(s), description(s), unit(s) and value labels as appropriate for each>
-  - Missing data codes: "NA" 
-  
+HachYSI-NutWatQualPlot-TimeSeries.png: Line plot with shaded ranges for Temperature (ºC), Salinity (PSU), pH, Alkalinity (mg/L CaCO3), Nitrate (mg/L), Phosphate (mg/L), Silica (mg/L), Iron (mg/L), and Dissolved Oxygen (mg/L) in B2O from 2020-2024. 
